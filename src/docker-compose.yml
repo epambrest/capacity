@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  teams:
+    image: ${DOCKER_REGISTRY-}teams
+    build:
+      context: .
+      dockerfile: Teams/Dockerfile
