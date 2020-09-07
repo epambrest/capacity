@@ -16,4 +16,8 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Teams.Business\Teams.Business.csproj" />
+  </ItemGroup>
+
 </Project>

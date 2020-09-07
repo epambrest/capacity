@@ -2,6 +2,7 @@ using NUnit.Framework;
 
 namespace Teams.Tests
 {
+    [TestFixture]
     public class Tests
     {
         [SetUp]
