@@ -12,6 +12,8 @@ using Teams.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Teams.Models;
+using Teams.Repository;
 
 namespace Teams
 {
@@ -27,11 +29,13 @@ namespace Teams
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<Models.ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<Models.ApplicationDbContext>();
+            services.AddTransient<IRepository<Team>, TeamRepository>();
+            services.AddTransient<IRepository<TeamMembers>, TeamMembersRepository>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
