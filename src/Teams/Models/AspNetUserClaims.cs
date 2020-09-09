@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Teams.Models
 {
-    public partial class AspNetUserClaims
+    public class AspNetUserClaims
     {
         [Key]
         public int Id { get; set; }

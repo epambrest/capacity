@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Teams.Models
 {
-    public partial class AspNetRoles
+    public class AspNetRoles
     {
         public AspNetRoles()
         {

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Teams.Models
 {
-    public partial class AspNetUserLogins
+    public class AspNetUserLogins
     {
         [Key]
         [StringLength(128)]

@@ -8,10 +8,10 @@ namespace Teams.Models
     interface IRepository<T> where T : class
     {
         IEnumerable<T> GetAll();
-        T GetById(object id);
-        void Insert(T obj);
-        void Update(T obj);
-        void Delete(object id);
-        void Save();
+        T GetById(IQueryable<T> id);
+        bool InsertAsync(T obj);
+        bool UpdateAsync(T obj);
+        bool DeleteAsync(object id);
+        bool SaveAsync();
     }
 }
