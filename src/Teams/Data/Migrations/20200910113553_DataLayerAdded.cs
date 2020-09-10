@@ -7,58 +7,58 @@ namespace Teams.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "team",
-                columns: table => new
-                {
-                    id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    team_name = table.Column<string>(nullable: true),
-                    team_owner = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_team", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "team_members",
+                name: "Team",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    team_id = table.Column<int>(nullable: true),
-                    member_id = table.Column<string>(nullable: true)
+                    TeamName = table.Column<string>(nullable: true),
+                    TeamOwner = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_team_members", x => x.Id);
+                    table.PrimaryKey("PK_Team", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TeamMember",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TeamId = table.Column<int>(nullable: false),
+                    MemberId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TeamMember", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_team_members_team_team_id",
-                        column: x => x.team_id,
-                        principalTable: "team",
-                        principalColumn: "id",
+                        name: "FK_TeamMember_Team_TeamId",
+                        column: x => x.TeamId,
+                        principalTable: "Team",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_team_members_AspNetUsers_member_id",
-                        column: x => x.member_id,
+                        name: "FK_TeamMember_AspNetUsers_MemberId",
+                        column: x => x.MemberId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_team_members_team_id",
-                table: "team_members",
-                column: "team_id");
+                name: "IX_TeamMember_TeamId",
+                table: "TeamMember",
+                column: "TeamId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "team_members");
+                name: "TeamMember");
 
             migrationBuilder.DropTable(
-                name: "team");
+                name: "Team");
         }
     }
 }

@@ -223,24 +223,21 @@ namespace Teams.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("TeamName")
-                        .HasColumnName("team_name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("TeamOwner")
-                        .HasColumnName("team_owner")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("team");
+                    b.ToTable("Team");
                 });
 
-            modelBuilder.Entity("Teams.Models.TeamMembers", b =>
+            modelBuilder.Entity("Teams.Models.TeamMember", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -248,18 +245,24 @@ namespace Teams.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("MemberId")
-                        .HasColumnName("member_id")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TeamId")
-                        .HasColumnName("team_id")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("team_members");
+                    b.ToTable("TeamMember");
+                });
+
+            modelBuilder.Entity("Teams.Models.TeamMembers", b =>
+                {
+                    b.Property<int?>("TeamId")
+                        .HasColumnType("int");
+
+                    b.ToTable("TeamMembers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

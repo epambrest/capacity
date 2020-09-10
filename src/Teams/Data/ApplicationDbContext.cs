@@ -11,7 +11,7 @@ namespace Teams.Data
         {
         }
 
-        public DbSet<Team> team { get; set; }
-        public DbSet<TeamMembers> team_members { get; set; }
+        public DbSet<Team> Team { get; set; }
+        public DbSet<TeamMember> TeamMembers { get; set; }
     }
 }
