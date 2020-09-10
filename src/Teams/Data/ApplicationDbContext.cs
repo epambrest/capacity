@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Teams.Models;
 
 namespace Teams.Data
 {
@@ -12,5 +10,8 @@ namespace Teams.Data
             : base(options)
         {
         }
+
+        public DbSet<Team> team { get; set; }
+        public DbSet<TeamMembers> team_members { get; set; }
     }
 }
