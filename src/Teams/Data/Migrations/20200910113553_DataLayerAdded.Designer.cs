@@ -218,45 +218,7 @@ namespace Teams.Data.Migrations
 
                     b.ToTable("AspNetUserTokens");
                 });
-
-            modelBuilder.Entity("Teams.Models.Team", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("TeamName")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("TeamOwner")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Team");
-                });
-
-            modelBuilder.Entity("Teams.Models.TeamMember", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("MemberId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TeamId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("TeamMember");
-                });
-
+            
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)

@@ -6,8 +6,10 @@ namespace Teams.Models
 {
     public class Team
     {
+        [Key]
         [Column ("Id", TypeName = "int")]
         [Required(AllowEmptyStrings = false)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Column("TeamName", TypeName = "nvarchar(MAX")]
         [Required(AllowEmptyStrings = true)]

@@ -13,7 +13,7 @@ namespace Teams.Models
         [Column("TeamId", TypeName = "int")]
         [Required(AllowEmptyStrings = false)]
         [ForeignKey("Team_Id")]
-        public virtual int TeamId { get; set; }
+        public virtual Team Team { get; set; }
         [Column("MemberId", TypeName = "nvarchar(450)")]
         [ForeignKey("AspNetUsers_Id")]
         [Required(AllowEmptyStrings = false)]
