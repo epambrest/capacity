@@ -54,7 +54,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public void GetExeption_HttpContextAccessorReturnsAuthenticationError_ReturnsAuthenticationError()
+        public void GetExeption_ HttpContextAccessorThrownAuthenticationError_ThrownAuthenticationError()
         {
 
             // Arrange
