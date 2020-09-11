@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Teams.Data
 {
-    interface IRepository<T> where T : class
+    public interface IRepository<T> where T : class
     {
         IQueryable<T> GetAll();
         IQueryable<T> GetById(T Id);
