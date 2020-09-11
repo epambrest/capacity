@@ -12,7 +12,7 @@ namespace Teams.Security
             _accessor = accessor;
         }
 
-        public string Id()
+        public string GetId()
         {
             if (_accessor != null && _accessor.HttpContext.User.Identity.IsAuthenticated)
             {
@@ -24,7 +24,7 @@ namespace Teams.Security
             }
         }
 
-        public string Name()
+        public string GetName()
         {
             if (_accessor != null && _accessor.HttpContext.User.Identity.IsAuthenticated)
             {

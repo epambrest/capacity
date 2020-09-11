@@ -2,39 +2,44 @@
 using Moq;
 using System.Security.Claims;
 using Teams.Security;
-using Xunit;
 using System.Security.Authentication;
+using NUnit.Framework;
 
-namespace Teams.UnitTests
+namespace Teams.Tests
 {
+    [TestFixture]
     public class CurrentUserTest
     {
-        private readonly Mock<IHttpContextAccessor> _httpContextAccessor;
-        private readonly ICurrentUser _currentUser;
-        public CurrentUserTest()
+        private Mock<IHttpContextAccessor> _httpContextAccessor;
+        private ICurrentUser _currentUser;
+
+        [SetUp]
+        public void Setup()
         {
             _httpContextAccessor = new Mock<IHttpContextAccessor>();
             _currentUser = new CurrentUser(_httpContextAccessor.Object);
         }
 
-        [Fact]
+        [Test]
         public void GetName_HttpContextAccessorReturnsDzmitry_ReturnsDzmitry()
         {
+
             // Arrange
             string name = "Dzmitry";
             _httpContextAccessor.Setup(x => x.HttpContext.User.Identity.Name).Returns(name);
             _httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(true);
+
             //Act
-            string result = _currentUser.Name();
+            string result = _currentUser.GetName();
 
             //Assert
-            Assert.Equal(result, name);
-
+            Assert.AreEqual(result, name);
         }
 
-        [Fact]
+        [Test]
         public void GetId_HttpContextAccessorReturns1234_Returns1234()
         {
+
             // Arrange
             string id = "1234";
             _httpContextAccessor.Setup(x => x.HttpContext.User.FindFirst(It.IsAny<string>()))
@@ -42,32 +47,24 @@ namespace Teams.UnitTests
             _httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(true);
 
             //Act
-            string result = _currentUser.Id();
+            string result = _currentUser.GetId();
 
             //Assert
-            Assert.Equal(result, id);
+            Assert.AreEqual(result, id);
         }
 
-        
-         [Fact]
+        [Test]
         public void GetExeption_HttpContextAccessorReturnsAuthenticationError_ReturnsAuthenticationError()
         {
-            // Arrange
-            string text = "authentication error";
-            try
-            {
-                _httpContextAccessor.Setup(x => x.HttpContext.User.FindFirst(It.IsAny<string>()))
-                    .Returns(new Claim("name", "name"));
-                _httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(false);
-                //Act
-                string result = _currentUser.Id();
-            }
-            catch(AuthenticationException e)
-            {
-                //Assert
-                Assert.Equal(e.Message, text);
-            }
 
+            // Arrange
+            _httpContextAccessor.Setup(x => x.HttpContext.User.FindFirst(It.IsAny<string>()))
+                .Returns(new Claim("name", "id"));
+            _httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(false);
+
+            //Assert
+            Assert.Throws<AuthenticationException>(() => _currentUser.GetId());
         }
     }
 }
+

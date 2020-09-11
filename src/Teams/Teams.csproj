@@ -19,7 +19,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Teams.Business\Teams.Business.csproj" />
     <ProjectReference Include="..\..\Teams.Security\Teams.Security.csproj" />
-    <ProjectReference Include="..\..\Teams.UnitTests\Teams.UnitTests.csproj" />
   </ItemGroup>
 
 </Project>
