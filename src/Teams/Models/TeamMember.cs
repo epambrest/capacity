@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Teams.Models
@@ -7,10 +8,11 @@ namespace Teams.Models
     {
         [Column("Id", TypeName = "int"), Key, Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Column("TeamId", TypeName = "int"), ForeignKey(nameof(Team)), Required] 
+        [Column("TeamId"), ForeignKey(nameof(Team)), Required] 
         public int TeamId { get; set; }
         public virtual Team Team { get; set; }
-        [Column("MemberId", TypeName = "nvarchar(450)"), ForeignKey("AspNetUsers"), Required]
+        [Column("MemberId"), ForeignKey("AspNetUsers"), Required]
         public virtual string MemberId { get; set; }
+        public virtual IdentityUser Member { get; set; }
     }
 }
