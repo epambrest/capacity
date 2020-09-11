@@ -12,8 +12,8 @@ namespace Teams.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TeamName = table.Column<string>(nullable: true),
-                    TeamOwner = table.Column<string>(nullable: true)
+                    TeamName = table.Column<string>(nullable: false),
+                    TeamOwner = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
