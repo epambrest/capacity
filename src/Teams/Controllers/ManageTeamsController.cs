@@ -4,7 +4,7 @@ using Teams.Models;
 
 namespace Teams.Controllers
 {
-    public class ManageTeamController : Controller
+    public class ManageTeamsController : Controller
     {
         public IActionResult Index()
         {
