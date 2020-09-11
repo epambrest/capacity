@@ -1,5 +1,3 @@
-using System;
-
 namespace Teams.Models
 {
     public class ErrorViewModel
