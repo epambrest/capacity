@@ -11,7 +11,7 @@ namespace Teams.Models
         public int Id { get; set; }
         [Column("TeamName", TypeName = "nvarchar(MAX"), Required]
         public string TeamName { get; set; }
-        [Column("TeamOwner", TypeName = "nvarchar(MAX"), Required(AllowEmptyStrings = false)]
+        [Column("TeamOwner", TypeName = "nvarchar(MAX"), Required]
         public string TeamOwner { get; set; }
 
         public ICollection<TeamMember> TeamMembers { get; set; }

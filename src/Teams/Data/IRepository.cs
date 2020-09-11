@@ -1,13 +1,14 @@
-﻿using System.Collections;
+﻿using Microsoft.AspNetCore.SignalR;
+using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Teams.Data
 {
-    public interface IRepository<T> where T : class
+    interface IRepository<T, K> where T : class
     {
-        IQueryable<T> GetAll();
-        Task <T> GetById { get; set;}
+        Task<T> GetByIdAsync (K id);
+        Task<IQueryable<T>> GetAll();
         Task<T> InsertAsync(T entity);
         Task<T> UpdateAsync(T entity);
         Task<T> DeleteAsync(T entity);
