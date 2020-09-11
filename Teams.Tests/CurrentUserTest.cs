@@ -62,7 +62,7 @@ namespace Teams.Tests
                 .Returns(new Claim("name", "id"));
             _httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(false);
 
-            //Assert
+            // Act & Assert
             Assert.Throws<AuthenticationException>(() => _currentUser.GetId());
         }
     }
