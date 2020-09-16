@@ -2,7 +2,6 @@
 {
     public interface ICurrentUser
     {
-        string GetName();
-        string GetId();
+        UserDetails Current { get;}
     }
 }

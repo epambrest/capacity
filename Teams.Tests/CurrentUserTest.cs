@@ -30,7 +30,7 @@ namespace Teams.Tests
             _httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(true);
 
             //Act
-            string result = _currentUser.GetName();
+            string result = _currentUser.Current.Name();
 
             //Assert
             Assert.AreEqual(result, name);
@@ -47,7 +47,7 @@ namespace Teams.Tests
             _httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(true);
 
             //Act
-            string result = _currentUser.GetId();
+            string result = _currentUser.Current.Id();
 
             //Assert
             Assert.AreEqual(result, id);
@@ -63,7 +63,7 @@ namespace Teams.Tests
             _httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(false);
 
             // Act & Assert
-            Assert.Throws<AuthenticationException>(() => _currentUser.GetId());
+            Assert.Throws<AuthenticationException>(() => _currentUser.Current.Id());
         }
     }
 }
