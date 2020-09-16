@@ -8,7 +8,7 @@ namespace Teams.Security
 
         public UserDetails Current { get => current.Value;}
 
-        Lazy<UserDetails> current;
+        private readonly Lazy<UserDetails> current;
 
         public CurrentUser(IHttpContextAccessor accessor)
         {
