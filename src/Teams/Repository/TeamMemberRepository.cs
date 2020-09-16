@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,48 +8,44 @@ using Teams.Models;
 
 namespace Teams.Repository
 {
-    public class TeamMemberRepository:IRepository<TeamMember>
+    public class TeamMemberRepository : IRepository<TeamMember,int>
     {
         private readonly ApplicationDbContext _dbContext;
 
         public TeamMemberRepository(ApplicationDbContext dbContext)
         {
-            this._dbContext = dbContext;
+            _dbContext = dbContext;
         }
 
-        public async Task<TeamMember> DeleteAsync(TeamMember entity)
+        public async Task<bool> DeleteAsync(TeamMember entity)
         {
-            var obj=_dbContext.TeamMembers.Remove(entity);
+            var obj = _dbContext.TeamMembers.Remove(entity);
             await _dbContext.SaveChangesAsync();
-            return obj.Entity;
+            return obj.State == EntityState.Deleted ? true : false;
         }
 
-        public IQueryable<TeamMember> GetAll()
+        public async Task<IQueryable<TeamMember>> GetAll()
         {
             return _dbContext.TeamMembers;
         }
 
-        public IQueryable<TeamMember> GetById(TeamMember Id)//public async Task<TeamMember> GetById(int Id) => await _dbContext.TeamMember.FindAsync(Id);
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<TeamMember> GetByIdAsync(int Id) => await _dbContext.TeamMembers.FindAsync(Id);    
 
-        
-
-        public async Task<TeamMember> InsertAsync(TeamMember entity)
+        public async Task<bool> InsertAsync(TeamMember entity)
         {
-            var obj=await _dbContext.TeamMembers.AddAsync(entity);
+            var obj = await _dbContext.TeamMembers.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
-            return obj.Entity;
+            return obj.State == EntityState.Added ? true : false;
         }
 
-        public async Task<TeamMember> UpdateAsync(TeamMember entity)
+        public async Task<bool> UpdateAsync(TeamMember entity)
         {
             var member = await _dbContext.TeamMembers.FindAsync(entity.Id);
             member.MemberId = entity.MemberId;
-            member.Team = entity.Team;
+            member.TeamId = entity.TeamId;
+            var result = _dbContext.Entry(member).State == EntityState.Modified ? true : false;
             await _dbContext.SaveChangesAsync();
-            return member;
+            return result;
         }
     }
 }

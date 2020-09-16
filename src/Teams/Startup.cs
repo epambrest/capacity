@@ -31,10 +31,10 @@ namespace Teams
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
-            services.AddScoped<IManageTeamsMembersService, ManageTeamsMembersService>();
-            services.AddScoped<IManageTeamsService, ManageTeamsService>();
-            services.AddTransient<IRepository<Team>, TeamRepository>();
-            services.AddTransient<IRepository<TeamMember>, TeamMemberRepository>();
+            services.AddTransient<IManageTeamsMembersService, ManageTeamsMembersService>();
+            services.AddTransient<IManageTeamsService, ManageTeamsService>();
+            services.AddTransient<IRepository<Team,int>, TeamRepository>();
+            services.AddTransient<IRepository<TeamMember,int>, TeamMemberRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

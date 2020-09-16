@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,49 +8,44 @@ using Teams.Models;
 
 namespace Teams.Repository
 {
-    public class TeamRepository:IRepository<Team>
+    public class TeamRepository : IRepository<Team,int>
     {
         private readonly ApplicationDbContext _dbContext;
 
         public TeamRepository(ApplicationDbContext dbContext)
         {
-            this._dbContext = dbContext;
+            _dbContext = dbContext;
         }
 
-        public async Task<Team> DeleteAsync(Team entity)
+        public async Task<bool> DeleteAsync(Team entity)
         {
-            _dbContext.Team.Remove(entity);
+            var obj = _dbContext.Team.Remove(entity);
             await _dbContext.SaveChangesAsync();
-            return entity;
+            return obj.State == EntityState.Deleted ? true : false; ;
         }
 
-        public IQueryable<Team> GetAll()
+        public async Task<IQueryable<Team>> GetAll()
         {
             return _dbContext.Team;
         }
 
-        public IQueryable<Team> GetById(Team Id) //public async Task<Team> GetById(int Id) => await _dbContext.Team.FindAsync(Id);
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<Team> GetByIdAsync(int Id) => await _dbContext.Team.FindAsync(Id);       
 
-       
-
-        public async Task<Team> InsertAsync(Team entity)
+        public async Task<bool> InsertAsync(Team entity)
         {
             var obj = await _dbContext.Team.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
-            return obj.Entity;
+            return obj.State == EntityState.Added ? true : false; ;
         }
 
-        public async Task<Team> UpdateAsync(Team entity)
+        public async Task<bool> UpdateAsync(Team entity)
         {
             var team = await _dbContext.Team.FindAsync(entity.Id);
-            team.TeamMembers = entity.TeamMembers;
             team.TeamName = entity.TeamName;
             team.TeamOwner = entity.TeamOwner;
+            var result = _dbContext.Entry(team).State == EntityState.Modified ? true : false;
             await _dbContext.SaveChangesAsync();
-            return team;
+            return result;
         }
     }
 }
