@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Teams.Data;
 using Teams.Services;
+using Teams.Security;
 
 namespace Teams
 {
@@ -31,6 +32,8 @@ namespace Teams
             services.AddRazorPages();
             services.AddScoped<IManageTeamsMembersService, ManageTeamsMembersService>();
             services.AddScoped<IManageTeamsService, ManageTeamsService>();
+            services.AddHttpContextAccessor();
+            services.AddTransient<ICurrentUser, CurrentUser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
