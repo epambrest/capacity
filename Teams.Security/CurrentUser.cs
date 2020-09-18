@@ -5,7 +5,6 @@ namespace Teams.Security
 {
     public class CurrentUser : ICurrentUser
     {
-
         public UserDetails Current { get => current.Value;}
 
         private readonly Lazy<UserDetails> current;
