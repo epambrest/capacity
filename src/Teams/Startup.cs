@@ -34,10 +34,11 @@ namespace Teams
             services.AddRazorPages();
             services.AddTransient<IManageTeamsMembersService, ManageTeamsMembersService>();
             services.AddTransient<IManageTeamsService, ManageTeamsService>();
-            services.AddTransient<IRepository<Team,int>, TeamRepository>();
-            services.AddTransient<IRepository<TeamMember,int>, TeamMemberRepository>();
+            services.AddTransient<IRepository<Team, int>, TeamRepository>();
+            services.AddTransient<IRepository<TeamMember, int>, TeamMemberRepository>();
             services.AddHttpContextAccessor();
             services.AddTransient<ICurrentUser, CurrentUser>();
+            services.AddTransient<IManageTeamsMembersService, ManageTeamsMembersService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
