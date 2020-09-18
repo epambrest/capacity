@@ -19,10 +19,10 @@ namespace Teams.Services
         {
             List<Team> myteams = new List<Team>();
             myteams.AddRange(db.Team.ToList().Where(team => team.TeamOwner == _currentUser.Current.Id()));
-            myteams.AddRange(GetMemberTeams());
+            myteams.AddRange(GetMyMemberTeams());
             return myteams;
         }
-        public List<Team> GetMemberTeams()
+        public List<Team> GetMyMemberTeams()
         {
             List<Team> memberlist = new List<Team>();
 
