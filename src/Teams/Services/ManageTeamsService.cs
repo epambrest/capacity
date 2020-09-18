@@ -15,7 +15,7 @@ namespace Teams.Services
             _currentUser = currentUser;
             db = context;
         }
-        public List<Team> GetMyTeams( ) 
+        public List<Team> GetMyTeams()
         {
             List<Team> myteams = new List<Team>();
             myteams.AddRange(db.Team.ToList().Where(team => team.TeamOwner == _currentUser.Current.Id()));
@@ -25,19 +25,17 @@ namespace Teams.Services
         public List<Team> GetMemberTeams()
         {
             List<Team> memberlist = new List<Team>();
-            
-            var teamids = db.TeamMembers.ToArray().Where(id => id.MemberId == _currentUser.Current.Id());
-            foreach (var id in teamids)
-            { 
-                    foreach (var team in db.Team.ToList())
+
+            foreach (var id in db.TeamMembers.ToArray().Where(id => id.MemberId == _currentUser.Current.Id()))
+            {
+                foreach (var team in db.Team.ToList())
+                {
+                    if (id.TeamId == team.Id)
                     {
-                        if(id.TeamId==team.Id)
-                        {
-                            memberlist.Add(team);
-                        }
+                        memberlist.Add(team);
                     }
+                }
             }
-            var memberlist2 = db.Team.ToList().Where(team => team.TeamOwner == _currentUser.Current.Id());
             return memberlist;
         }
     }
