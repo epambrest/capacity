@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace Teams.Data
 {
-    interface IRepository<T, K> where T : class
+    public interface IRepository<T, K> where T : class
     {
         Task<T> GetByIdAsync (K id);
         Task<IQueryable<T>> GetAll();
-        Task<T> InsertAsync(T entity);
-        Task<T> UpdateAsync(T entity);
-        Task<T> DeleteAsync(T entity);
+        Task<bool> InsertAsync(T entity);
+        Task<bool> UpdateAsync(T entity);
+        Task<bool> DeleteAsync(T entity);
     }
 }

@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Teams.Data;
+using Teams.Models;
+using Teams.Repository;
 using Teams.Services;
 using Teams.Security;
 
@@ -30,8 +32,10 @@ namespace Teams
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
-            services.AddScoped<IManageTeamsMembersService, ManageTeamsMembersService>();
-            services.AddScoped<IManageTeamsService, ManageTeamsService>();
+            services.AddTransient<IManageTeamsMembersService, ManageTeamsMembersService>();
+            services.AddTransient<IManageTeamsService, ManageTeamsService>();
+            services.AddTransient<IRepository<Team,int>, TeamRepository>();
+            services.AddTransient<IRepository<TeamMember,int>, TeamMemberRepository>();
             services.AddHttpContextAccessor();
             services.AddTransient<ICurrentUser, CurrentUser>();
         }
