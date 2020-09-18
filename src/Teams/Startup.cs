@@ -9,6 +9,7 @@ using Teams.Data;
 using Teams.Models;
 using Teams.Repository;
 using Teams.Services;
+using Teams.Security;
 
 namespace Teams
 {
@@ -35,6 +36,8 @@ namespace Teams
             services.AddTransient<IManageTeamsService, ManageTeamsService>();
             services.AddTransient<IRepository<Team,int>, TeamRepository>();
             services.AddTransient<IRepository<TeamMember,int>, TeamMemberRepository>();
+            services.AddHttpContextAccessor();
+            services.AddTransient<ICurrentUser, CurrentUser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

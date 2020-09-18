@@ -1,19 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace Teams.Models
 {
     public class Team
     {
         [Key]
-        [Column ("Id", TypeName = "int"), Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column ("Id"), Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Column("TeamName", TypeName = "nvarchar(MAX"), Required]
+        [Column("TeamName"), Required]
         public string TeamName { get; set; }
-        [Column("TeamOwner", TypeName = "nvarchar(MAX"), Required]
+        [ForeignKey(nameof(Owner)), Required]
         public string TeamOwner { get; set; }
-
-        public ICollection<TeamMember> TeamMembers { get; set; }
+        public virtual IdentityUser Owner { get; set; }
+        public virtual ICollection<TeamMember> TeamMembers { get; set; }
     }
 }
