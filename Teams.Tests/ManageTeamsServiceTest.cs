@@ -1,14 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Moq;
-using System.Security.Claims;
+﻿using Moq;
 using Teams.Security;
-using Teams.Services;
-using System.Security.Authentication;
 using NUnit.Framework;
 using Teams.Data;
 using Teams.Models;
-using Microsoft.EntityFrameworkCore;
-using Teams.Data.Migrations;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,38 +26,38 @@ namespace Teams.Tests
         {
             //Arrange
             string user = "abc-def";
-            List<Models.Team> myteams = new List<Models.Team>
+            List<Team> myteams = new List<Team>
             {
-                 new Models.Team { Id= 1, TeamOwner = "abc-def", TeamName = "Team1"},
-                 new Models.Team { Id= 4, TeamOwner = "abc-def", TeamName = "Team4"},
-                 new Models.Team { Id= 2, TeamOwner = "def-abc", TeamName = "Team2"},
-                 new Models.Team { Id= 9, TeamOwner = "def-abc", TeamName = "Team9"},
+                 new Team { Id= 1, TeamOwner = "abc-def", TeamName = "Team1"},
+                 new Team { Id= 4, TeamOwner = "abc-def", TeamName = "Team4"},
+                 new Team { Id= 2, TeamOwner = "def-abc", TeamName = "Team2"},
+                 new Team { Id= 9, TeamOwner = "def-abc", TeamName = "Team9"},
             };
             _currentUser.Setup(x => x.Current.Id()).Returns(user);
             _db.Setup(x => x.Team.ToList()).Returns(GetTestTeams());
             _db.Setup(x => x.TeamMembers.ToArray()).Returns(GetTestTeamMembers());
 
             //Act
-            List<Models.Team> result = new List<Models.Team>( _mangeTeamsService.GetMyTeams());
+            List<Team> result = new List<Team>( _mangeTeamsService.GetMyTeams());
 
             //Assert
             Assert.AreEqual(result, myteams);
 
         }
-        private List<Models.Team> GetTestTeams()
+        private List<Team> GetTestTeams()
         {
-            List<Models.Team> teams = new List<Models.Team>
+            List<Team> teams = new List<Team>
             {
-                new Models.Team { Id= 1, TeamOwner = "abc-def", TeamName = "Team1"},
-                new Models.Team { Id= 2, TeamOwner = "def-abc", TeamName = "Team2"},
-                new Models.Team { Id= 3, TeamOwner = "def-abc", TeamName = "Team3"},
-                new Models.Team { Id= 4, TeamOwner = "abc-def", TeamName = "Team4"},
-                new Models.Team { Id= 5, TeamOwner = "def-abc", TeamName = "Team5"},
-                new Models.Team { Id= 6, TeamOwner = "def-abc", TeamName = "Team6"},
-                new Models.Team { Id= 7, TeamOwner = "def-abc", TeamName = "Team7"},
-                new Models.Team { Id= 8, TeamOwner = "def-abc", TeamName = "Team8"},
-                new Models.Team { Id= 9, TeamOwner = "def-abc", TeamName = "Team9"},
-                new Models.Team { Id= 10, TeamOwner = "def-abc", TeamName = "Team10"}
+                new Team { Id= 1, TeamOwner = "abc-def", TeamName = "Team1"},
+                new Team { Id= 2, TeamOwner = "def-abc", TeamName = "Team2"},
+                new Team { Id= 3, TeamOwner = "def-abc", TeamName = "Team3"},
+                new Team { Id= 4, TeamOwner = "abc-def", TeamName = "Team4"},
+                new Team { Id= 5, TeamOwner = "def-abc", TeamName = "Team5"},
+                new Team { Id= 6, TeamOwner = "def-abc", TeamName = "Team6"},
+                new Team { Id= 7, TeamOwner = "def-abc", TeamName = "Team7"},
+                new Team { Id= 8, TeamOwner = "def-abc", TeamName = "Team8"},
+                new Team { Id= 9, TeamOwner = "def-abc", TeamName = "Team9"},
+                new Team { Id= 10, TeamOwner = "def-abc", TeamName = "Team10"}
             };
             return teams;
         }
