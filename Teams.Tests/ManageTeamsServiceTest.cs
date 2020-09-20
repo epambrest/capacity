@@ -5,6 +5,10 @@ using Teams.Data;
 using Teams.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using Teams.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace Teams.Tests
 {
@@ -12,20 +16,25 @@ namespace Teams.Tests
     class ManageTeamsServiceTest
     {
         private IManageTeamsService _mangeTeamsService;
-        private Mock<ICurrentUser> _currentUser;
+        private ICurrentUser _currentUser;
         private Mock<ApplicationDbContext> _db;
+        private Mock<IHttpContextAccessor> _httpContextAccessor;
         [SetUp]
         public void Setup()
         {
-            _currentUser = new Mock<ICurrentUser>();
-            _db = new Mock<ApplicationDbContext>();
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .Options;
+            _httpContextAccessor = new Mock<IHttpContextAccessor>();
+            _currentUser = new CurrentUser(_httpContextAccessor.Object);
+            _db = new Mock<ApplicationDbContext>(options);
+            _mangeTeamsService = new ManageTeamsService(_currentUser, _db.Object);
             
         }
         [Test]
         public void GetMyTeams_ManageTeamsServiceReturnsListCount4_ListCount4()
         {
             //Arrange
-            string user = "abc-def";
+            string id = "abc-def";
             List<Team> myteams = new List<Team>
             {
                  new Team { Id= 1, TeamOwner = "abc-def", TeamName = "Team1"},
@@ -33,9 +42,11 @@ namespace Teams.Tests
                  new Team { Id= 2, TeamOwner = "def-abc", TeamName = "Team2"},
                  new Team { Id= 9, TeamOwner = "def-abc", TeamName = "Team9"},
             };
-            _currentUser.Setup(x => x.Current.Id()).Returns(user);
-            _db.Setup(x => x.Team.ToList()).Returns(GetTestTeams());
-            _db.Setup(x => x.TeamMembers.ToArray()).Returns(GetTestTeamMembers());
+            _httpContextAccessor.Setup(x => x.HttpContext.User.FindFirst(It.IsAny<string>()))
+               .Returns(new Claim("name", id));
+            //_currentUser.Setup(x => x.Current.Id()).Returns(id);
+            _db.Setup(x => x.Team.ToList<Team>()).Returns(GetTestTeams());
+            _db.Setup(x => x.TeamMembers.ToArray<TeamMember>()).Returns(GetTestTeamMembers());
 
             //Act
             List<Team> result = new List<Team>( _mangeTeamsService.GetMyTeams());
