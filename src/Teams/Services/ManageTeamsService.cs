@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Teams.Data;
 using Teams.Models;
+using Teams.Repository;
 using Teams.Security;
 
 namespace Teams.Services
@@ -9,16 +10,18 @@ namespace Teams.Services
     public class ManageTeamsService : IManageTeamsService
     {
         private readonly ICurrentUser _currentUser;
-        private readonly ApplicationDbContext db;
-        public ManageTeamsService(ICurrentUser currentUser, ApplicationDbContext context)
-        {
+        private readonly TeamRepository _teamRepository;
+        private readonly TeamMemberRepository _teamMemberRepository;
+        public ManageTeamsService(ICurrentUser currentUser, TeamRepository teamRepository, TeamMemberRepository teamMemberRepository)
+        { 
             _currentUser = currentUser;
-            db = context;
+            _teamRepository = teamRepository;
+            _teamMemberRepository = teamMemberRepository;
         }
         public List<Team> GetMyTeams()
         {
             List<Team> myteams = new List<Team>();
-            myteams.AddRange(db.Team.ToList().Where(team => team.TeamOwner == _currentUser.Current.Id()));
+            myteams.AddRange(_teamRepository.GetAll().Result.Where(team => team.TeamOwner == _currentUser.Current.Id()));
             myteams.AddRange(GetMyMemberTeams());
             return myteams;
         }
@@ -26,7 +29,7 @@ namespace Teams.Services
         {
             List<Team> memberlist = new List<Team>();
 
-            foreach (var id in db.TeamMembers.ToArray().Where(id => id.MemberId == _currentUser.Current.Id()))
+            foreach (var id in _teamMemberRepository.GetAll().Result.Where(id => id.MemberId == _currentUser.Current.Id()))
             {
                 foreach (var team in db.Team.ToList())
                 {
