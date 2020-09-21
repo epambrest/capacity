@@ -25,7 +25,7 @@ namespace Teams.Repository
             return result;
         }
 
-        public async Task<IQueryable<Team>> GetAll()
+        public IQueryable<Team> GetAll()
         {
             return _dbContext.Team;
         }
