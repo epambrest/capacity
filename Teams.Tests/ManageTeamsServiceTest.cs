@@ -15,20 +15,19 @@ namespace Teams.Tests
     [TestFixture]
     class ManageTeamsServiceTest
     {
-        private IManageTeamsService _mangeTeamsService;
-        private ICurrentUser _currentUser;
-        private Mock<ApplicationDbContext> _db;
+        public IManageTeamsService _mangeTeamsService;
+        public ICurrentUser _currentUser;
+        public Mock<IRepository<Team, int>> _teamRepository;
+        public Mock<IRepository<TeamMember, int>> _teamMemberRepository;
         private Mock<IHttpContextAccessor> _httpContextAccessor;
         [SetUp]
         public void Setup()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .Options;
             _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _currentUser = new CurrentUser(_httpContextAccessor.Object);
-            _db = new Mock<ApplicationDbContext>(options);
-            _mangeTeamsService = new ManageTeamsService(_currentUser, _db.Object);
-            
+            _teamRepository = new Mock<IRepository<Team, int>>();
+            _teamMemberRepository = new Mock<IRepository<TeamMember, int>>();
+            _currentUser = new  CurrentUser(_httpContextAccessor.Object);
+            _mangeTeamsService = new ManageTeamsService(_currentUser, _teamRepository.Object, _teamMemberRepository.Object);
         }
         [Test]
         public void GetMyTeams_ManageTeamsServiceReturnsListCount4_ListCount4()
@@ -43,21 +42,26 @@ namespace Teams.Tests
                  new Team { Id= 9, TeamOwner = "def-abc", TeamName = "Team9"},
             };
             _httpContextAccessor.Setup(x => x.HttpContext.User.FindFirst(It.IsAny<string>()))
-               .Returns(new Claim("name", id));
-            //_currentUser.Setup(x => x.Current.Id()).Returns(id);
-            _db.Setup(x => x.Team.ToList<Team>()).Returns(GetTestTeams());
-            _db.Setup(x => x.TeamMembers.ToArray<TeamMember>()).Returns(GetTestTeamMembers());
+                .Returns(new Claim("name", id));
+            _httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(true);
+            _teamRepository.Setup(x => x.GetAll()).Returns(GetTestTeams());
+            _teamMemberRepository.Setup(x => x.GetAll()).Returns(GetTestTeamMembers());
 
             //Act
-            List<Team> result = new List<Team>( _mangeTeamsService.GetMyTeams());
+            List<Team> result = new List<Team>(_mangeTeamsService.GetMyTeams());
 
             //Assert
-            Assert.AreEqual(result, myteams);
+            bool compare = true;
+            for(int i =0; i< result.Count(); i++)
+            {
+                if (myteams[i].Id != result[i].Id) compare = false;
+            }
+            Assert.IsTrue(compare);
 
         }
-        private List<Team> GetTestTeams()
+        private IQueryable<Team> GetTestTeams()
         {
-            List<Team> teams = new List<Team>
+            var teams = new List<Team>
             {
                 new Team { Id= 1, TeamOwner = "abc-def", TeamName = "Team1"},
                 new Team { Id= 2, TeamOwner = "def-abc", TeamName = "Team2"},
@@ -70,11 +74,12 @@ namespace Teams.Tests
                 new Team { Id= 9, TeamOwner = "def-abc", TeamName = "Team9"},
                 new Team { Id= 10, TeamOwner = "def-abc", TeamName = "Team10"}
             };
-            return teams;
+            return teams.AsQueryable();
         }
-        private TeamMember[] GetTestTeamMembers()
+        private IQueryable<TeamMember> GetTestTeamMembers()
         {
-            TeamMember[] teammembers = new TeamMember[] {
+            var teammembers = new List<TeamMember> 
+            {
 
             new TeamMember { Id = 1, TeamId = 1, MemberId = "def-abc" },
             new TeamMember { Id = 2, TeamId = 2, MemberId = "abc-def" },
@@ -88,7 +93,7 @@ namespace Teams.Tests
             new TeamMember { Id = 10, TeamId = 10, MemberId = "cxz-zxc" }
         };
 
-            return teammembers;
+            return teammembers.AsQueryable();
         }
     }
 }

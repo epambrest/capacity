@@ -8,7 +8,7 @@ namespace Teams.Data
     public interface IRepository<T, K> where T : class
     {
         Task<T> GetByIdAsync (K id);
-        Task<IQueryable<T>> GetAll();
+        IQueryable<T> GetAll();
         Task<bool> InsertAsync(T entity);
         Task<bool> UpdateAsync(T entity);
         Task<bool> DeleteAsync(T entity);
