@@ -31,7 +31,7 @@ namespace Teams.Services
 
             foreach (var id in _teamMemberRepository.GetAll().Result.Where(id => id.MemberId == _currentUser.Current.Id()))
             {
-                foreach (var team in db.Team.ToList())
+                foreach (var team in _teamRepository.GetAll().Result)
                 {
                     if (id.TeamId == team.Id)
                     {
