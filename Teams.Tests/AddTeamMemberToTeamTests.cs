@@ -81,12 +81,11 @@ namespace Teams.Tests
             //Arrange
             string memberId = "1234";
             int teamId = 1;
+            int CountUserNow = 1;
             _httpContextAccessor.Setup(x => x.HttpContext.User.FindFirst(It.IsAny<string>()))
                .Returns(new Claim("UserName", memberId));
             _httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(true);
             teamRepository.InsertAsync(new Team { TeamName = "first team", TeamOwner = memberId });
-            teamMemberRepository.InsertAsync(new TeamMember { TeamId = teamId, MemberId = memberId });
-            int CountUserNow = 1;
             teamsMembersService.Add(teamId, memberId);
 
             //Act
