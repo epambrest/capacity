@@ -48,12 +48,12 @@ namespace Teams.Tests
         public void GetAll_TeamRepositoryReturnsListCount100_ListCount100()
         {
             //Arrange
-            context.Team.AddRange(GenerateData(101));
+            context.Team.AddRange(GenerateData(100));
             context.SaveChanges();
             teamRepository = new TeamRepository(context);
 
             //Act
-            var teams = teamRepository.GetAll().Result;
+            var teams = teamRepository.GetAll();
 
             //Assert
             Assert.AreEqual(context.Team.Count(), teams.Count());
@@ -64,12 +64,10 @@ namespace Teams.Tests
         public void GetAll_TeamRepositoryReturnsEmptyList_ReturnsEmpty()
         {
             //Arrange
-            context.Team.AddRange(GenerateData(0));
-            context.SaveChanges();
             teamRepository = new TeamRepository(context);
 
             //Act
-            var teams = teamRepository.GetAll().Result;
+            var teams = teamRepository.GetAll();
 
             //Assert
             Assert.IsEmpty(teams);
@@ -82,8 +80,8 @@ namespace Teams.Tests
         public void GetByIdAsync_TeamRepositoryReturnsTeamId1_ReturnsTeamId1()
         {
             //Arrange
-            context.Team.AddRange(GenerateData(100));
-            context.SaveChanges();
+            if (context.Team.Count() < 1)
+                context.Team.AddRange(GenerateData(100));
             teamRepository = new TeamRepository(context);
 
             //Act
@@ -98,8 +96,6 @@ namespace Teams.Tests
         public void GetByIdAsync_TeamRepositoryReturnsNull_ReturnsNull()
         {
             //Arrange
-            context.Team.AddRange(GenerateData(100));
-            context.SaveChanges();
             teamRepository = new TeamRepository(context);
 
             //Act
@@ -116,8 +112,6 @@ namespace Teams.Tests
         public void InsertAsync_TeamRepositoryReturnsTrue_ReturnsTrue()
         {
             //Arrange
-            context.Team.AddRange(GenerateData(100));
-            context.SaveChanges();
             teamRepository = new TeamRepository(context);
             Team team = new Team() { TeamName = "Name101", TeamOwner = "Owner101" };
 
@@ -135,7 +129,7 @@ namespace Teams.Tests
         public void DeleteAsync_TeamRepositoryReturnsTrue_ReturnsTrue()
         {
             //Arrange
-            context.Team.AddRange(GenerateData(100));
+            context.Team.AddRange(GenerateData(2));
             context.SaveChanges();
             teamRepository = new TeamRepository(context);
 
@@ -151,8 +145,6 @@ namespace Teams.Tests
         public void DeleteAsync_TeamRepositoryReturnsNull_ReturnsNull()
         {
             //Arrange
-            context.Team.AddRange(GenerateData(100));
-            context.SaveChanges();
             teamRepository = new TeamRepository(context);
 
             //Act&Assert
@@ -173,8 +165,11 @@ namespace Teams.Tests
         public void UpdateAsync_TeamRepositoryReturnsTrue_ReturnsTrue()
         {
             //Arrange
-            context.Team.AddRange(GenerateData(100));
-            context.SaveChanges();
+            if (context.Team.Count() < 1)
+            {
+                context.Team.AddRange(GenerateData(100));
+                context.SaveChanges();
+            }
             teamRepository = new TeamRepository(context);
 
             //Act
@@ -189,12 +184,10 @@ namespace Teams.Tests
         public void UpdateAsync_TeamRepositoryReturnsFalse_ReturnsFalse()
         {
             //Arrange
-            context.Team.AddRange(GenerateData(100));
-            context.SaveChanges();
             teamRepository = new TeamRepository(context);
 
             //Act
-            var result = teamRepository.UpdateAsync(new Team() { Id = 100, TeamName = "1Name", TeamOwner = "1Onwer" }).Result;
+            var result = teamRepository.UpdateAsync(new Team() { Id = 101, TeamName = "1Name", TeamOwner = "1Onwer" }).Result;
 
             //Assert
             Assert.IsFalse(result);
