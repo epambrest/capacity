@@ -10,6 +10,8 @@ using System.Security.Claims;
 using Teams.Services;
 using Microsoft.EntityFrameworkCore;
 using Teams.Repository;
+using System;
+using System.Threading.Tasks;
 
 namespace Teams.Tests
 {
@@ -17,24 +19,27 @@ namespace Teams.Tests
     class ManageTeamsServiceTest
     {
         private ManageTeamsService manageTeamsService;
-        public Mock<TeamRepository> teamRepository;
-        public Mock<CurrentUser> currentUser;
-        private Mock<HttpContextAccessor> httpContextAccessor;
+        private IRepository<Team, int> testTeamRepo;
+        private Mock<ICurrentUser> currentUserMock;
+        ApplicationDbContext dbContext;
+
         [SetUp]
         public void Setup()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(databaseName:"TeamCapacity").Options;
-            teamRepository = new Mock<TeamRepository>();
-            httpContextAccessor = new Mock<HttpContextAccessor>();
-            currentUser = new Mock<CurrentUser>();
-            manageTeamsService = new ManageTeamsService(currentUser.Object, teamRepository.Object);
+            currentUserMock =  new Mock<ICurrentUser>();
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(databaseName: "TestDB").Options;
+            dbContext = new ApplicationDbContext(options);
+            testTeamRepo = new TeamRepository(dbContext);
+            string ownerId = Guid.NewGuid().ToString();
+            var userDetails = new Mock<UserDetails>(null);
+            userDetails.Setup(x => x.Id()).Returns(ownerId);
+            currentUserMock.SetupGet(x => x.Current).Returns(userDetails.Object);
+            manageTeamsService = new ManageTeamsService(currentUserMock.Object, testTeamRepo);
         }
         [Test]
-        public void AddTeamWithEmptyName()
+        public void AddTeamAsync_AddTeamWithEmptyName_ReturnsFalse()
         {
             //Arrange
-            httpContextAccessor.Setup(x => x.HttpContext.User.FindFirst(It.IsAny<string>())).Returns(new Claim("name", "abc-def"));
-            httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(true);
             string teamName = "";
             //Act
             bool isValid = manageTeamsService.AddTeamAsync(teamName).Result;
@@ -42,35 +47,35 @@ namespace Teams.Tests
             Assert.AreEqual(false, isValid);
         }
         [Test]
-        public void AddTeamWithIllegalName()
+        public void AddTeamAsync_AddTeamWithIllegalName_ReturnsFalse()
         {
             //Arrange
             string teamName = "alex wins:";
-            httpContextAccessor.Setup(x => x.HttpContext.User.Identity.Name).Returns("Max");
-            httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(true);
             //Act
             bool isValid = manageTeamsService.AddTeamAsync(teamName).Result;
             //Assert
             Assert.AreEqual(false, isValid);
         }
         [Test]
-        public void AddTeamWithLegalName()
+        public void AddTeamAsync_AddTeamWithLegalName_ReturnsTrue()
         {
             //Arrange
-            string teamName = "Juventus_FC";
+            string teamName = "Legal_Team.";
             //Act
             bool isValid = manageTeamsService.AddTeamAsync(teamName).Result;
             //Assert
             Assert.AreEqual(true, isValid);
         }
-        public void AddTeamWithExistingName()
+        [Test]
+        public async Task AddTeamAsync_AddTeamWithExistingName_ReturnsFalseAsync()
         {
             //Arrange
-            string teamName = "Juventus_FC";
+            string teamName = "Su_per-Team.,";
             //Act
+            await manageTeamsService.AddTeamAsync(teamName);
             bool isValid = manageTeamsService.AddTeamAsync(teamName).Result;
             //Assert
-            Assert.AreEqual(true, isValid);
+            Assert.AreEqual(false, isValid);
         }
     }
 }
