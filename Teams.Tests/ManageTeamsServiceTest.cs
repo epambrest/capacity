@@ -15,17 +15,19 @@ namespace Teams.Tests
     class ManageTeamsServiceTest
     {
         public IManageTeamsService _mangeTeamsService;
+
         public Mock<IRepository<Team, int>> _teamRepository;
-        public Mock<IRepository<TeamMember, int>> _teamMemberRepository;
+
         public Mock<ICurrentUser> _currentUser;
         
         [SetUp]
         public void Setup()
         {
             _teamRepository = new Mock<IRepository<Team, int>>();
-            _teamMemberRepository = new Mock<IRepository<TeamMember, int>>();
+
             _currentUser = new Mock<ICurrentUser>();
-            _mangeTeamsService = new ManageTeamsService(_currentUser.Object, _teamRepository.Object, _teamMemberRepository.Object);
+
+            _mangeTeamsService = new ManageTeamsService(_currentUser.Object, _teamRepository.Object);
             
         }
 
@@ -34,67 +36,62 @@ namespace Teams.Tests
         {
             //Arrange
             string id = "abc-def";
-            List<Team> myteams = new List<Team>
+            var myteams = new List<Team>
             {
                  new Team { Id= 1, TeamOwner = "abc-def", TeamName = "Team1"},
                  new Team { Id= 4, TeamOwner = "abc-def", TeamName = "Team4"},
                  new Team { Id= 2, TeamOwner = "def-abc", TeamName = "Team2"},
                  new Team { Id= 9, TeamOwner = "def-abc", TeamName = "Team9"},
+                 
             };
 
             _teamRepository.Setup(x => x.GetAll()).Returns(GetTestTeams());
-            _teamMemberRepository.Setup(x => x.GetAll()).Returns(GetTestTeamMembers());
-            _currentUser.Setup(x => x.Current.Id()).Returns(id);
-                
+            var ud = new Mock<UserDetails>(null);
+            ud.Setup(x => x.Id()).Returns(id);
+            ud.Setup(x => x.Name()).Returns("name");
+            _currentUser.SetupGet(x => x.Current).Returns(ud.Object);
+
 
             //Act
-            List <Team> result = new List<Team>(_mangeTeamsService.GetMyTeams());
+            var result = new List<Team>(_mangeTeamsService.GetMyTeams());
 
             //Assert
-            bool compare = true;
-            for (int i = 0; i < result.Count(); i++)
-            {
-                if (myteams[i].Id != result[i].Id) compare = false;
-            }
-            Assert.IsTrue(compare);
-
+            Assert.AreEqual(myteams.Count(), result.Count());
+            Assert.AreEqual(1, result[0].Id);
+            Assert.AreEqual(4, result[1].Id);
+            Assert.AreEqual(2, result[2].Id);
+            Assert.AreEqual(9, result[3].Id);
         }
 
         private IQueryable<Team> GetTestTeams()
         {
+            var members1 = new List<TeamMember>{new TeamMember {MemberId="def-abc", TeamId =1}};
+
+            var members2 = new List<TeamMember>{new TeamMember {MemberId="abc-def", TeamId =2}};
+
+            var members4 = new List<TeamMember>{new TeamMember {MemberId="abc-def", TeamId =4}};
+
+            var members9 = new List<TeamMember>{new TeamMember {MemberId="abc-def", TeamId =9}};
+
+            var members7 = new List<TeamMember>{new TeamMember {MemberId="abc-defa", TeamId =7}};
+            
+            var samemember = new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}};
+            
             var teams = new List<Team>
             {
-                new Team { Id= 1, TeamOwner = "abc-def", TeamName = "Team1"},
-                new Team { Id= 2, TeamOwner = "def-abc", TeamName = "Team2"},
-                new Team { Id= 3, TeamOwner = "def-abc", TeamName = "Team3"},
-                new Team { Id= 4, TeamOwner = "abc-def", TeamName = "Team4"},
-                new Team { Id= 5, TeamOwner = "def-abc", TeamName = "Team5"},
-                new Team { Id= 6, TeamOwner = "def-abc", TeamName = "Team6"},
-                new Team { Id= 7, TeamOwner = "def-abc", TeamName = "Team7"},
-                new Team { Id= 8, TeamOwner = "def-abc", TeamName = "Team8"},
-                new Team { Id= 9, TeamOwner = "def-abc", TeamName = "Team9"},
-                new Team { Id= 10, TeamOwner = "def-abc", TeamName = "Team10"}
+                new Team { Id= 1, TeamOwner = "abc-def", TeamName = "Team1", TeamMembers=members1},
+                new Team { Id= 2, TeamOwner = "def-abc", TeamName = "Team2", TeamMembers=members2},
+                new Team { Id= 3, TeamOwner = "def-abc", TeamName = "Team3", TeamMembers=samemember},
+                new Team { Id= 4, TeamOwner = "abc-def", TeamName = "Team4", TeamMembers=members4},
+                new Team { Id= 5, TeamOwner = "def-abc", TeamName = "Team5", TeamMembers=samemember},
+                new Team { Id= 6, TeamOwner = "def-abc", TeamName = "Team6", TeamMembers=samemember},
+                new Team { Id= 7, TeamOwner = "def-abc", TeamName = "Team7", TeamMembers=members7},
+                new Team { Id= 8, TeamOwner = "def-abc", TeamName = "Team8", TeamMembers=samemember},
+                new Team { Id= 9, TeamOwner = "def-abc", TeamName = "Team9", TeamMembers=members9},
+                new Team { Id= 10, TeamOwner = "def-abc", TeamName = "Team10", TeamMembers=samemember}
             };
 
             return teams.AsQueryable();
-        }
-        private IQueryable<TeamMember> GetTestTeamMembers()
-        {
-            var teammembers = new List<TeamMember>
-            {
-            new TeamMember { Id = 1, TeamId = 1, MemberId = "def-abc" },
-            new TeamMember { Id = 2, TeamId = 2, MemberId = "abc-def" },
-            new TeamMember { Id = 3, TeamId = 3, MemberId = "zxc-cxz" },
-            new TeamMember { Id = 4, TeamId = 4, MemberId = "def-abc" },
-            new TeamMember { Id = 5, TeamId = 5, MemberId = "cxz-zxc" },
-            new TeamMember { Id = 6, TeamId = 6, MemberId = "zxc-cxz" },
-            new TeamMember { Id = 7, TeamId = 7, MemberId = "cxz-zxc" },
-            new TeamMember { Id = 8, TeamId = 8, MemberId = "zxc-cxz" },
-            new TeamMember { Id = 9, TeamId = 9, MemberId = "abc-def" },
-            new TeamMember { Id = 10, TeamId = 10, MemberId = "cxz-zxc" }
-            };
-
-            return teammembers.AsQueryable();
         }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Teams.Models;
 
    public interface IManageTeamsService
     {
-        public List<Team> GetMyTeams();
+        public IEnumerable<Team> GetMyTeams();
     }
 
