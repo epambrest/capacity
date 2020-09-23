@@ -45,11 +45,10 @@ namespace Teams.Tests
 
             #region GetAll
             [Test]
-            public void GetAll_TeamRepositoryReturnsListCount100_ListCount100()
+            public void GetAll_TeamMemberRepositoryReturnsListCount100_ListCount100()
             {
                 //Arrange
                 context.TeamMembers.AddRange(GenerateData(100));
-                context.SaveChanges();
                 teamMemberRepository = new TeamMemberRepository(context);
 
                 //Act
@@ -57,11 +56,11 @@ namespace Teams.Tests
 
                 //Assert
                 Assert.AreEqual(context.TeamMembers.Count(), teamMembers.Count());
-
+                context.TeamMembers.RemoveRange(context.TeamMembers);
             }
 
             [Test]
-            public void GetAll_TeamRepositoryReturnsEmptyList_ReturnsEmpty()
+            public void GetAll_TeamMemberRepositoryReturnsEmptyList_ReturnsEmpty()
             {
                 //Arrange
                 teamMemberRepository = new TeamMemberRepository(context);
@@ -77,11 +76,10 @@ namespace Teams.Tests
 
             #region GetByIdAsync
             [Test]
-            public void GetByIdAsync_TeamRepositoryReturnsTeamId1_ReturnsTeamId1()
+            public void GetByIdAsync_TeamMemberRepositoryReturnsTeamId1_ReturnsTeamId1()
             {
                 //Arrange
-                if (context.TeamMembers.Count() < 1)
-                    context.TeamMembers.AddRange(GenerateData(100));
+                context.TeamMembers.AddRange(GenerateData(100));
                 teamMemberRepository = new TeamMemberRepository(context);
 
                 //Act
@@ -89,7 +87,7 @@ namespace Teams.Tests
 
                 //Assert
                 Assert.AreEqual(1, team.Id);
-
+                context.TeamMembers.RemoveRange(context.TeamMembers);
             }
 
             [Test]
@@ -120,7 +118,8 @@ namespace Teams.Tests
 
                 //Assert
                 Assert.IsTrue(result);
-
+                context.TeamMembers.RemoveRange(context.TeamMembers);
+                context.SaveChanges();
             }
             #endregion
 
@@ -164,11 +163,8 @@ namespace Teams.Tests
             public void UpdateAsync_TeamRepositoryReturnsTrue_ReturnsTrue()
             {
                 //Arrange
-                if (context.TeamMembers.Count() < 1)
-                {
-                    context.TeamMembers.AddRange(GenerateData(3));
-                    context.SaveChanges();
-                }
+                context.TeamMembers.AddRange(GenerateData(3));
+                context.SaveChanges();
                 teamMemberRepository = new TeamMemberRepository(context);
 
                 //Act
@@ -176,7 +172,7 @@ namespace Teams.Tests
 
                 //Assert
                 Assert.IsTrue(result);
-
+                context.TeamMembers.RemoveRange(context.TeamMembers);
             }
 
             [Test]
