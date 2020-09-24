@@ -47,52 +47,31 @@ namespace Teams.Tests
                .Returns(new Claim("UserName", memberId));
             _httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(true);
             teamRepository.InsertAsync(new Team { TeamName = "first team", TeamOwner = memberId });
-            teamsMembersService.Add(teamId, memberId);
 
             //Act
-            bool userExists = teamMemberRepository.GetAll().AnyAsync(x => x.MemberId == memberId).Result;
+            bool result = teamsMembersService.Add(teamId, memberId).Result;
 
             //Assert
-            Assert.IsTrue(userExists);
+            Assert.IsTrue(result);
         }
 
-
         [Test]
-        public void AddMember_UserAuthorizeReturnFalse_ReturnThrownAuthenticationError()
+        public void AddMember_teamsMembersServiceAddMemberReturnFalse_ReturnFalse()
         {
 
             //Arrange
             string memberId = "1234";
             int teamId = 1;
-            _httpContextAccessor.Setup(x => x.HttpContext.User.FindFirst(It.IsAny<string>()))
-               .Returns(new Claim("UserName", memberId));
-            _httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(false);
-            teamRepository.InsertAsync(new Team { TeamName = "first team", TeamOwner = memberId });
-
-            // Act & Assert
-            Assert.Throws<AuthenticationException>(() => teamsMembersService.Add(teamId, memberId));
-        }
-
-
-        [Test]
-        public void AddMember_UserAlreadyInTeamReturnTrue_ReturnTrue()
-        {
-
-            //Arrange
-            string memberId = "1234";
-            int teamId = 1;
-            int CountUserNow = 1;
             _httpContextAccessor.Setup(x => x.HttpContext.User.FindFirst(It.IsAny<string>()))
                .Returns(new Claim("UserName", memberId));
             _httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(true);
-            teamRepository.InsertAsync(new Team { TeamName = "first team", TeamOwner = memberId });
-            teamsMembersService.Add(teamId, memberId);
+            teamRepository.InsertAsync(new Team { TeamName = "first team", TeamOwner = "1111" });
 
             //Act
-            int countUserAfterAdd = teamMemberRepository.GetAll().CountAsync().Result;
+            bool result = teamsMembersService.Add(teamId, memberId).Result;
 
             //Assert
-            Assert.AreEqual(CountUserNow, countUserAfterAdd);
+            Assert.IsFalse(result);
         }
 
     }

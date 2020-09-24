@@ -1,7 +1,9 @@
-﻿namespace Teams.Services
+﻿using System.Threading.Tasks;
+
+namespace Teams.Services
 {
     public interface IManageTeamsMembersService
     {
-        public void Add(int team_id, string member_id);
+        Task<bool> Add(int team_id, string member_id);
     }
 }

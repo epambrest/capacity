@@ -4,6 +4,7 @@ using System.Linq;
 using Teams.Services;
 using Teams.Security;
 using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace Teams.Services
 {
@@ -21,14 +22,15 @@ namespace Teams.Services
         }
 
         [Authorize]
-        public void Add(int team_id, string member_id)
+        public async Task<bool> Add(int team_id, string member_id)
         {
             Team team = _teamRepository.GetByIdAsync(team_id).Result;
             if (team.TeamOwner == _currentUser.Current.Id() && !AlreadyInTeam(team_id, member_id))
             {
                 TeamMember member = new TeamMember { TeamId = team_id, MemberId = member_id };
-                _memberRepository.InsertAsync(member);
+                return await _memberRepository.InsertAsync(member);
             }
+            return false;
         }
 
         private bool AlreadyInTeam(int team_id, string member_id)
