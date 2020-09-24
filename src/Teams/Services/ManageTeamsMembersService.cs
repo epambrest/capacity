@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Teams.Data;
 using Teams.Models;
 using Teams.Security;
@@ -17,14 +18,13 @@ namespace Teams.Services
             _teamRepository = teamRepository;
             _memberRepository = memberRepository;
         }
-        public bool Remove(int team_id, string member_id)
+        public async Task<bool> Remove(int team_id, string member_id)
         {
             Team team = _teamRepository.GetByIdAsync(team_id).Result;
             TeamMember member;
             if (team.TeamOwner == _currentUser.Current.Id() && (member = MemberInTeam(team_id,member_id)) != null)
-            {
-                _memberRepository.DeleteAsync(member);
-                return true;
+            {                
+                return await _memberRepository.DeleteAsync(member);
             }
             return false;
         }
