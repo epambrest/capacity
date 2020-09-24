@@ -56,7 +56,6 @@ namespace Teams.Tests
 
             //Assert
             Assert.AreEqual(context.Team.Count(), teams.Count());
-            context.Team.RemoveRange(context.Team);
         }
 
         [Test]
@@ -87,7 +86,6 @@ namespace Teams.Tests
 
             //Assert
             Assert.AreEqual(1, team.Id);
-            context.Team.RemoveRange(context.Team);
         }
 
         [Test]
@@ -118,8 +116,6 @@ namespace Teams.Tests
 
             //Assert
             Assert.IsTrue(result);
-            context.Team.RemoveRange(context.Team);
-            context.SaveChanges();
         }
         #endregion
 
@@ -128,7 +124,7 @@ namespace Teams.Tests
         public void DeleteAsync_TeamRepositoryReturnsTrue_ReturnsTrue()
         {
             //Arrange
-            context.Team.AddRange(GenerateData(2));
+            context.Team.Add(new Team { TeamOwner = "Owner1", TeamName = "Team1" });
             context.SaveChanges();
             teamRepository = new TeamRepository(context);
 
@@ -164,7 +160,7 @@ namespace Teams.Tests
         public void UpdateAsync_TeamRepositoryReturnsTrue_ReturnsTrue()
         {
             //Arrange
-            context.Team.AddRange(GenerateData(100));
+            context.Team.Add(new Team { Id=1,TeamOwner = "Owner1", TeamName = "Team1" });
             context.SaveChanges();
             teamRepository = new TeamRepository(context);
 
@@ -173,7 +169,6 @@ namespace Teams.Tests
 
             //Assert
             Assert.IsTrue(result);
-            context.Team.RemoveRange(context.Team);
         }
 
         [Test]

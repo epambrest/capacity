@@ -24,9 +24,8 @@ namespace Teams.Tests
                 var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: "TeamMemberListDatabase")
                 .Options;
-
+                
                 context = new ApplicationDbContext(options);
-
             }
 
             private IQueryable<TeamMember> GenerateData(int num)
@@ -56,7 +55,6 @@ namespace Teams.Tests
 
                 //Assert
                 Assert.AreEqual(context.TeamMembers.Count(), teamMembers.Count());
-                context.TeamMembers.RemoveRange(context.TeamMembers);
             }
 
             [Test]
@@ -87,7 +85,6 @@ namespace Teams.Tests
 
                 //Assert
                 Assert.AreEqual(1, team.Id);
-                context.TeamMembers.RemoveRange(context.TeamMembers);
             }
 
             [Test]
@@ -118,8 +115,6 @@ namespace Teams.Tests
 
                 //Assert
                 Assert.IsTrue(result);
-                context.TeamMembers.RemoveRange(context.TeamMembers);
-                context.SaveChanges();
             }
             #endregion
 
@@ -163,7 +158,7 @@ namespace Teams.Tests
             public void UpdateAsync_TeamRepositoryReturnsTrue_ReturnsTrue()
             {
                 //Arrange
-                context.TeamMembers.AddRange(GenerateData(3));
+                context.TeamMembers.Add(new TeamMember { MemberId = "2" });
                 context.SaveChanges();
                 teamMemberRepository = new TeamMemberRepository(context);
 
@@ -172,7 +167,7 @@ namespace Teams.Tests
 
                 //Assert
                 Assert.IsTrue(result);
-                context.TeamMembers.RemoveRange(context.TeamMembers);
+                
             }
 
             [Test]
