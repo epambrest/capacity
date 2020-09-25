@@ -35,7 +35,7 @@ namespace Teams.Tests
         public void GetMyTeams_ManageTeamsServiceReturnsListCount4_ListCount4()
         {
             //Arrange
-           const string id = "abc-def";
+            const string id = "abc-def";
             var teams = new List<Team>
             {
                 new Team { Id= 1, TeamOwner = "abc-def", TeamName = "Team1", TeamMembers=new List<TeamMember>{new TeamMember {MemberId="def-abc", TeamId =1}}},
