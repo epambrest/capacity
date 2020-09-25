@@ -35,6 +35,7 @@ namespace Teams.Tests
         public void GetMyTeams_ManageTeamsServiceReturnsListCount4_ListCount4()
         {
             //Arrange
+           const string id = "abc-def";
             var teams = new List<Team>
             {
                 new Team { Id= 1, TeamOwner = "abc-def", TeamName = "Team1", TeamMembers=new List<TeamMember>{new TeamMember {MemberId="def-abc", TeamId =1}}},
@@ -51,7 +52,7 @@ namespace Teams.Tests
 
             _teamRepository.Setup(x => x.GetAll()).Returns(teams.AsQueryable());
             var ud = new Mock<UserDetails>(null);
-            ud.Setup(x => x.Id()).Returns("abc - def");
+            ud.Setup(x => x.Id()).Returns(id);
             ud.Setup(x => x.Name()).Returns("name");
             _currentUser.SetupGet(x => x.Current).Returns(ud.Object);
 
