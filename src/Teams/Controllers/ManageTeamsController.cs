@@ -13,11 +13,11 @@ namespace Teams.Controllers
 {
     public class ManageTeamsController : Controller
     {
-        private readonly IManageTeamsService _teamsService;
+        private readonly IManageTeamsService _manageTeamsService;
 
-        public ManageTeamsController(IManageTeamsService teamsService)
+        public ManageTeamsController(IManageTeamsService manageTeamsService)
         {
-            _teamsService = teamsService;
+            _manageTeamsService = manageTeamsService;
         }
 
         public IActionResult Index()
@@ -28,7 +28,7 @@ namespace Teams.Controllers
         [Authorize]
         public IActionResult GetMyTeams()
         {
-            return View(_teamsService.GetMyTeams());
+            return View(_manageTeamsService.GetMyTeams());
         }
 
         public IActionResult Privacy()
