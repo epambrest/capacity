@@ -21,11 +21,10 @@ namespace Teams.Services
             _memberRepository = memberRepository;
         }
 
-        [Authorize]
-        public async Task<bool> Add(int team_id, string member_id)
+        public async Task<bool> AddAsync(int team_id, string member_id)
         {
-            Team team = _teamRepository.GetByIdAsync(team_id).Result;
-            if (team.TeamOwner == _currentUser.Current.Id() && !AlreadyInTeam(team_id, member_id))
+            Team team = await _teamRepository.GetByIdAsync(team_id);
+            if (team != null && team.TeamOwner == _currentUser.Current.Id() && !AlreadyInTeam(team_id, member_id))
             {
                 TeamMember member = new TeamMember { TeamId = team_id, MemberId = member_id };
                 return await _memberRepository.InsertAsync(member);

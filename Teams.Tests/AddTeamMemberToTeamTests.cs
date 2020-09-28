@@ -36,6 +36,7 @@ namespace Teams.Tests
             teamsMembersService = new ManageTeamsMembersService(teamRepository, teamMemberRepository, _currentUser);
         }
 
+
         [Test]
         public void AddMember_teamsMembersServiceAddMemberReturnTrue_ReturnTrue()
         {
@@ -49,7 +50,7 @@ namespace Teams.Tests
             teamRepository.InsertAsync(new Team { TeamName = "first team", TeamOwner = memberId });
 
             //Act
-            bool result = teamsMembersService.Add(teamId, memberId).Result;
+            bool result = teamsMembersService.AddAsync(teamId, memberId).Result;
 
             //Assert
             Assert.IsTrue(result);
@@ -60,15 +61,14 @@ namespace Teams.Tests
         {
 
             //Arrange
-            string memberId = "1234";
+            string memberId = "1111";
             int teamId = 1;
             _httpContextAccessor.Setup(x => x.HttpContext.User.FindFirst(It.IsAny<string>()))
                .Returns(new Claim("UserName", memberId));
             _httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(true);
-            teamRepository.InsertAsync(new Team { TeamName = "first team", TeamOwner = "1111" });
 
             //Act
-            bool result = teamsMembersService.Add(teamId, memberId).Result;
+            bool result = teamsMembersService.AddAsync(teamId, memberId).Result;
 
             //Assert
             Assert.IsFalse(result);
