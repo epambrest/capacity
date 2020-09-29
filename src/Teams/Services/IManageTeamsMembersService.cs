@@ -5,6 +5,6 @@ namespace Teams.Services
 {
     public interface IManageTeamsMembersService
     {
-        public TeamMember GetMember(int team_id, string member_id);
+        public Task<TeamMember> GetMemberAsync(int team_id, string member_id);
     }
 }

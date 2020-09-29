@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Teams.Models;
@@ -10,19 +12,34 @@ namespace Teams.Controllers
     {
         private readonly IManageTeamsMembersService _manageTeamsMembersService;
 
-        public ManageTeamMembersController(IManageTeamsMembersService manageTeamsMembersService)
+        private readonly IAccessCheckService _accessCheckService;
+
+        public ManageTeamMembersController(IManageTeamsMembersService manageTeamsMembersService, IAccessCheckService accessCheckService)
         {
             _manageTeamsMembersService = manageTeamsMembersService;
+
+            _accessCheckService = accessCheckService;
         }
         public IActionResult Index()
         {
             return View();
         }
 
-        [Authorize, NonAction]
-        public TeamMember GetMember(int team_id, string member_id)
+        public IActionResult UserSaw()
         {
-            return _manageTeamsMembersService.GetMember(team_id, member_id);
+            var memberlist = new List<TeamMember>();
+            memberlist.Add(GetMemberAsync(8, "475122a9-d83c-45bd-a795-341ff4ddc721").Result);
+            return View(memberlist);
+        }
+
+        [Authorize, NonAction]
+        public async Task<TeamMember> GetMemberAsync(int team_id, string member_id)
+        {
+            if (!_accessCheckService.OwnerOrMemberAsync(team_id).Result)
+            {
+                return null;
+            }
+            else return await _manageTeamsMembersService.GetMemberAsync(team_id, member_id);
         }
 
         public IActionResult Privacy()

@@ -1,0 +1,11 @@
+﻿@model IEnumerable<Teams.Models.TeamMember>
+@{
+    ViewBag.Title = "User:";
+}
+<table class="table">
+    <tr><td>Id</td><td>MemberId</td><td>TeamId</td></tr>
+    @foreach (var item in Model)
+    {
+        <tr><td>@item.Id</td><td>@item.MemberId</td><td>@item.TeamId</td></tr>
+    }
+</table>
