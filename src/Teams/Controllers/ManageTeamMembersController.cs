@@ -25,13 +25,6 @@ namespace Teams.Controllers
             return View();
         }
 
-        public IActionResult UserSaw()
-        {
-            var memberlist = new List<TeamMember>();
-            memberlist.Add(GetMemberAsync(8, "475122a9-d83c-45bd-a795-341ff4ddc721").Result);
-            return View(memberlist);
-        }
-
         [Authorize, NonAction]
         public async Task<TeamMember> GetMemberAsync(int team_id, string member_id)
         {

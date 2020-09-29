@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -33,7 +34,8 @@ namespace Teams.Tests
             const int team_id = 4;
             const string member_id = "def-abc";
 
-            _teamMemberRepository.Setup(x => x.GetAll()).Returns(GetFakeDbTeamMembers().AsQueryable());
+            var mock = GetFakeDbTeamMembers().AsQueryable().BuildMock();
+            _teamMemberRepository.Setup(x => x.GetAll()).Returns(mock.Object);
 
             //Act
             var result = _manageTeamsMembersService.GetMemberAsync(team_id, member_id).Result;
@@ -52,7 +54,8 @@ namespace Teams.Tests
             const string member_id = "def-abc";
             const string member_id_eror = "eror-id";
 
-            _teamMemberRepository.Setup(x => x.GetAll()).Returns(GetFakeDbTeamMembers().AsQueryable());
+            var mock = GetFakeDbTeamMembers().AsQueryable().BuildMock();
+            _teamMemberRepository.Setup(x => x.GetAll()).Returns(mock.Object);
 
             //Act
             var result1 = _manageTeamsMembersService.GetMemberAsync(team_id, member_id_eror).Result;

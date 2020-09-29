@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using MockQueryable.Moq;
+using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -55,7 +56,8 @@ namespace Teams.Tests
                 new Team { Id= 10, TeamOwner = "def-abc", TeamName = "Team10", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv", TeamId = 10 }}}
             };
 
-            _teamRepository.Setup(x => x.GetAll()).Returns(teams.AsQueryable());
+            var mock = teams.AsQueryable().BuildMock();
+            _teamRepository.Setup(x => x.GetAll()).Returns(mock.Object);
 
             var ud = new Mock<UserDetails>(null);
             ud.Setup(x => x.Id()).Returns(id);
@@ -63,18 +65,14 @@ namespace Teams.Tests
             _currentUser.SetupGet(x => x.Current).Returns(ud.Object);
 
             //Act
-            var result1 =_accessCheckService.OwnerOrMemberAsync(team_id1);        //Owner
-            var result2 =_accessCheckService.OwnerOrMemberAsync(team_id2);       //Member
-            var result3 = _accessCheckService.OwnerOrMemberAsync(team_id3);       //Not Owner or member
+            var result1 =_accessCheckService.OwnerOrMemberAsync(team_id1).Result;        //Owner
+            var result2 =_accessCheckService.OwnerOrMemberAsync(team_id2).Result;       //Member
+            var result3 = _accessCheckService.OwnerOrMemberAsync(team_id3).Result;       //Not Owner or member
 
             //Assert
             Assert.AreEqual(true, result1);
             Assert.AreEqual(true, result2);
             Assert.AreEqual(false, result3);
-        }
-        private async Task<bool> GetResultAsync(int team_id)
-        {
-            return await _accessCheckService.OwnerOrMemberAsync(team_id);
         }
     }
 }
