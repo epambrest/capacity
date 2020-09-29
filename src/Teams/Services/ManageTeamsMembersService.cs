@@ -27,7 +27,7 @@ namespace Teams.Services
 
         public  TeamMember GetMember(int team_id, string member_id)
         {
-           return _teamMemberRepository.GetAll().Where(x => x.MemberId == member_id && x.TeamId == team_id && OwnerOrMemberOfTeam(team_id)).First();
+           return _teamMemberRepository.GetAll().Where(x => x.MemberId == member_id && x.TeamId == team_id && OwnerOrMemberOfTeam(team_id)).FirstOrDefault();
         }
 
         private bool OwnerOrMemberOfTeam(int team_id)
