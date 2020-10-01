@@ -23,7 +23,7 @@ namespace Teams.Services
 
         public async Task<bool> AddTeamAsync(string teamName)
         {
-            if (Regex.IsMatch(teamName, "^[a-zA-Z0-9-_,.]+$") && !_teamRepository.GetAll().Any(t => t.TeamName.Equals(teamName)))
+            if (Regex.IsMatch(teamName, ("^[a-zA-Z0-9-_,.]+$")) && !_teamRepository.GetAll().Any(t => t.TeamName.ToUpper().Equals(teamName.ToUpper())))
             {
                 await _teamRepository.InsertAsync(new Team { TeamOwner = _currentUser.Current.Id(), TeamName = teamName });
                 return true;
