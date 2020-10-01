@@ -19,22 +19,20 @@ namespace Teams.Tests
     class ManageTeamsServiceTest
     {
         private ManageTeamsService manageTeamsService;
-        private IRepository<Team, int> testTeamRepo;
+        private Mock <IRepository<Team, int>> testTeamRepo;
         private Mock<ICurrentUser> currentUserMock;
-        ApplicationDbContext dbContext;
 
         [SetUp]
         public void Setup()
         {
             currentUserMock =  new Mock<ICurrentUser>();
             var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(databaseName: "TestDB").Options;
-            dbContext = new ApplicationDbContext(options);
-            testTeamRepo = new TeamRepository(dbContext);
+            testTeamRepo = new Mock<IRepository<Team, int>>();
             string ownerId = Guid.NewGuid().ToString();
             var userDetails = new Mock<UserDetails>(null);
             userDetails.Setup(x => x.Id()).Returns(ownerId);
             currentUserMock.SetupGet(x => x.Current).Returns(userDetails.Object);
-            manageTeamsService = new ManageTeamsService(currentUserMock.Object, testTeamRepo);
+            manageTeamsService = new ManageTeamsService(currentUserMock.Object, testTeamRepo.Object);
         }
         [Test]
         public void AddTeamAsync_AddTeamWithEmptyName_ReturnsFalse()
@@ -71,8 +69,14 @@ namespace Teams.Tests
         {
             //Arrange
             string teamName = "Su_per-Team.,";
-            //Act
             await manageTeamsService.AddTeamAsync(teamName);
+            var existingTeams = new List<Team>
+            {
+                 new Team { Id= 1, TeamOwner = "1234", TeamName = teamName},
+
+            }.AsQueryable();
+            testTeamRepo.Setup(x => x.GetAll()).Returns(existingTeams);
+            //Act
             bool isValid = manageTeamsService.AddTeamAsync(teamName).Result;
             //Assert
             Assert.AreEqual(false, isValid);

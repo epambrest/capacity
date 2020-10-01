@@ -13,19 +13,19 @@ namespace Teams.Services
 {
     public class ManageTeamsService : IManageTeamsService
     {
-        public ICurrentUser _currentUser;
-        private readonly IRepository<Team,int> _repository;
+        private readonly ICurrentUser _currentUser;
+        private readonly IRepository<Team,int> _teamRepository;
         public ManageTeamsService(ICurrentUser currentUser, IRepository<Team, int> teamRepository)
         {
             _currentUser = currentUser;
-            _repository = teamRepository;
+            _teamRepository = teamRepository;
         }
 
         public async Task<bool> AddTeamAsync(string teamName)
         {
-            if (Regex.IsMatch(teamName, "^[a-zA-Z0-9-_,.]+$") && !_repository.GetAll().Result.Any(t => t.TeamName.Equals(teamName)))
+            if (Regex.IsMatch(teamName, "^[a-zA-Z0-9-_,.]+$") && !_teamRepository.GetAll().Any(t => t.TeamName.Equals(teamName)))
             {
-                await _repository.InsertAsync(new Team { TeamOwner = _currentUser.Current.Id(), TeamName = teamName });
+                await _teamRepository.InsertAsync(new Team { TeamOwner = _currentUser.Current.Id(), TeamName = teamName });
                 return true;
             }
 

@@ -53,7 +53,7 @@ namespace Teams.Tests
                 teamMemberRepository = new TeamMemberRepository(context);
 
                 //Act
-                var teamMembers = teamMemberRepository.GetAll().Result;
+                var teamMembers = teamMemberRepository.GetAll();
 
                 //Assert
                 Assert.AreEqual(context.TeamMembers.Count(), teamMembers.Count());
@@ -69,7 +69,7 @@ namespace Teams.Tests
                 teamMemberRepository = new TeamMemberRepository(context);
 
                 //Act
-                var teams = teamMemberRepository.GetAll().Result;
+                var teams = teamMemberRepository.GetAll();
 
                 //Assert
                 Assert.IsEmpty(teams);
