@@ -2,10 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Text;
 using Teams.Data;
 using Teams.Models;
 using Teams.Repository;
@@ -52,7 +49,7 @@ namespace Teams.Tests
             teamMemberRepository.InsertAsync(new TeamMember { TeamId = teamId, MemberId = memberId });
 
             //Act
-            bool result = teamsMembersService.Remove(teamId, memberId).Result;
+            bool result = teamsMembersService.RemoveAsync(teamId, memberId).Result;
 
             //Assert
             Assert.IsTrue(result);
@@ -73,7 +70,7 @@ namespace Teams.Tests
             teamMemberRepository.InsertAsync(new TeamMember { TeamId = teamId, MemberId = memberId });
 
             //Act
-            bool result = teamsMembersService.Remove(teamId, memberId).Result;
+            bool result = teamsMembersService.RemoveAsync(teamId, memberId).Result;
 
             //Assert
             Assert.IsFalse(result);

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Teams.Models;
 using Teams.Services;
 
@@ -40,9 +41,9 @@ namespace Teams.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult Remove(int team_id, string member_id)
+        public async Task<IActionResult> Remove(int team_id, string member_id)
         {
-            _teamsMembersService.Remove(team_id, member_id);
+            await _teamsMembersService.RemoveAsync(team_id, member_id);
             return RedirectToAction("Index");
         }
     }

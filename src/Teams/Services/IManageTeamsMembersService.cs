@@ -4,6 +4,6 @@ namespace Teams.Services
 {
     public interface IManageTeamsMembersService
     {
-        Task<bool> Remove(int team_id, string member_id);
+        Task<bool> RemoveAsync(int team_id, string member_id);
     }
 }
