@@ -4,6 +4,6 @@ using Teams.Models;
 
    public interface IManageTeamsService
     {
-        public IEnumerable<Team> GetMyTeams();
+        IEnumerable<Team> GetMyTeams();
     }
 
