@@ -28,7 +28,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public void GetMembers_ManageTeamsMembersServiceReturnTeamMember_ReturnTeamMember()
+        public async Task GetMembers_ManageTeamsMembersServiceReturnTeamMember_ReturnTeamMember()
         {
             //Arrange
             const int team_id = 4;
@@ -38,7 +38,7 @@ namespace Teams.Tests
             _teamMemberRepository.Setup(x => x.GetAll()).Returns(mock.Object);
 
             //Act
-            var result = _manageTeamsMembersService.GetMemberAsync(team_id, member_id).Result;
+            var result =await  _manageTeamsMembersService.GetMemberAsync(team_id, member_id);
 
             //Assert
             Assert.AreEqual(result.TeamId, team_id);
@@ -46,7 +46,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public void GetMembers_ManageTeamsMembersServiceReturnNull_ReturnNull()     //Team or member not exist
+        public async Task GetMembers_ManageTeamsMembersServiceReturnNull_ReturnNull()     //Team or member not exist
         {
             //Arrange
             const int team_id = 4;
@@ -58,8 +58,8 @@ namespace Teams.Tests
             _teamMemberRepository.Setup(x => x.GetAll()).Returns(mock.Object);
 
             //Act
-            var result1 = _manageTeamsMembersService.GetMemberAsync(team_id, member_id_eror).Result;
-            var result2 = _manageTeamsMembersService.GetMemberAsync(team_id_eror, member_id).Result;
+            var result1 =await _manageTeamsMembersService.GetMemberAsync(team_id, member_id_eror);
+            var result2 =await _manageTeamsMembersService.GetMemberAsync(team_id_eror, member_id);
 
             //Assert
             Assert.AreEqual(result1, null);

@@ -34,7 +34,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public void OwnerOrMemberAsync_FccessCheckServiceReturnsTrue_ReturnsTrue()
+        public async Task OwnerOrMemberAsync_FccessCheckServiceReturnsTrue_ReturnsTrue()
         {
             //Arrange
             const int team_id1 = 1;
@@ -65,9 +65,9 @@ namespace Teams.Tests
             _currentUser.SetupGet(x => x.Current).Returns(ud.Object);
 
             //Act
-            var result1 =_accessCheckService.OwnerOrMemberAsync(team_id1).Result;        //Owner
-            var result2 =_accessCheckService.OwnerOrMemberAsync(team_id2).Result;       //Member
-            var result3 = _accessCheckService.OwnerOrMemberAsync(team_id3).Result;       //Not Owner or member
+            var result1 =await _accessCheckService.OwnerOrMemberAsync(team_id1);        //Owner
+            var result2 =await _accessCheckService.OwnerOrMemberAsync(team_id2);       //Member
+            var result3 =await _accessCheckService.OwnerOrMemberAsync(team_id3);       //Not Owner or member
 
             //Assert
             Assert.AreEqual(true, result1);
