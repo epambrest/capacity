@@ -15,6 +15,7 @@ namespace Teams.Services
     {
         private readonly ICurrentUser _currentUser;
         private readonly IRepository<Team,int> _teamRepository;
+
         public ManageTeamsService(ICurrentUser currentUser, IRepository<Team, int> teamRepository)
         {
             _currentUser = currentUser;
@@ -23,13 +24,12 @@ namespace Teams.Services
 
         public async Task<bool> AddTeamAsync(string teamName)
         {
-            if (Regex.IsMatch(teamName, ("^[a-zA-Z0-9-_,.]+$")) && !_teamRepository.GetAll().Any(t => t.TeamName.ToUpper().Equals(teamName.ToUpper())))
+            if (await _teamRepository.GetAll().AnyAsync(t => t.TeamName.ToUpper() == teamName.ToUpper()) || !Regex.IsMatch(teamName, ("^[a-zA-Z0-9-_.]+$")))
             {
-                await _teamRepository.InsertAsync(new Team { TeamOwner = _currentUser.Current.Id(), TeamName = teamName });
-                return true;
+                return false;
             }
-
-            return false;
+            
+            return _teamRepository.InsertAsync(new Team { TeamOwner = _currentUser.Current.Id(), TeamName = teamName }).Result;
         }
     }
 }

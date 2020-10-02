@@ -26,7 +26,6 @@ namespace Teams.Tests
         public void Setup()
         {
             currentUserMock =  new Mock<ICurrentUser>();
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(databaseName: "TestDB").Options;
             testTeamRepo = new Mock<IRepository<Team, int>>();
             string ownerId = Guid.NewGuid().ToString();
             var userDetails = new Mock<UserDetails>(null);
