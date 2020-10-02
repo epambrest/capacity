@@ -28,7 +28,7 @@ namespace Teams.Controllers
         [Authorize]
         public IActionResult GetMyTeams()
         {
-            return View(_manageTeamsService.GetMyTeams());
+            return View(_manageTeamsService.GetMyTeamsAsync().Result);
         }
 
         public IActionResult Privacy()

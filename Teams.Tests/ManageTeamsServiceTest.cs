@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
+using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Teams.Data;
 using Teams.Models;
 using Teams.Security;
@@ -32,7 +34,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public void GetMyTeams_ManageTeamsServiceReturnsListCount4_ListCount4()
+        public async Task GetMyTeamsAsync_ManageTeamsServiceReturnsListCount4_ListCount4()
         {
             //Arrange
             const string id = "abc-def";
@@ -50,14 +52,16 @@ namespace Teams.Tests
                 new Team { Id= 10, TeamOwner = "def-abc", TeamName = "Team10", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}}
             };
 
-            _teamRepository.Setup(x => x.GetAll()).Returns(teams.AsQueryable());
+            var mock = teams.AsQueryable().BuildMock();
+            _teamRepository.Setup(x => x.GetAll()).Returns(mock.Object);
+
             var ud = new Mock<UserDetails>(null);
             ud.Setup(x => x.Id()).Returns(id);
             ud.Setup(x => x.Name()).Returns("name");
             _currentUser.SetupGet(x => x.Current).Returns(ud.Object);
 
             //Act
-            var result = new List<Team>(_manageTeamsService.GetMyTeams());
+            var result = new List<Team>(await _manageTeamsService.GetMyTeamsAsync());
 
             //Assert
             Assert.AreEqual(4, result.Count());
