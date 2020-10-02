@@ -8,6 +8,7 @@ using Teams.Data;
 using Teams.Models;
 using Teams.Security;
 using Teams.Services;
+using System.Threading.Tasks;
 
 namespace Teams.Controllers
 {
@@ -26,9 +27,9 @@ namespace Teams.Controllers
         }
 
         [Authorize]
-        public IActionResult GetMyTeams()
+        public async Task<IActionResult> GetMyTeamsAsync()
         {
-            return View(_manageTeamsService.GetMyTeamsAsync().Result);
+            return View(await _manageTeamsService.GetMyTeamsAsync());
         }
 
         public IActionResult Privacy()
