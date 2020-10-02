@@ -4,6 +4,6 @@ namespace Teams.Services
 {
     public interface IAccessCheckService
     {
-        public  Task<bool> OwnerOrMemberAsync(int team_id);
+        Task<bool> OwnerOrMemberAsync(int team_id);
     }
 }

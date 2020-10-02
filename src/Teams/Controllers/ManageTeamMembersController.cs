@@ -28,11 +28,11 @@ namespace Teams.Controllers
         [Authorize, NonAction]
         public async Task<TeamMember> GetMemberAsync(int team_id, string member_id)
         {
-            if (!_accessCheckService.OwnerOrMemberAsync(team_id).Result)
+            if (await _accessCheckService.OwnerOrMemberAsync(team_id))
             {
-                return null;
+                return await _manageTeamsMembersService.GetMemberAsync(team_id, member_id);
             }
-            else return await _manageTeamsMembersService.GetMemberAsync(team_id, member_id);
+            else return null;
         }
 
         public IActionResult Privacy()
