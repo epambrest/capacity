@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Teams.Repository;
 using Teams.Services;
 using System.Security.Authentication;
+using System.Threading.Tasks;
 
 namespace Teams.Tests
 {
@@ -38,26 +39,27 @@ namespace Teams.Tests
 
 
         [Test]
-        public void AddMember_teamsMembersServiceAddMemberReturnTrue_ReturnTrue()
+        public async Task AddMember_teamsMembersServiceAddMemberReturnTrue_ReturnTrue()
         {
 
             //Arrange
             string memberId = "1234";
+            string ownerId = "1111";
             int teamId = 1;
             _httpContextAccessor.Setup(x => x.HttpContext.User.FindFirst(It.IsAny<string>()))
-               .Returns(new Claim("UserName", memberId));
+               .Returns(new Claim("UserName", ownerId));
             _httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(true);
-            teamRepository.InsertAsync(new Team { TeamName = "first team", TeamOwner = memberId });
+            await teamRepository.InsertAsync(new Team { TeamName = "first team", TeamOwner = ownerId });
 
             //Act
-            bool result = teamsMembersService.AddAsync(teamId, memberId).Result;
+            bool result = await teamsMembersService.AddAsync(teamId, memberId);
 
             //Assert
             Assert.IsTrue(result);
         }
 
         [Test]
-        public void AddMember_teamsMembersServiceAddMemberReturnFalse_ReturnFalse()
+        public async Task AddMember_teamsMembersServiceAddMemberReturnFalse_ReturnFalse()
         {
 
             //Arrange
@@ -66,13 +68,13 @@ namespace Teams.Tests
             _httpContextAccessor.Setup(x => x.HttpContext.User.FindFirst(It.IsAny<string>()))
                .Returns(new Claim("UserName", memberId));
             _httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(true);
+            await teamRepository.InsertAsync(new Team { TeamName = "first team", TeamOwner = memberId });
 
             //Act
-            bool result = teamsMembersService.AddAsync(teamId, memberId).Result;
+            bool result = await teamsMembersService.AddAsync(teamId, memberId);
 
             //Assert
             Assert.IsFalse(result);
         }
-
     }
 }

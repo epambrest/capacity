@@ -8,7 +8,7 @@ using Teams.Models;
 
 namespace Teams.Repository
 {
-    public class TeamRepository : IRepository<Team,int>
+    public class TeamRepository : IRepository<Team, int>
     {
         private readonly ApplicationDbContext _dbContext;
 
@@ -30,12 +30,12 @@ namespace Teams.Repository
             return _dbContext.Team;
         }
 
-        public async Task<Team> GetByIdAsync(int Id) => await _dbContext.Team.FindAsync(Id);       
+        public async Task<Team> GetByIdAsync(int Id) => await _dbContext.Team.FindAsync(Id);
 
         public async Task<bool> InsertAsync(Team entity)
         {
             var obj = await _dbContext.Team.AddAsync(entity);
-            var result= obj.State == EntityState.Added ? true : false;
+            var result = obj.State == EntityState.Added ? true : false;
             await _dbContext.SaveChangesAsync();
             return result;
         }

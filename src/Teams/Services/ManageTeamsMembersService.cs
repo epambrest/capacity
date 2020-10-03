@@ -5,6 +5,7 @@ using Teams.Services;
 using Teams.Security;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Teams.Services
 {
@@ -12,29 +13,30 @@ namespace Teams.Services
     {
         private readonly ICurrentUser _currentUser;
         private readonly IRepository<Team, int> _teamRepository;
-        private readonly IRepository<TeamMember, int> _memberRepository;
+        private readonly IRepository<TeamMember, int> _teamMemberRepository;
 
         public ManageTeamsMembersService(IRepository<Team, int> teamRepository, IRepository<TeamMember, int> memberRepository, ICurrentUser currentUser)
         {
             _currentUser = currentUser;
             _teamRepository = teamRepository;
-            _memberRepository = memberRepository;
+            _teamMemberRepository = memberRepository;
         }
 
         public async Task<bool> AddAsync(int team_id, string member_id)
         {
-            Team team = await _teamRepository.GetByIdAsync(team_id);
-            if (team != null && team.TeamOwner == _currentUser.Current.Id() && !AlreadyInTeam(team_id, member_id))
+            var team = await _teamRepository.GetAll().Include(t => t.TeamMembers).FirstOrDefaultAsync(t => t.Id == team_id);
+            if (team != null && team.TeamOwner == _currentUser.Current.Id()
+                && member_id != _currentUser.Current.Id() && !AlreadyInTeam(team, member_id))
             {
                 TeamMember member = new TeamMember { TeamId = team_id, MemberId = member_id };
-                return await _memberRepository.InsertAsync(member);
+                return await _teamMemberRepository.InsertAsync(member);
             }
             return false;
         }
 
-        private bool AlreadyInTeam(int team_id, string member_id)
+        private bool AlreadyInTeam(Team team, string member_id)
         {
-            return _memberRepository.GetAll().Any(t => t.TeamId == team_id && t.MemberId == member_id);
+            return team.TeamMembers.Any(t => t.MemberId == member_id);
         }
     }
 }
