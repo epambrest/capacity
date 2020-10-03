@@ -1,13 +1,12 @@
-using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Teams.Data;
 using Teams.Models;
 using Teams.Security;
-using Teams.Repository;
-using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System.Text.RegularExpressions;
-using System;
+using System.Threading.Tasks;
 
 namespace Teams.Services
 {
@@ -28,8 +27,15 @@ namespace Teams.Services
             {
                 return false;
             }
-            
+
+            bool result = _teamRepository.InsertAsync(new Team { TeamOwner = _currentUser.Current.Id(), TeamName = teamName }).Result;
+
+
             return await _teamRepository.InsertAsync(new Team { TeamOwner = _currentUser.Current.Id(), TeamName = teamName });
         }
+
+        public IEnumerable<Team> GetMyTeams() => _teamRepository.GetAll().Include(m => m.TeamMembers)
+                .Where(x => x.TeamOwner == _currentUser.Current.Id() || x.TeamMembers.Any(p => p.MemberId == _currentUser.Current.Id()))
+                .OrderByDescending(y => y.TeamOwner == _currentUser.Current.Id());
     }
 }

@@ -48,7 +48,7 @@ namespace Teams.Tests
             public void GetAll_TeamRepositoryReturnsListCount100_ListCount100()
             {
                 //Arrange
-                context.TeamMembers.AddRange(GenerateData(101));
+                context.TeamMembers.AddRange(GenerateData(100));
                 context.SaveChanges();
                 teamMemberRepository = new TeamMemberRepository(context);
 
@@ -64,8 +64,6 @@ namespace Teams.Tests
             public void GetAll_TeamRepositoryReturnsEmptyList_ReturnsEmpty()
             {
                 //Arrange
-                context.TeamMembers.AddRange(GenerateData(0));
-                context.SaveChanges();
                 teamMemberRepository = new TeamMemberRepository(context);
 
                 //Act
@@ -82,8 +80,8 @@ namespace Teams.Tests
             public void GetByIdAsync_TeamRepositoryReturnsTeamId1_ReturnsTeamId1()
             {
                 //Arrange
-                context.TeamMembers.AddRange(GenerateData(100));
-                context.SaveChanges();
+                if (context.TeamMembers.Count() < 1)
+                    context.TeamMembers.AddRange(GenerateData(100));
                 teamMemberRepository = new TeamMemberRepository(context);
 
                 //Act
@@ -98,8 +96,6 @@ namespace Teams.Tests
             public void GetByIdAsync_TeamRepositoryReturnsNull_ReturnsNull()
             {
                 //Arrange
-                context.TeamMembers.AddRange(GenerateData(100));
-                context.SaveChanges();
                 teamMemberRepository = new TeamMemberRepository(context);
 
                 //Act
@@ -116,8 +112,6 @@ namespace Teams.Tests
             public void InsertAsync_TeamRepositoryReturnsTrue_ReturnsTrue()
             {
                 //Arrange
-                context.TeamMembers.AddRange(GenerateData(100));
-                context.SaveChanges();
                 teamMemberRepository = new TeamMemberRepository(context);
                 TeamMember teamMember = new TeamMember() { MemberId = "100" };
 
@@ -135,10 +129,9 @@ namespace Teams.Tests
             public void DeleteAsync_TeamRepositoryReturnsTrue_ReturnsTrue()
             {
                 //Arrange
-                context.TeamMembers.AddRange(GenerateData(100));
+                context.TeamMembers.AddRange(GenerateData(2));
                 context.SaveChanges();
                 teamMemberRepository = new TeamMemberRepository(context);
-
                 //Act
                 var result = teamMemberRepository.DeleteAsync(teamMemberRepository.GetByIdAsync(1).Result).Result;
 
@@ -151,8 +144,6 @@ namespace Teams.Tests
             public void DeleteAsync_TeamRepositoryReturnsNull_ReturnsNull()
             {
                 //Arrange
-                context.TeamMembers.AddRange(GenerateData(100));
-                context.SaveChanges();
                 teamMemberRepository = new TeamMemberRepository(context);
 
                 //Act&Assert
@@ -173,8 +164,11 @@ namespace Teams.Tests
             public void UpdateAsync_TeamRepositoryReturnsTrue_ReturnsTrue()
             {
                 //Arrange
-                context.TeamMembers.AddRange(GenerateData(100));
-                context.SaveChanges();
+                if (context.TeamMembers.Count() < 1)
+                {
+                    context.TeamMembers.AddRange(GenerateData(3));
+                    context.SaveChanges();
+                }
                 teamMemberRepository = new TeamMemberRepository(context);
 
                 //Act
@@ -189,12 +183,10 @@ namespace Teams.Tests
             public void UpdateAsync_TeamRepositoryReturnsFalse_ReturnsFalse()
             {
                 //Arrange
-                context.TeamMembers.AddRange(GenerateData(100));
-                context.SaveChanges();
                 teamMemberRepository = new TeamMemberRepository(context);
 
                 //Act
-                var result = teamMemberRepository.UpdateAsync(new TeamMember() { Id = 100, MemberId = "001" }).Result;
+                var result = teamMemberRepository.UpdateAsync(new TeamMember() { Id = 101, MemberId = "101" }).Result;
 
                 //Assert
                 Assert.IsFalse(result);
