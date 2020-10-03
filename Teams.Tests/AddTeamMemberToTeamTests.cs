@@ -28,6 +28,7 @@ namespace Teams.Tests
             teamRepository = new Mock<IRepository<Team, int>>();
             var mock = GetFakeDbTeam().AsQueryable().BuildMock();
             teamRepository.Setup(t => t.GetAll()).Returns(mock.Object);
+            teamMemberRepository.Setup(t => t.InsertAsync(It.IsAny<TeamMember>())).ReturnsAsync(true);
             teamsMembersService = new ManageTeamsMembersService(teamRepository.Object, teamMemberRepository.Object, _currentUser.Object);
         }
 
@@ -50,6 +51,28 @@ namespace Teams.Tests
             //Assert
             Assert.IsTrue(result);
         }
+
+        [Test]
+        public async Task AddMember_teamsMembersServiceAddMemberReturnFalse_ReturnFalse()
+        {
+
+            //Arrange
+            const string ownerId = "1";
+            const string memberId = "1234";
+            var user = new Mock<UserDetails>(null);
+            user.Setup(x => x.Id()).Returns(ownerId);
+            user.Setup(x => x.Name()).Returns("name");
+            _currentUser.SetupGet(x => x.Current).Returns(user.Object);
+
+            //Act
+            bool result1 = await teamsMembersService.AddAsync(2, memberId);
+            bool result2 = await teamsMembersService.AddAsync(1, ownerId);
+
+            //Assert
+            Assert.IsFalse(result1);
+            Assert.IsFalse(result2);
+        }
+
 
         private List<Team> GetFakeDbTeam()
         {

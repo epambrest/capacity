@@ -24,7 +24,7 @@ namespace Teams.Services
 
         public async Task<bool> AddAsync(int team_id, string member_id)
         {
-            var team = await _teamRepository.GetAll().Include(t => t.TeamMembers).FirstOrDefaultAsync(t => t.Id == team_id);
+            var team = await _teamRepository.GetAll().Where(t => t.Id == team_id).Include(t => t.TeamMembers).FirstOrDefaultAsync();
             if (team != null && team.TeamOwner == _currentUser.Current.Id()
                 && member_id != _currentUser.Current.Id() && !AlreadyInTeam(team, member_id))
             {
