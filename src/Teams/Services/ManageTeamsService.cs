@@ -5,6 +5,7 @@ using Teams.Models;
 using Teams.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using System.Threading.Tasks;
 
 namespace Teams.Services
 {
@@ -24,5 +25,7 @@ namespace Teams.Services
         public IEnumerable<Team> GetMyTeams() => _teamRepository.GetAll().Include(m => m.TeamMembers)
                 .Where(x => x.TeamOwner == _currentUser.Current.Id() || x.TeamMembers.Any(p => p.MemberId == _currentUser.Current.Id()))
                 .OrderByDescending(y => y.TeamOwner == _currentUser.Current.Id());
+
+        public async Task<Team> GetTeamAsync(int team_id) => await _teamRepository.GetByIdAsync(team_id);
     }
 }
