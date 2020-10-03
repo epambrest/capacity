@@ -1,55 +1,48 @@
 ﻿using NUnit.Framework;
 using Moq;
-using Microsoft.AspNetCore.Http;
 using Teams.Security;
 using System.Security.Claims;
 using Teams.Data;
 using Teams.Models;
-using Microsoft.EntityFrameworkCore;
-using Teams.Repository;
 using Teams.Services;
-using System.Security.Authentication;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
+using MockQueryable.Moq;
 
 namespace Teams.Tests
 {
     [TestFixture]
     class AddTeamMemberToTeamTests
     {
-        private Mock<IHttpContextAccessor> _httpContextAccessor;
-        private ICurrentUser _currentUser;
-        private ApplicationDbContext context;
-        private IRepository<TeamMember, int> teamMemberRepository;
-        private IRepository<Team, int> teamRepository;
-        private IManageTeamsMembersService teamsMembersService;
+        private Mock<ICurrentUser> _currentUser;
+        private Mock<IRepository<TeamMember, int>> teamMemberRepository;
+        private Mock<IRepository<Team, int>> teamRepository;
+        private ManageTeamsMembersService teamsMembersService;
 
         [SetUp]
         public void Setup()
         {
-            _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _currentUser = new CurrentUser(_httpContextAccessor.Object);
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-               .UseInMemoryDatabase(databaseName: "TeamMemberListDatabase")
-               .Options;
-            context = new ApplicationDbContext(options);
-            teamMemberRepository = new TeamMemberRepository(context);
-            teamRepository = new TeamRepository(context);
-            teamsMembersService = new ManageTeamsMembersService(teamRepository, teamMemberRepository, _currentUser);
+            _currentUser = new Mock<ICurrentUser>();
+            teamMemberRepository =new Mock<IRepository<TeamMember, int>>();
+            teamRepository = new Mock<IRepository<Team, int>>();
+            var mock = GetFakeDbTeam().AsQueryable().BuildMock();
+            teamRepository.Setup(t => t.GetAll()).Returns(mock.Object);
+            teamsMembersService = new ManageTeamsMembersService(teamRepository.Object, teamMemberRepository.Object, _currentUser.Object);
         }
-
 
         [Test]
         public async Task AddMember_teamsMembersServiceAddMemberReturnTrue_ReturnTrue()
         {
 
             //Arrange
-            string memberId = "1234";
-            string ownerId = "1111";
-            int teamId = 1;
-            _httpContextAccessor.Setup(x => x.HttpContext.User.FindFirst(It.IsAny<string>()))
-               .Returns(new Claim("UserName", ownerId));
-            _httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(true);
-            await teamRepository.InsertAsync(new Team { TeamName = "first team", TeamOwner = ownerId });
+            const string ownerId = "1";
+            const string memberId = "1234";
+            const int teamId = 1;
+            var user = new Mock<UserDetails>(null);
+            user.Setup(x => x.Id()).Returns(ownerId);
+            user.Setup(x => x.Name()).Returns("name");
+            _currentUser.SetupGet(x => x.Current).Returns(user.Object);
 
             //Act
             bool result = await teamsMembersService.AddAsync(teamId, memberId);
@@ -58,23 +51,13 @@ namespace Teams.Tests
             Assert.IsTrue(result);
         }
 
-        [Test]
-        public async Task AddMember_teamsMembersServiceAddMemberReturnFalse_ReturnFalse()
+        private List<Team> GetFakeDbTeam()
         {
-
-            //Arrange
-            string memberId = "1111";
-            int teamId = 1;
-            _httpContextAccessor.Setup(x => x.HttpContext.User.FindFirst(It.IsAny<string>()))
-               .Returns(new Claim("UserName", memberId));
-            _httpContextAccessor.Setup(x => x.HttpContext.User.Identity.IsAuthenticated).Returns(true);
-            await teamRepository.InsertAsync(new Team { TeamName = "first team", TeamOwner = memberId });
-
-            //Act
-            bool result = await teamsMembersService.AddAsync(teamId, memberId);
-
-            //Assert
-            Assert.IsFalse(result);
+            var teams = new List<Team>
+            {
+                new Team {Id =1, TeamOwner = "1",TeamMembers = new List<TeamMember>(){ new TeamMember { Id=1,MemberId="2"} } },
+            };
+            return teams;
         }
     }
 }

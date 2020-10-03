@@ -28,8 +28,7 @@ namespace Teams.Services
             if (team != null && team.TeamOwner == _currentUser.Current.Id()
                 && member_id != _currentUser.Current.Id() && !AlreadyInTeam(team, member_id))
             {
-                TeamMember member = new TeamMember { TeamId = team_id, MemberId = member_id };
-                return await _teamMemberRepository.InsertAsync(member);
+                return await _teamMemberRepository.InsertAsync(new TeamMember { TeamId = team_id, MemberId = member_id }); 
             }
             return false;
         }
