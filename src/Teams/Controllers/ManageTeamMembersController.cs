@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Teams.Models;
 using Teams.Services;
 
-using Teams.Services;
+
 namespace Teams.Controllers
 {
     public class ManageTeamMembersController : Controller
@@ -22,7 +22,6 @@ namespace Teams.Controllers
 
             _accessCheckService = accessCheckService;
         }
-        private readonly IManageTeamsMembersService _manageTeamsMembersService;
 
         public ManageTeamMembersController(IManageTeamsMembersService manageTeamsMembersService)
         {
