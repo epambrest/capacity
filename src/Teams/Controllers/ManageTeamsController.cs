@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Teams.Models;
 using Teams.Services;
 
@@ -29,9 +31,18 @@ namespace Teams.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public void Remove(int team_id)
+        [Authorize]
+        public async Task<IActionResult> RemoveAsync(int team_id)
         {
-            _teamsService.Remove(team_id);
+            var result = await _teamsService.RemoveAsync(team_id);
+            if (result) 
+               return RedirectToAction("Index", "Home");
+            return RedirectToAction("ErorRemoveAsync");
+        }
+
+        public IActionResult ErrorRemoveAsync()
+        {
+            return View();
         }
     }
 }

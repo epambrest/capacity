@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +21,9 @@ namespace Teams.Services
             _currentUser = currentUser;
         }
 
-        public async Task<bool> Remove(int team_id)
+        public async Task<bool> RemoveAsync(int team_id)
         {
-            var team = _teamRepository.GetAll().FirstOrDefault(i => i.TeamOwner == _currentUser.Current.Id() && i.Id == team_id);
+            var team = await _teamRepository.GetAll().FirstOrDefaultAsync(i => i.TeamOwner == _currentUser.Current.Id() && i.Id == team_id);
             if (team == null)
                 return false;
             
