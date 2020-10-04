@@ -77,7 +77,7 @@ namespace Teams.Tests
             const int team_id = 3;
             Team team = new Team { Id= 3, TeamOwner = "def-abc", TeamName = "Team3", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}};
 
-            _teamRepository.Setup(x => x.GetByIdAsync(team_id).Result).Returns(team);
+            _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(team);
 
             var ud = new Mock<UserDetails>(null);
             ud.Setup(x => x.Id()).Returns(id);
