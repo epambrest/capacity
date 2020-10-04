@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 using Teams.Data;
 using Teams.Models;
@@ -20,16 +21,16 @@ namespace Teams.Services
         }
         public async Task<bool> RemoveAsync(int team_id, string member_id)
         {
-            Team team = _teamRepository.GetByIdAsync(team_id).Result;
-            if (team.TeamOwner == _currentUser.Current.Id() && MemberInTeam(team_id,member_id))
+            var team = await _teamRepository.GetAll().Where(t => t.Id == team_id).FirstOrDefaultAsync();
+            if (team != null && team.TeamOwner == _currentUser.Current.Id() && MemberInTeam(team,member_id))
             {       
-                return await _memberRepository.DeleteAsync(await _memberRepository.GetAll().FirstAsync(t => t.TeamId == team_id && t.MemberId == member_id));
+                return await _memberRepository.DeleteAsync(team.TeamMembers.FirstOrDefault(t => t.MemberId == member_id));
             }
             return false;
         }
-        private bool MemberInTeam(int team_id, string member_id)
+        private bool MemberInTeam(Team team, string member_id)
         {
-            return _memberRepository.GetAll().AnyAsync(t => t.TeamId == team_id && t.MemberId == member_id).Result;
+            return team.TeamMembers.Any(t => t.MemberId == member_id);
         }
     }
 }

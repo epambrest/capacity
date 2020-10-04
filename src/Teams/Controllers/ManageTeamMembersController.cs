@@ -43,7 +43,7 @@ namespace Teams.Controllers
         [Authorize]
         public async Task<IActionResult> Remove(int team_id, string member_id)
         {
-            await _teamsMembersService.RemoveAsync(team_id, member_id);
+            var result = await _teamsMembersService.RemoveAsync(team_id, member_id);
             return RedirectToAction("Index");
         }
     }
