@@ -9,11 +9,11 @@ namespace Teams.Controllers
 {
     public class ManageTeamMembersController : Controller
     {
-        private readonly IManageTeamsMembersService _membersService;
+        private readonly IManageTeamsMembersService _manageTeamsMembersService;
 
         public ManageTeamMembersController(IManageTeamsMembersService membersService)
         {
-            _membersService = membersService;
+            _manageTeamsMembersService = membersService;
         }
 
         public IActionResult Index()
@@ -36,7 +36,7 @@ namespace Teams.Controllers
         [Authorize]
         public async Task<IActionResult> Add(int team_id, string member_id)
         {
-            await _membersService.AddAsync(team_id, member_id);
+            await _manageTeamsMembersService.AddAsync(team_id, member_id);
             return View();
         }
     }

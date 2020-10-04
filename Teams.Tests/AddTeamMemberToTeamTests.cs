@@ -15,7 +15,7 @@ namespace Teams.Tests
     [TestFixture]
     class AddTeamMemberToTeamTests
     {
-        private Mock<ICurrentUser> _currentUser;
+        private Mock<ICurrentUser> currentUser;
         private Mock<IRepository<TeamMember, int>> teamMemberRepository;
         private Mock<IRepository<Team, int>> teamRepository;
         private ManageTeamsMembersService teamsMembersService;
@@ -23,13 +23,13 @@ namespace Teams.Tests
         [SetUp]
         public void Setup()
         {
-            _currentUser = new Mock<ICurrentUser>();
+            currentUser = new Mock<ICurrentUser>();
             teamMemberRepository =new Mock<IRepository<TeamMember, int>>();
             teamRepository = new Mock<IRepository<Team, int>>();
             var mock = GetFakeDbTeam().AsQueryable().BuildMock();
             teamRepository.Setup(t => t.GetAll()).Returns(mock.Object);
             teamMemberRepository.Setup(t => t.InsertAsync(It.IsAny<TeamMember>())).ReturnsAsync(true);
-            teamsMembersService = new ManageTeamsMembersService(teamRepository.Object, teamMemberRepository.Object, _currentUser.Object);
+            teamsMembersService = new ManageTeamsMembersService(teamRepository.Object, teamMemberRepository.Object, currentUser.Object);
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace Teams.Tests
             var user = new Mock<UserDetails>(null);
             user.Setup(x => x.Id()).Returns(ownerId);
             user.Setup(x => x.Name()).Returns("name");
-            _currentUser.SetupGet(x => x.Current).Returns(user.Object);
+            currentUser.SetupGet(x => x.Current).Returns(user.Object);
 
             //Act
             bool result = await teamsMembersService.AddAsync(teamId, memberId);
@@ -62,7 +62,7 @@ namespace Teams.Tests
             var user = new Mock<UserDetails>(null);
             user.Setup(x => x.Id()).Returns(ownerId);
             user.Setup(x => x.Name()).Returns("name");
-            _currentUser.SetupGet(x => x.Current).Returns(user.Object);
+            currentUser.SetupGet(x => x.Current).Returns(user.Object);
 
             //Act
             bool result1 = await teamsMembersService.AddAsync(2, memberId);
