@@ -39,6 +39,7 @@ namespace Teams
             services.AddHttpContextAccessor();
             services.AddTransient<ICurrentUser, CurrentUser>();
             services.AddTransient<IManageTeamsMembersService, ManageTeamsMembersService>();
+            services.AddTransient<IAccessCheckService, AccessCheckService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
