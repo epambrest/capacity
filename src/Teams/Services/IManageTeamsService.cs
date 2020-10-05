@@ -5,7 +5,7 @@ using Teams.Models;
 
    public interface IManageTeamsService
     {
-        IEnumerable<Team> GetMyTeams();
+        Task<IEnumerable<Team>> GetMyTeamsAsync();
         Task<Team> GetTeamAsync(int team_id);
     }
 

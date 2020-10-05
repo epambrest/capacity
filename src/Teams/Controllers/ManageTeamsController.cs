@@ -31,9 +31,19 @@ namespace Teams.Controllers
         }
 
         [Authorize]
-        public IActionResult GetMyTeams()
+        public async Task<IActionResult> GetMyTeamsAsync()
         {
-            return View(_manageTeamsService.GetMyTeams());
+            return View(await _manageTeamsService.GetMyTeamsAsync());
+        }
+
+        [Authorize, NonAction]
+        public async Task<Team> GetTeamAsync(int team_id)
+        {
+            if (await _accessCheckService.OwnerOrMemberAsync(team_id))
+            {
+                return await _manageTeamsService.GetTeamAsync(team_id);
+            }
+            else return null;
         }
 
         [Authorize, NonAction]
