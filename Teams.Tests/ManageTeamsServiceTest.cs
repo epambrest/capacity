@@ -1,16 +1,17 @@
-﻿using Moq;
+using Moq;
 using Teams.Security;
+using Microsoft.AspNetCore.Http;
+using MockQueryable.Moq;
 using NUnit.Framework;
-using Teams.Data;
-using Teams.Models;
 using System.Collections.Generic;
 using System.Linq;
-using MockQueryable.Moq;
-using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using System.Threading.Tasks;
+using Teams.Data;
+using Teams.Models;
 using Teams.Services;
-using Microsoft.EntityFrameworkCore;
 using Teams.Repository;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 
@@ -116,6 +117,28 @@ namespace Teams.Tests
             Assert.AreEqual(4, result[1].Id);
             Assert.AreEqual(2, result[2].Id);
             Assert.AreEqual(9, result[3].Id);
+        }
+
+        [Test]
+        public async Task GetTeamAsync_ManageTeamsServiceReturnsTeam_Team()
+        {
+            //Arrange
+            const string id = "abc-def";
+            const int team_id = 3;
+            Team team = new Team { Id= 3, TeamOwner = "def-abc", TeamName = "Team3", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}};
+
+            _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(team);
+
+            var ud = new Mock<UserDetails>(null);
+            ud.Setup(x => x.Id()).Returns(id);
+            ud.Setup(x => x.Name()).Returns("name");
+            _currentUserMock.SetupGet(x => x.Current).Returns(ud.Object);
+
+            //Act
+            var result = await _manageTeamsService.GetTeamAsync(team_id);
+
+            //Assert
+            Assert.AreEqual(3, result.Id);
         }
     }
 }
