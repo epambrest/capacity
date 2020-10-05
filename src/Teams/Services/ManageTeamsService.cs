@@ -6,6 +6,7 @@ using Teams.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Teams.Services
 {
@@ -31,7 +32,13 @@ namespace Teams.Services
 
         public async Task<bool> EditTeamNameAsync(int team_id, string team_name)
         {
-            return  false;
+            var team = await _teamRepository.GetByIdAsync(team_id);
+
+            if (team != null && team.TeamOwner == _currentUser.Current.Id() && !_teamRepository.GetAll().Any(x => x.TeamName.ToUpper() == team_name.ToUpper()) && Regex.IsMatch(team_name, ("^[a-zA-Z0-9-_.]+$")))
+            {
+                return await _teamRepository.UpdateAsync(new Team { Id = team_id, TeamOwner = _currentUser.Current.Id(), TeamName = team_name });
+            }
+            else return false;
         }
     }
 }
