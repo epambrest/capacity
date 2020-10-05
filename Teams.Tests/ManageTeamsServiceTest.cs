@@ -70,5 +70,27 @@ namespace Teams.Tests
             Assert.AreEqual(2, result[2].Id);
             Assert.AreEqual(9, result[3].Id);
         }
+
+        [Test]
+        public async Task GetTeamAsync_ManageTeamsServiceReturnsTeam_Team()
+        {
+            //Arrange
+            const string id = "abc-def";
+            const int team_id = 3;
+            Team team = new Team { Id= 3, TeamOwner = "def-abc", TeamName = "Team3", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}};
+
+            _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(team);
+
+            var ud = new Mock<UserDetails>(null);
+            ud.Setup(x => x.Id()).Returns(id);
+            ud.Setup(x => x.Name()).Returns("name");
+            _currentUser.SetupGet(x => x.Current).Returns(ud.Object);
+
+            //Act
+            var result = await _manageTeamsService.GetTeamAsync(team_id);
+
+            //Assert
+            Assert.AreEqual(3, result.Id);
+        }
     }
 }

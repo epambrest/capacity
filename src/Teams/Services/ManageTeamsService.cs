@@ -22,9 +22,10 @@ namespace Teams.Services
             _teamRepository = teamRepository;
         }
 
-        public async Task<IEnumerable<Team>> GetMyTeamsAsync() =>await _teamRepository.GetAll().Include(m => m.TeamMembers)
+        public IEnumerable<Team> GetMyTeams() => _teamRepository.GetAll().Include(m => m.TeamMembers)
                 .Where(x => x.TeamOwner == _currentUser.Current.Id() || x.TeamMembers.Any(p => p.MemberId == _currentUser.Current.Id()))
-                .OrderByDescending(y => y.TeamOwner == _currentUser.Current.Id())
-                .ToListAsync();
+                .OrderByDescending(y => y.TeamOwner == _currentUser.Current.Id());
+
+        public async Task<Team> GetTeamAsync(int team_id) => await _teamRepository.GetByIdAsync(team_id);
     }
 }

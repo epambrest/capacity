@@ -16,9 +16,13 @@ namespace Teams.Controllers
     {
         private readonly IManageTeamsService _manageTeamsService;
 
-        public ManageTeamsController(IManageTeamsService manageTeamsService)
+        private readonly IAccessCheckService _accessCheckService;
+
+        public ManageTeamsController(IManageTeamsService manageTeamsService, IAccessCheckService accessCheckService)
         {
             _manageTeamsService = manageTeamsService;
+
+            _accessCheckService = accessCheckService;
         }
 
         public IActionResult Index()
@@ -30,6 +34,16 @@ namespace Teams.Controllers
         public async Task<IActionResult> GetMyTeamsAsync()
         {
             return View(await _manageTeamsService.GetMyTeamsAsync());
+        }
+
+        [Authorize, NonAction]
+        public async Task<Team> GetTeamAsync(int team_id)
+        {
+            if (await _accessCheckService.OwnerOrMemberAsync(team_id))
+            {
+                return await _manageTeamsService.GetTeamAsync(team_id);
+            }
+            else return null;
         }
 
         public IActionResult Privacy()
