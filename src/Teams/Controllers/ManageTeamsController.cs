@@ -46,12 +46,6 @@ namespace Teams.Controllers
             else return null;
         }
 
-        [Authorize, NonAction]
-        public async Task<bool> EditTeamNameAsync(int team_id, string team_name)
-        {
-            return await _manageTeamsService.EditTeamNameAsync(team_id, team_name);
-        }
-
         public IActionResult Privacy()
         {
             return View();
