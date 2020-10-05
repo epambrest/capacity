@@ -47,13 +47,9 @@ namespace Teams.Controllers
         }
 
         [Authorize, NonAction]
-        public async Task<Team> GetTeamAsync(int team_id)
+        public async Task<bool> EditTeamNameAsync(int team_id, string team_name)
         {
-            if (await _accessCheckService.OwnerOrMemberAsync(team_id))
-            {
-                return await _manageTeamsService.GetTeamAsync(team_id);
-            }
-            else return null;
+            return await _manageTeamsService.EditTeamNameAsync(team_id, team_name);
         }
 
         public IActionResult Privacy()

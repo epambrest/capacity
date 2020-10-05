@@ -28,5 +28,10 @@ namespace Teams.Services
                 .ToListAsync();
 
         public async Task<Team> GetTeamAsync(int team_id) => await _teamRepository.GetByIdAsync(team_id);
+
+        public async Task<bool> EditTeamNameAsync(int team_id, string team_name)
+        {
+            return  false;
+        }
     }
 }

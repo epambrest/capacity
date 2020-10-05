@@ -7,5 +7,6 @@ using Teams.Models;
     {
         Task<IEnumerable<Team>> GetMyTeamsAsync();
         Task<Team> GetTeamAsync(int team_id);
-    }
+        Task<bool> EditTeamNameAsync(int team_id, string team_name);
+}
 
