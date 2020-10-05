@@ -32,12 +32,12 @@ namespace Teams.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> RemoveAsync(int team_id)
+        public async Task<IActionResult> Remove(int team_id)
         {
             var result = await _teamsService.RemoveAsync(team_id);
             if (result) 
                return RedirectToAction("Index", "Home");
-            return RedirectToAction("ErorRemoveAsync");
+            return RedirectToAction("ErorRemove");
         }
 
         public IActionResult ErrorRemoveAsync()

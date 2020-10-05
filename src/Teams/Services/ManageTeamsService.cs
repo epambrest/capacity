@@ -1,11 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Teams.Data;
 using Teams.Models;
-using Teams.Repository;
 using Teams.Security;
 
 namespace Teams.Services
