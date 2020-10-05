@@ -27,10 +27,6 @@ namespace Teams.Services
             {
                 return false;
             }
-
-            bool result = _teamRepository.InsertAsync(new Team { TeamOwner = _currentUser.Current.Id(), TeamName = teamName }).Result;
-
-
             return await _teamRepository.InsertAsync(new Team { TeamOwner = _currentUser.Current.Id(), TeamName = teamName });
         }
 

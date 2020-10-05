@@ -12,72 +12,78 @@ using Microsoft.EntityFrameworkCore;
 using Teams.Repository;
 using System;
 using System.Threading.Tasks;
-using Teams.Services;
+using Microsoft.EntityFrameworkCore.Query.Internal;
+using System.Linq.Expressions;
+using System.Threading;
+using Microsoft.VisualStudio.Web.CodeGeneration.Templating;
 
 namespace Teams.Tests
 {
     [TestFixture]
     class ManageTeamsServiceTest
     {
-        private ManageTeamsService manageTeamsService;
-        private Mock <IRepository<Team, int>> testTeamRepo;
-        private Mock<ICurrentUser> currentUserMock;
+        private ManageTeamsService _manageTeamsService;
+        private Mock <IRepository<Team, int>> _testTeamRepo;
+        private Mock<ICurrentUser> _currentUserMock;
 
         [SetUp]
         public void Setup()
         {
-            currentUserMock =  new Mock<ICurrentUser>();
-            testTeamRepo = new Mock<IRepository<Team, int>>();
+            _currentUserMock =  new Mock<ICurrentUser>();
+            _testTeamRepo = new Mock<IRepository<Team, int>>();
             string ownerId = Guid.NewGuid().ToString();
             var userDetails = new Mock<UserDetails>(null);
             userDetails.Setup(x => x.Id()).Returns(ownerId);
-            currentUserMock.SetupGet(x => x.Current).Returns(userDetails.Object);
-            manageTeamsService = new ManageTeamsService(currentUserMock.Object, testTeamRepo.Object);
+            _currentUserMock.SetupGet(x => x.Current).Returns(userDetails.Object);
+            _manageTeamsService = new ManageTeamsService(_currentUserMock.Object, _testTeamRepo.Object);
         }
+
         [Test]
-        public void AddTeamAsync_AddTeamWithEmptyName_ReturnsFalse()
+        public async Task AddTeamAsync_AddTeamWithEmptyName_ReturnsFalse()
         {
             //Arrange
             string teamName = "";
             //Act
-            bool isValid = manageTeamsService.AddTeamAsync(teamName).Result;
+            var isValid = await _manageTeamsService.AddTeamAsync(teamName);
             //Assert
-            Assert.AreEqual(false, isValid);
+            Assert.That(isValid, Is.True);
         }
+
         [Test]
-        public void AddTeamAsync_AddTeamWithIllegalName_ReturnsFalse()
+        public async Task AddTeamAsync_AddTeamWithIllegalName_ReturnsFalse()
         {
             //Arrange
             string teamName = "alex wins:";
             //Act
-            bool isValid = manageTeamsService.AddTeamAsync(teamName).Result;
+            var isValid = await _manageTeamsService.AddTeamAsync(teamName);
             //Assert
             Assert.AreEqual(false, isValid);
         }
         [Test]
-        public void AddTeamAsync_AddTeamWithLegalName_ReturnsTrue()
+        public async Task AddTeamAsync_AddTeamWithLegalName_ReturnsTrue()
         {
             //Arrange
             string teamName = "Legal_Team.";
             //Act
-            bool isValid = manageTeamsService.AddTeamAsync(teamName).Result;
+            bool isValid = await _manageTeamsService.AddTeamAsync(teamName);
             //Assert
             Assert.AreEqual(true, isValid);
         }
+
         [Test]
         public async Task AddTeamAsync_AddTeamWithExistingName_ReturnsFalseAsync()
         {
             //Arrange
             string teamName = "Su_per-Team.,";
-            await manageTeamsService.AddTeamAsync(teamName);
+            await _manageTeamsService.AddTeamAsync(teamName);
             var existingTeams = new List<Team>
             {
                  new Team { Id= 1, TeamOwner = "1234", TeamName = teamName},
 
             }.AsQueryable();
-            testTeamRepo.Setup(x => x.GetAll()).Returns(existingTeams);
+            _testTeamRepo.Setup(x => x.GetAll()).Returns(existingTeams);
             //Act
-            bool isValid = manageTeamsService.AddTeamAsync(teamName).Result;
+            bool isValid = _manageTeamsService.AddTeamAsync(teamName).Result;
             //Assert
             Assert.AreEqual(false, isValid);
         }
@@ -101,14 +107,14 @@ namespace Teams.Tests
                 new Team { Id= 10, TeamOwner = "def-abc", TeamName = "Team10", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}}
             };
 
-            testTeamRepo.Setup(x => x.GetAll()).Returns(teams.AsQueryable());
+            _testTeamRepo.Setup(x => x.GetAll()).Returns(teams.AsQueryable());
             var ud = new Mock<UserDetails>(null);
             ud.Setup(x => x.Id()).Returns(id);
             ud.Setup(x => x.Name()).Returns("name");
-            currentUserMock.SetupGet(x => x.Current).Returns(ud.Object);
+            _currentUserMock.SetupGet(x => x.Current).Returns(ud.Object);
 
             //Act
-            var result = new List<Team>(manageTeamsService.GetMyTeams());
+            var result = new List<Team>(_manageTeamsService.GetMyTeams());
 
             //Assert
             Assert.AreEqual(4, result.Count());

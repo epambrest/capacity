@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Teams.Models;
 using System.Linq;
 using Teams.Data;
-using Teams.Models;
 using Teams.Security;
 using Teams.Services;
 
@@ -15,11 +14,11 @@ namespace Teams.Controllers
 {
     public class ManageTeamsController : Controller
     {
-        private readonly IManageTeamsService _manageTeamService;
+        private readonly IManageTeamsService _manageTeamsService;
 
-        public ManageTeamsController(IManageTeamsService teamsService)
+        public ManageTeamsController(IManageTeamsService manageTeamsService)
         {
-            _manageTeamService = teamsService;
+            _manageTeamsService = manageTeamsService;
         }
 
         public IActionResult Index()
@@ -30,7 +29,7 @@ namespace Teams.Controllers
         [Authorize]
         public IActionResult GetMyTeams()
         {
-            return View(_manageTeamService.GetMyTeams());
+            return View(_manageTeamsService.GetMyTeams());
         }
 
         public IActionResult Privacy()
@@ -57,7 +56,7 @@ namespace Teams.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _manageTeamService.AddTeamAsync(teamName);
+                await _manageTeamsService.AddTeamAsync(teamName);
                 return RedirectToAction(nameof(Index));
             }
             return View(teamName);
