@@ -20,8 +20,7 @@ namespace Teams.Repository
         public async Task<bool> DeleteAsync(Team entity)
         {
             var obj = _dbContext.Team.Remove(entity);
-            var result = obj.State == EntityState.Deleted ? true : false;
-            await _dbContext.SaveChangesAsync();
+            var result = await _dbContext.SaveChangesAsync() > 0 ? true : false;
             return result;
         }
 
@@ -34,9 +33,8 @@ namespace Teams.Repository
 
         public async Task<bool> InsertAsync(Team entity)
         {
-            var obj = await _dbContext.Team.AddAsync(entity);
-            var result = obj.State == EntityState.Added ? true : false;
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.Team.AddAsync(entity);
+            var result = await _dbContext.SaveChangesAsync() > 0 ? true : false;
             return result;
         }
 

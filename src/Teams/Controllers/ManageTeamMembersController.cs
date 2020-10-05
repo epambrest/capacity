@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Teams.Models;
 using Teams.Services;
 
-
 namespace Teams.Controllers
 {
     public class ManageTeamMembersController : Controller

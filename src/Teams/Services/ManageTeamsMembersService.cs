@@ -30,25 +30,20 @@ namespace Teams.Services
 
         public async Task<bool> AddAsync(int team_id, string member_id)
         {
-            var team = await _teamRepository.GetAll().Where(t => t.Id == team_id).Include(t => t.TeamMembers).FirstOrDefaultAsync();
-            if (team != null && team.TeamOwner == _currentUser.Current.Id()
-                && member_id != _currentUser.Current.Id() && !AlreadyInTeam(team, member_id))
+            var alreadyInTeam = await _teamRepository.GetAll().
+                AnyAsync(t => t.TeamOwner == _currentUser.Current.Id() && t.Id == team_id && t.TeamMembers.Any(t => t.MemberId == member_id));
+            if (!alreadyInTeam && member_id != _currentUser.Current.Id())
             {
                 return await _teamMemberRepository.InsertAsync(new TeamMember { TeamId = team_id, MemberId = member_id });
             }
             return false;
         }
 
-        private bool AlreadyInTeam(Team team, string member_id)
-        {
-            return team.TeamMembers.Any(t => t.MemberId == member_id);
-        }
-
         public async Task<TeamMember> GetMemberAsync(int team_id, string member_id)
         {
             return await _teamMemberRepository.GetAll()
-                   .Where(x => x.MemberId == member_id && x.TeamId == team_id)
-                   .FirstOrDefaultAsync();
+            .Where(x => x.MemberId == member_id && x.TeamId == team_id)
+            .FirstOrDefaultAsync();
         }
     }
 }
