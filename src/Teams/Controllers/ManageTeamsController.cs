@@ -46,16 +46,6 @@ namespace Teams.Controllers
             else return null;
         }
 
-        [Authorize, NonAction]
-        public async Task<Team> GetTeamAsync(int team_id)
-        {
-            if (await _accessCheckService.OwnerOrMemberAsync(team_id))
-            {
-                return await _manageTeamsService.GetTeamAsync(team_id);
-            }
-            else return null;
-        }
-
         public IActionResult Privacy()
         {
             return View();
