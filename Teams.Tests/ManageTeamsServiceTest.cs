@@ -57,17 +57,18 @@ namespace Teams.Tests
             //Act
             var isValid = await _manageTeamsService.AddTeamAsync(teamName);
             //Assert
-            Assert.AreEqual(false, isValid);
+            Assert.That(isValid, Is.False);
         }
+
         [Test]
         public async Task AddTeamAsync_AddTeamWithLegalName_ReturnsTrue()
         {
             //Arrange
             string teamName = "Legal_Team.";
             //Act
-            bool isValid = await _manageTeamsService.AddTeamAsync(teamName);
+            var isValid = await _manageTeamsService.AddTeamAsync(teamName);
             //Assert
-            Assert.AreEqual(true, isValid);
+            Assert.AreEqual(isValid, Is.True);
         }
 
         [Test]
@@ -83,9 +84,9 @@ namespace Teams.Tests
             }.AsQueryable();
             _testTeamRepo.Setup(x => x.GetAll()).Returns(existingTeams);
             //Act
-            bool isValid = _manageTeamsService.AddTeamAsync(teamName).Result;
+            var isValid = await _manageTeamsService.AddTeamAsync(teamName);
             //Assert
-            Assert.AreEqual(false, isValid);
+            Assert.That(isValid, Is.False);
         }
         
         [Test]
