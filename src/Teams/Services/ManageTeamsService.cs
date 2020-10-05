@@ -27,6 +27,7 @@ namespace Teams.Services
             {
                 return false;
             }
+            var result = await _teamRepository.InsertAsync(new Team { TeamOwner = _currentUser.Current.Id(), TeamName = teamName });
             return await _teamRepository.InsertAsync(new Team { TeamOwner = _currentUser.Current.Id(), TeamName = teamName });
         }
 

@@ -5,6 +5,7 @@ using Teams.Data;
 using Teams.Models;
 using System.Collections.Generic;
 using System.Linq;
+using MockQueryable.Moq;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Teams.Services;
@@ -12,10 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Teams.Repository;
 using System;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Query.Internal;
-using System.Linq.Expressions;
-using System.Threading;
-using Microsoft.VisualStudio.Web.CodeGeneration.Templating;
 
 namespace Teams.Tests
 {
@@ -23,19 +20,22 @@ namespace Teams.Tests
     class ManageTeamsServiceTest
     {
         private ManageTeamsService _manageTeamsService;
-        private Mock <IRepository<Team, int>> _testTeamRepo;
+        private Mock <IRepository<Team, int>> _teamRepository;
         private Mock<ICurrentUser> _currentUserMock;
 
         [SetUp]
         public void Setup()
         {
             _currentUserMock =  new Mock<ICurrentUser>();
-            _testTeamRepo = new Mock<IRepository<Team, int>>();
+            _teamRepository = new Mock<IRepository<Team, int>>();
+            var dbMock = new List<Team>().AsQueryable().BuildMock();
+            _teamRepository.Setup(x => x.GetAll()).Returns(dbMock.Object);
+            _teamRepository.Setup(x => x.InsertAsync(It.IsAny<Team>())).ReturnsAsync(true);
             string ownerId = Guid.NewGuid().ToString();
             var userDetails = new Mock<UserDetails>(null);
             userDetails.Setup(x => x.Id()).Returns(ownerId);
             _currentUserMock.SetupGet(x => x.Current).Returns(userDetails.Object);
-            _manageTeamsService = new ManageTeamsService(_currentUserMock.Object, _testTeamRepo.Object);
+            _manageTeamsService = new ManageTeamsService(_currentUserMock.Object, _teamRepository.Object);
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace Teams.Tests
             //Act
             var isValid = await _manageTeamsService.AddTeamAsync(teamName);
             //Assert
-            Assert.That(isValid, Is.True);
+            Assert.That(isValid, Is.False);
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace Teams.Tests
             //Act
             var isValid = await _manageTeamsService.AddTeamAsync(teamName);
             //Assert
-            Assert.AreEqual(isValid, Is.True);
+            Assert.That(isValid, Is.True);
         }
 
         [Test]
@@ -77,13 +77,6 @@ namespace Teams.Tests
             //Arrange
             string teamName = "Su_per-Team.,";
             await _manageTeamsService.AddTeamAsync(teamName);
-            var existingTeams = new List<Team>
-            {
-                 new Team { Id= 1, TeamOwner = "1234", TeamName = teamName},
-
-            }.AsQueryable();
-            _testTeamRepo.Setup(x => x.GetAll()).Returns(existingTeams);
-            //Act
             var isValid = await _manageTeamsService.AddTeamAsync(teamName);
             //Assert
             Assert.That(isValid, Is.False);
@@ -108,7 +101,7 @@ namespace Teams.Tests
                 new Team { Id= 10, TeamOwner = "def-abc", TeamName = "Team10", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}}
             };
 
-            _testTeamRepo.Setup(x => x.GetAll()).Returns(teams.AsQueryable());
+            _teamRepository.Setup(x => x.GetAll()).Returns(teams.AsQueryable());
             var ud = new Mock<UserDetails>(null);
             ud.Setup(x => x.Id()).Returns(id);
             ud.Setup(x => x.Name()).Returns("name");
