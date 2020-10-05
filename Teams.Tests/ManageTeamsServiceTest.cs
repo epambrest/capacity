@@ -13,7 +13,6 @@ using Teams.Services;
 using Teams.Repository;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Threading.Tasks;
 
 namespace Teams.Tests
 {

@@ -9,20 +9,17 @@ using System.Linq;
 using Teams.Data;
 using Teams.Security;
 using Teams.Services;
-using System.Threading.Tasks;
 
 namespace Teams.Controllers
 {
     public class ManageTeamsController : Controller
     {
         private readonly IManageTeamsService _manageTeamsService;
-
         private readonly IAccessCheckService _accessCheckService;
 
         public ManageTeamsController(IManageTeamsService manageTeamsService, IAccessCheckService accessCheckService)
         {
             _manageTeamsService = manageTeamsService;
-
             _accessCheckService = accessCheckService;
         }
 
