@@ -34,14 +34,14 @@ namespace Teams.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult Remove()
+        public IActionResult RemoveAsync()
         {
             return View();
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Remove(int team_id, string member_id)
+        public async Task<IActionResult> RemoveAsync(int team_id, string member_id)
         {
             var result = await _teamsMembersService.RemoveAsync(team_id, member_id);
             return RedirectToAction("Index");
