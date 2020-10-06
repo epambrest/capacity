@@ -1,3 +1,4 @@
+
 using System.Collections.Generic;
 using System.Linq;
 using Teams.Data;
@@ -28,5 +29,15 @@ namespace Teams.Services
                 .ToListAsync();
 
         public async Task<Team> GetTeamAsync(int team_id) => await _teamRepository.GetByIdAsync(team_id);
+
+        public async Task<bool> RemoveAsync(int team_id)
+        {
+            var team = await _teamRepository.GetAll().FirstOrDefaultAsync(i => i.TeamOwner == _currentUser.Current.Id() && i.Id == team_id);
+            if (team == null)
+                return false;
+            
+            var result = await _teamRepository.DeleteAsync(team);
+            return result;
+        }
     }
 }

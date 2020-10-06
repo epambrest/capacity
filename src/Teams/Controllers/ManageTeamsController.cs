@@ -14,6 +14,8 @@ namespace Teams.Controllers
 {
     public class ManageTeamsController : Controller
     {
+
+        
         private readonly IManageTeamsService _manageTeamsService;
 
         private readonly IAccessCheckService _accessCheckService;
@@ -55,6 +57,20 @@ namespace Teams.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Remove(int team_id)
+        {
+            var result = await _manageTeamsService.RemoveAsync(team_id);
+            if (result) 
+               return RedirectToAction("Index", "Home");
+            return RedirectToAction("ErorRemove");
+        }
+
+        public IActionResult ErrorRemoveAsync()
+        {
+            return View();
         }
     }
 }

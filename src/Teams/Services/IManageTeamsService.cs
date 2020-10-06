@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Teams.Models;
@@ -7,5 +7,5 @@ using Teams.Models;
     {
         Task<IEnumerable<Team>> GetMyTeamsAsync();
         Task<Team> GetTeamAsync(int team_id);
+        Task<bool> RemoveAsync(int team_id);
     }
-
