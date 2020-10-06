@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Teams.Models;
 using Teams.Services;
+
 namespace Teams.Controllers
 {
     public class ManageTeamMembersController : Controller
@@ -20,6 +21,12 @@ namespace Teams.Controllers
 
             _accessCheckService = accessCheckService;
         }
+
+        public ManageTeamMembersController(IManageTeamsMembersService manageTeamsMembersService)
+        {
+            _manageTeamsMembersService = manageTeamsMembersService;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -44,6 +51,14 @@ namespace Teams.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Add(int team_id, string member_id)
+        {
+            await _manageTeamsMembersService.AddAsync(team_id, member_id);
+            return View();
         }
     }
 }
