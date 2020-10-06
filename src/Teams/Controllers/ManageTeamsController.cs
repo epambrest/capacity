@@ -14,6 +14,8 @@ namespace Teams.Controllers
 {
     public class ManageTeamsController : Controller
     {
+
+        
         private readonly IManageTeamsService _manageTeamsService;
         private readonly IAccessCheckService _accessCheckService;
 
@@ -29,9 +31,9 @@ namespace Teams.Controllers
         }
 
         [Authorize]
-        public IActionResult GetMyTeams()
+        public async Task<IActionResult> GetMyTeamsAsync()
         {
-            return View(_manageTeamsService.GetMyTeams());
+            return View(await _manageTeamsService.GetMyTeamsAsync());
         }
 
         [Authorize, NonAction]
@@ -72,6 +74,20 @@ namespace Teams.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(teamName);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Remove(int team_id)
+        {
+            var result = await _manageTeamsService.RemoveAsync(team_id);
+            if (result) 
+               return RedirectToAction("Index", "Home");
+            return RedirectToAction("ErorRemove");
+        }
+
+        public IActionResult ErrorRemoveAsync()
+        {
+            return View();
         }
     }
 }

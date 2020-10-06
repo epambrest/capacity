@@ -10,5 +10,7 @@ namespace Teams.Services
         Task<bool> AddTeamAsync(string teamName); 
         IEnumerable<Team> GetMyTeams();
         Task<Team> GetTeamAsync(int team_id);
+        Task<IEnumerable<Team>> GetMyTeamsAsync();
+        Task<bool> RemoveAsync(int team_id);
     }
 }
