@@ -21,7 +21,7 @@ namespace Teams.Controllers
 
             _accessCheckService = accessCheckService;
         }
-
+        
         public IActionResult Index()
         {
             return View();
@@ -61,6 +61,14 @@ namespace Teams.Controllers
         {
             var result = await _manageTeamsMembersService.RemoveAsync(team_id, member_id);
             return RedirectToAction("Index");
+        }
+        
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Add(int team_id, string member_id)
+        {
+            await _manageTeamsMembersService.AddAsync(team_id, member_id);
+            return View();
         }
     }
 }

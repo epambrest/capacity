@@ -38,6 +38,7 @@ namespace Teams
             services.AddTransient<IRepository<TeamMember, int>, TeamMemberRepository>();
             services.AddHttpContextAccessor();
             services.AddTransient<ICurrentUser, CurrentUser>();
+            services.AddTransient<IManageTeamsMembersService, ManageTeamsMembersService>();
             services.AddTransient<IAccessCheckService, AccessCheckService>();
         }
 

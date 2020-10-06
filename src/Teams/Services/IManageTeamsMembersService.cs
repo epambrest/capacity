@@ -7,5 +7,7 @@ namespace Teams.Services
     {
         Task<bool> RemoveAsync(int team_id, string member_id);
         Task<TeamMember> GetMemberAsync(int team_id, string member_id);
+        Task<bool> AddAsync(int team_id, string member_id);
     }
 }
+
