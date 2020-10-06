@@ -1,8 +1,11 @@
-﻿@{
-    ViewData["Title"] = "Manage Team";
+﻿@model IEnumerable<Teams.Models.Team>
+
+@{
+    ViewData["Title"] = "Index";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to Manage Team Page</h1>
-    <p>Here was something later</p>
-</div>
+<h1>Index</h1>
+
+<p>
+    <a asp-action="AddTeam">Add New Team</a>
+</p>
