@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using MockQueryable.Moq;
 using Moq;
+using Teams.Security;
+using Microsoft.AspNetCore.Http;
+using MockQueryable.Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,31 +9,79 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Teams.Data;
 using Teams.Models;
-using Teams.Security;
 using Teams.Services;
+using Teams.Repository;
+using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Teams.Tests
 {
     [TestFixture]
     class ManageTeamsServiceTest
     {
-        public IManageTeamsService _manageTeamsService;
+        private ManageTeamsService _manageTeamsService;
+        private Mock <IRepository<Team, int>> _teamRepository;
+        private Mock<ICurrentUser> _currentUserMock;
 
-        public Mock<IRepository<Team, int>> _teamRepository;
-
-        public Mock<ICurrentUser> _currentUser;
-        
         [SetUp]
         public void Setup()
         {
+            _currentUserMock =  new Mock<ICurrentUser>();
             _teamRepository = new Mock<IRepository<Team, int>>();
-
-            _currentUser = new Mock<ICurrentUser>();
-
-            _manageTeamsService = new ManageTeamsService(_currentUser.Object, _teamRepository.Object);
-            
+            var dbMock = new List<Team>().AsQueryable().BuildMock();
+            _teamRepository.Setup(x => x.GetAll()).Returns(dbMock.Object);
+            _teamRepository.Setup(x => x.InsertAsync(It.IsAny<Team>())).ReturnsAsync(true);
+            string ownerId = Guid.NewGuid().ToString();
+            var userDetails = new Mock<UserDetails>(null);
+            userDetails.Setup(x => x.Id()).Returns(ownerId);
+            _currentUserMock.SetupGet(x => x.Current).Returns(userDetails.Object);
+            _manageTeamsService = new ManageTeamsService(_currentUserMock.Object, _teamRepository.Object);
         }
 
+        [Test]
+        public async Task AddTeamAsync_AddTeamWithEmptyName_ReturnsFalse()
+        {
+            //Arrange
+            string teamName = "";
+            //Act
+            var isValid = await _manageTeamsService.AddTeamAsync(teamName);
+            //Assert
+            Assert.That(isValid, Is.False);
+        }
+
+        [Test]
+        public async Task AddTeamAsync_AddTeamWithIllegalName_ReturnsFalse()
+        {
+            //Arrange
+            string teamName = "alex wins:";
+            //Act
+            var isValid = await _manageTeamsService.AddTeamAsync(teamName);
+            //Assert
+            Assert.That(isValid, Is.False);
+        }
+
+        [Test]
+        public async Task AddTeamAsync_AddTeamWithLegalName_ReturnsTrue()
+        {
+            //Arrange
+            string teamName = "Legal_Team.";
+            //Act
+            var isValid = await _manageTeamsService.AddTeamAsync(teamName);
+            //Assert
+            Assert.That(isValid, Is.True);
+        }
+
+        [Test]
+        public async Task AddTeamAsync_AddTeamWithExistingName_ReturnsFalseAsync()
+        {
+            //Arrange
+            string teamName = "Su_per-Team.,";
+            await _manageTeamsService.AddTeamAsync(teamName);
+            var isValid = await _manageTeamsService.AddTeamAsync(teamName);
+            //Assert
+            Assert.That(isValid, Is.False);
+        }
+        
         [Test]
         public async Task GetMyTeamsAsync_ManageTeamsServiceReturnsListCount4_ListCount4()
         {
@@ -58,7 +107,7 @@ namespace Teams.Tests
             var ud = new Mock<UserDetails>(null);
             ud.Setup(x => x.Id()).Returns(id);
             ud.Setup(x => x.Name()).Returns("name");
-            _currentUser.SetupGet(x => x.Current).Returns(ud.Object);
+            _currentUserMock.SetupGet(x => x.Current).Returns(ud.Object);
 
             //Act
             var result = new List<Team>(await _manageTeamsService.GetMyTeamsAsync());
@@ -84,7 +133,7 @@ namespace Teams.Tests
             var ud = new Mock<UserDetails>(null);
             ud.Setup(x => x.Id()).Returns(id);
             ud.Setup(x => x.Name()).Returns("name");
-            _currentUser.SetupGet(x => x.Current).Returns(ud.Object);
+            _currentUserMock.SetupGet(x => x.Current).Returns(ud.Object);
 
             //Act
             var result = await _manageTeamsService.GetTeamAsync(team_id);

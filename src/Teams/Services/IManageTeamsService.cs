@@ -1,11 +1,16 @@
+﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Teams.Models;
 
-   public interface IManageTeamsService
+namespace Teams.Services
+{
+    public interface IManageTeamsService
     {
-        Task<IEnumerable<Team>> GetMyTeamsAsync();
+        Task<bool> AddTeamAsync(string teamName); 
+        IEnumerable<Team> GetMyTeams();
         Task<Team> GetTeamAsync(int team_id);
+        Task<IEnumerable<Team>> GetMyTeamsAsync();
         Task<bool> RemoveAsync(int team_id);
     }
+}

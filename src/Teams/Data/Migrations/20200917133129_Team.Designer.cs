@@ -232,7 +232,7 @@ namespace Teams.Data.Migrations
                     b.Property<string>("TeamName")
                         .IsRequired()
                         .HasColumnName("TeamName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("TeamOwner")
                         .IsRequired()
