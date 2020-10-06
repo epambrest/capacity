@@ -48,6 +48,7 @@ namespace Teams.Services
                 return await _teamRepository.UpdateAsync(new Team { Id = team_id, TeamOwner = _currentUser.Current.Id(), TeamName = team_name });
             }
             else return false;
+        }   
             
         public async Task<bool> RemoveAsync(int team_id)
         {
