@@ -137,7 +137,6 @@ namespace Teams.Tests
 
                 //Assert
                 Assert.IsTrue(result);
-
             }
 
             [Test]

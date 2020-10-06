@@ -8,7 +8,7 @@ using Teams.Models;
 
 namespace Teams.Repository
 {
-    public class TeamMemberRepository : IRepository<TeamMember,int>
+    public class TeamMemberRepository : IRepository<TeamMember, int>
     {
         private readonly ApplicationDbContext _dbContext;
 
@@ -19,9 +19,8 @@ namespace Teams.Repository
 
         public async Task<bool> DeleteAsync(TeamMember entity)
         {
-            var obj = _dbContext.TeamMembers.Remove(entity);
-            var result=obj.State == EntityState.Deleted ? true : false;
-            await _dbContext.SaveChangesAsync();
+            _dbContext.TeamMembers.Remove(entity);
+            var result = await _dbContext.SaveChangesAsync() > 0 ? true : false;
             return result;
         }
 
@@ -30,13 +29,12 @@ namespace Teams.Repository
             return _dbContext.TeamMembers;
         }
 
-        public async Task<TeamMember> GetByIdAsync(int Id) => await _dbContext.TeamMembers.FindAsync(Id);    
+        public async Task<TeamMember> GetByIdAsync(int Id) => await _dbContext.TeamMembers.FindAsync(Id);
 
         public async Task<bool> InsertAsync(TeamMember entity)
         {
-            var obj = await _dbContext.TeamMembers.AddAsync(entity);
-            var result = obj.State == EntityState.Added ? true : false;
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.TeamMembers.AddAsync(entity);
+            var result = await _dbContext.SaveChangesAsync() > 0 ? true : false;
             return result;
         }
 

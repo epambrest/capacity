@@ -13,5 +13,13 @@ namespace Teams.Data
 
         public DbSet<Team> Team { get; set; }
         public DbSet<TeamMember> TeamMembers { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<Team>()
+                .HasIndex(t => t.TeamName)
+                .IsUnique();
+        }
     }
 }
