@@ -158,7 +158,7 @@ namespace Teams.Tests
             var ud = new Mock<UserDetails>(null);
             ud.Setup(x => x.Id()).Returns(id);
             ud.Setup(x => x.Name()).Returns("name");
-            _currentUser.SetupGet(x => x.Current).Returns(ud.Object);
+            _currentUserMock.SetupGet(x => x.Current).Returns(ud.Object);
 
             //Act
             var result = await _manageTeamsService.EditTeamNameAsync(team_id, team_name);
@@ -184,7 +184,7 @@ namespace Teams.Tests
             var ud = new Mock<UserDetails>(null);
             ud.Setup(x => x.Id()).Returns(id);
             ud.Setup(x => x.Name()).Returns("name");
-            _currentUser.SetupGet(x => x.Current).Returns(ud.Object);
+            _currentUserMock.SetupGet(x => x.Current).Returns(ud.Object);
 
             //Act
             var result1 = await _manageTeamsService.EditTeamNameAsync(team_id, exist_team_name);         //team with the same name already exists 
@@ -211,7 +211,7 @@ namespace Teams.Tests
             var ud = new Mock<UserDetails>(null);
             ud.Setup(x => x.Id()).Returns(id);
             ud.Setup(x => x.Name()).Returns("name");
-            _currentUser.SetupGet(x => x.Current).Returns(ud.Object);
+            _currentUserMock.SetupGet(x => x.Current).Returns(ud.Object);
 
             //Act
             var result = await _manageTeamsService.EditTeamNameAsync(team_id, team_name);        //current user is not a team owner
