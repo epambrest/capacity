@@ -1,0 +1,28 @@
+﻿@model Teams.Models.Team
+
+@{
+    ViewData["Title"] = "Add Team";
+}
+
+<h1>Add New Team</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddTeam">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TeamName" class="control-label">Enter new team's name</label>
+                <input asp-for="TeamName" class="form-control" />
+                <span asp-validation-for="TeamName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add Team" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to Index</a>
+</div>
+
