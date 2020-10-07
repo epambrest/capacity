@@ -7,6 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace Teams.Services
 {
@@ -44,6 +46,21 @@ namespace Teams.Services
             return await _teamMemberRepository.GetAll()
             .Where(x => x.MemberId == member_id && x.TeamId == team_id)
             .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<TeamMember>> GetAllTeamMembersAsync(int team_id, DisplayOptions options)
+        {
+            var members = _teamMemberRepository.GetAll().Where(x => x.TeamId == team_id);
+
+            if (options.SortDirection == (int)SortDirection.Ascending) return await members.OrderBy(x => x.Member.UserName).ToListAsync();
+
+            else return await members.OrderByDescending(x => x.Member.UserName).ToListAsync();
+        }
+
+        public enum SortDirection
+        {
+            Ascending=0,
+            Descending=1
         }
     }
 }
