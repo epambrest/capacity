@@ -52,15 +52,9 @@ namespace Teams.Services
         {
             var members = _teamMemberRepository.GetAll().Where(x => x.TeamId == team_id);
 
-            if (options.SortDirection == (int)SortDirection.Ascending) return await members.OrderBy(x => x.Member.UserName).ToListAsync();
+            if (options.SortDirection == SortDirection.Ascending) return await members.OrderBy(x => x.Member.UserName).ToListAsync();
 
             else return await members.OrderByDescending(x => x.Member.UserName).ToListAsync();
-        }
-
-        public enum SortDirection
-        {
-            Ascending=0,
-            Descending=1
         }
     }
 }

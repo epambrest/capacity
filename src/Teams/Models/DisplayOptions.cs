@@ -14,7 +14,12 @@ namespace Teams.Models
         [DefaultValue(25), Range(0, int.MaxValue)]
         public int PageSize { get; set; }
 
-        [DefaultValue(0), Range(0, 1)]
-        public int SortDirection { get; set; }
+        [DefaultValue(SortDirection.Ascending)]
+        public SortDirection SortDirection { get; set; }
+    }
+    public enum SortDirection
+    {
+        Ascending = 0,
+        Descending = 1
     }
 }
