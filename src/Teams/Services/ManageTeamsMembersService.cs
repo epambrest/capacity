@@ -50,17 +50,11 @@ namespace Teams.Services
 
         public async Task<List<TeamMember>> GetAllTeamMembersAsync(int team_id, DisplayOptions options)
         {
-            var members = _teamMemberRepository.GetAll().Include(x=>x.Member).Include(x=>x.Team).ThenInclude(x=>x.Owner).Where(x => x.TeamId == team_id);
+            var members = _teamMemberRepository.GetAll().Include(x => x.Member).Include(x => x.Team).ThenInclude(x => x.Owner).Where(x => x.TeamId == team_id);
 
-            if (options.SortDirection == (int)SortDirection.Ascending) return await members.OrderBy(x => x.Member.UserName).ToListAsync();
+            if (options.SortDirection == SortDirection.Ascending) return await members.OrderBy(x => x.Member.UserName).ToListAsync();
 
             else return await members.OrderByDescending(x => x.Member.UserName).ToListAsync();
-        }
-
-        public enum SortDirection
-        {
-            Ascending=0,
-            Descending=1
         }
     }
 }
