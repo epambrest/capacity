@@ -50,7 +50,7 @@ namespace Teams.Services
 
         public async Task<List<TeamMember>> GetAllTeamMembersAsync(int team_id, DisplayOptions options)
         {
-            var members = _teamMemberRepository.GetAll().Where(x => x.TeamId == team_id);
+            var members = _teamMemberRepository.GetAll().Include(x=>x.Member).Include(x=>x.Team).Where(x => x.TeamId == team_id);
 
             if (options.SortDirection == (int)SortDirection.Ascending) return await members.OrderBy(x => x.Member.UserName).ToListAsync();
 
