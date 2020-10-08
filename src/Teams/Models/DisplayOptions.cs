@@ -17,9 +17,4 @@ namespace Teams.Models
         [DefaultValue(SortDirection.Ascending)]
         public SortDirection SortDirection { get; set; }
     }
-    public enum SortDirection
-    {
-        Ascending = 0,
-        Descending = 1
-    }
 }
