@@ -6,6 +6,6 @@
     <tr><td>Team Name</td><td>Team Owner</td></tr>
     @foreach (var item in Model)
     {
-        <tr><td><a asp-controller="ManageTeamMembers" asp-action="TeamMembers">@item.TeamName</a></td><td>@item.TeamOwner</td></tr>
+        <tr><td><a>@Html.ActionLink(item.TeamName, "TeamMembers", "ManageTeamMembers", new { team_id = item.Id, team_name = item.TeamName, owner_name = item.Owner.UserName})</a></td><td>@item.Owner.UserName</td></tr>
     }
 </table>
