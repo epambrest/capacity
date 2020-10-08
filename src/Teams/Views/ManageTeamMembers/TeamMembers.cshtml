@@ -2,14 +2,33 @@
 @{
     ViewBag.Title = "Team Members";
 }
+ <script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
+ <div style="margin: 10px 0px 0px 30px" align="left">
+     <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to your teams", "GetMyTeams", "ManageTeams")</a></h>
+ </div>
 <div align="center">
     <h><font size="6" color="red">@ViewBag.TeamName</font></h>
+        
+    
 </div>
 <table class="table">
-    <tr><td>Member Name</td><td>Role</td></tr>
-    <tr><td>@ViewBag.TeamOwner</td><td>Owner</td></tr>
+    <tr align="center">
+        <td align="left" width="1%"></td>
+        <td align="left" style="font-weight: bold">Member Email</td>
+        <td align="right"></td>
+    </tr>
+    
+    <tr align="center">
+        <td align="left" width="1%"><i title="Owner" class="fas fa-crown"></i></td>
+        <td align="left">@ViewBag.TeamOwner</td>
+        <td align="right"></td>
+    </tr>
     @foreach (var item in ViewBag.Members)
     {
-        <tr><td><a asp-controller="ManageTeamMembers" asp-action="TeamMembers">@item.Member.UserName</a></td><td>Member</td></tr>
+     <tr align="center">
+        <td align="left" width="1%"><i title="Member" class="fas fa-user"></i></td>
+        <td align="left">@item.Member.Email</td>
+        <td align="right"></td>
+     </tr>
     }
 </table>
