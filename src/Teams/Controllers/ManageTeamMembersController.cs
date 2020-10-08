@@ -22,11 +22,6 @@ namespace Teams.Controllers
             _accessCheckService = accessCheckService;
         }
 
-        public ManageTeamMembersController(IManageTeamsMembersService manageTeamsMembersService)
-        {
-            _manageTeamsMembersService = manageTeamsMembersService;
-        }
-
         public IActionResult Index()
         {
             return View();
@@ -40,6 +35,16 @@ namespace Teams.Controllers
                 return await _manageTeamsMembersService.GetMemberAsync(team_id, member_id);
             }
             else return null;
+        }
+
+        [Authorize, NonAction]
+        public async Task<List<TeamMember>> GetAllTeamMembersAsync(int team_id, DisplayOptions options)
+        {
+            if (await _accessCheckService.OwnerOrMemberAsync(team_id))
+            {
+                return await _manageTeamsMembersService.GetAllTeamMembersAsync(team_id, options);
+            }
+            else return null; 
         }
 
         public IActionResult Privacy()

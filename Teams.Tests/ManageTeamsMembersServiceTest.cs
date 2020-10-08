@@ -66,6 +66,39 @@ namespace Teams.Tests
             Assert.AreEqual(result2, null);
         }
 
+        [Test]
+        public async Task GetAllTeamMembersAsync_ManageTeamsMembersServiceReturnList_ReturnList()
+        {
+            //Arrange
+            const int team_id = 4;
+
+            var mock = GetFakeDbTeamMembers().AsQueryable().BuildMock();
+            _teamMemberRepository.Setup(x => x.GetAll()).Returns(mock.Object);
+
+            //Act
+            var result = await _manageTeamsMembersService.GetAllTeamMembersAsync(team_id, new DisplayOptions { });
+
+            //Assert
+            Assert.AreEqual(result[0].Id, 5);
+            Assert.AreEqual(result[1].Id, 4);
+        }
+
+        [Test]
+        public async Task GetAllTeamMembersAsync_ManageTeamsMembersServiceReturnNull_ReturnNull()
+        {
+            //Arrange
+            const int team_id = 40;
+
+            var mock = GetFakeDbTeamMembers().AsQueryable().BuildMock();
+            _teamMemberRepository.Setup(x => x.GetAll()).Returns(mock.Object);
+
+            //Act
+            var result = await _manageTeamsMembersService.GetAllTeamMembersAsync(team_id, new DisplayOptions { });
+
+            //Assert
+            Assert.AreEqual(result.Count, 0);
+        }
+
         private List<TeamMember> GetFakeDbTeamMembers()
         {
             var teamMembers = new List<TeamMember>
@@ -73,8 +106,8 @@ namespace Teams.Tests
                 new TeamMember {Id =1, MemberId="def-abc", TeamId =1},
                 new TeamMember {Id =2, MemberId="abc-def", TeamId =2},
                 new TeamMember {Id =3, MemberId="asf-fgv", TeamId =3},
-                new TeamMember {Id =4, MemberId="def-abc", TeamId =4},
-                new TeamMember {Id =5, MemberId="abc-def", TeamId =4},
+                new TeamMember {Id =4, MemberId="def-abc", Member= new Microsoft.AspNetCore.Identity.IdentityUser{ UserName = "b" }, TeamId =4},
+                new TeamMember {Id =5, MemberId="abc-def", Member= new Microsoft.AspNetCore.Identity.IdentityUser{ UserName = "a" }, TeamId =4},
                 new TeamMember {Id =6, MemberId="asf-fgv", TeamId =5},
                 new TeamMember {Id =7, MemberId="asf-fgv", TeamId =6},
                 new TeamMember {Id =8, MemberId="asf-fgv", TeamId =7},
