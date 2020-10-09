@@ -16,15 +16,11 @@ namespace Teams.Controllers
     {
         private readonly IManageTeamsMembersService _manageTeamsMembersService;
 
-        private readonly IManageTeamsService _manageTeamsService;
-
         private readonly IAccessCheckService _accessCheckService;
 
-        public ManageTeamMembersController(IManageTeamsMembersService manageTeamsMembersService, IManageTeamsService manageTeamsService, IAccessCheckService accessCheckService)
+        public ManageTeamMembersController(IManageTeamsMembersService manageTeamsMembersService, IAccessCheckService accessCheckService)
         {
             _manageTeamsMembersService = manageTeamsMembersService;
-
-            _manageTeamsService = manageTeamsService;
 
             _accessCheckService = accessCheckService;
         }
