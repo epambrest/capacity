@@ -1,11 +1,14 @@
 ﻿@model IEnumerable<Teams.Models.Team>
-@{
-    ViewBag.Title = "My teams";
-}
+@{ ViewBag.Title = "My teams"; }
+<p>
+        <script src="https://kit.fontawesome.com/8fd96fc88e.js" crossorigin="anonymous"></script>
+        <div style="margin: 10px 0px 0px 30px" align="right">
+            <h><a style="color: black; text-decoration: none;" class="fas fa-plus" @Html.ActionLink("", "AddTeam", "ManageTeams")</a></h>
+        </div>
+</p>
 <table class="table">
     <tr><td>Team Name</td><td>Team Owner</td></tr>
     @foreach (var item in Model)
     {
-        <tr><td>@item.TeamName</td><td>@item.TeamOwner</td></tr>
-    }
+<tr><td>@item.TeamName</td><td>@item.TeamOwner</td></tr>}
 </table>
