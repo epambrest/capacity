@@ -2,10 +2,26 @@
 @{
     ViewBag.Title = "My teams";
 }
+<script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
 <table class="table">
-    <tr><td>Team Name</td><td>Team Owner</td></tr>
+    <tr align="center">
+        <td align="left" width="1%"></td>
+        <td align="left" style="font-weight: bold">Team Name</td>
+        <td align="right"></td>
+    </tr>
     @foreach (var item in Model)
     {
-        <tr><td>@item.TeamName</td><td>@item.TeamOwner</td></tr>
+        <tr align="center">
+            @if (item.Owner.Email == User.Identity.Name)
+            {
+                <td align="left" width="1%"><i title="Owner" class="fas fa-crown"></i></td>
+            }
+            else
+            {
+                <td align="left" width="1%"><i title="Member" class="fas fa-user"></i></td>
+            }
+            <td align="left">@item.TeamName</td>
+            <td align="right"></td>
+        </tr>
     }
 </table>
