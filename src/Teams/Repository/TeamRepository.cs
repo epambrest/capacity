@@ -19,7 +19,7 @@ namespace Teams.Repository
 
         public async Task<bool> DeleteAsync(Team entity)
         {
-            var obj = _dbContext.Team.Remove(entity);
+            _dbContext.Team.Remove(entity);
             var result = await _dbContext.SaveChangesAsync() > 0 ? true : false;
             return result;
         }

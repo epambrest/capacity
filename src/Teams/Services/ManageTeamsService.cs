@@ -27,17 +27,26 @@ namespace Teams.Services
             {
                 return false;
             }
-            var result = await _teamRepository.InsertAsync(new Team { TeamOwner = _currentUser.Current.Id(), TeamName = teamName });
             return await _teamRepository.InsertAsync(new Team { TeamOwner = _currentUser.Current.Id(), TeamName = teamName });
         }
 
-        public IEnumerable<Team> GetMyTeams() => _teamRepository.GetAll().Include(m => m.TeamMembers);
         public async Task<IEnumerable<Team>> GetMyTeamsAsync() =>await _teamRepository.GetAll().Include(m => m.TeamMembers)
                 .Where(x => x.TeamOwner == _currentUser.Current.Id() || x.TeamMembers.Any(p => p.MemberId == _currentUser.Current.Id()))
                 .OrderByDescending(y => y.TeamOwner == _currentUser.Current.Id()).ToListAsync();
 
         public async Task<Team> GetTeamAsync(int team_id) => await _teamRepository.GetByIdAsync(team_id);
 
+        public async Task<bool> EditTeamNameAsync(int team_id, string team_name)
+        {
+            var team = await _teamRepository.GetByIdAsync(team_id);
+
+            if (team != null && team.TeamOwner == _currentUser.Current.Id() && !_teamRepository.GetAll().Any(x => x.TeamName.ToUpper() == team_name.ToUpper()) && Regex.IsMatch(team_name, ("^[a-zA-Z0-9-_.]+$")))
+            {
+                return await _teamRepository.UpdateAsync(new Team { Id = team_id, TeamOwner = _currentUser.Current.Id(), TeamName = team_name });
+            }
+            else return false;
+        }   
+            
         public async Task<bool> RemoveAsync(int team_id)
         {
             var team = await _teamRepository.GetAll().FirstOrDefaultAsync(i => i.TeamOwner == _currentUser.Current.Id() && i.Id == team_id);
