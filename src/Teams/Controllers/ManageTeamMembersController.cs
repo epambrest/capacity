@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Teams.Models;
 using Teams.Services;
@@ -47,6 +50,22 @@ namespace Teams.Controllers
             else return null; 
         }
 
+        [Authorize]
+        public async Task<IActionResult> TeamMembersAsync(int team_id, string team_name, string owner_name)
+        {
+            List <TeamMember> members = await GetAllTeamMembersAsync(team_id, new DisplayOptions { });
+
+            if (members == null) return View("MembersEror");
+            ViewBag.Members = members;
+            ViewBag.TeamName = team_name;
+            ViewBag.TeamOwner = owner_name;
+            return View();
+        }
+
+        public IActionResult MembersEror()
+        {
+            return View("Index");
+        }
         public IActionResult Privacy()
         {
             return View();
