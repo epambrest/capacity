@@ -9,12 +9,13 @@
 <div>
     @using (Html.BeginForm("AddMember", "ManageTeamMembers", FormMethod.Post))
     {
-        @Html.Hidden("team_id",@ViewBag.TeamId as string)
+        @Html.Hidden("team_id", @ViewBag.TeamId as string)
+
         <input name="member_id" list="members">
         <datalist id="members">
             @foreach (var item in @ViewBag.Users)
             {
-                <option value="@item.Id">@item.Email</option>
+                <option value=@item.Id>@item.Email</option>
             }
         </datalist>
 

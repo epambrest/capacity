@@ -66,8 +66,13 @@ namespace Teams.Controllers
             List <TeamMember> members = await GetAllTeamMembersAsync(team_id, new DisplayOptions { });
 
             if (members == null) return View("MembersError");
+
             var teams =await  _manageTeamsService.GetMyTeamsAsync();
             var team = teams.Where(x => x.Id == team_id).FirstOrDefault();
+
+            if (await _accessCheckService.IsOwnerAsync(team_id)) ViewBag.AddVision = "visible";
+            else ViewBag.AddVision = "collapse";
+
             ViewBag.Members = members;
             ViewBag.TeamName = team.TeamName;
             ViewBag.TeamId = team.Id;
