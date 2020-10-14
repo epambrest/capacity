@@ -56,5 +56,19 @@ namespace Teams.Services
 
             else return await members.OrderByDescending(x => x.Member.UserName).ToListAsync();
         }
+
+        public async Task<bool> DeleteAsync(int team_id, string member_id)
+        {
+            var member = await _teamMemberRepository.GetAll()
+            .Where(x => x.MemberId == member_id && x.TeamId == team_id
+            && x.Team.TeamOwner == _currentUser.Current.Id()
+            && x.Team.TeamOwner != member_id)
+            .FirstOrDefaultAsync();
+            if (member != null)
+            {
+                return await _teamMemberRepository.DeleteAsync(member);
+            }
+            return false;
+        }
     }
 }
