@@ -11,11 +11,12 @@
     {
         @Html.Hidden("team_id", @ViewBag.TeamId as string)
 
-        <input name="member_id" list="members">
+        <label for="user">Find user:</label>
+        <input id="user" autocomplete="off" name="member_email" list="members">
         <datalist id="members">
             @foreach (var item in ViewBag.Users)
             {
-                <option value=@item.Id>@item.Email</option>
+            <option value=@item.Email></option>
             }
         </datalist>
 
