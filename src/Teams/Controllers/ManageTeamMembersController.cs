@@ -108,21 +108,19 @@ namespace Teams.Controllers
         [Authorize]
         public async Task<IActionResult> AddMemberAsync(int team_id, string member_id)
         {
+            if (member_id == null) return RedirectToAction("AddError", new { error_message = "Field is empty"});
+
             bool result = await _manageTeamsMembersService.AddAsync(team_id, member_id);
-            if (result) return View(await TeamMembersAsync(team_id));
-            else return View(AddError());
+            var users = await _userManager.Users.ToListAsync();
+            ViewBag.Users = users;
+
+            if (result) return RedirectToAction("TeamMembers", new { team_id = team_id});
+            else return RedirectToAction("AddError", new { error_message = "Current user already in team" });
         }
 
-        [Authorize]
-        public async Task<IActionResult> Add(int team_id, string member_id)
+        public IActionResult AddError(string error_message)
         {
-            bool result = await _manageTeamsMembersService.AddAsync(team_id, member_id);
-            if (result) return View("TeamMembers", new { team_id = team_id});
-            else return View("AddError");
-        }
-
-        public IActionResult AddError()
-        {
+            ViewBag.ErrorMessage = error_message;
             return View();
         }
     }

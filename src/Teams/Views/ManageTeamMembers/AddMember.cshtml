@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Manage Team Members";
+    ViewData["Title"] = "Add Member";
 }
 
 <div align="center">
@@ -7,16 +7,17 @@
 </div>
 
 <div>
-    <form asp-action="AddMember">
-        <input type="hidden" value="@ViewBag.TeamId" />
-        <input list="members">
+    @using (Html.BeginForm("AddMember", "ManageTeamMembers", FormMethod.Post))
+    {
+        @Html.Hidden("team_id",@ViewBag.TeamId as string)
+        <input name="member_id" list="members">
         <datalist id="members">
-            @foreach (var item in ViewBag.Users)
+            @foreach (var item in @ViewBag.Users)
             {
-                <option value="@item.Id"></option>
+                <option value="@item.Id">@item.Email</option>
             }
         </datalist>
 
         <input type="submit" class="btn btn-primary" value="Add Member" />
-        </form>
+    }
 </div>
