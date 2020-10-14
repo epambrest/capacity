@@ -57,7 +57,7 @@ namespace Teams.Controllers
         [Authorize]
         public async Task<IActionResult> EditTeamNameAsync(int team_id, string team_name)
         {
-            var result = await _manageTeamsService.EditTeamNameAsync(team_id, team_name);
+            ViewBag.resultOfEditing = await _manageTeamsService.EditTeamNameAsync(team_id, team_name);
             return View(await GetTeamAsync(team_id));
         }
 

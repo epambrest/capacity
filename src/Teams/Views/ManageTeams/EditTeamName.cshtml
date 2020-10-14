@@ -5,7 +5,7 @@
     ViewData["Title"] = "Edit Team Name";
 }
 
-<h1>EditTeamName</h1>
+<h1>Team Editing</h1>
 
 
 @using (Html.BeginForm())
@@ -13,16 +13,24 @@
     <input type="hidden" value="@Model.Id" />
     <table>
         <tr>
-            <td>Введите новое имя команды</td>
+            <td>Name</td>
         </tr>
         <tr>
             <td><input type="text" name="team_name" value="@Model.TeamName" /></td>
+            @if (ViewBag.resultOfEditing != null && ViewBag.resultOfEditing)
+            {
+                <td>Saved</td>
+            }
+            else if (ViewBag.resultOfEditing != null)
+            {
+                <td>Name is taken</td>
+            }
         </tr>
         <tr>
-            <td><input type="submit" class="btn btn-primary" value="Сохранить" />
+            <td><input type="submit" class="btn btn-primary" value="Save" />
         </tr>
         <tr>
-            <td><a class="btn btn-primary" href="GetMyTeams" role="button">Вернуться назад</a></td>
+            <td><a class="btn btn-primary" href="GetMyTeams" role="button">Back</a></td>
         </tr>
     </table>
 }
