@@ -13,7 +13,7 @@
 
         <input name="member_id" list="members">
         <datalist id="members">
-            @foreach (var item in @ViewBag.Users)
+            @foreach (var item in ViewBag.Users)
             {
                 <option value=@item.Id>@item.Email</option>
             }
