@@ -13,8 +13,11 @@
             <td>@item.TeamName</td>
             <td>@item.TeamOwner</td>
             <td>
-                @Html.ActionLink("", "EditTeamName", new { team_id = item.Id },
+                @if(item.Owner.Email == User.Identity.Name)
+                { @Html.ActionLink("", "EditTeamName", new { team_id = item.Id },
                new { @class = "fas fa-edit", style = "margin: 10px 0px 0px 30px", align = "right" })
+                }
+               
             </td>
         </tr>
     }
