@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Manage Team Members";
+}
+
+<div align="center">
+    <h1 size="4" align="left">@ViewBag.TeamName | Add Team Member</h1>
+</div>
+
+<div>
+    <form asp-action="AddMember">
+        <input type="hidden" value="@ViewBag.TeamId" />
+        <input list="members">
+        <datalist id="members">
+            @foreach (var item in ViewBag.Users)
+            {
+                <option value="@item.Id"></option>
+            }
+        </datalist>
+
+        <input type="submit" class="btn btn-primary" value="Add Member" />
+        </form>
+</div>
