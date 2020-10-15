@@ -19,12 +19,17 @@ namespace Teams.Tests
 
         public Mock<IRepository<TeamMember, int>> _teamMemberRepository;
 
+        public Mock<IRepository<Team, int>> _teamRepository;
+
+        private Mock<ICurrentUser> _currentUserMock;
+
         [SetUp]
         public void Setup()
         {
+            _currentUserMock = new Mock<ICurrentUser>();
             _teamMemberRepository = new Mock<IRepository<TeamMember, int>>();
-
-            _manageTeamsMembersService = new ManageTeamsMembersService(_teamMemberRepository.Object);
+            _teamRepository = new Mock<IRepository<Team, int>>();
+            _manageTeamsMembersService = new ManageTeamsMembersService(_teamRepository.Object, _teamMemberRepository.Object, _currentUserMock.Object);
         }
 
         [Test]
