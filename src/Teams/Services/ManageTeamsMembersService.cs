@@ -32,7 +32,7 @@ namespace Teams.Services
             if (team != null)
             {
                 var member = MemberInTeam(team, member_id);
-                if (team != null && team.TeamOwner == _currentUser.Current.Id() && member != null)
+                if (team.TeamOwner == _currentUser.Current.Id() && member != null)
                 {
                     return await _teamMemberRepository.DeleteAsync(member);
                 }
