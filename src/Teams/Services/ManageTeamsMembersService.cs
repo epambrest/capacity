@@ -29,10 +29,13 @@ namespace Teams.Services
         public async Task<bool> RemoveAsync(int team_id, string member_id)
         {
             var team = await _teamRepository.GetAll().Include(t =>t.TeamMembers).Where(t => t.Id == team_id).SingleOrDefaultAsync();
-            var member = MemberInTeam(team, member_id);
-            if (team != null && team.TeamOwner == _currentUser.Current.Id() && member != null )
-            {       
-                return await _teamMemberRepository.DeleteAsync(member);
+            if (team != null)
+            {
+                var member = MemberInTeam(team, member_id);
+                if (team != null && team.TeamOwner == _currentUser.Current.Id() && member != null)
+                {
+                    return await _teamMemberRepository.DeleteAsync(member);
+                }
             }
             return false;
         }
