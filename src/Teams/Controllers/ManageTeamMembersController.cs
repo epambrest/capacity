@@ -35,6 +35,7 @@ namespace Teams.Controllers
             _userManager = userManager;
         }
 
+
         public IActionResult Index()
         {
             return View();
@@ -108,7 +109,22 @@ namespace Teams.Controllers
 
             return View(await TeamMembersAsync(team_id));
         }
+        
+        [HttpGet]
+        [Authorize]
+        public IActionResult RemoveAsync()
+        {
+            return View();
+        }
 
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> RemoveAsync(int team_id, string member_id)
+        {
+            var result = await _manageTeamsMembersService.RemoveAsync(team_id, member_id);
+            return RedirectToAction("Index");
+        }
+        
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> AddMemberAsync(int team_id, string member_id)
