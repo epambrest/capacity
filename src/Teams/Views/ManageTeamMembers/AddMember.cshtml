@@ -10,16 +10,28 @@
     @using (Html.BeginForm("AddMember", "ManageTeamMembers", FormMethod.Post))
     {
         @Html.Hidden("team_id", @ViewBag.TeamId as string)
+        @section scripts{
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
-        <label for="user">Find user:</label>
-        <input id="user" autocomplete="off" name="member_email" list="members">
-        <datalist id="members">
+            <script>
+                function myFunction(e) {
+                    document.getElementById("user").value = e.target.value
+                }
+                $(document).ready(function () {
+                    $('.js-example-basic-single').select2();
+                });
+            </script>
+        }
+        <input hidden="hidden" id="user" name="member_id">
+
+        <select class="js-example-basic-single" id="members" onchange="myFunction(event)">
+            <option disabled selected>Choose User</option>
             @foreach (var item in ViewBag.Users)
             {
-            <option value=@item.Email></option>
+                <option value=@item.Id>@item.Email</option>
             }
-        </datalist>
+        </select>
 
-        <input type="submit" class="btn btn-primary" value="Add Member" />
+        <input id="sub" type="submit" class="btn btn-primary" value="Add Member" />
     }
 </div>

@@ -111,12 +111,11 @@ namespace Teams.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AddMemberAsync(int team_id, string member_email)
+        public async Task<IActionResult> AddMemberAsync(int team_id, string member_id)
         {
-            if (member_email == null) return RedirectToAction("AddError", new { error_message = "Field is empty"});
+            if (member_id == null) return RedirectToAction("AddError", new { error_message = "Field is empty"});
             var users = await _userManager.Users.ToListAsync();
             ViewBag.Users = users;
-            var member_id = users.Find(x => x.Email == member_email).Id;
             bool result = await _manageTeamsMembersService.AddAsync(team_id, member_id);
             
 
