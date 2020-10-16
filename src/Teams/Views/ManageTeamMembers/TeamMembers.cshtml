@@ -2,14 +2,14 @@
 @{
     ViewBag.Title = "Team Members";
 }
- <script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
- <div style="margin: 10px 0px 0px 30px" align="left">
-     <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to your teams", "GetMyTeams", "ManageTeams")</a></h>
- </div>
+<script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
+<div style="margin: 10px 0px 0px 30px" align="left">
+    <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("Return to your teams", "GetMyTeams", "ManageTeams")</a></h>
+</div>
 <div align="center">
     <h><font size="6" color="black">@ViewBag.TeamName</font></h>
-        
-    
+
+
 </div>
 <table class="table">
     <tr align="center">
@@ -17,7 +17,6 @@
         <td align="left" style="font-weight: bold">Member Email</td>
         <td align="right"></td>
     </tr>
-    
     <tr align="center">
         <td align="left" width="1%"><i title="Owner" class="fas fa-crown"></i></td>
         <td align="left">@ViewBag.TeamOwner</td>
@@ -25,10 +24,22 @@
     </tr>
     @foreach (var item in ViewBag.Members)
     {
-     <tr align="center">
-        <td align="left" width="1%"><i title="Member" class="fas fa-user"></i></td>
-        <td align="left">@item.Member.Email</td>
-        <td align="right"></td>
-     </tr>
+        <tr align="center">
+            <td align="left" width="1%"><i title="Member" class="fas fa-user"></i></td>
+            <td align="left">@item.Member.Email</td>            
+            <td align="right"></td>
+        </tr>
     }
 </table>
+
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Some text in the Modal..</p>
+    </div>
+
+</div>

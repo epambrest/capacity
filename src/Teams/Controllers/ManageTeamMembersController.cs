@@ -80,17 +80,19 @@ namespace Teams.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult RemoveAsync()
-        {
-            return View();
+        public IActionResult Remove()
+        {      
+            return PartialView();
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> RemoveAsync(int team_id, string member_id)
+        public async Task<IActionResult> Remove(int team_id, string member_id)
         {
+            ViewBag.team_id = team_id;
+            ViewBag.member_id = member_id;
             var result = await _manageTeamsMembersService.RemoveAsync(team_id, member_id);
-            return RedirectToAction("Index");
+            return PartialView();
         }
         
         [HttpPost]
