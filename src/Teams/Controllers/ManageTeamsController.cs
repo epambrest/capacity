@@ -87,8 +87,8 @@ namespace Teams.Controllers
         {
             var result = await _manageTeamsService.RemoveAsync(team_id);
             if (result) 
-               return RedirectToAction("Index", "Home");
-            return RedirectToAction("ErorRemove");
+               return RedirectToAction("GetMyTeams");
+            return RedirectToAction("ErrorRemove");
         }
 
         public IActionResult ErrorRemoveAsync()
