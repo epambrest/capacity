@@ -25,7 +25,6 @@ namespace Teams.Controllers
             _accessCheckService = accessCheckService;
         }
 
-
         public IActionResult Index()
         {
             return View();
@@ -48,17 +47,17 @@ namespace Teams.Controllers
             {
                 return await _manageTeamsMembersService.GetAllTeamMembersAsync(team_id, options);
             }
-            else return null; 
+            else return null;
         }
 
         [Authorize]
         public async Task<IActionResult> TeamMembersAsync(int team_id, string team_name, string owner_name)
         {
-            List <TeamMember> members = await GetAllTeamMembersAsync(team_id, new DisplayOptions { });
-
+            List<TeamMember> members = await GetAllTeamMembersAsync(team_id, new DisplayOptions { });
             if (members == null) return View("MembersEror");
             ViewBag.Members = members;
             ViewBag.TeamName = team_name;
+            ViewBag.TeamId = team_id;
             ViewBag.TeamOwner = owner_name;
             return View();
         }
@@ -78,23 +77,23 @@ namespace Teams.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        [HttpGet]
         [Authorize]
-        public IActionResult Remove()
-        {      
-            return PartialView();
+        public async Task<IActionResult> Remove(int team_id, string member_id, string owner_name, string team_name)
+        {
+            var result = await _manageTeamsMembersService.RemoveAsync(team_id, member_id);
+            if (result)
+            {
+                return RedirectToAction("TeamMembers", new { team_id = team_id, team_name = team_name, owner_name = owner_name });
+            }
+            return RedirectToAction("ErrorRemoveMember");
         }
 
-        [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Remove(int team_id, string member_id)
+        public IActionResult ErrorRemoveMember()
         {
-            ViewBag.team_id = team_id;
-            ViewBag.member_id = member_id;
-            var result = await _manageTeamsMembersService.RemoveAsync(team_id, member_id);
-            return PartialView();
+            return View();
         }
-        
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Add(int team_id, string member_id)
