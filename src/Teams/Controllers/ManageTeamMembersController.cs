@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Teams.Models;
+using Teams.Security;
 using Teams.Services;
 
 namespace Teams.Controllers
@@ -16,13 +18,21 @@ namespace Teams.Controllers
     {
         private readonly IManageTeamsMembersService _manageTeamsMembersService;
 
+        private readonly IManageTeamsService _manageTeamsService;
+
+        private readonly UserManager<IdentityUser> _userManager;
+
         private readonly IAccessCheckService _accessCheckService;
 
-        public ManageTeamMembersController(IManageTeamsMembersService manageTeamsMembersService, IAccessCheckService accessCheckService)
+        public ManageTeamMembersController(IManageTeamsMembersService manageTeamsMembersService, IManageTeamsService manageTeamsService, IAccessCheckService accessCheckService, UserManager<IdentityUser> userManager)
         {
             _manageTeamsMembersService = manageTeamsMembersService;
 
+            _manageTeamsService = manageTeamsService;
+
             _accessCheckService = accessCheckService;
+
+            _userManager = userManager;
         }
 
 
@@ -52,18 +62,26 @@ namespace Teams.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> TeamMembersAsync(int team_id, string team_name, string owner_name)
+        public async Task<IActionResult> TeamMembersAsync(int team_id)
         {
             List <TeamMember> members = await GetAllTeamMembersAsync(team_id, new DisplayOptions { });
 
-            if (members == null) return View("MembersEror");
+            if (members == null) return View("MembersError");
+
+            var teams =await  _manageTeamsService.GetMyTeamsAsync();
+            var team = teams.Where(x => x.Id == team_id).FirstOrDefault();
+
+            if (await _accessCheckService.IsOwnerAsync(team_id)) ViewBag.AddVision = "visible";
+            else ViewBag.AddVision = "collapse";
+
             ViewBag.Members = members;
-            ViewBag.TeamName = team_name;
-            ViewBag.TeamOwner = owner_name;
+            ViewBag.TeamName = team.TeamName;
+            ViewBag.TeamId = team.Id;
+            ViewBag.TeamOwner = team.Owner.Email;
             return View();
         }
 
-        public IActionResult MembersEror()
+        public IActionResult MembersError()
         {
             return View("Index");
         }
@@ -78,6 +96,20 @@ namespace Teams.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> AddMemberAsync(int team_id)
+        {
+            Team team = await _manageTeamsService.GetTeamAsync(team_id);
+            var users = await _userManager.Users.ToListAsync();
+
+            ViewBag.TeamId = team.Id;
+            ViewBag.TeamName = team.TeamName;
+            ViewBag.Users = users;
+
+            return View(await TeamMembersAsync(team_id));
+        }
+        
         [HttpGet]
         [Authorize]
         public IActionResult RemoveAsync()
@@ -95,9 +127,21 @@ namespace Teams.Controllers
         
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Add(int team_id, string member_id)
+        public async Task<IActionResult> AddMemberAsync(int team_id, string member_id)
         {
-            await _manageTeamsMembersService.AddAsync(team_id, member_id);
+            if (member_id == null) return RedirectToAction("AddError", new { error_message = "Field is empty"});
+            var users = await _userManager.Users.ToListAsync();
+            ViewBag.Users = users;
+            bool result = await _manageTeamsMembersService.AddAsync(team_id, member_id);
+            
+
+            if (result) return RedirectToAction("TeamMembers", new { team_id = team_id});
+            else return RedirectToAction("AddError", new { error_message = "Current user already in team" });
+        }
+
+        public IActionResult AddError(string error_message)
+        {
+            ViewBag.ErrorMessage = error_message;
             return View();
         }
     }

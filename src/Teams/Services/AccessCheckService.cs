@@ -26,5 +26,12 @@ namespace Teams.Services
                 .Where(t => t.Id == team_id)
                 .AnyAsync(y => y.TeamOwner == _currentUser.Current.Id() || y.TeamMembers.Any(z => z.MemberId == _currentUser.Current.Id()));
         }
+
+        public async Task<bool> IsOwnerAsync(int team_id)
+        {
+            return await _teamRepository.GetAll()
+               .Where(t => t.Id == team_id)
+               .AnyAsync(y => y.TeamOwner == _currentUser.Current.Id());
+        }
     }
 }

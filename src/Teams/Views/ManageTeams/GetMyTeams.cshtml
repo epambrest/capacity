@@ -24,7 +24,7 @@
     {
         <td align="left" width="1%"><i title="Member" class="fas fa-user"></i></td>
     }
-    <td align="left"><a>@Html.ActionLink(item.TeamName, "TeamMembers", "ManageTeamMembers", new { team_id = item.Id, team_name = item.TeamName, owner_name = item.Owner.Email })</a></td>
+    <td align="left"><a>@Html.ActionLink(item.TeamName, "TeamMembers", "ManageTeamMembers", new { team_id = item.Id})</a></td>
 
     @if (item.Owner.Email == User.Identity.Name)
     {
@@ -55,7 +55,8 @@
     }
 </tr>
 
-    }
+
+}
 </table>
 <script>
     $(document).ready(function () {
