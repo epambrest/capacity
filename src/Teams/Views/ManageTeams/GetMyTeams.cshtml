@@ -30,12 +30,15 @@
     {
         <td align="left" width="1%"><i title="Member" class="fas fa-user"></i></td>
     }
-    <td align="left"><a>@Html.ActionLink(item.TeamName, "TeamMembers", "ManageTeamMembers", new { team_id = item.Id})</a></td>
-
+    <td align="left"><a>@Html.ActionLink(item.TeamName, "TeamMembers", "ManageTeamMembers", new { team_id = item.Id })</a></td>
     @if (item.Owner.Email == User.Identity.Name)
     {
 
         <td align="right"><button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#myModal" data-content="@item.TeamName" data-whatever="@item.Id"><i class='far fa-trash-alt'></i></button></td>
+        <td align="right">
+            @Html.ActionLink("", "EditTeamName", new { team_id = item.Id },
+            new { @class = "fas fa-edit"})
+        </td>
         <form>
             <div class="modal fade" id="myModal" role="dialog">
                 <div class="modal-dialog modal-dialog-centered">
@@ -54,6 +57,7 @@
                 </div>
             </div>
         </form>
+
     }
     else
     {
@@ -62,8 +66,9 @@
 </tr>
 
 
-}
+    }
 </table>
+
 <script>
     $(document).ready(function () {
         $("#myModal").on("show.bs.modal", function (event) {
@@ -77,32 +82,4 @@
     });
 
 </script>
-        <tr align="center">
-            @if (item.Owner.Email == User.Identity.Name)
-            {
-                <td align="left" width="1%"><i title="Owner" class="fas fa-crown"></i></td>
-                <td align="left">
-                    <a>
-                        @Html.ActionLink(item.TeamName, "TeamMembers", "ManageTeamMembers",
-                        new { team_id = item.Id, team_name = item.TeamName, owner_name = item.Owner.Email })
-                    </a>
-                </td>
-                <td align="right">
-                    @Html.ActionLink("", "EditTeamName", new { team_id = item.Id },
-                    new { @class = "fas fa-edit", style = "margin: 10px 0px 0px 30px", align = "right" })
-                </td>
-            }
-            else
-            {
-                <td align="left" width="1%"><i title="Member" class="fas fa-user"></i></td>
-                <td align="left">
-                    <a>
-                        @Html.ActionLink(item.TeamName, "TeamMembers", "ManageTeamMembers",
-                        new { team_id = item.Id, team_name = item.TeamName, owner_name = item.Owner.Email })
-                    </a>
-                </td>
-            }
-            <td align="right"></td>
-        </tr>
-    }
-</table>
+
