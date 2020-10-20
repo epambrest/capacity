@@ -57,27 +57,26 @@ namespace Teams.Controllers
             {
                 return await _manageTeamsMembersService.GetAllTeamMembersAsync(team_id, options);
             }
-            else return null; 
+            else return null;
         }
 
         [Authorize]
         public async Task<IActionResult> TeamMembersAsync(int team_id)
         {
-            List <TeamMember> members = await GetAllTeamMembersAsync(team_id, new DisplayOptions { });
+            List<TeamMember> members = await GetAllTeamMembersAsync(team_id, new DisplayOptions { });
 
             if (members == null) return View("MembersError");
 
-            var teams =await  _manageTeamsService.GetMyTeamsAsync();
+            var teams = await _manageTeamsService.GetMyTeamsAsync();
             var team = teams.Where(x => x.Id == team_id).FirstOrDefault();
 
             if (await _accessCheckService.IsOwnerAsync(team_id)) ViewBag.AddVision = "visible";
             else ViewBag.AddVision = "collapse";
 
-            ViewBag.Members = members;
             ViewBag.TeamName = team.TeamName;
             ViewBag.TeamId = team.Id;
             ViewBag.TeamOwner = team.Owner.Email;
-            return View();
+            return View(members);
         }
 
         public IActionResult MembersError()
@@ -107,7 +106,7 @@ namespace Teams.Controllers
 
             return View(await TeamMembersAsync(team_id));
         }
-        
+
         [HttpGet]
         [Authorize]
         public IActionResult RemoveAsync()
@@ -125,13 +124,13 @@ namespace Teams.Controllers
         [Authorize]
         public async Task<IActionResult> AddMemberAsync(int team_id, string member_id)
         {
-            if (member_id == null) return RedirectToAction("AddError", new { error_message = "Field is empty"});
+            if (member_id == null) return RedirectToAction("AddError", new { error_message = "Field is empty" });
             var users = await _userManager.Users.ToListAsync();
             ViewBag.Users = users;
             bool result = await _manageTeamsMembersService.AddAsync(team_id, member_id);
-            
 
-            if (result) return RedirectToAction("TeamMembers", new { team_id = team_id});
+
+            if (result) return RedirectToAction("TeamMembers", new { team_id = team_id });
             else return RedirectToAction("AddError", new { error_message = "Current user already in team" });
         }
 
