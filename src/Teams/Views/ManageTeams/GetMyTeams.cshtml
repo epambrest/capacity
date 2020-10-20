@@ -20,54 +20,59 @@
     </tr>
     @foreach (var item in Model)
     {
-<tr align="center">
-    @if (item.Owner.Email == User.Identity.Name)
-    {
-        <td align="left" width="1%"><i title="Owner" class="fas fa-crown"></i></td>
+        <tr align="center">
+            @if (item.Owner.Email == User.Identity.Name)
+            {
+                <td align="left" width="1%"><i title="Owner" class="fas fa-crown"></i></td>
 
-    }
-    else
-    {
-        <td align="left" width="1%"><i title="Member" class="fas fa-user"></i></td>
-    }
-    <td align="left"><a>@Html.ActionLink(item.TeamName, "TeamMembers", "ManageTeamMembers", new { team_id = item.Id })</a></td>
-    @if (item.Owner.Email == User.Identity.Name)
-    {
-
-        <td align="right"><button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#myModal" data-content="@item.TeamName" data-whatever="@item.Id"><i class='far fa-trash-alt'></i></button></td>
-        <td align="right">
-            @Html.ActionLink("", "EditTeamName", new { team_id = item.Id },
-            new { @class = "fas fa-edit"})
-        </td>
-        <form>
-            <div class="modal fade" id="myModal" role="dialog">
-                <div class="modal-dialog modal-dialog-centered">
-
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <p align="center" id="team"></p>
-                            <input type="hidden" id="team_id" name="team_id" value="" />
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-outline-secondary" asp-action="Remove">OK</button>
-                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </form>
-
-    }
-    else
-    {
-        <td align="right"></td>
-    }
-</tr>
+            }
+            else
+            {
+                <td align="left" width="1%"><i title="Member" class="fas fa-user"></i></td>
+            }
+            <td align="left"><a>@Html.ActionLink(item.TeamName, "TeamMembers", "ManageTeamMembers", new { team_id = item.Id })</a></td>
+            @if (item.Owner.Email == User.Identity.Name)
+            {
+                <td align="right" onclick="location.href='@Url.Action("EditTeamName", "ManageTeams", new { team_id = item.Id })'">
+                    <button type='button' class='btn btn-outline-danger border-0'>
+                        <i class='fas fa-edit'></i>
+                    </button>
+                </td>
+                <td align="right">
+                    <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#myModal"
+                            data-content="@item.TeamName" data-whatever="@item.Id">
+                        <i class='far fa-trash-alt'></i>
+                    </button>
+                </td>
+            }
+            else
+            {
+                <td align="right"></td>
+            }
+        </tr>
 
 
     }
 </table>
+
+<form>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p align="center" id="team"></p>
+                    <input type="hidden" id="team_id" name="team_id" value="" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-secondary" asp-action="Remove">OK</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
 
 <script>
     $(document).ready(function () {
@@ -80,6 +85,5 @@
             document.getElementById('team').innerHTML = "Are you sure you want to remove " + "<strong>" + team + "</strong>" + "?";
         });
     });
-
 </script>
 
