@@ -107,11 +107,16 @@ namespace Teams.Controllers
             return View(await TeamMembersAsync(team_id));
         }
 
-        [HttpGet]
+
         [Authorize]
-        public IActionResult RemoveAsync()
+        public async Task<IActionResult> RemoveAsync(int team_id, string member_id, string owner_name, string team_name)
         {
-            return View();
+            var result = await _manageTeamsMembersService.RemoveAsync(team_id, member_id);
+            if (result)
+            {
+                return RedirectToAction("TeamMembers", new { team_id = team_id, team_name = team_name, owner_name = owner_name });
+            }
+            return RedirectToAction("ErrorRemoveMember");
         }
 
         [Authorize]
