@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "Ooops...";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Ooops... Something went wrong!</h1>
+    <p>@ViewBag.ErrorMessage</p>
+</div>
+<div style="margin: 10px 0px 0px 30px" align="center">
+    <h><a color="black">@Html.ActionLink("  Return to your teams", "GetMyTeams", "ManageTeams")</a></h>
+    
+</div>

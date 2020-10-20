@@ -1,14 +1,79 @@
 ﻿@model IEnumerable<Teams.Models.Team>
-@{ ViewBag.Title = "My teams"; }
+@{
+    ViewBag.Title = "My teams";
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
+
 <p>
-        <script src="https://kit.fontawesome.com/8fd96fc88e.js" crossorigin="anonymous"></script>
-        <div style="margin: 10px 0px 0px 30px" align="right">
-            <h><a style="color: black; text-decoration: none;" class="fas fa-plus" @Html.ActionLink("", "AddTeam", "ManageTeams")</a></h>
-        </div>
+    <div style="margin: 10px 0px 0px 30px" align="right">
+        <h><a style="color: black; text-decoration: none;" class="fas fa-plus" @Html.ActionLink("", "AddTeam", "ManageTeams")</a></h>
+    </div>
 </p>
+
 <table class="table">
-    <tr><td>Team Name</td><td>Team Owner</td></tr>
+    <tr align="center">
+        <td align="left" width="1%"></td>
+        <td align="left" style="font-weight: bold">Team Name</td>
+        <td align="right"></td>
+    </tr>
     @foreach (var item in Model)
     {
-<tr><td>@item.TeamName</td><td>@item.TeamOwner</td></tr>}
+<tr align="center">
+    @if (item.Owner.Email == User.Identity.Name)
+    {
+        <td align="left" width="1%"><i title="Owner" class="fas fa-crown"></i></td>
+
+    }
+    else
+    {
+        <td align="left" width="1%"><i title="Member" class="fas fa-user"></i></td>
+    }
+    <td align="left"><a>@Html.ActionLink(item.TeamName, "TeamMembers", "ManageTeamMembers", new { team_id = item.Id})</a></td>
+
+    @if (item.Owner.Email == User.Identity.Name)
+    {
+
+        <td align="right"><button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#myModal" data-content="@item.TeamName" data-whatever="@item.Id"><i class='far fa-trash-alt'></i></button></td>
+        <form>
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog modal-dialog-centered">
+
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <p align="center" id="team"></p>
+                            <input type="hidden" id="team_id" name="team_id" value="" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-outline-secondary" asp-action="Remove">OK</button>
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    }
+    else
+    {
+        <td align="right"></td>
+    }
+</tr>
+
+
+}
 </table>
+<script>
+    $(document).ready(function () {
+        $("#myModal").on("show.bs.modal", function (event) {
+            var button = $(event.relatedTarget)
+            var team = button.data('content')
+            var teamId = button.data('whatever')
+            var removeModal = $("#myModal");
+            removeModal.find("#team_id").val(teamId);
+            document.getElementById('team').innerHTML = "Are you sure you want to remove " + "<strong>" + team + "</strong>" + "?";
+        });
+    });
+
+</script>
