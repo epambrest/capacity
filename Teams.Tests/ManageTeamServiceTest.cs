@@ -11,11 +11,9 @@ using System.Threading.Tasks;
 
 namespace Teams.Tests
 {
+    [TestFixture]
     class ManageTeamServiceTest
     {
-        [TestFixture]
-        public class CurrentUserTest
-        {
             private Mock<IRepository<Team, int>> _teamRepository;
             private Mock<ICurrentUser> _currentUser;
             private IManageTeamsService _manageTeamsService;
@@ -84,8 +82,8 @@ namespace Teams.Tests
                 Assert.IsFalse(result2);
             }
 
-        }
     }
+    
 }
 
 
