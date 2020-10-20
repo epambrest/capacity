@@ -15,7 +15,7 @@ namespace Teams.Controllers
     public class ManageTeamsController : Controller
     {
 
-        
+
         private readonly IManageTeamsService _manageTeamsService;
         private readonly IAccessCheckService _accessCheckService;
 
@@ -46,10 +46,19 @@ namespace Teams.Controllers
             else return null;
         }
 
-        [Authorize, NonAction]
-        public async Task<bool> EditTeamNameAsync(int team_id, string team_name)
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> EditTeamNameAsync(int team_id)
         {
-            return await _manageTeamsService.EditTeamNameAsync(team_id, team_name);
+            return View(await GetTeamAsync(team_id));
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> EditTeamNameAsync(int team_id, string team_name)
+        {
+            ViewBag.resultOfEditing = await _manageTeamsService.EditTeamNameAsync(team_id, team_name);
+            return View(await GetTeamAsync(team_id));
         }
 
         public IActionResult Privacy()
@@ -62,7 +71,7 @@ namespace Teams.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        
+
         [HttpGet]
         [Authorize]
         public IActionResult AddTeam()
