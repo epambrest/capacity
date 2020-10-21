@@ -36,7 +36,6 @@ namespace Teams.Repository
             var sprint = await _dbContext.Sprint.FindAsync(entity.Id);
             if (sprint == null)
                 return false;
-            sprint.TeamId = entity.TeamId;
             sprint.Name = entity.Name;
             sprint.StorePointInHours = entity.StorePointInHours;
             sprint.DaysInSprint = entity.DaysInSprint;
