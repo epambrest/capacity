@@ -14,8 +14,6 @@ namespace Teams.Controllers
 {
     public class ManageTeamsController : Controller
     {
-
-
         private readonly IManageTeamsService _manageTeamsService;
         private readonly IAccessCheckService _accessCheckService;
 

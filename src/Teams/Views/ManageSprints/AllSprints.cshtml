@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Teams.Models.Sprint>
+@{
+    ViewBag.Title = "Sprints";
+}
+
+<div style="margin: 10px 0px 0px 30px" align="left">
+    <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to your teams", "GetMyTeams", "ManageTeams")</a></h>
+</div>
+<div align="center">
+    <h><font size="6" color="black"><strong>@ViewBag.TeamName</strong></font></h>
+</div>
+<table class="table">
+
+    <tr align="center">
+        <td align="left" style="border-top: hidden" width="1%"></td>
+        <td align="left" style="border-top: hidden; font-weight: bold">Name of Sprint</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">Days in Sprint</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">Store Point in Hours</td>
+        <td style="border-top: hidden; visibility: @ViewBag.AddVision" align="right"></td>
+    </tr>
+
+    @*<tr align="center">
+        <td align="left" width="1%"><i title="Owner" class="fas fa-crown"></i></td>
+        <td align="left">@ViewBag.TeamOwner</td>
+        <td align="right"></td>
+    </tr>*@
+    @foreach (var item in Model)
+    {
+<tr align="center">
+    @if (item.IsActive)
+    {
+        <td align="left" width="1%" bgcolor="green"></td>
+    }
+    else
+    {
+        <td align="left" width="1%" bgcolor="red"></td>
+    }
+    <td align="left">@item.Name</td>
+    <td align="left">@item.DaysInSprint</td>
+    <td align="left">@item.StorePointInHours</td>
+    <td align="right"></td>
+</tr>
+    }
+</table>

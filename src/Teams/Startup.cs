@@ -34,8 +34,10 @@ namespace Teams
             services.AddRazorPages();
             services.AddTransient<IManageTeamsMembersService, ManageTeamsMembersService>();
             services.AddTransient<IManageTeamsService, ManageTeamsService>();
+            services.AddTransient<IManageSprintsService, ManageSprintsService>();
             services.AddTransient<IRepository<Team, int>, TeamRepository>();
             services.AddTransient<IRepository<TeamMember, int>, TeamMemberRepository>();
+            services.AddTransient<IRepository<Sprint, int>, SprintRepository>();
             services.AddHttpContextAccessor();
             services.AddTransient<ICurrentUser, CurrentUser>();
             services.AddTransient<IManageTeamsMembersService, ManageTeamsMembersService>();
