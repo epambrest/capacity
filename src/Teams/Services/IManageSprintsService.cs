@@ -9,5 +9,6 @@ namespace Teams.Services
     public interface IManageSprintsService
     {
         Task<IEnumerable<Sprint>> GetAllSprintsAsync(int team_id, DisplayOptions options);
+        Task<Team> GetTeam(int team_id);
     }
 }

@@ -18,12 +18,14 @@ namespace Teams.Tests
     {
         private Mock<IRepository<Sprint, int>> _sprintRepository;
         private ManageSprintsService _manageSprintsService;
+        private Mock<IManageTeamsService> _manageTeamsService;
 
         [SetUp]
         public void Setup()
         {
             _sprintRepository = new Mock<IRepository<Sprint, int>>();
-            _manageSprintsService = new ManageSprintsService(_sprintRepository.Object);
+            _manageTeamsService = new Mock<IManageTeamsService>();
+            _manageSprintsService = new ManageSprintsService(_sprintRepository.Object, _manageTeamsService.Object);
         }
 
         [Test]

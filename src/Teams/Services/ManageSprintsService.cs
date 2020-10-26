@@ -12,10 +12,12 @@ namespace Teams.Services
     public class ManageSprintsService : IManageSprintsService
     {
         private readonly IRepository<Sprint, int> _sprintRepository;
+        private readonly IManageTeamsService _manageTeamsService;
 
-        public ManageSprintsService(IRepository<Sprint, int> sprintRepository)
+        public ManageSprintsService(IRepository<Sprint, int> sprintRepository, IManageTeamsService manageTeamsService)
         {
             _sprintRepository = sprintRepository;
+            _manageTeamsService = manageTeamsService;
         }
 
         public async Task<IEnumerable<Sprint>> GetAllSprintsAsync(int team_id, DisplayOptions options)
@@ -25,6 +27,13 @@ namespace Teams.Services
                 return await sprints.OrderBy(x => x.Name).ToListAsync();
             else
                 return await sprints.OrderByDescending(x => x.Name).ToListAsync();
+        }
+
+        public async Task<Team> GetTeam(int team_id)
+        {
+            var teams = await _manageTeamsService.GetMyTeamsAsync();
+            var team = teams.FirstOrDefault(i => i.Id == team_id);
+            return team;
         }
     }
 }
