@@ -1,3 +1,4 @@
+
 using Teams.Repository;
 using Teams.Models;
 using Teams.Data;
@@ -18,16 +19,30 @@ namespace Teams.Services
         private readonly IRepository<Team, int> _teamRepository;
         private readonly IRepository<TeamMember, int> _teamMemberRepository;
 
-        public ManageTeamsMembersService(IRepository<TeamMember, int> teamMemberRepository)
-        {
-            _teamMemberRepository = teamMemberRepository;
-        }
-
         public ManageTeamsMembersService(IRepository<Team, int> teamRepository, IRepository<TeamMember, int> memberRepository, ICurrentUser currentUser)
         {
             _currentUser = currentUser;
             _teamRepository = teamRepository;
             _teamMemberRepository = memberRepository;
+        }
+
+        public async Task<bool> RemoveAsync(int team_id, string member_id)
+        {
+            var member = await _teamMemberRepository.GetAll()
+            .Where(x => x.MemberId == member_id && x.TeamId == team_id
+            && x.Team.TeamOwner == _currentUser.Current.Id()
+            && x.Team.TeamOwner != member_id)
+            .FirstOrDefaultAsync();
+            if (member != null)
+            {
+                return await _teamMemberRepository.DeleteAsync(member);
+            }
+            return false;
+        }
+
+        private TeamMember MemberInTeam(Team team, string member_id)
+        {
+            return team.TeamMembers.SingleOrDefault(t => t.MemberId == member_id);
         }
 
         public async Task<bool> AddAsync(int team_id, string member_id)
@@ -43,9 +58,9 @@ namespace Teams.Services
 
         public async Task<TeamMember> GetMemberAsync(int team_id, string member_id)
         {
-            return await _teamMemberRepository.GetAll()
-            .Where(x => x.MemberId == member_id && x.TeamId == team_id)
-            .FirstOrDefaultAsync();
+             return await _teamMemberRepository.GetAll()
+                    .Where(x => x.MemberId == member_id && x.TeamId == team_id)
+                    .FirstOrDefaultAsync();
         }
 
         public async Task<List<TeamMember>> GetAllTeamMembersAsync(int team_id, DisplayOptions options)
