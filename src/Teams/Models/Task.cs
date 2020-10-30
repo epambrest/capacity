@@ -27,5 +27,4 @@ namespace Teams.Models
         [Column("StoryPoints"), Required]
         public int StoryPoints { get; set; }
     }
-
 }
