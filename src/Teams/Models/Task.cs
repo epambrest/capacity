@@ -26,7 +26,6 @@ namespace Teams.Models
         public string Link { get; set; }
         [Column("StoryPoints"), Required]
         public int StoryPoints { get; set; }
-        public virtual ICollection<Sprint> Sprints { get; set; }
     }
 
 }
