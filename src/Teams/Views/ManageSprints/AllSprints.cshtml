@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Teams.Models.Sprint>
+@{
+    ViewBag.Title = "Sprints";
+}
+
+<script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
+
+<div style="margin: 10px 0px 0px 30px" align="left">
+    <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to your teams", "GetMyTeams", "ManageTeams")</a></h>
+</div>
+<div align="center">
+    <h><font size="6" color="black"><strong>@ViewBag.TeamName</strong></font></h>
+</div>
+<table class="table">
+
+    <tr align="center">
+        <td align="left" style="border-top: hidden" width="1%"></td>
+        <td align="left" style="border-top: hidden; font-weight: bold">Name of Sprint</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">Days in Sprint</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">Store Point in Hours</td>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr align="center">
+            @if (item.IsActive)
+            {
+                <td align="left" width="1%" bgcolor="green"></td>
+            }
+            else
+            {
+                <td align="left" width="1%" bgcolor="red"></td>
+            }
+            <td align="left">@item.Name</td>
+            <td align="left">@item.DaysInSprint</td>
+            <td align="left">@item.StorePointInHours</td>
+        </tr>
+    }
+</table>
