@@ -39,6 +39,14 @@ namespace Teams.Controllers
             return View(sprints);
         }
 
+        [Authorize]
+        public async Task<IActionResult> GetSprintById(int sprint_id)
+        {
+            var sprint = await _manageSprintsService.GetSprintAsync(sprint_id);
+            if (sprint == null)
+                return View("ErrorGetAllSprints");
+            return View(sprint);
+        }
         public IActionResult Index()
         {
             return View();

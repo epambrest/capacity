@@ -35,5 +35,7 @@ namespace Teams.Services
             var team = teams.FirstOrDefault(i => i.Id == team_id);
             return team;
         }
+
+        public async Task<Sprint> GetSprintAsync(int sprint_id) => await _sprintRepository.GetByIdAsync(sprint_id);
     }
 }
