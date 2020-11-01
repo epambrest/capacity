@@ -39,7 +39,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task AddTeamAsync_AddTeamWithEmptyName_ReturnsFalse()
+        public async System.Threading.Tasks.Task AddTeamAsync_AddTeamWithEmptyName_ReturnsFalse()
         {
             //Arrange
             string teamName = "";
@@ -50,7 +50,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task AddTeamAsync_AddTeamWithIllegalName_ReturnsFalse()
+        public async System.Threading.Tasks.Task AddTeamAsync_AddTeamWithIllegalName_ReturnsFalse()
         {
             //Arrange
             string teamName = "alex wins:";
@@ -61,7 +61,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task AddTeamAsync_AddTeamWithLegalName_ReturnsTrue()
+        public async System.Threading.Tasks.Task AddTeamAsync_AddTeamWithLegalName_ReturnsTrue()
         {
             //Arrange
             string teamName = "Legal_Team.";
@@ -72,7 +72,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task AddTeamAsync_AddTeamWithExistingName_ReturnsFalseAsync()
+        public async System.Threading.Tasks.Task AddTeamAsync_AddTeamWithExistingName_ReturnsFalseAsync()
         {
             //Arrange
             string teamName = "Su_per-Team.,";
@@ -83,7 +83,7 @@ namespace Teams.Tests
         }
         
         [Test]
-        public async Task GetMyTeamsAsync_ManageTeamsServiceReturnsListCount4_ListCount4()
+        public async System.Threading.Tasks.Task GetMyTeamsAsync_ManageTeamsServiceReturnsListCount4_ListCount4()
         {
             //Arrange
             const string id = "abc-def";
@@ -121,7 +121,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task GetTeamAsync_ManageTeamsServiceReturnsTeam_Team()
+        public async System.Threading.Tasks.Task GetTeamAsync_ManageTeamsServiceReturnsTeam_Team()
         {
             //Arrange
             const string id = "abc-def";
@@ -143,7 +143,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task EditTeamNameAsync_ManageTeamsServiceReturnsTrue_True()
+        public async System.Threading.Tasks.Task EditTeamNameAsync_ManageTeamsServiceReturnsTrue_True()
         {
             //Arrange
             const string id = "abc-def";
@@ -168,7 +168,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task EditTeamNameAsync_ManageTeamsServiceReturnsFalse1_False1()
+        public async System.Threading.Tasks.Task EditTeamNameAsync_ManageTeamsServiceReturnsFalse1_False1()
         {
             //Arrange
             const string id = "abc-def";
@@ -196,7 +196,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task EditTeamNameAsync_ManageTeamsServiceReturnsFalse2_False2()
+        public async System.Threading.Tasks.Task EditTeamNameAsync_ManageTeamsServiceReturnsFalse2_False2()
         {
             //Arrange
             const string id = "not-owner";

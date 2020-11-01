@@ -33,7 +33,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task GetMembers_ManageTeamsMembersServiceReturnTeamMember_ReturnTeamMember()
+        public async System.Threading.Tasks.Task GetMembers_ManageTeamsMembersServiceReturnTeamMember_ReturnTeamMember()
         {
             //Arrange
             const int team_id = 4;
@@ -51,7 +51,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task GetMembers_ManageTeamsMembersServiceReturnNull_ReturnNull()     //Team or member not exist
+        public async System.Threading.Tasks.Task GetMembers_ManageTeamsMembersServiceReturnNull_ReturnNull()     //Team or member not exist
         {
             //Arrange
             const int team_id = 4;
@@ -72,7 +72,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task GetAllTeamMembersAsync_ManageTeamsMembersServiceReturnList_ReturnList()
+        public async System.Threading.Tasks.Task GetAllTeamMembersAsync_ManageTeamsMembersServiceReturnList_ReturnList()
         {
             //Arrange
             const int team_id = 4;
@@ -89,7 +89,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task GetAllTeamMembersAsync_ManageTeamsMembersServiceReturnNull_ReturnNull()
+        public async System.Threading.Tasks.Task GetAllTeamMembersAsync_ManageTeamsMembersServiceReturnNull_ReturnNull()
         {
             //Arrange
             const int team_id = 40;

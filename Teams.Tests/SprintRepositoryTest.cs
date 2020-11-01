@@ -41,7 +41,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task GetAll_SprintRepositoryReturns_ListCount5()
+        public async System.Threading.Tasks.Task GetAll_SprintRepositoryReturns_ListCount5()
         {
             //Arrange
             const int sprint_count = 5;
@@ -56,7 +56,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task GetByIdAsync_SprintRepositoryReturns_Id3()
+        public async System.Threading.Tasks.Task GetByIdAsync_SprintRepositoryReturns_Id3()
         {
             //Arrange
             const int sprint_id = 3;
@@ -69,7 +69,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task GetByIdAsync_SprintRepositoryReturns_Null()
+        public async System.Threading.Tasks.Task GetByIdAsync_SprintRepositoryReturns_Null()
         {
             //Arrange
             const int sprint_id = 30;
@@ -82,7 +82,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task InsertAsync_SprintRepositoryReturns_True()
+        public async System.Threading.Tasks.Task InsertAsync_SprintRepositoryReturns_True()
         {
             //Arrange
             Sprint sprint = new Sprint { Id = 6, DaysInSprint = 3, Name = "Sprint6", TeamId = 6, StorePointInHours = 4, IsActive = false };
@@ -95,7 +95,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task DeleteAsync_SprintRepositoryReturns_True()
+        public async System.Threading.Tasks.Task DeleteAsync_SprintRepositoryReturns_True()
         {
             //Arrange
             Sprint sprint = new Sprint { Id = 3, DaysInSprint = 3, Name = "Sprint3", TeamId = 3, StorePointInHours = 4, IsActive = false };
@@ -110,7 +110,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task UpdateAsync_SprintRepositoryReturns_True()
+        public async System.Threading.Tasks.Task UpdateAsync_SprintRepositoryReturns_True()
         {
             //Arrange
             Sprint sprint = new Sprint { Id = 2, DaysInSprint = 3, Name = "Update", TeamId = 5, StorePointInHours = 4, IsActive = false };
@@ -123,7 +123,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task UpdateAsync_SprintRepositoryReturns_False()
+        public async System.Threading.Tasks.Task UpdateAsync_SprintRepositoryReturns_False()
         {
             //Arrange
             Sprint sprint = new Sprint { Id = 10, DaysInSprint = 3, Name = "Sprint5", TeamId = 6, StorePointInHours = 4, IsActive = false };
