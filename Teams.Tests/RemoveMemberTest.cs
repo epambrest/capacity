@@ -33,7 +33,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task RemoveMember_teamsMembersServiceRemoveMemberReturnTrue_ReturnTrue()
+        public async System.Threading.Tasks.Task RemoveMember_teamsMembersServiceRemoveMemberReturnTrue_ReturnTrue()
         {
 
             //Arrange
@@ -53,7 +53,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task RemoveMember_teamsMembersServiceRemoveMemberReturnFalse_ReturnFalse()
+        public async System.Threading.Tasks.Task RemoveMember_teamsMembersServiceRemoveMemberReturnFalse_ReturnFalse()
         {
 
             //Arrange

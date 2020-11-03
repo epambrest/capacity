@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace Teams.Models
 {
@@ -21,5 +22,6 @@ namespace Teams.Models
         public int StorePointInHours { get; set; }
         [Column("IsActive"), DefaultValue(false)]
         public bool IsActive { get; set; }
+        public virtual ICollection<Task> Tasks { get; set; }
     }
 }
