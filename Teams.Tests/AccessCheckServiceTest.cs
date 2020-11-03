@@ -34,7 +34,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task OwnerOrMemberAsync_FccessCheckServiceReturnsTrue_ReturnsTrue()
+        public async System.Threading.Tasks.Task OwnerOrMemberAsync_FccessCheckServiceReturnsTrue_ReturnsTrue()
         {
             //Arrange
             const int team_id1 = 1;
@@ -76,7 +76,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task IsOwnerAsync_AccessCheckServiceReturnsTrue_ReturnsTrue()
+        public async System.Threading.Tasks.Task IsOwnerAsync_AccessCheckServiceReturnsTrue_ReturnsTrue()
         {
             //Arrange
             const int team_id1 = 1;

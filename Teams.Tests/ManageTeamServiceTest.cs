@@ -27,7 +27,7 @@ namespace Teams.Tests
             }
 
             [Test]
-            public async Task RemoveAsync_ManageTeamsServiceReturnsTrue_ReturnsTrue()
+            public async System.Threading.Tasks.Task RemoveAsync_ManageTeamsServiceReturnsTrue_ReturnsTrue()
             {
                 // Arrange
                 const string team_owner = "1234";
@@ -53,7 +53,7 @@ namespace Teams.Tests
             }
 
             [Test]
-            public async Task RemoveAsync_ManageTeamsServiceReturnsFalse_ReturnsFalse()
+            public async System.Threading.Tasks.Task RemoveAsync_ManageTeamsServiceReturnsFalse_ReturnsFalse()
             {
                 // Arrange
                 const string team_owner = "1234";
