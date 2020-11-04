@@ -10,6 +10,7 @@ using Teams.Data;
 using Teams.Models;
 using Teams.Security;
 using Teams.Services;
+using Task = System.Threading.Tasks.Task;
 
 namespace Teams.Tests
 {

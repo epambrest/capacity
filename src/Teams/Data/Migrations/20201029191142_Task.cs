@@ -31,20 +31,17 @@ namespace Teams.Data.Migrations
                         name: "FK_Task_TeamMembers_MemberId",
                         column: x => x.MemberId,
                         principalTable: "TeamMembers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Task_Sprint_SprintId",
                         column: x => x.SprintId,
                         principalTable: "Sprint",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Task_Team_TeamId",
                         column: x => x.TeamId,
                         principalTable: "Team",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -66,22 +63,10 @@ namespace Teams.Data.Migrations
                 name: "IX_Task_TeamId",
                 table: "Task",
                 column: "TeamId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Sprint_Task_TaskId",
-                table: "Sprint",
-                column: "TaskId",
-                principalTable: "Task",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Sprint_Task_TaskId",
-                table: "Sprint");
-
             migrationBuilder.DropTable(
                 name: "Task");
 
