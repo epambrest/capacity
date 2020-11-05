@@ -31,7 +31,7 @@
             {
                 <td align="left" width="1%" bgcolor="red"></td>
             }
-            <td align="left">@item.Name</td>
+        <td align="left">@Html.ActionLink(item.Name, "GetSprintById", new { sprint_id = item.Id })</td>
             <td align="left">@item.DaysInSprint</td>
             <td align="left">@item.StorePointInHours</td>
         </tr>

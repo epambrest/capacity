@@ -10,6 +10,7 @@ using Teams.Data;
 using Teams.Models;
 using Teams.Security;
 using Teams.Services;
+using Task = System.Threading.Tasks.Task;
 
 namespace Teams.Tests
 {
@@ -80,6 +81,22 @@ namespace Teams.Tests
 
             //Assert
             Assert.IsEmpty(result);
+        }
+
+        [Test]
+        public async Task GetSprintAsync_ManageSpiritsServiceReturnsSprintWithId1_ReturnsSprintWithId1()
+        {
+            //Arrange
+            const int sprint_id = 1;
+            var sprint = new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 1, StorePointInHours = 1, IsActive = true };
+
+            _sprintRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(sprint);
+
+            //Act
+            var result = await _manageSprintsService.GetSprintAsync(sprint_id);
+
+            //Assert
+            Assert.AreEqual(1, result.Id);
         }
     }
 }
