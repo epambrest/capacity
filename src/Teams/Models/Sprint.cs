@@ -9,16 +9,23 @@ namespace Teams.Models
     public class Sprint
     {
         [Key]
-        [Column("Id"), Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Required]
+        [Column("Id"), DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Column("TeamId"), ForeignKey(nameof(Team)), Required]
+        [Required]
+        [Column("TeamId"), ForeignKey(nameof(Team))]
         public int TeamId { get; set; }
         public virtual Team Team { get; set; }
-        [Column("Name"), Required]
+        [Required(ErrorMessage = "Name required")]
+        [Column("Name")]
         public string Name { get; set; }
-        [Column("DaysInSprint"), Required]
+        [Required(ErrorMessage = "Days count required")]
+        [Range(1, 99999, ErrorMessage = "Please enter a value greater than 0")]
+        [Column("DaysInSprint")]
         public int DaysInSprint { get; set; }
-        [Column("StorePointInHours"), Required]
+        [Required(ErrorMessage = "Enter how much hours story point cost")]
+        [Range(1, 99999, ErrorMessage = "Please enter a value greater than 0")]
+        [Column("StorePointInHours")]
         public int StorePointInHours { get; set; }
         [Column("IsActive"), DefaultValue(false)]
         public bool IsActive { get; set; }

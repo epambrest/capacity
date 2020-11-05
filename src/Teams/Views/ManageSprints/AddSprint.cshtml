@@ -1,0 +1,42 @@
+﻿@model Teams.Models.Sprint
+@{
+    ViewData["Title"] = "Add Sprint";
+}
+<script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
+<div style="margin: 10px 0px 0px 30px" align="left">
+    <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to Sprints", "AllSprints", new { team_id = ViewBag.TeamId })</a></h>
+</div>
+
+<div align="center">
+    <h1 size="4" align="left">@ViewBag.TeamName | @ViewData["AddSprint"]</h1>
+</div>
+
+<div>
+    @using (Html.BeginForm("AddSprint", "ManageSprints", FormMethod.Post))
+    {
+        <div><p align="center" style="color:red">@ViewBag.ErrorMessage</p></div>
+        @Html.Hidden("team_id", @ViewBag.TeamId as string)
+        <div>
+            <label for="name">@ViewData["Name"] :</label>
+            <input id="name" name="sprint_name" class="form-control" />
+        </div>
+
+        <div>
+            <label for="days">@ViewData["DaysInSprint"] :</label>
+            <input id="days" name="days_in_sprint" class="form-control" />
+        </div>
+
+        <div>
+            <label for="points">@ViewData["StorePointInHours"]</label>
+            <input id="points" name="store_points_in_hours" class="form-control" />
+        </div>
+
+        <div>
+            <label for="active">@ViewData["Active"]</label>
+            <input name="is_active" id="active" type="radio" value="true" />
+            <label for="nonactive">@ViewData["NotActive"]</label>
+            <input checked="checked" id="nonactive" name="is_active" type="radio" value="false" />
+        </div>
+        <input id="sub" type="submit" class="btn btn-primary" value="@ViewData["AddSprint"]" />
+    }
+</div>
