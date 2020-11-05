@@ -29,8 +29,9 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task GetAllSprintsAsync_ManageSpiritsServiceReturnsListCount5_ReturnsListCount5()
+        public async System.Threading.Tasks.Task GetAllSprintsAsync_ManageSpiritsServiceReturnsListCount5_ReturnsListCount5()
         {
+
             //Arrange
             const int team_id = 1;
             var sprints = new List<Sprint>
@@ -58,7 +59,7 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task GetAllSprintsAsync_ManageSpiritsServiceReturnEmpty_ReturnEmpty()
+        public async System.Threading.Tasks.Task GetAllSprintsAsync_ManageSpiritsServiceReturnEmpty_ReturnEmpty()
         {
             //Arrange
             const int team_id = 10;
