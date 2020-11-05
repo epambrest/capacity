@@ -7,7 +7,7 @@ using Teams.Data;
 
 namespace Teams.Services
 {
-    public class ManageTasksService
+    public class ManageTasksService : IManageTasksService
     {
         private readonly IRepository<Models.Task, int> _repository;
 
