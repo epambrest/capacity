@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Teams.Data;
 using Teams.Models;
 using Teams.Security;
+using Task = Teams.Models.Task;
 
 namespace Teams.Services
 {
@@ -22,7 +23,7 @@ namespace Teams.Services
 
         public async Task<IEnumerable<Sprint>> GetAllSprintsAsync(int team_id, DisplayOptions options)
         {
-            var sprints = _sprintRepository.GetAll().Include(x => x.Team).Where(x => x.TeamId == team_id);
+            var sprints = _sprintRepository.GetAll().Include(x => x.Team).Include(x=>x.Tasks).Where(x => x.TeamId == team_id);
             if (options.SortDirection == SortDirection.Ascending)
                 return await sprints.OrderBy(x => x.Name).ToListAsync();
             else
@@ -36,6 +37,17 @@ namespace Teams.Services
             return team;
         }
 
-        public async Task<Sprint> GetSprintAsync(int sprint_id) => await _sprintRepository.GetByIdAsync(sprint_id);
+        public async Task<Sprint> GetSprintAsyncw(int sprint_id)
+        {
+            return  await _sprintRepository.GetByIdAsync(sprint_id);
+        } 
+
+        public async Task<Sprint> GetSprintAsync(int sprint_id)
+        {
+            return await _sprintRepository.GetAll().Where(t => t.Id == sprint_id)
+                .Include(t => t.Tasks)
+                .ThenInclude(x=>x.TeamMember.Member)
+                .FirstOrDefaultAsync(t => t.Id == sprint_id);
+        } 
     }
 }

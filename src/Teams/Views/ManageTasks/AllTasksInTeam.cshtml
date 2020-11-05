@@ -14,16 +14,19 @@
 <table class="table">
 
     <tr align="center">
-        <td align="left" style="border-top: hidden" width="1%"></td>
-        <td align="left" style="border-top: hidden; font-weight: bold">Name of Sprint</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">Days in Sprint</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">Store Point in Hours</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">Name of Task</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">User</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">Store Point</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">Link</td>
     </tr>
 
     @foreach (var item in Model)
     {
         <tr align="center">
             <td align="left">@item.Name</td>
+            <td align="left">@item.TeamMember.Member.Email</td>
+            <td align="left">@item.StoryPoints</td>
+            <td href="https://@item.Link"><a href="@item.Link" align="left">Link</a></td>
         </tr>
     }
 </table>

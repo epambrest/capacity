@@ -26,8 +26,9 @@ namespace Teams.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> AllTaskInTeam(int team_id, DisplayOptions options)
+        public async Task<IActionResult> AllTasksInTeam(int team_id, DisplayOptions options)
         {
+
             if (await _accessCheckService.OwnerOrMemberAsync(team_id))
             {
                 var tasks = await _manageTasksService.GetMyTaskInTeamAsync(team_id, options);
@@ -38,21 +39,7 @@ namespace Teams.Controllers
             else
                 return View("ErrorGetAllTasks");
         }
-
-        [Authorize]
-        public async Task<IActionResult> AllTaskInSprint(int team_id, int sprint_id, DisplayOptions options)
-        {
-            if (await _accessCheckService.OwnerOrMemberAsync(team_id))
-            {
-                var tasks = await _manageTasksService.GetMyTaskInSprintAsync(sprint_id, options);
-                //var sprint = await _manageSprintsService.GetSprint(sprint_id);
-                ViewBag.SprintName = "her shuld be getByIdSprint sprint.name";
-                return View(tasks);
-            }
-            else
-                return View("ErrorGetAllSprints");
-        }
-
+        
         public IActionResult Index()
         {
             return View();

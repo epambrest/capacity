@@ -37,13 +37,22 @@
 </table>
 <table class="table">
 
+    
     <tr align="center">
-        <td align="left" style="border-top: hidden; font-weight: bold">Name of task</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">Number of Story Point</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">Name of Task</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">User</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">Store Point</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">Link</td>
     </tr>
 
-    <tr align="center">
-       
-    </tr>
+    @foreach (var item in @Model.Tasks)
+    {
+        <tr align="center">
+            <td align="left">@item.Name</td>
+            <td align="left">@item.TeamMember.Member.Email</td>
+            <td align="left">@item.StoryPoints</td>
+            <td href="https://@item.Link"><a href="@item.Link" align="left">Link</a></td>
+        </tr>
+    }
 
 </table>
