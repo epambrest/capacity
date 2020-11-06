@@ -108,15 +108,15 @@ namespace Teams.Controllers
           
             if(string.IsNullOrEmpty(sprint_name))
             {
-                return RedirectToAction("AddSprint", new { team_id = team_id, error_message = "Name field can not be empty!" });
+                return RedirectToAction("AddSprint", new { team_id = team_id, error_message = _localizer["NameFieldError"] });
             }
             if (days_in_sprint <= 0)
             {
-                return RedirectToAction("AddSprint", new { team_id = team_id, error_message = "Days field can not be empty or less than 0!" });
+                return RedirectToAction("AddSprint", new { team_id = team_id, error_message = _localizer["DaysFieldError"] });
                 }
             if (store_points_in_hours <= 0)
             {
-                return RedirectToAction("AddSprint", new { team_id = team_id, error_message = "Points field can not be empty or less than 0!" });
+                return RedirectToAction("AddSprint", new { team_id = team_id, error_message = _localizer["PointsFieldError"] });
             }
            bool result = await AddSprintAsync(sprint);
                 if (result) return RedirectToAction("AllSprints", new { team_id = team_id});

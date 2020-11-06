@@ -126,6 +126,9 @@
   <data name="AddSprint" xml:space="preserve">
     <value>Add Sprint</value>
   </data>
+  <data name="DaysFieldError" xml:space="preserve">
+    <value>Days field can not be empty or less than 0!</value>
+  </data>
   <data name="DaysInSprint" xml:space="preserve">
     <value>Days in Sprint</value>
   </data>
@@ -139,6 +142,9 @@
     <value>Name</value>
     <comment>add sprint page</comment>
   </data>
+  <data name="NameFieldError" xml:space="preserve">
+    <value>Name field can not be empty!</value>
+  </data>
   <data name="NameOfSprint" xml:space="preserve">
     <value>Name of Sprint</value>
     <comment>all sprints page</comment>
@@ -148,6 +154,9 @@
   </data>
   <data name="Owner" xml:space="preserve">
     <value>Owner</value>
+  </data>
+  <data name="PointsFieldError" xml:space="preserve">
+    <value>Points field can not be empty or less than 0!</value>
   </data>
   <data name="RemoveMember" xml:space="preserve">
     <value>RemoveMember</value>

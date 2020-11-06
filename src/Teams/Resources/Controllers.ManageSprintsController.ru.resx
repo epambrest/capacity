@@ -126,6 +126,9 @@
   <data name="AddSprint" xml:space="preserve">
     <value>Добавить спринт</value>
   </data>
+  <data name="DaysFieldError" xml:space="preserve">
+    <value>Поле для дней не может быть пустым или содержать значениие меньше нуля</value>
+  </data>
   <data name="DaysInSprint" xml:space="preserve">
     <value>Кол-во дней</value>
   </data>
@@ -139,6 +142,9 @@
     <value>Название</value>
     <comment>add sprint page</comment>
   </data>
+  <data name="NameFieldError" xml:space="preserve">
+    <value>Поле для имени не может быть пустым</value>
+  </data>
   <data name="NameOfSprint" xml:space="preserve">
     <value>Название спринта</value>
     <comment>all sprints page</comment>
@@ -148,6 +154,9 @@
   </data>
   <data name="Owner" xml:space="preserve">
     <value>Владелец</value>
+  </data>
+  <data name="PointsFieldError" xml:space="preserve">
+    <value>Поле для СП не может быть пустым или содержать значениие меньше нуля</value>
   </data>
   <data name="RemoveMember" xml:space="preserve">
     <value>Удалить участника</value>
