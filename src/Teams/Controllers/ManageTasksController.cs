@@ -24,7 +24,6 @@ namespace Teams.Controllers
         public async Task<IActionResult> GetTaskByIdAsync(int teamId, int taskId)
         {
             var task = await _manageTasksService.GetTaskByIdAsync(taskId);
-            ViewBag.TaskName = task.Name;
             return View(task);
         }
     }
