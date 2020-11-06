@@ -23,16 +23,9 @@ namespace Teams.Controllers
         [Authorize]
         public async Task<IActionResult> GetTaskByIdAsync(int teamId, int taskId)
         {
-            if (await _accessCheckService.OwnerOrMemberAsync(teamId))
-            {
-                var task = await _manageTasksService.GetTaskByIdAsync(taskId);
-                ViewBag.TaskName = task.Name;
-                return View(task);
-            }
-            else
-            {
-                return View("Error");
-            }
+            var task = await _manageTasksService.GetTaskByIdAsync(taskId);
+            ViewBag.TaskName = task.Name;
+            return View(task);
         }
     }
 }
