@@ -65,17 +65,18 @@ namespace Teams.Controllers
         [Authorize, NonAction]
         public async Task<List<TeamMember>> GetAllTeamMembersAsync(int team_id, DisplayOptions options)
         {
-            if (await _accessCheckService.OwnerOrMemberAsync(team_id))
+            if (!await _accessCheckService.OwnerOrMemberAsync(team_id))
             {
-                return await _manageTeamsMembersService.GetAllTeamMembersAsync(team_id, options);
+                RedirectToAction("Error");
             }
-            else return null;
+            return await _manageTeamsMembersService.GetAllTeamMembersAsync(team_id, options);
         }
 
         [Authorize]
         public async Task<IActionResult> GetSprintById(int sprint_id)
         {
             var sprint = await _manageSprintsService.GetSprintAsync(sprint_id);
+
             if (sprint == null)
                 return View("ErrorGetAllSprints");
             return View(sprint);
@@ -104,7 +105,7 @@ namespace Teams.Controllers
         [Authorize]
         public async Task<IActionResult> AddSprintAsync(int team_id, string sprint_name, int days_in_sprint, int store_points_in_hours, bool is_active)
         {
-            Sprint sprint = new Sprint { TeamId = team_id, Name = sprint_name, DaysInSprint = days_in_sprint, StorePointInHours = store_points_in_hours, IsActive = is_active };
+            var sprint = new Sprint { TeamId = team_id, Name = sprint_name, DaysInSprint = days_in_sprint, StorePointInHours = store_points_in_hours, IsActive = is_active };
           
             if(string.IsNullOrEmpty(sprint_name))
             {
@@ -118,7 +119,9 @@ namespace Teams.Controllers
             {
                 return RedirectToAction("AddSprint", new { team_id = team_id, error_message = _localizer["PointsFieldError"] });
             }
-           bool result = await AddSprintAsync(sprint);
+
+           var result = await AddSprintAsync(sprint);
+
                 if (result) return RedirectToAction("AllSprints", new { team_id = team_id});
                 else return RedirectToAction("AddError", new { team_id = team_id });
             
@@ -127,6 +130,12 @@ namespace Teams.Controllers
         public IActionResult AddError(int team_id)
         {
             ViewBag.TeamId = team_id;
+            return View();
+        }
+
+        public IActionResult Error()
+        {
+            ViewData["Error"] = _localizer["Error"];
             return View();
         }
 

@@ -42,7 +42,10 @@ namespace Teams.Services
 
         public async Task<bool> AddSprintAsync(Sprint sprint)
         {
-            if (_sprintRepository.GetAll().Where(x=>x.TeamId == sprint.TeamId).Any(x=>x.Name == sprint.Name) || sprint.DaysInSprint<=0 || sprint.StorePointInHours<=0 || !Regex.IsMatch(sprint.Name, ("^[a-zA-Z0-9-_.]+$")))
+            if (_sprintRepository.GetAll()
+                .Where(x=>x.TeamId == sprint.TeamId)
+                .Any(x=>x.Name == sprint.Name) 
+                || sprint.DaysInSprint<=0 || sprint.StorePointInHours<=0 || !Regex.IsMatch(sprint.Name, ("^[a-zA-Z0-9-_.]+$")))
             {
                 return false;
             }
