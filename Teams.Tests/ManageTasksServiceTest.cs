@@ -15,12 +15,12 @@ namespace Teams.Tests
         private Mock<IRepository<Models.Task, int>> _taskReposotiry;
         private ManageTasksService _manageTasksService;
 
-    [SetUp]
-    public void Setup()
-    {
-        _taskReposotiry = new Mock<IRepository<Models.Task, int>>();
-        _manageTasksService = new ManageTasksService(_taskReposotiry.Object);
-    }
+        [SetUp]
+        public void Setup()
+        {
+            _taskReposotiry = new Mock<IRepository<Models.Task, int>>();
+            _manageTasksService = new ManageTasksService(_taskReposotiry.Object);
+        }
 
         [Test]
         public async Task GetTaskByIdAsync_ManageTasksServiceReturnsTaskWithId1_ReturnTaskWithId1()
@@ -48,7 +48,6 @@ namespace Teams.Tests
             var mock = task.AsQueryable().BuildMock();
 
             _taskReposotiry.Setup(x => x.GetAll()).Returns(mock.Object);
-            _taskReposotiry.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(task.FirstOrDefault());
 
             // Act
             var result = await _manageTasksService.GetTaskByIdAsync(taskId);
