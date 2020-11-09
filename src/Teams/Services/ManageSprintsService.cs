@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Teams.Data;
 using Teams.Models;
@@ -37,5 +39,17 @@ namespace Teams.Services
         }
 
         public async Task<Sprint> GetSprintAsync(int sprint_id) => await _sprintRepository.GetByIdAsync(sprint_id);
+
+        public async Task<bool> AddSprintAsync(Sprint sprint)
+        {
+            if (_sprintRepository.GetAll()
+                .Where(x=>x.TeamId == sprint.TeamId)
+                .Any(x=>x.Name == sprint.Name) 
+                || sprint.DaysInSprint<=0 || sprint.StorePointInHours<=0 || !Regex.IsMatch(sprint.Name, ("^[a-zA-Z0-9-_.]+$")))
+            {
+                return false;
+            }
+            return await _sprintRepository.InsertAsync(sprint);
+        }
     }
 }
