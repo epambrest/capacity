@@ -133,5 +133,43 @@ namespace Teams.Tests
             Assert.IsFalse(result2);
             Assert.IsFalse(result3);
         }
+
+        [Test]
+        public async Task EditSprintsAsync_ManageSpiritsServiceReturns_True()
+        {
+            //Arrange
+            var sprint = new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 14, StorePointInHours = 4, IsActive = true };
+
+            _sprintRepository.Setup(x => x.UpdateAsync(It.IsAny<Sprint>())).ReturnsAsync(true);
+            _sprintRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(sprint);
+
+            //Act
+            var result = await _manageSprintsService.EditSprintAsync(sprint);
+
+            //Assert
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public async Task EditSprintsAsync_ManageSpiritsServiceReturns_False()
+        {
+            //Arrange
+            var sprint1 = new Sprint { Id = 1, TeamId = 1, Name = "Spr int", DaysInSprint = 14, StorePointInHours = 4, IsActive = true };
+            var sprint2 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint", DaysInSprint = -14, StorePointInHours = 4, IsActive = true };
+            var sprint3 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint", DaysInSprint = 14, StorePointInHours = -4, IsActive = true };
+
+            _sprintRepository.Setup(x => x.UpdateAsync(It.IsAny<Sprint>())).ReturnsAsync(true);
+            _sprintRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(sprint2);
+
+            //Act
+            var result1 = await _manageSprintsService.EditSprintAsync(sprint1); //Incorrect name
+            var result2 = await _manageSprintsService.EditSprintAsync(sprint2); //Incorrect days count
+            var result3 = await _manageSprintsService.EditSprintAsync(sprint3); //Incorrect SP count
+
+            //Assert
+            Assert.IsFalse(result1);
+            Assert.IsFalse(result2);
+            Assert.IsFalse(result3);
+        }
     }
 }

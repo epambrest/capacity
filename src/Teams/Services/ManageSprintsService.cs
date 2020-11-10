@@ -51,5 +51,20 @@ namespace Teams.Services
             }
             return await _sprintRepository.InsertAsync(sprint);
         }
+
+        public async Task<bool> EditSprintAsync(Sprint sprint)
+        {
+            var sprint_for_check = await _sprintRepository.GetByIdAsync(sprint.Id);
+            bool name_check;
+            if (sprint_for_check.Name == sprint.Name) name_check = false;
+            else name_check = _sprintRepository.GetAll()
+                .Where(x => x.TeamId == sprint.TeamId)
+                .Any(x => x.Name == sprint.Name);
+            if (name_check || sprint.DaysInSprint <= 0 || sprint.StorePointInHours <= 0 || !Regex.IsMatch(sprint.Name, ("^[a-zA-Z0-9-_.]+$")))
+            {
+                return false;
+            }
+            return await _sprintRepository.UpdateAsync(sprint);
+        }
     }
 }
