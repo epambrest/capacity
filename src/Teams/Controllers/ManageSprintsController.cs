@@ -96,6 +96,7 @@ namespace Teams.Controllers
             ViewData["ReturnToSprint"] = _localizer["ReturnToSprint"];
             ViewData["DaysInSprint"] = _localizer["DaysInSprint"];
             ViewData["StorePointInHours"] = _localizer["StorePointInHours"];
+            ViewData["Close"] = _localizer["Close"];
 
             ViewBag.ErrorMessage = error_message;
             ViewBag.TeamName = team.TeamName;
@@ -130,6 +131,7 @@ namespace Teams.Controllers
             ViewData["ReturnToSprint"] = _localizer["ReturnToSprint"];
             ViewData["DaysInSprint"] = _localizer["DaysInSprint"];
             ViewData["StorePointInHours"] = _localizer["StorePointInHours"];
+            ViewData["Close"] = _localizer["Close"];
 
             ViewBag.ErrorMessage = error_message;
             ViewBag.TeamName = team.TeamName;

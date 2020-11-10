@@ -126,6 +126,9 @@
   <data name="AddSprint" xml:space="preserve">
     <value>Add Sprint</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
   <data name="DaysFieldError" xml:space="preserve">
     <value>Days field can not be empty or less than 0!</value>
   </data>

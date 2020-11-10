@@ -3,9 +3,6 @@
     ViewData["Title"] = "Add Sprint";
 }
 <script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
-<div style="margin: 10px 0px 0px 30px" align="left">
-    <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to Sprints", "AllSprints", new { team_id = ViewBag.TeamId })</a></h>
-</div>
 
 <div align="center">
     <h1 size="4" align="left">@ViewBag.TeamName | @ViewData["AddSprint"]</h1>
@@ -37,6 +34,10 @@
             <label for="nonactive">@ViewData["NotActive"]</label>
             <input checked="checked" id="nonactive" name="is_active" type="radio" value="false" />
         </div>
-        <input id="sub" type="submit" class="btn btn-primary" value="@ViewData["AddSprint"]" />
-    }
-</div>
+
+        <div style="display: table">
+            <input id="sub" type="submit" class="btn btn-success" value="@ViewData["AddSprint"]" />
+            <button style="margin-left:7px" type='button' class="btn btn-danger" onclick="location.href = '@Url.Action("AllSprints", "ManageSprints", new { team_id = ViewBag.TeamId })'">@ViewData["Close"]</button>
+        </div>
+     }
+    </div>

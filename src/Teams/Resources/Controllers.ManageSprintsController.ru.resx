@@ -126,6 +126,9 @@
   <data name="AddSprint" xml:space="preserve">
     <value>Добавить спринт</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
   <data name="DaysFieldError" xml:space="preserve">
     <value>Поле для дней не может быть пустым или содержать значениие меньше нуля</value>
   </data>
