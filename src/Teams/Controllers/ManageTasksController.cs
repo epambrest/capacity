@@ -33,6 +33,10 @@ namespace Teams.Controllers
                 return View("ErrorGetAllTasks");
             }
             var tasks = await _manageTasksService.GetAllTasksForTeamAsync(team_id, options);
+            if (tasks == null)
+            {
+                return View("ErrorGetAllTasks");
+            }
             return View(tasks);
         }
 
