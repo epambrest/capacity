@@ -99,13 +99,11 @@ namespace Teams.Controllers
             ViewData["Close"] = _localizer["Close"];
 
             ViewBag.ErrorMessage = error_message;
-            ViewBag.TeamName = team.TeamName;
-            ViewBag.TeamId = team_id;
 
-            ViewBag.SprintId = sprint.Id;
-            ViewBag.SprintName = sprint.Name;
-            ViewBag.SprintDays = sprint.DaysInSprint;
-            ViewBag.SprintPoints = sprint.StorePointInHours;
+            EditSprintViewModel model = new EditSprintViewModel {Team = new Team { Id = team_id, TeamName = team.TeamName },
+                Sprint = new Sprint { Id = sprint.Id, Name = sprint.Name, DaysInSprint = sprint.DaysInSprint, StorePointInHours = sprint.StorePointInHours },
+                ErrorMessage=error_message};
+
             if(sprint.IsActive)
             {
                 ViewBag.SprintActive = "checked";
@@ -116,7 +114,7 @@ namespace Teams.Controllers
                 ViewBag.SprintActive = "";
                 ViewBag.SprintNotActive = "checked";
             }
-            return View();
+            return View(model);
         }
 
         [Authorize]
