@@ -9,7 +9,7 @@
     <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to your teams", "GetMyTeams", "ManageTeams")</a></h>
 </div>
 <div align="center">
-    <h><font size="6" color="black"><strong>@ViewBag.TeamName</strong></font></h>
+    <h><font size="6" color="black"><strong>@Model.First().Team.TeamName</strong></font></h>
 </div>
 <table class="table">
 

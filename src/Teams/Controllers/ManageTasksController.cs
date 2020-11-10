@@ -16,8 +16,8 @@ namespace Teams.Controllers
         private readonly IManageTeamsService _manageTeamsService;
         private readonly IManageSprintsService _manageSprintsService;
 
-        public ManageTasksController(IManageTasksService manageTasksService, IAccessCheckService accessCheckService, 
-            IManageTeamsService manageTeamsService,IManageSprintsService manageSprintsService)
+        public ManageTasksController(IManageTasksService manageTasksService, IAccessCheckService accessCheckService,
+            IManageTeamsService manageTeamsService, IManageSprintsService manageSprintsService)
         {
             _manageTasksService = manageTasksService;
             _accessCheckService = accessCheckService;
@@ -26,20 +26,16 @@ namespace Teams.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> AllTasksInTeam(int team_id, DisplayOptions options)
+        public async Task<IActionResult> AllTasksForTeam(int team_id, DisplayOptions options)
         {
-
-            if (await _accessCheckService.OwnerOrMemberAsync(team_id))
+            if (!await _accessCheckService.OwnerOrMemberAsync(team_id))
             {
-                var tasks = await _manageTasksService.GetMyTaskInTeamAsync(team_id, options);
-                var team = await _manageTeamsService.GetTeamAsync(team_id);
-                ViewBag.TeamName = team.TeamName;
-                return View(tasks);
-            }
-            else
                 return View("ErrorGetAllTasks");
+            }
+            var tasks = await _manageTasksService.GetAllTasksForTeamAsync(team_id, options);
+            return View(tasks);
         }
-        
+
         public IActionResult Index()
         {
             return View();

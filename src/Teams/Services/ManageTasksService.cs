@@ -18,19 +18,12 @@ namespace Teams.Services
             _taskRepository = taskRepository;
         }
 
-        public async Task<IEnumerable<Task>> GetMyTaskInSprintAsync(int sprint_id, DisplayOptions options)
+        public async Task<IEnumerable<Task>> GetAllTasksForTeamAsync(int team_id, DisplayOptions options)
         {
-            var tasks = _taskRepository.GetAll().Where(x => x.SprintId == sprint_id);
-            if (options.SortDirection == SortDirection.Ascending)
-                return await tasks.OrderBy(x => x.Name).ToListAsync();
-            else
-                return await tasks.OrderByDescending(x => x.Name).ToListAsync();
-        }
-
-        public async Task<IEnumerable<Task>> GetMyTaskInTeamAsync(int team_id, DisplayOptions options)
-        {
-            var tasks = _taskRepository.GetAll().Where(x => x.TeamId == team_id)
-                .Include(t => t.TeamMember.Member);
+            var tasks = _taskRepository.GetAll()
+                .Where(x => x.TeamId == team_id)
+                .Include(t => t.TeamMember.Member)
+                .Include(t=>t.Team);
                 
             if (options.SortDirection == SortDirection.Ascending)
                 return await tasks.OrderBy(x => x.Name).ToListAsync();

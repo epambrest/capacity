@@ -8,7 +8,6 @@ namespace Teams.Services
 {
     public interface IManageTasksService
     {
-        Task<IEnumerable<Models.Task>> GetMyTaskInTeamAsync(int team_id, DisplayOptions options);
-        Task<IEnumerable<Models.Task>> GetMyTaskInSprintAsync(int sprint_id, DisplayOptions options);
+        Task<IEnumerable<Models.Task>> GetAllTasksForTeamAsync(int team_id, DisplayOptions options);
     }
 }

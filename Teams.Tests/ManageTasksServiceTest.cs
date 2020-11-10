@@ -30,56 +30,31 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async System.Threading.Tasks.Task GetAllTasksInTeamAsyncReturnListTasks_ReturnListTasks()
+        public async System.Threading.Tasks.Task GetAllTasksInTeamAsync_RepositoryContainsTwoTasksForSelectedTeam_ReturnsTwoTasks()
         {
             //Arrange
-            int team_id = 1;
+            const int teamId = 1;
 
             //Act
-            var result = new List<Task>(await _manageTasksService.GetMyTaskInTeamAsync(team_id, new DisplayOptions { }));
+            var result = new List<Task>(await _manageTasksService.GetAllTasksForTeamAsync(teamId, new DisplayOptions { }));
 
             //Assert
             Assert.AreEqual(2, result.Count());
         }
 
         [Test]
-        public async System.Threading.Tasks.Task GetAllTasksInTeamAsyncReturnEmptyList_ReturnEmpryList()
+        public async System.Threading.Tasks.Task GetAllTasksInTeamAsync_RepositoryContainsZeroTasksForSelectedTeam_ReturnsNull()
         {
             //Arrange
-            int team_id = 2;
+            const int teamId = 2;
 
             //Act
-            var result = new List<Task>(await _manageTasksService.GetMyTaskInTeamAsync(team_id, new DisplayOptions { }));
+            var result = new List<Task>(await _manageTasksService.GetAllTasksForTeamAsync(teamId, new DisplayOptions { }));
 
             //Assert
             Assert.IsEmpty(result);
         }
 
-        [Test]
-        public async System.Threading.Tasks.Task GetAllTasksInSprintAsyncReturnListTasks_ReturnListTasks()
-        {
-            //Arrange
-            int sprint_id = 1;
-
-            //Act
-            var result = new List<Task>(await _manageTasksService.GetMyTaskInSprintAsync(sprint_id, new DisplayOptions { }));
-
-            //Assert
-            Assert.AreEqual(2, result.Count());
-        }
-
-        [Test]
-        public async System.Threading.Tasks.Task GetAllTasksInSprintAsyncReturnEmptyList_ReturnEmpryList()
-        {
-            //Arrange
-            int sprint_id = 2;
-
-            //Act
-            var result = new List<Task>(await _manageTasksService.GetMyTaskInSprintAsync(sprint_id, new DisplayOptions { }));
-
-            //Assert
-            Assert.IsEmpty(result);
-        }
         private List<Task> getFakeDbTasks()
         {
             var tasks = new List<Task>()
