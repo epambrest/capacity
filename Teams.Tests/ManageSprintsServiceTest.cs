@@ -36,11 +36,11 @@ namespace Teams.Tests
             const int team_id = 1;
             var sprints = new List<Sprint>
             {
-                new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 14, StorePointInHours = 4, IsActive = true },
-                new Sprint { Id = 2, TeamId = 1, Name = "Sprint2", DaysInSprint = 16, StorePointInHours = 4, IsActive = false },
-                new Sprint { Id = 3, TeamId = 1, Name = "Sprint3", DaysInSprint = 21, StorePointInHours = 2, IsActive = true }, 
-                new Sprint { Id = 4, TeamId = 1, Name = "Sprint4", DaysInSprint = 10, StorePointInHours = 3, IsActive = true },
-                new Sprint { Id = 5, TeamId = 1, Name = "Sprint5", DaysInSprint = 27, StorePointInHours = 5, IsActive = false} 
+                new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 14, StoryPointInHours = 4, IsActive = true },
+                new Sprint { Id = 2, TeamId = 1, Name = "Sprint2", DaysInSprint = 16, StoryPointInHours = 4, IsActive = false },
+                new Sprint { Id = 3, TeamId = 1, Name = "Sprint3", DaysInSprint = 21, StoryPointInHours = 2, IsActive = true }, 
+                new Sprint { Id = 4, TeamId = 1, Name = "Sprint4", DaysInSprint = 10, StoryPointInHours = 3, IsActive = true },
+                new Sprint { Id = 5, TeamId = 1, Name = "Sprint5", DaysInSprint = 27, StoryPointInHours = 5, IsActive = false} 
             };
 
             var mock = sprints.AsQueryable().BuildMock();
@@ -65,11 +65,11 @@ namespace Teams.Tests
             const int team_id = 10;
             var sprints = new List<Sprint>
             {
-                new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 14, StorePointInHours = 4, IsActive = true },
-                new Sprint { Id = 2, TeamId = 1, Name = "Sprint2", DaysInSprint = 16, StorePointInHours = 4, IsActive = true },
-                new Sprint { Id = 3, TeamId = 1, Name = "Sprint3", DaysInSprint = 21, StorePointInHours = 2, IsActive = true },
-                new Sprint { Id = 4, TeamId = 1, Name = "Sprint4", DaysInSprint = 10, StorePointInHours = 3, IsActive = true },
-                new Sprint { Id = 5, TeamId = 1, Name = "Sprint5", DaysInSprint = 27, StorePointInHours = 5, IsActive = false}
+                new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 14, StoryPointInHours = 4, IsActive = true },
+                new Sprint { Id = 2, TeamId = 1, Name = "Sprint2", DaysInSprint = 16, StoryPointInHours = 4, IsActive = true },
+                new Sprint { Id = 3, TeamId = 1, Name = "Sprint3", DaysInSprint = 21, StoryPointInHours = 2, IsActive = true },
+                new Sprint { Id = 4, TeamId = 1, Name = "Sprint4", DaysInSprint = 10, StoryPointInHours = 3, IsActive = true },
+                new Sprint { Id = 5, TeamId = 1, Name = "Sprint5", DaysInSprint = 27, StoryPointInHours = 5, IsActive = false}
             };
 
             var mock = sprints.AsQueryable().BuildMock();
@@ -87,7 +87,7 @@ namespace Teams.Tests
         {
             //Arrange
             const int sprint_id = 1;
-            var sprint = new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 1, StorePointInHours = 1, IsActive = true };
+            var sprint = new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 1, StoryPointInHours = 1, IsActive = true };
 
             _sprintRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(sprint);
 
@@ -102,7 +102,7 @@ namespace Teams.Tests
         public async Task AddSprintsAsync_ManageSpiritsServiceReturns_True()
         {
             //Arrange
-            var sprint = new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 14, StorePointInHours = 4, IsActive = true };
+            var sprint = new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 14, StoryPointInHours = 4, IsActive = true };
 
             _sprintRepository.Setup(x => x.InsertAsync(It.IsAny<Sprint>())).ReturnsAsync(true);
 
@@ -117,9 +117,9 @@ namespace Teams.Tests
         public async Task AddSprintsAsync_ManageSpiritsServiceReturns_False()
         {
             //Arrange
-            var sprint1 = new Sprint { Id = 1, TeamId = 1, Name = "Spr int1", DaysInSprint = 14, StorePointInHours = 4, IsActive = true };
-            var sprint2 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint2", DaysInSprint = -14, StorePointInHours = 4, IsActive = true };
-            var sprint3 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint3", DaysInSprint = 14, StorePointInHours = -4, IsActive = true };
+            var sprint1 = new Sprint { Id = 1, TeamId = 1, Name = "Spr int1", DaysInSprint = 14, StoryPointInHours = 4, IsActive = true };
+            var sprint2 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint2", DaysInSprint = -14, StoryPointInHours = 4, IsActive = true };
+            var sprint3 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint3", DaysInSprint = 14, StoryPointInHours = -4, IsActive = true };
 
             _sprintRepository.Setup(x => x.InsertAsync(It.IsAny<Sprint>())).ReturnsAsync(true);
 

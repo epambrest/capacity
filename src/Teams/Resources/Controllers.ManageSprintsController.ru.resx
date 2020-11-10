@@ -167,7 +167,7 @@
   <data name="ReturnToSprint" xml:space="preserve">
     <value>Вернуться к спринтам</value>
   </data>
-  <data name="StorePointInHours" xml:space="preserve">
+  <data name="StoryPointInHours" xml:space="preserve">
     <value>Кол-во часов в СП</value>
   </data>
 </root>
