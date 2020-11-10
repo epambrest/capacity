@@ -111,15 +111,6 @@ namespace Teams.Controllers
         {
             var team = await _manageSprintsService.GetTeam(team_id);
 
-            ViewData["Name"] = _localizer["Name"];
-            ViewData["Active"] = _localizer["Active"];
-            ViewData["NotActive"] = _localizer["NotActive"];
-            ViewData["AddSprint"] = _localizer["AddSprint"];
-            ViewData["ReturnToSprint"] = _localizer["ReturnToSprint"];
-            ViewData["DaysInSprint"] = _localizer["DaysInSprint"];
-            ViewData["StorePointInHours"] = _localizer["StorePointInHours"];
-            ViewData["Close"] = _localizer["Close"];
-
             ViewBag.ErrorMessage = error_message;
             ViewBag.TeamName = team.TeamName;
             ViewBag.TeamId = team_id;
