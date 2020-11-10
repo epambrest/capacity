@@ -89,17 +89,6 @@ namespace Teams.Controllers
             var team = await _manageSprintsService.GetTeam(team_id);
             var sprint = await _manageSprintsService.GetSprintAsync(sprint_id);
 
-            ViewData["Name"] = _localizer["Name"];
-            ViewData["Active"] = _localizer["Active"];
-            ViewData["NotActive"] = _localizer["NotActive"];
-            ViewData["EditSprint"] = _localizer["EditSprint"];
-            ViewData["ReturnToSprint"] = _localizer["ReturnToSprint"];
-            ViewData["DaysInSprint"] = _localizer["DaysInSprint"];
-            ViewData["StorePointInHours"] = _localizer["StorePointInHours"];
-            ViewData["Close"] = _localizer["Close"];
-
-            ViewBag.ErrorMessage = error_message;
-
             EditSprintViewModel model = new EditSprintViewModel {Team = new Team { Id = team_id, TeamName = team.TeamName },
                 Sprint = new Sprint { Id = sprint.Id, Name = sprint.Name, DaysInSprint = sprint.DaysInSprint, StorePointInHours = sprint.StorePointInHours },
                 ErrorMessage=error_message};
