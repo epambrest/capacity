@@ -31,8 +31,6 @@ namespace Teams.Controllers
         [Authorize]
         public async Task<IActionResult> AllSprints(int team_id, DisplayOptions options)
         {
-            await _manageSprintsService.AddSprintAsync(new Sprint()
-                {DaysInSprint = 1, IsActive = true, Name = "q", TeamId = 16,StoryPointInHours = 10});
             List<Sprint> sprints;
             if (await _accessCheckService.OwnerOrMemberAsync(team_id))
             {
