@@ -37,7 +37,7 @@ namespace Teams.Repository
             if (sprint == null)
                 return false;
             sprint.Name = entity.Name;
-            sprint.StorePointInHours = entity.StorePointInHours;
+            sprint.StoryPointInHours = entity.StoryPointInHours;
             sprint.DaysInSprint = entity.DaysInSprint;
             sprint.IsActive = entity.IsActive;
             var result = _dbContext.Entry(sprint).State == EntityState.Modified ? true : false;

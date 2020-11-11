@@ -45,7 +45,7 @@ namespace Teams.Controllers
             else ViewBag.AddVision = "collapse";
 
             ViewData["DaysInSprint"] = _localizer["DaysInSprint"];
-            ViewData["StorePointInHours"] = _localizer["StorePointInHours"];
+            ViewData["StoryPointInHours"] = _localizer["StoryPointInHours"];
             ViewData["NameOfSprint"] = _localizer["NameOfSprint"];
             ViewData["MemberEmail"] = _localizer["MemberEmail"];
             ViewData["Owner"] = _localizer["Owner"];
@@ -93,7 +93,7 @@ namespace Teams.Controllers
             ViewData["AddSprint"] = _localizer["AddSprint"];
             ViewData["ReturnToSprint"] = _localizer["ReturnToSprint"];
             ViewData["DaysInSprint"] = _localizer["DaysInSprint"];
-            ViewData["StorePointInHours"] = _localizer["StorePointInHours"];
+            ViewData["StoryPointInHours"] = _localizer["StoryPointInHours"];
 
             ViewBag.ErrorMessage = error_message;
             ViewBag.TeamName = team.TeamName;
@@ -103,9 +103,9 @@ namespace Teams.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AddSprintAsync(int team_id, string sprint_name, int days_in_sprint, int store_points_in_hours, bool is_active)
+        public async Task<IActionResult> AddSprintAsync(int team_id, string sprint_name, int days_in_sprint, int story_points_in_hours, bool is_active)
         {
-            var sprint = new Sprint { TeamId = team_id, Name = sprint_name, DaysInSprint = days_in_sprint, StorePointInHours = store_points_in_hours, IsActive = is_active };
+            var sprint = new Sprint { TeamId = team_id, Name = sprint_name, DaysInSprint = days_in_sprint, StoryPointInHours = story_points_in_hours, IsActive = is_active };
           
             if(string.IsNullOrEmpty(sprint_name))
             {
@@ -115,7 +115,7 @@ namespace Teams.Controllers
             {
                 return RedirectToAction("AddSprint", new { team_id = team_id, error_message = _localizer["DaysFieldError"] });
                 }
-            if (store_points_in_hours <= 0)
+            if (story_points_in_hours <= 0)
             {
                 return RedirectToAction("AddSprint", new { team_id = team_id, error_message = _localizer["PointsFieldError"] });
             }

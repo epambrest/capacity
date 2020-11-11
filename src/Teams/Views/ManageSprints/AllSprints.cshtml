@@ -18,7 +18,7 @@
             <td align="left" style="border-top: hidden" width="1%"></td>
             <td align="left" style="border-top: hidden; font-weight: bold">@ViewData["NameOfSprint"]</td>
             <td align="left" style="border-top: hidden; font-weight: bold">@ViewData["DaysInSprint"]</td>
-            <td align="left" style="border-top: hidden; font-weight: bold">@ViewData["StorePointInHours"]</td>
+            <td align="left" style="border-top: hidden; font-weight: bold">@ViewData["StoryPointInHours"]</td>
             <td style="border-top: hidden; visibility: @ViewBag.AddVision" align="right">
                 @Html.ActionLink("", "AddSprint", new { team_id = ViewBag.TeamId, error_message = "" }, new { @class = "fas fa-plus", title = "Add Sprint", style = "margin: 10px 0px 0px 30px", align = "right" })
             </td>
@@ -37,7 +37,7 @@
                 }
                 <td align="left">@Html.ActionLink(item.Name, "GetSprintById", new { sprint_id = item.Id })</td>
                 <td align="left">@item.DaysInSprint</td>
-                <td align="left">@item.StorePointInHours</td>
+                <td align="left">@item.StoryPointInHours</td>
                 <td></td>
             </tr>
         }
