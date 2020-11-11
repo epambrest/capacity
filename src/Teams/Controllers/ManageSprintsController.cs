@@ -30,19 +30,19 @@ namespace Teams.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> AllSprints(int team_id, DisplayOptions options)
+        public async Task<IActionResult> AllSprints(int teamId, DisplayOptions options)
         {
             List<Sprint> sprints;
-            if (await _accessCheckService.OwnerOrMemberAsync(team_id))
+            if (await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
-                sprints = (List<Sprint>)await _manageSprintsService.GetAllSprintsAsync(team_id, options);
+                sprints = (List<Sprint>)await _manageSprintsService.GetAllSprintsAsync(teamId, options);
             }
             else 
                 return View("ErrorGetAllSprints");
 
-            var team = await _manageSprintsService.GetTeam(team_id);
+            var team = await _manageSprintsService.GetTeam(teamId);
 
-            if (await _accessCheckService.IsOwnerAsync(team_id)) ViewBag.AddVision = "visible";
+            if (await _accessCheckService.IsOwnerAsync(teamId)) ViewBag.AddVision = "visible";
             else ViewBag.AddVision = "collapse";
 
             ViewData["DaysInSprint"] = _localizer["DaysInSprint"];
@@ -54,29 +54,29 @@ namespace Teams.Controllers
             ViewData["AddMember"] = _localizer["AddMember"];
             ViewData["RemoveMember"] = _localizer["RemoveMember"];
 
-            ViewBag.TeamId = team_id;
+            ViewBag.TeamId = teamId;
             ViewBag.TeamName = team.TeamName;
             ViewBag.TeamOwner = team.Owner.Email;
-            List<TeamMember> teamMembers = await GetAllTeamMembersAsync(team_id, new DisplayOptions { });
+            List<TeamMember> teamMembers = await GetAllTeamMembersAsync(teamId, new DisplayOptions { });
 
             CombinedModel combinedModel = new CombinedModel { Sprints = sprints, TeamMembers = teamMembers };
             return View(combinedModel);
         }
 
         [Authorize, NonAction]
-        public async Task<List<TeamMember>> GetAllTeamMembersAsync(int team_id, DisplayOptions options)
+        public async Task<List<TeamMember>> GetAllTeamMembersAsync(int teamId, DisplayOptions options)
         {
-            if (!await _accessCheckService.OwnerOrMemberAsync(team_id))
+            if (!await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
                 RedirectToAction("Error");
             }
-            return await _manageTeamsMembersService.GetAllTeamMembersAsync(team_id, options);
+            return await _manageTeamsMembersService.GetAllTeamMembersAsync(teamId, options);
         }
 
         [Authorize]
-        public async Task<IActionResult> GetSprintById(int sprint_id)
+        public async Task<IActionResult> GetSprintById(int sprintId)
         {
-            var sprint = await _manageSprintsService.GetSprintAsync(sprint_id);
+            var sprint = await _manageSprintsService.GetSprintAsync(sprintId);
 
             if (sprint == null)
                 return View("ErrorGetAllSprints");
@@ -149,15 +149,15 @@ namespace Teams.Controllers
 
             if (string.IsNullOrEmpty(sprintName))
             {
-                return RedirectToAction("EditSprint", new { teamId = teamId, errorMessage = _localizer["NameFieldError"] });
+                return RedirectToAction("AddSprint", new { teamId = teamId, errorMessage = _localizer["NameFieldError"] });
             }
             if (daysInSprint <= 0)
             {
-                return RedirectToAction("EditSprint", new { teamId = teamId, errorMessage = _localizer["DaysFieldError"] });
+                return RedirectToAction("AddSprint", new { teamId = teamId, errorMessage = _localizer["DaysFieldError"] });
             }
             if (storePointsInHours <= 0)
             {
-                return RedirectToAction("EditSprint", new { teamId = teamId, errorMessage = _localizer["PointsFieldError"] });
+                return RedirectToAction("AddSprint", new { teamId = teamId, errorMessage = _localizer["PointsFieldError"] });
             }
 
             var result = await AddSprintAsync(sprint);
