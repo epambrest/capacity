@@ -95,7 +95,7 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <p align="center" id="sprint"></p>
-                    <input type="hidden" id="sprint_id" name="sprint_id" value="" />
+                    <input type="hidden" id="sprintId" name="sprintId" value="" />
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-outline-secondary" asp-action="Remove">OK</button>
@@ -114,7 +114,7 @@
             var sprint = button.data('content')
             var sprintId = button.data('whatever')
             var removeModal = $("#myModal");
-            removeModal.find("#sprint_id").val(sprintId);
+            removeModal.find("#sprintId").val(sprintId);
             document.getElementById('sprint').innerHTML = "Are you sure you want to remove " + "<strong>" + sprint + "</strong>" + "?";
         });
     });

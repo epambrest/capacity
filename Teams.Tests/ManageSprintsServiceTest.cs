@@ -142,18 +142,18 @@ namespace Teams.Tests
         public async Task RemoveAsync_ManageSprintsServiceReturnsTrue_ReturnsTrue()
         {
             // Arrange
-            const string team_owner = "1234";
-            const int sprint_id = 1;
+            const string teamOwner = "1234";
+            const int sprintId = 1;
             var sprints = new List<Sprint>
             {
-                new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 14, StorePointInHours = 4, IsActive = true, Team = new Team{TeamOwner = team_owner}},
-                new Sprint { Id = 2, TeamId = 1, Name = "Sprint2", DaysInSprint = 16, StorePointInHours = 4, IsActive = true, Team = new Team{TeamOwner = team_owner}},
-                new Sprint { Id = 3, TeamId = 1, Name = "Sprint3", DaysInSprint = 21, StorePointInHours = 2, IsActive = true, Team = new Team{TeamOwner = team_owner}},
-                new Sprint { Id = 4, TeamId = 1, Name = "Sprint4", DaysInSprint = 10, StorePointInHours = 3, IsActive = true, Team = new Team{TeamOwner = team_owner}},
-                new Sprint { Id = 5, TeamId = 1, Name = "Sprint5", DaysInSprint = 27, StorePointInHours = 5, IsActive = false, Team = new Team{TeamOwner = team_owner}}
+                new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 14, StorePointInHours = 4, IsActive = true, Team = new Team{TeamOwner = teamOwner}},
+                new Sprint { Id = 2, TeamId = 1, Name = "Sprint2", DaysInSprint = 16, StorePointInHours = 4, IsActive = true, Team = new Team{TeamOwner = teamOwner}},
+                new Sprint { Id = 3, TeamId = 1, Name = "Sprint3", DaysInSprint = 21, StorePointInHours = 2, IsActive = true, Team = new Team{TeamOwner = teamOwner}},
+                new Sprint { Id = 4, TeamId = 1, Name = "Sprint4", DaysInSprint = 10, StorePointInHours = 3, IsActive = true, Team = new Team{TeamOwner = teamOwner}},
+                new Sprint { Id = 5, TeamId = 1, Name = "Sprint5", DaysInSprint = 27, StorePointInHours = 5, IsActive = false, Team = new Team{TeamOwner = teamOwner}}
             };
             var user = new Mock<UserDetails>(null);
-            user.Setup(x => x.Id()).Returns(team_owner);
+            user.Setup(x => x.Id()).Returns(teamOwner);
             _currentUser.SetupGet(x => x.Current).Returns(user.Object);
             var mock = sprints.AsQueryable().BuildMock();
             _sprintRepository.Setup(x => x.GetAll()).Returns(mock.Object);
@@ -161,7 +161,7 @@ namespace Teams.Tests
             .ReturnsAsync(true);
 
             //Act
-            var result = await _manageSprintsService.RemoveAsync(sprint_id);
+            var result = await _manageSprintsService.RemoveAsync(sprintId);
 
             //Assert
             Assert.IsTrue(result);
@@ -171,18 +171,18 @@ namespace Teams.Tests
         public async Task RemoveAsync_ManageSprintsServiceReturnsFalse_ReturnsFalse()
         {
             // Arrange
-            const string team_owner = "1234";
-            const int sprint_id = 10;
+            const string teamOwner = "1234";
+            const int sprintId = 10;
             var sprints = new List<Sprint>
             {
-                new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 14, StorePointInHours = 4, IsActive = true, Team = new Team{TeamOwner = team_owner}},
-                new Sprint { Id = 2, TeamId = 1, Name = "Sprint2", DaysInSprint = 16, StorePointInHours = 4, IsActive = true, Team = new Team{TeamOwner = team_owner}},
-                new Sprint { Id = 3, TeamId = 1, Name = "Sprint3", DaysInSprint = 21, StorePointInHours = 2, IsActive = true, Team = new Team{TeamOwner = team_owner}},
-                new Sprint { Id = 4, TeamId = 1, Name = "Sprint4", DaysInSprint = 10, StorePointInHours = 3, IsActive = true, Team = new Team{TeamOwner = team_owner}},
+                new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 14, StorePointInHours = 4, IsActive = true, Team = new Team{TeamOwner = teamOwner}},
+                new Sprint { Id = 2, TeamId = 1, Name = "Sprint2", DaysInSprint = 16, StorePointInHours = 4, IsActive = true, Team = new Team{TeamOwner = teamOwner}},
+                new Sprint { Id = 3, TeamId = 1, Name = "Sprint3", DaysInSprint = 21, StorePointInHours = 2, IsActive = true, Team = new Team{TeamOwner = teamOwner}},
+                new Sprint { Id = 4, TeamId = 1, Name = "Sprint4", DaysInSprint = 10, StorePointInHours = 3, IsActive = true, Team = new Team{TeamOwner = teamOwner}},
                 new Sprint { Id = 5, TeamId = 1, Name = "Sprint5", DaysInSprint = 27, StorePointInHours = 5, IsActive = false, Team = new Team{TeamOwner = "123"}}
             };
             var user = new Mock<UserDetails>(null);
-            user.Setup(x => x.Id()).Returns(team_owner);
+            user.Setup(x => x.Id()).Returns(teamOwner);
             _currentUser.SetupGet(x => x.Current).Returns(user.Object);
             var mock = sprints.AsQueryable().BuildMock();
             _sprintRepository.Setup(x => x.GetAll()).Returns(mock.Object);
@@ -190,7 +190,7 @@ namespace Teams.Tests
             .ReturnsAsync(true);
 
             //Act
-            var result1 = await _manageSprintsService.RemoveAsync(sprint_id);
+            var result1 = await _manageSprintsService.RemoveAsync(sprintId);
             var result2 = await _manageSprintsService.RemoveAsync(5);
 
             //Assert

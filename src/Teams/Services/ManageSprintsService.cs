@@ -54,9 +54,9 @@ namespace Teams.Services
             return await _sprintRepository.InsertAsync(sprint);
         }
 
-        public async Task<bool> RemoveAsync(int sprint_id)
+        public async Task<bool> RemoveAsync(int sprintId)
         {
-            var sprint = await _sprintRepository.GetAll().Include(x => x.Team).FirstOrDefaultAsync(i => i.Team.TeamOwner == _currentUser.Current.Id() && i.Id == sprint_id);
+            var sprint = await _sprintRepository.GetAll().Include(x => x.Team).FirstOrDefaultAsync(i => i.Team.TeamOwner == _currentUser.Current.Id() && i.Id == sprintId);
             if (sprint == null)
                 return false;
 

@@ -154,11 +154,11 @@ namespace Teams.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Remove(int sprint_id)
+        public async Task<IActionResult> Remove(int sprintId)
         {
-            var sprint = await _manageSprintsService.GetSprintAsync(sprint_id);
+            var sprint = await _manageSprintsService.GetSprintAsync(sprintId);
             var teamId = sprint.TeamId;
-            var result = await _manageSprintsService.RemoveAsync(sprint_id);
+            var result = await _manageSprintsService.RemoveAsync(sprintId);
             if (result)
                 return RedirectToAction("AllSprints",new { team_id = teamId});
             return RedirectToAction("ErrorRemove");
