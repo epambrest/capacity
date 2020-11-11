@@ -22,7 +22,7 @@ namespace Teams.Data.Migrations
                     TeamId = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     DaysInSprint = table.Column<int>(nullable: false),
-                    StorePointInHours = table.Column<int>(nullable: false),
+                    StoryPointInHours = table.Column<int>(nullable: false),
                     IsActive = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>

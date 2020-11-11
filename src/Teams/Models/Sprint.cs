@@ -25,8 +25,8 @@ namespace Teams.Models
         public int DaysInSprint { get; set; }
         [Required(ErrorMessage = "Enter how much hours story point cost")]
         [Range(1, 99999, ErrorMessage = "Please enter a value greater than 0")]
-        [Column("StorePointInHours")]
-        public int StorePointInHours { get; set; }
+        [Column("StoryPointInHours")]
+        public int StoryPointInHours { get; set; }
         [Column("IsActive"), DefaultValue(false)]
         public bool IsActive { get; set; }
         public virtual ICollection<Task> Tasks { get; set; }

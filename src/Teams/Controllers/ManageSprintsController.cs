@@ -46,7 +46,7 @@ namespace Teams.Controllers
             else ViewBag.AddVision = "collapse";
 
             ViewData["DaysInSprint"] = _localizer["DaysInSprint"];
-            ViewData["StorePointInHours"] = _localizer["StorePointInHours"];
+            ViewData["StoryPointInHours"] = _localizer["StoryPointInHours"];
             ViewData["NameOfSprint"] = _localizer["NameOfSprint"];
             ViewData["MemberEmail"] = _localizer["MemberEmail"];
             ViewData["Owner"] = _localizer["Owner"];

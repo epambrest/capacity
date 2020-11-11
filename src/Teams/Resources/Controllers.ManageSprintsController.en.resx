@@ -173,7 +173,7 @@
   <data name="ReturnToSprint" xml:space="preserve">
     <value>   Return to sprints</value>
   </data>
-  <data name="StorePointInHours" xml:space="preserve">
-    <value>Store Point in Hours</value>
+  <data name="StoryPointInHours" xml:space="preserve">
+    <value>Story Point in Hours</value>
   </data>
 </root>
