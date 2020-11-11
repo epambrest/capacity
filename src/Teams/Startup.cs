@@ -47,6 +47,8 @@ namespace Teams
             services.AddTransient<IManageTeamsMembersService, ManageTeamsMembersService>();
             services.AddTransient<IAccessCheckService, AccessCheckService>();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddControllersWithViews()
+                .AddViewLocalization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
