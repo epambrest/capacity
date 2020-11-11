@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Teams.Tests", "..\Teams.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Teams.Security", "..\Teams.Security\Teams.Security.csproj", "{B5BEC415-D989-4F41-AADE-027CE1798AC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teams.Business", "..\Teams.Business\Teams.Business.csproj", "{CF7AEAEC-880F-42EF-A0D3-703105A0B412}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Teams.Business", "..\Teams.Business\Teams.Business.csproj", "{CF7AEAEC-880F-42EF-A0D3-703105A0B412}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

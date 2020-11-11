@@ -126,11 +126,17 @@
   <data name="AddSprint" xml:space="preserve">
     <value>Add Sprint</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
   <data name="DaysFieldError" xml:space="preserve">
     <value>Days field can not be empty or less than 0!</value>
   </data>
   <data name="DaysInSprint" xml:space="preserve">
     <value>Days in Sprint</value>
+  </data>
+  <data name="EditSprint" xml:space="preserve">
+    <value>Edit Sprint</value>
   </data>
   <data name="Error" xml:space="preserve">
     <value>Ooops... Something went wrong!</value>
@@ -167,7 +173,7 @@
   <data name="ReturnToSprint" xml:space="preserve">
     <value>   Return to sprints</value>
   </data>
-  <data name="StorePointInHours" xml:space="preserve">
-    <value>Store Point in Hours</value>
+  <data name="StoryPointInHours" xml:space="preserve">
+    <value>Story Point in Hours</value>
   </data>
 </root>

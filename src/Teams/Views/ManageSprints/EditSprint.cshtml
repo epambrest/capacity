@@ -1,0 +1,45 @@
+﻿@model Teams.Models.EditSprintViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = @Localizer["EditSprint"];
+}
+<script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
+
+<div align="center">
+    <h1 size="4" align="left">@Model.TeamName | @Localizer["EditSprint"]</h1>
+</div>
+
+<div>
+    @using (Html.BeginForm("EditSprint", "ManageSprints", FormMethod.Post))
+    {
+        <div><p align="center" style="color:red">@Model.ErrorMessage</p></div>
+        @Html.Hidden("teamId", @Model.TeamId)
+        @Html.Hidden("sprintId", @Model.SprintId)
+        <div>
+            <label for="name">@Localizer["Name"] :</label>
+            <input id="name" name="sprintName" class="form-control" value="@Model.SprintName" />
+        </div>
+
+        <div>
+            <label for="days">@Localizer["DaysInSprint"] :</label>
+            <input id="days" name="daysInSprint" class="form-control" value="@Model.SprintDaysInSprint" />
+        </div>
+
+        <div>
+            <label for="points">@Localizer["StoryPointInHours"]</label>
+            <input id="points" name="storePointsInHours" class="form-control" value="@Model.SprintStorePointInHours" />
+        </div>
+
+        <div>
+            <label for="active">@Localizer["Active"]</label>
+            <input @ViewBag.SprintActive name="isActive" id="active" type="radio" value="true" />
+            <label for="nonactive">@Localizer["NotActive"]</label>
+            <input @ViewBag.SprintNotActive id="nonactive" name="isActive" type="radio" value="false" />
+        </div>
+        <div style="display: table">
+            <input id="sub" type="submit" class="btn btn-success" value="@Localizer["EditSprint"]" />
+            <button style="margin-left:7px" type='button' class="btn btn-danger" onclick="location.href = '@Url.Action("AllSprints", "ManageSprints", new { teamId = Model.TeamId })'">@Localizer["Close"]</button>
+         </div>
+    }
+</div>
