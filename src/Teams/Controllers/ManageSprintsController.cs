@@ -89,9 +89,8 @@ namespace Teams.Controllers
             var team = await _manageSprintsService.GetTeam(team_id);
             var sprint = await _manageSprintsService.GetSprintAsync(sprint_id);
 
-            EditSprintViewModel model = new EditSprintViewModel {Team = new Team { Id = team_id, TeamName = team.TeamName },
-                Sprint = new Sprint { Id = sprint.Id, Name = sprint.Name, DaysInSprint = sprint.DaysInSprint, StorePointInHours = sprint.StorePointInHours },
-                ErrorMessage=error_message};
+            EditSprintViewModel model = new EditSprintViewModel {TeamId = team_id, TeamName = team.TeamName, SprintId = sprint.Id, SprintName = sprint.Name,
+                SprintDaysInSprint = sprint.DaysInSprint, SprintStorePointInHours = sprint.StorePointInHours, ErrorMessage=error_message};
 
             if(sprint.IsActive)
             {
