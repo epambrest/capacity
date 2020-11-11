@@ -84,13 +84,13 @@ namespace Teams.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> EditSprintAsync(int team_id, int sprint_id, string error_message)
+        public async Task<IActionResult> EditSprintAsync(int teamId, int sprintId, string errorMessage)
         {
-            var team = await _manageSprintsService.GetTeam(team_id);
-            var sprint = await _manageSprintsService.GetSprintAsync(sprint_id);
+            var team = await _manageSprintsService.GetTeam(teamId);
+            var sprint = await _manageSprintsService.GetSprintAsync(sprintId);
 
-            EditSprintViewModel model = new EditSprintViewModel {TeamId = team_id, TeamName = team.TeamName, SprintId = sprint.Id, SprintName = sprint.Name,
-                SprintDaysInSprint = sprint.DaysInSprint, SprintStorePointInHours = sprint.StorePointInHours, ErrorMessage=error_message};
+            EditSprintViewModel model = new EditSprintViewModel {TeamId = teamId, TeamName = team.TeamName, SprintId = sprint.Id, SprintName = sprint.Name,
+                SprintDaysInSprint = sprint.DaysInSprint, SprintStorePointInHours = sprint.StorePointInHours, ErrorMessage=errorMessage};
 
             if(sprint.IsActive)
             {
@@ -106,70 +106,70 @@ namespace Teams.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> AddSprintAsync(int team_id, string error_message)
+        public async Task<IActionResult> AddSprintAsync(int teamId, string errorMessage)
         {
-            var team = await _manageSprintsService.GetTeam(team_id);
+            var team = await _manageSprintsService.GetTeam(teamId);
 
-            ViewBag.ErrorMessage = error_message;
+            ViewBag.ErrorMessage = errorMessage;
             ViewBag.TeamName = team.TeamName;
-            ViewBag.TeamId = team_id;
+            ViewBag.TeamId = teamId;
             return View();
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> EditSprintAsync(int team_id, int sprint_id, string sprint_name, int days_in_sprint, int store_points_in_hours, bool is_active)
+        public async Task<IActionResult> EditSprintAsync(int teamId, int sprintId, string sprintName, int daysInSprint, int storePointsInHours, bool isActive)
         {
-            if (string.IsNullOrEmpty(sprint_name))
+            if (string.IsNullOrEmpty(sprintName))
             {
-                return RedirectToAction("EditSprint", new { team_id = team_id, sprint_id = sprint_id, error_message = _localizer["NameFieldError"] });
+                return RedirectToAction("EditSprint", new { teamId = teamId, sprintId = sprintId, errorMessage = _localizer["NameFieldError"] });
             }
-            if (days_in_sprint <= 0)
+            if (daysInSprint <= 0)
             {
-                return RedirectToAction("EditSprint", new { team_id = team_id, sprint_id = sprint_id, error_message = _localizer["DaysFieldError"] });
+                return RedirectToAction("EditSprint", new { teamId = teamId, sprintId = sprintId, errorMessage = _localizer["DaysFieldError"] });
             }
-            if (store_points_in_hours <= 0)
+            if (storePointsInHours <= 0)
             {
-                return RedirectToAction("EditSprint", new { team_id = team_id, sprint_id=sprint_id, error_message = _localizer["PointsFieldError"] });
+                return RedirectToAction("EditSprint", new { teamId = teamId, sprintId=sprintId, errorMessage = _localizer["PointsFieldError"] });
             }
 
-            var sprint = new Sprint { Id = sprint_id, TeamId = team_id, Name = sprint_name, DaysInSprint = days_in_sprint, StorePointInHours = store_points_in_hours, IsActive = is_active };
+            var sprint = new Sprint { Id = sprintId, TeamId = teamId, Name = sprintName, DaysInSprint = daysInSprint, StorePointInHours = storePointsInHours, IsActive = isActive };
             var result = await EditSprintAsync(sprint);
 
-            if (result) return RedirectToAction("AllSprints", new { team_id = team_id });
-            else return RedirectToAction("AddError", new { team_id = team_id });
+            if (result) return RedirectToAction("AllSprints", new { teamId = teamId });
+            else return RedirectToAction("AddError", new { teamId = teamId });
 
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AddSprintAsync(int team_id, string sprint_name, int days_in_sprint, int store_points_in_hours, bool is_active)
+        public async Task<IActionResult> AddSprintAsync(int teamId, string sprintName, int daysInSprint, int storePointsInHours, bool isActive)
         {
-            var sprint = new Sprint { TeamId = team_id, Name = sprint_name, DaysInSprint = days_in_sprint, StorePointInHours = store_points_in_hours, IsActive = is_active };
-          
-            if(string.IsNullOrEmpty(sprint_name))
+            var sprint = new Sprint { TeamId = teamId, Name = sprintName, DaysInSprint = daysInSprint, StorePointInHours = storePointsInHours, IsActive = isActive };
+
+            if (string.IsNullOrEmpty(sprintName))
             {
-                return RedirectToAction("AddSprint", new { team_id = team_id, error_message = _localizer["NameFieldError"] });
+                return RedirectToAction("EditSprint", new { teamId = teamId, errorMessage = _localizer["NameFieldError"] });
             }
-            if (days_in_sprint <= 0)
+            if (daysInSprint <= 0)
             {
-                return RedirectToAction("AddSprint", new { team_id = team_id, error_message = _localizer["DaysFieldError"] });
-                }
-            if (store_points_in_hours <= 0)
+                return RedirectToAction("EditSprint", new { teamId = teamId, errorMessage = _localizer["DaysFieldError"] });
+            }
+            if (storePointsInHours <= 0)
             {
-                return RedirectToAction("AddSprint", new { team_id = team_id, error_message = _localizer["PointsFieldError"] });
+                return RedirectToAction("EditSprint", new { teamId = teamId, errorMessage = _localizer["PointsFieldError"] });
             }
 
-           var result = await AddSprintAsync(sprint);
+            var result = await AddSprintAsync(sprint);
 
-                if (result) return RedirectToAction("AllSprints", new { team_id = team_id});
-                else return RedirectToAction("AddError", new { team_id = team_id });
+                if (result) return RedirectToAction("AllSprints", new { teamId = teamId});
+                else return RedirectToAction("AddError", new { teamId = teamId });
             
         }
 
-        public IActionResult AddError(int team_id)
+        public IActionResult AddError(int teamId)
         {
-            ViewBag.TeamId = team_id;
+            ViewBag.TeamId = teamId;
             return View();
         }
 
