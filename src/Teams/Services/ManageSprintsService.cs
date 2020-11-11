@@ -21,32 +21,35 @@ namespace Teams.Services
             _manageTeamsService = manageTeamsService;
         }
 
-        public async Task<IEnumerable<Sprint>> GetAllSprintsAsync(int team_id, DisplayOptions options)
+        public async Task<IEnumerable<Sprint>> GetAllSprintsAsync(int teamId, DisplayOptions options)
         {
-            var sprints = _sprintRepository.GetAll().Include(x => x.Team).Include(x => x.Tasks).Where(x => x.TeamId == team_id);
+            var sprints = _sprintRepository.GetAll()
+                .Include(x => x.Team)
+                .Include(x => x.Tasks)
+                .Where(x => x.TeamId == teamId);
             if (options.SortDirection == SortDirection.Ascending)
                 return await sprints.OrderBy(x => x.Name).ToListAsync();
             else
                 return await sprints.OrderByDescending(x => x.Name).ToListAsync();
         }
 
-        public async Task<Team> GetTeam(int team_id)
+        public async Task<Team> GetTeam(int teamId)
         {
             var teams = await _manageTeamsService.GetMyTeamsAsync();
-            var team = teams.FirstOrDefault(i => i.Id == team_id);
+            var team = teams.FirstOrDefault(i => i.Id == teamId);
             return team;
         }
 
-        public async Task<Sprint> GetSprintAsync(int sprint_id, bool includeTaskAndTeamMember)
+        public async Task<Sprint> GetSprintAsync(int sprintId, bool includeTaskAndTeamMember)
         {
             if (includeTaskAndTeamMember)
             {
-                return await _sprintRepository.GetAll().Where(t => t.Id == sprint_id)
+                return await _sprintRepository.GetAll().Where(t => t.Id == sprintId)
                     .Include(t => t.Tasks)
                     .ThenInclude(x => x.TeamMember.Member)
-                    .FirstOrDefaultAsync(t => t.Id == sprint_id);
+                    .FirstOrDefaultAsync(t => t.Id == sprintId);
             }
-            return await _sprintRepository.GetByIdAsync(sprint_id);
+            return await _sprintRepository.GetByIdAsync(sprintId);
         }
     }
 }

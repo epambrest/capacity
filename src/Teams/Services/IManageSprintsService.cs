@@ -8,8 +8,8 @@ namespace Teams.Services
 {
     public interface IManageSprintsService
     {
-        Task<IEnumerable<Sprint>> GetAllSprintsAsync(int team_id, DisplayOptions options);
-        Task<Team> GetTeam(int team_id);
-        Task<Sprint> GetSprintAsync(int sprint_id, bool includeTaskAndTeamMember);
+        Task<IEnumerable<Sprint>> GetAllSprintsAsync(int teamId, DisplayOptions options);
+        Task<Team> GetTeam(int teamId);
+        Task<Sprint> GetSprintAsync(int sprintId, bool includeTaskAndTeamMember);
     }
 }

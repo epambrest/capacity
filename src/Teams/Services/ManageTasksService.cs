@@ -18,14 +18,14 @@ namespace Teams.Services
             _taskRepository = taskRepository;
         }
 
-        public async Task<IEnumerable<Task>> GetAllTasksForTeamAsync(int team_id, DisplayOptions options)
+        public async Task<IEnumerable<Task>> GetAllTasksForTeamAsync(int teamId, DisplayOptions options)
         {
             var tasks = _taskRepository.GetAll()
-                .Where(x => x.TeamId == team_id)
+                .Where(x => x.TeamId == teamId)
                 .Include(t => t.TeamMember.Member)
                 .Include(t=>t.Team);
                 
-            if (options.SortDirection == SortDirection.Ascending)
+            if (options.SortDirection == SortDirection.Ascending)   
                 return await tasks.OrderBy(x => x.Name).ToListAsync();
             else
                 return await tasks.OrderByDescending(x => x.Name).ToListAsync();

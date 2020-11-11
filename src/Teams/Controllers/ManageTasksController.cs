@@ -26,13 +26,13 @@ namespace Teams.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> AllTasksForTeam(int team_id, DisplayOptions options)
+        public async Task<IActionResult> AllTasksForTeam(int teamId, DisplayOptions options)
         {
-            if (!await _accessCheckService.OwnerOrMemberAsync(team_id))
+            if (!await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
                 return View("ErrorGetAllTasks");
             }
-            var tasks = await _manageTasksService.GetAllTasksForTeamAsync(team_id, options);
+            var tasks = await _manageTasksService.GetAllTasksForTeamAsync(teamId, options);
             if (tasks == null)
             {
                 return View("ErrorGetAllTasks");

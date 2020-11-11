@@ -24,25 +24,25 @@ namespace Teams.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> AllSprints(int team_id, DisplayOptions options)
+        public async Task<IActionResult> AllSprints(int teamId, DisplayOptions options)
         {
             List<Sprint> sprints;
-            if (await _accessCheckService.OwnerOrMemberAsync(team_id))
+            if (await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
-                sprints = (List<Sprint>)await _manageSprintsService.GetAllSprintsAsync(team_id, options);
+                sprints = (List<Sprint>)await _manageSprintsService.GetAllSprintsAsync(teamId, options);
             }
             else 
                 return View("ErrorGetAllSprints");
 
-            var team = await _manageSprintsService.GetTeam(team_id);
+            var team = await _manageSprintsService.GetTeam(teamId);
             ViewBag.TeamName = team.TeamName;
             return View(sprints);
         }
 
         [Authorize]
-        public async Task<IActionResult> GetSprintById(int sprint_id)
+        public async Task<IActionResult> GetSprintById(int sprintId)
         {
-            var sprint = await _manageSprintsService.GetSprintAsync(sprint_id,true);
+            var sprint = await _manageSprintsService.GetSprintAsync(sprintId, true);
             if (sprint == null)
                 return View("ErrorGetAllSprints");
             return View(sprint);
