@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Teams.Data;
 using Teams.Models;
@@ -14,11 +16,13 @@ namespace Teams.Services
     {
         private readonly IRepository<Sprint, int> _sprintRepository;
         private readonly IManageTeamsService _manageTeamsService;
+        private readonly ICurrentUser _currentUser;
 
-        public ManageSprintsService(IRepository<Sprint, int> sprintRepository, IManageTeamsService manageTeamsService)
+        public ManageSprintsService(IRepository<Sprint, int> sprintRepository, IManageTeamsService manageTeamsService, ICurrentUser currentUser)
         {
             _sprintRepository = sprintRepository;
             _manageTeamsService = manageTeamsService;
+            _currentUser = currentUser;
         }
 
         public async Task<IEnumerable<Sprint>> GetAllSprintsAsync(int teamId, DisplayOptions options)
@@ -40,16 +44,44 @@ namespace Teams.Services
             return team;
         }
 
-        public async Task<Sprint> GetSprintAsync(int sprintId, bool includeTaskAndTeamMember)
+        public async Task<Sprint> GetSprintAsync(int sprintId) => await _sprintRepository.GetByIdAsync(sprintId);
+
+        public async Task<bool> AddSprintAsync(Sprint sprint)
         {
-            if (includeTaskAndTeamMember)
+            if (_sprintRepository.GetAll()
+                .Where(x=>x.TeamId == sprint.TeamId)
+                .Any(x=>x.Name == sprint.Name) 
+                || sprint.DaysInSprint<=0 || sprint.StoryPointInHours <= 0 || !Regex.IsMatch(sprint.Name, ("^[a-zA-Z0-9-_.]+$")))
             {
-                return await _sprintRepository.GetAll().Where(t => t.Id == sprintId)
-                    .Include(t => t.Tasks)
-                    .ThenInclude(x => x.TeamMember.Member)
-                    .FirstOrDefaultAsync(t => t.Id == sprintId);
+                return false;
             }
-            return await _sprintRepository.GetByIdAsync(sprintId);
+            return await _sprintRepository.InsertAsync(sprint);
+        }
+
+
+        public async Task<bool> RemoveAsync(int sprintId)
+        {
+            var sprint = await _sprintRepository.GetAll().Include(x => x.Team).FirstOrDefaultAsync(i => i.Team.TeamOwner == _currentUser.Current.Id() && i.Id == sprintId);
+            if (sprint == null)
+                return false;
+
+            var result = await _sprintRepository.DeleteAsync(sprint);
+            return result;
+         }
+
+        public async Task<bool> EditSprintAsync(Sprint sprint)
+        {
+            var sprintForCheck = await _sprintRepository.GetByIdAsync(sprint.Id);
+            bool nameCheck;
+            if (sprintForCheck.Name == sprint.Name) nameCheck = false;
+            else nameCheck = _sprintRepository.GetAll()
+                .Where(x => x.TeamId == sprint.TeamId)
+                .Any(x => x.Name == sprint.Name);
+            if (nameCheck || sprint.DaysInSprint <= 0 || sprint.StoryPointInHours <= 0 || !Regex.IsMatch(sprint.Name, ("^[a-zA-Z0-9-_.]+$")))
+            {
+                return false;
+            }
+            return await _sprintRepository.UpdateAsync(sprint);
         }
     }
 }

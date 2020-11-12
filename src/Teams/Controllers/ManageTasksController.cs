@@ -40,6 +40,19 @@ namespace Teams.Controllers
             return View(tasks);
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetTaskByIdAsync(int teamId, int taskId)
+        {
+            if (!await _accessCheckService.OwnerOrMemberAsync(teamId))
+            {
+                return View("ErrorGetTaskById");
+            }
+
+            var task = await _manageTasksService.GetTaskByIdAsync(taskId);
+            return View(task);
+        }
+
         public IActionResult Index()
         {
             return View();

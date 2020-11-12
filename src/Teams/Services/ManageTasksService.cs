@@ -30,5 +30,13 @@ namespace Teams.Services
             else
                 return await tasks.OrderByDescending(x => x.Name).ToListAsync();
         }
+
+        public async Task<Models.Task> GetTaskByIdAsync(int id)
+        {
+            var task = await _taskRepository.GetAll().Include(t => t.TeamMember)
+                .Include(t => t.TeamMember.Member).Where(t => t.Id == id).FirstOrDefaultAsync();
+
+            return task;
+        }
     }
 }
