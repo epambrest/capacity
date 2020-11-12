@@ -39,7 +39,7 @@
                 }
                 <td align="left">@Html.ActionLink(item.Name, "GetSprintById", new { sprintId = item.Id })</td>
                 <td align="left">@item.DaysInSprint</td>
-                <td align="left">@item.StorePointInHours</td>
+                <td align="left">@item.StoryPointInHours</td>
 
                 @if (item.Team.Owner.Email == User.Identity.Name)
                 {

@@ -73,7 +73,7 @@ namespace Teams.Services
             else nameCheck = _sprintRepository.GetAll()
                 .Where(x => x.TeamId == sprint.TeamId)
                 .Any(x => x.Name == sprint.Name);
-            if (nameCheck || sprint.DaysInSprint <= 0 || sprint.StorePointInHours <= 0 || !Regex.IsMatch(sprint.Name, ("^[a-zA-Z0-9-_.]+$")))
+            if (nameCheck || sprint.DaysInSprint <= 0 || sprint.StoryPointInHours <= 0 || !Regex.IsMatch(sprint.Name, ("^[a-zA-Z0-9-_.]+$")))
             {
                 return false;
             }

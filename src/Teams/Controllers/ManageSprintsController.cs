@@ -90,7 +90,7 @@ namespace Teams.Controllers
             var sprint = await _manageSprintsService.GetSprintAsync(sprintId);
 
             EditSprintViewModel model = new EditSprintViewModel {TeamId = teamId, TeamName = team.TeamName, SprintId = sprint.Id, SprintName = sprint.Name,
-                SprintDaysInSprint = sprint.DaysInSprint, SprintStorePointInHours = sprint.StorePointInHours, ErrorMessage=errorMessage};
+                SprintDaysInSprint = sprint.DaysInSprint, SprintStorePointInHours = sprint.StoryPointInHours, ErrorMessage=errorMessage};
 
             if(sprint.IsActive)
             {
@@ -133,7 +133,7 @@ namespace Teams.Controllers
                 return RedirectToAction("EditSprint", new { teamId = teamId, sprintId=sprintId, errorMessage = _localizer["PointsFieldError"] });
             }
 
-            var sprint = new Sprint { Id = sprintId, TeamId = teamId, Name = sprintName, DaysInSprint = daysInSprint, StorePointInHours = storePointsInHours, IsActive = isActive };
+            var sprint = new Sprint { Id = sprintId, TeamId = teamId, Name = sprintName, DaysInSprint = daysInSprint, StoryPointInHours = storePointsInHours, IsActive = isActive };
             var result = await EditSprintAsync(sprint);
 
             if (result) return RedirectToAction("AllSprints", new { teamId = teamId });
@@ -145,7 +145,7 @@ namespace Teams.Controllers
         [Authorize]
         public async Task<IActionResult> AddSprintAsync(int teamId, string sprintName, int daysInSprint, int storePointsInHours, bool isActive)
         {
-            var sprint = new Sprint { TeamId = teamId, Name = sprintName, DaysInSprint = daysInSprint, StorePointInHours = storePointsInHours, IsActive = isActive };
+            var sprint = new Sprint { TeamId = teamId, Name = sprintName, DaysInSprint = daysInSprint, StoryPointInHours = storePointsInHours, IsActive = isActive };
 
             if (string.IsNullOrEmpty(sprintName))
             {
