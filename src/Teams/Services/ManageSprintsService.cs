@@ -15,11 +15,13 @@ namespace Teams.Services
     {
         private readonly IRepository<Sprint, int> _sprintRepository;
         private readonly IManageTeamsService _manageTeamsService;
+        private readonly ICurrentUser _currentUser;
 
-        public ManageSprintsService(IRepository<Sprint, int> sprintRepository, IManageTeamsService manageTeamsService)
+        public ManageSprintsService(IRepository<Sprint, int> sprintRepository, IManageTeamsService manageTeamsService, ICurrentUser currentUser)
         {
             _sprintRepository = sprintRepository;
             _manageTeamsService = manageTeamsService;
+            _currentUser = currentUser;
         }
 
         public async Task<IEnumerable<Sprint>> GetAllSprintsAsync(int teamId, DisplayOptions options)
@@ -51,6 +53,17 @@ namespace Teams.Services
             }
             return await _sprintRepository.InsertAsync(sprint);
         }
+
+
+        public async Task<bool> RemoveAsync(int sprintId)
+        {
+            var sprint = await _sprintRepository.GetAll().Include(x => x.Team).FirstOrDefaultAsync(i => i.Team.TeamOwner == _currentUser.Current.Id() && i.Id == sprintId);
+            if (sprint == null)
+                return false;
+
+            var result = await _sprintRepository.DeleteAsync(sprint);
+            return result;
+         }
 
         public async Task<bool> EditSprintAsync(Sprint sprint)
         {

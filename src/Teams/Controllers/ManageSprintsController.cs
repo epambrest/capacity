@@ -202,5 +202,21 @@ namespace Teams.Controllers
         {
             return View();
         }
+
+        [Authorize]
+        public async Task<IActionResult> Remove(int sprintId)
+        {
+            var sprint = await _manageSprintsService.GetSprintAsync(sprintId);
+            var teamId = sprint.TeamId;
+            var result = await _manageSprintsService.RemoveAsync(sprintId);
+            if (result)
+                return RedirectToAction("AllSprints",new { team_id = teamId});
+            return RedirectToAction("ErrorRemove");
+        }
+
+        public IActionResult ErrorRemove()
+        {
+            return View();
+        }
     }
 }

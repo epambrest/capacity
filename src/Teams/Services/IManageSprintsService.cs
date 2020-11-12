@@ -12,6 +12,8 @@ namespace Teams.Services
         Task<Team> GetTeam(int teamId);
         Task<Sprint> GetSprintAsync(int sprintId);
         Task<bool> AddSprintAsync(Sprint sprint);
+        Task<bool> RemoveAsync(int sprintId);
         Task<bool> EditSprintAsync(Sprint sprint);
+
     }
 }
