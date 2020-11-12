@@ -92,7 +92,7 @@ namespace Teams.Tests
 
             //Arrange
             const int sprintId = 1;
-            var sprint = new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 1, StorePointInHours = 1, IsActive = true };
+            var sprint = new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 1, StoryPointInHours = 1, IsActive = true };
 
             _sprintRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(sprint);
 

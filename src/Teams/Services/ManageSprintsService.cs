@@ -44,7 +44,17 @@ namespace Teams.Services
             return team;
         }
 
-        public async Task<Sprint> GetSprintAsync(int sprintId) => await _sprintRepository.GetByIdAsync(sprintId);
+        public async Task<Sprint> GetSprintAsync(int sprintId, bool includeTaskAndTeamMember)
+        {
+            if (includeTaskAndTeamMember)
+            {
+                return await _sprintRepository.GetAll().Where(t => t.Id == sprintId)
+                    .Include(t => t.Tasks)
+                    .ThenInclude(x => x.TeamMember.Member)
+                    .FirstOrDefaultAsync(t => t.Id == sprintId);
+            }
+            return await _sprintRepository.GetByIdAsync(sprintId);
+        }
 
         public async Task<bool> AddSprintAsync(Sprint sprint)
         {

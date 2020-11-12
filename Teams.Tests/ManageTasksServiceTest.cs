@@ -67,7 +67,7 @@ namespace Teams.Tests
             return tasks;
         }
         [Test]
-        public async Task GetTaskByIdAsync_ManageTasksServiceReturnsTaskWithId1_ReturnTaskWithId1()
+        public async System.Threading.Tasks.Task GetTaskByIdAsync_ManageTasksServiceReturnsTaskWithId1_ReturnTaskWithId1()
         {
             // Arrange
             const int taskId = 1;
@@ -91,7 +91,7 @@ namespace Teams.Tests
 
             var mock = task.AsQueryable().BuildMock();
 
-            _taskReposotiry.Setup(x => x.GetAll()).Returns(mock.Object);
+            _tasksRepository.Setup(x => x.GetAll()).Returns(mock.Object);
 
             // Act
             var result = await _manageTasksService.GetTaskByIdAsync(taskId);
