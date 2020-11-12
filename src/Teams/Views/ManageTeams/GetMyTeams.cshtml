@@ -6,19 +6,13 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
 
-<p>
-    <div style="margin: 10px 0px 0px 30px" align="right">
-        <h><a style="color: black; text-decoration: none;" class="fas fa-plus" @Html.ActionLink("", "AddTeam", "ManageTeams")</a></h>
-    </div>
-</p>
-
 <table class="table">
     <tr align="center">
-        <td align="left" width="1%"></td>
-        <td align="left" style="font-weight: bold">Team Name</td>
-        <td align="right" width="1%"></td>
-        <td align="right" width="1%"></td>
-        <td align="right" width="1%"></td>
+        <td align="left" style="border-top: hidden" width="1%"></td>
+        <td align="left" style="font-weight: bold;border-top: hidden">Team Name</td>
+        <td align="right" style="border-top: hidden" width="1%"></td>
+        <td align="right" style="border-top: hidden" width="1%"></td>
+        <td align="right" style="border-top: hidden" width="1%"><a style="color: black; text-decoration: none;" class="fas fa-plus" @Html.ActionLink("", "AddTeam", "ManageTeams")</a></td>
     </tr>
     @foreach (var item in Model)
     {
