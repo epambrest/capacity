@@ -6,6 +6,7 @@ using Teams.Data;
 using Teams.Models;
 using Task = Teams.Models.Task;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace Teams.Services
 {
@@ -33,10 +34,25 @@ namespace Teams.Services
 
         public async Task<Models.Task> GetTaskByIdAsync(int id)
         {
-            var task = await _taskRepository.GetAll().Include(t => t.TeamMember)
+            var task = await _taskRepository.GetAll().Include(t=>t.Team).Include(t => t.TeamMember)
                 .Include(t => t.TeamMember.Member).Where(t => t.Id == id).FirstOrDefaultAsync();
 
             return task;
+        }
+
+        public async Task<bool> EditTaskAsync(Models.Task task)
+        {
+            var taskForCheck = await _taskRepository.GetByIdAsync(task.Id);
+            bool nameCheck;
+            if (taskForCheck.Name == task.Name) nameCheck = false;
+            else nameCheck = _taskRepository.GetAll()
+                .Where(x => x.TeamId == task.TeamId)
+                .Any(x => x.Name == task.Name);
+            if (nameCheck || task.StoryPoints <= 0 || !Regex.IsMatch(task.Link, (@"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$")) || !Regex.IsMatch(task.Name, ("^[a-zA-Z0-9-_.]+$")))
+            {
+                return false;
+            }
+            return await _taskRepository.UpdateAsync(task);
         }
     }
 }
