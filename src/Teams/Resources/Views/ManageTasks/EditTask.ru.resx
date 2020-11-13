@@ -126,6 +126,9 @@
   <data name="Name" xml:space="preserve">
     <value>Название</value>
   </data>
+  <data name="SelectUser" xml:space="preserve">
+    <value>Выбрать пользователя</value>
+  </data>
   <data name="StoryPoints" xml:space="preserve">
     <value>Кол-во СП</value>
   </data>

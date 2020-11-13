@@ -48,7 +48,7 @@
             <label for="user">@Localizer["User"]</label>
             <input hidden="hidden" id="user" name="taskMemberId">
             <select class="js-example-basic-single" id="members" onchange="myFunction(event)">
-                <option disabled selected>Choose User</option>
+                <option disabled selected>@Localizer["SelectUser"]</option>
                 @foreach (var item in Model.TeamMembers)
                 {
                     <option value=@item.Id>@item.Member.Email</option>

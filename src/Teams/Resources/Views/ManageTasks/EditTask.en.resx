@@ -126,6 +126,9 @@
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="SelectUser" xml:space="preserve">
+    <value>Select User</value>
+  </data>
   <data name="StoryPoints" xml:space="preserve">
     <value>Story Points</value>
   </data>
