@@ -6,16 +6,19 @@ using Teams.Data;
 using Teams.Models;
 using Task = Teams.Models.Task;
 using Microsoft.EntityFrameworkCore;
+using Teams.Security;
 
 namespace Teams.Services
 {
     public class ManageTasksService : IManageTasksService
     {
         private readonly IRepository<Task, int> _taskRepository;
+        private readonly ICurrentUser _currentUser;
 
-        public ManageTasksService(IRepository<Task, int> taskRepository)
+        public ManageTasksService(IRepository<Task, int> taskRepository,ICurrentUser currentUser)
         {
             _taskRepository = taskRepository;
+            _currentUser = currentUser;
         }
 
         public async Task<IEnumerable<Task>> GetAllTasksForTeamAsync(int teamId, DisplayOptions options)
@@ -37,6 +40,19 @@ namespace Teams.Services
                 .Include(t => t.TeamMember.Member).Where(t => t.Id == id).FirstOrDefaultAsync();
 
             return task;
+        }
+
+        public async Task<bool> RemoveAsync(int taskId)
+        {
+            var task = await _taskRepository.GetAll()
+                .FirstOrDefaultAsync(x => x.Id == taskId 
+                                          && x.Team.TeamOwner == _currentUser.Current.Id());
+            if (task == null)
+            {
+                return false;
+            }
+            var result = await _taskRepository.DeleteAsync(task);
+            return result;
         }
     }
 }

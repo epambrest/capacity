@@ -51,7 +51,53 @@
             <td align="left">@item.TeamMember.Member.Email</td>
             <td align="left">@item.StoryPoints</td>
             <td href="https://@item.Link"><a href="@item.Link" align="left">Link</a></td>
+
+            @if (item.Team.Owner.Email == User.Identity.Name)
+            {
+                <td align="right">
+                    <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTask"
+                            data-taskname="@item.Name" data-taskid="@item.Id">
+                        <i class='far fa-trash-alt'></i>
+                    </button>
+                </td>
+            }
+            else
+            {
+                <td align="right"></td>
+            }
         </tr>
     }
 
 </table>
+
+<form>
+    <div class="modal fade" id="removeTask" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p align="center" id="task"></p>
+                    <input type="hidden" id="taskId" name="taskName" value="" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-secondary" asp-action="RemoveInSprint">OK</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function () {
+        $("#removeTask").on("show.bs.modal", function (event) {
+            var button = $(event.relatedTarget);
+            var taskId = button.data('taskid')
+            var taskName = button.data('taskname');
+            var removeTask = $("#removeTask");
+            removeModal.find("#team_id").val(teamId);
+            document.getElementById('member').innerHTML =
+                "Are you sure you want to remove " + "<strong>" + memberName + "</strong>" + " from " + "<strong>" + teamName + "</strong>" + " ?";
+        });
+    });
+</script>
