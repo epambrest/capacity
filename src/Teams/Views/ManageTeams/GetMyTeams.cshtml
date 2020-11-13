@@ -27,8 +27,8 @@
         <td align="left" width="1%"><i title="Member" class="fas fa-user"></i></td>
     }
     <td align="left"><a>@Html.ActionLink(item.TeamName, "TeamMembers", "ManageTeamMembers", new { team_id = item.Id })</a></td>
-    <td align="right" onclick="location.href = '@Url.Action("AllSprints", "ManageSprints", new { teamId = item.Id })'"><button type='button' class='btn btn-outline-secondary border-0' >Sprints</button></td>
-  
+    <td align="right" onclick="location.href = '@Url.Action("AllSprints", "ManageSprints", new { teamId= item.Id })'"><button type='button' class='btn btn-outline-secondary border-0'>Sprints</button></td>
+    <td align="right" onclick="location.href = '@Url.Action("AllTasksForTeam", "ManageTasks", new { teamId = item.Id })'"><button type='button' class='btn btn-outline-secondary border-0'>Tasks</button></td>
     @if (item.Owner.Email == User.Identity.Name)
     {
         <td align="right" onclick="location.href='@Url.Action("EditTeamName", "ManageTeams", new { team_id = item.Id })'">

@@ -33,10 +33,11 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task GetAllSprintsAsync_ManageSpiritsServiceReturnsListCount5_ReturnsListCount5()
+        public async System.Threading.Tasks.Task GetAllSprintsAsync_ManageSpiritsServiceReturnsListCount5_ReturnsListCount5()
         {
+
             //Arrange
-            const int team_id = 1;
+            const int teamId = 1;
             var sprints = new List<Sprint>
             {
                 new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 14, StoryPointInHours = 4, IsActive = true },
@@ -50,7 +51,7 @@ namespace Teams.Tests
             _sprintRepository.Setup(x => x.GetAll()).Returns(mock.Object);
 
             //Act
-            var result = new List<Sprint>(await _manageSprintsService.GetAllSprintsAsync(team_id, new DisplayOptions { }));
+            var result = new List<Sprint>(await _manageSprintsService.GetAllSprintsAsync(teamId, new DisplayOptions { }));
 
             //Assert
             Assert.AreEqual(5, result.Count());
@@ -62,10 +63,10 @@ namespace Teams.Tests
         }
 
         [Test]
-        public async Task GetAllSprintsAsync_ManageSpiritsServiceReturnEmpty_ReturnEmpty()
+        public async System.Threading.Tasks.Task GetAllSprintsAsync_ManageSpiritsServiceReturnEmpty_ReturnEmpty()
         {
             //Arrange
-            const int team_id = 10;
+            const int teamId = 10;
             var sprints = new List<Sprint>
             {
                 new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 14, StoryPointInHours = 4, IsActive = true },
@@ -79,23 +80,24 @@ namespace Teams.Tests
             _sprintRepository.Setup(x => x.GetAll()).Returns(mock.Object);
 
             //Act
-            var result = new List<Sprint>(await _manageSprintsService.GetAllSprintsAsync(team_id, new DisplayOptions { }));
+            var result = new List<Sprint>(await _manageSprintsService.GetAllSprintsAsync(teamId, new DisplayOptions { }));
 
             //Assert
             Assert.IsEmpty(result);
         }
 
         [Test]
-        public async Task GetSprintAsync_ManageSpiritsServiceReturnsSprintWithId1_ReturnsSprintWithId1()
+        public async System.Threading.Tasks.Task GetSprintAsync_ManageSpiritsServiceReturnsSprintWithId1_ReturnsSprintWithId1()
         {
+
             //Arrange
-            const int sprint_id = 1;
+            const int sprintId = 1;
             var sprint = new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 1, StoryPointInHours = 1, IsActive = true };
 
             _sprintRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(sprint);
 
             //Act
-            var result = await _manageSprintsService.GetSprintAsync(sprint_id);
+            var result = await _manageSprintsService.GetSprintAsync(sprintId,false);
 
             //Assert
             Assert.AreEqual(1, result.Id);

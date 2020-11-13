@@ -76,8 +76,7 @@ namespace Teams.Controllers
         [Authorize]
         public async Task<IActionResult> GetSprintById(int sprintId)
         {
-            var sprint = await _manageSprintsService.GetSprintAsync(sprintId);
-
+            var sprint = await _manageSprintsService.GetSprintAsync(sprintId, true);
             if (sprint == null)
                 return View("ErrorGetAllSprints");
             return View(sprint);
@@ -87,7 +86,7 @@ namespace Teams.Controllers
         public async Task<IActionResult> EditSprintAsync(int teamId, int sprintId, string errorMessage)
         {
             var team = await _manageSprintsService.GetTeam(teamId);
-            var sprint = await _manageSprintsService.GetSprintAsync(sprintId);
+            var sprint = await _manageSprintsService.GetSprintAsync(sprintId,false);
 
             EditSprintViewModel model = new EditSprintViewModel {TeamId = teamId, TeamName = team.TeamName, SprintId = sprint.Id, SprintName = sprint.Name,
                 SprintDaysInSprint = sprint.DaysInSprint, SprintStorePointInHours = sprint.StoryPointInHours, ErrorMessage=errorMessage};
@@ -206,7 +205,7 @@ namespace Teams.Controllers
         [Authorize]
         public async Task<IActionResult> Remove(int sprintId)
         {
-            var sprint = await _manageSprintsService.GetSprintAsync(sprintId);
+            var sprint = await _manageSprintsService.GetSprintAsync(sprintId,false);
             var teamId = sprint.TeamId;
             var result = await _manageSprintsService.RemoveAsync(sprintId);
             if (result)

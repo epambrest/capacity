@@ -10,10 +10,9 @@ namespace Teams.Services
     {
         Task<IEnumerable<Sprint>> GetAllSprintsAsync(int teamId, DisplayOptions options);
         Task<Team> GetTeam(int teamId);
-        Task<Sprint> GetSprintAsync(int sprintId);
         Task<bool> AddSprintAsync(Sprint sprint);
         Task<bool> RemoveAsync(int sprintId);
         Task<bool> EditSprintAsync(Sprint sprint);
-
+        Task<Sprint> GetSprintAsync(int sprintId, bool includeTaskAndTeamMember);
     }
 }
