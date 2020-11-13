@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Teams.Models;
 using Teams.Services;
+using Teams.ViewModels;
 
 namespace Teams.Controllers
 {
@@ -37,7 +38,11 @@ namespace Teams.Controllers
             {
                 return View("ErrorGetAllTasks");
             }
-            return View(tasks);
+            AllTasksForTeamViewModel tasksForTeamViewModel = new AllTasksForTeamViewModel();
+            var team = await _manageTeamsService.GetTeamAsync(teamId);
+            tasksForTeamViewModel.TeamName = team.TeamName;
+            tasksForTeamViewModel.Tasks = tasks;
+            return View(tasksForTeamViewModel);
         }
 
         [HttpGet]
