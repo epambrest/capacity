@@ -65,6 +65,18 @@ namespace Teams.Controllers
             return RedirectToAction("ErrorRemoveTask");
         }
 
+        [Authorize]
+        public async Task<IActionResult> RemoveInTeam(int taskId)
+        {
+            var task = await _manageTasksService.GetTaskByIdAsync(taskId);
+            var teamId = task.TeamId;
+            var result = await _manageTasksService.RemoveAsync(taskId);
+            if (result)
+                return RedirectToAction("AllTasksForTeam",  new { teamId });
+            return RedirectToAction("ErrorRemoveTask");
+        }
+
+
         public IActionResult Index()
         {
             return View();

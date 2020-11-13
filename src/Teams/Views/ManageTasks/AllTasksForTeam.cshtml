@@ -27,6 +27,51 @@
             <td align="left">@item.TeamMember.Member.Email</td>
             <td align="left">@item.StoryPoints</td>
             <td href="https://@item.Link"><a href="@item.Link" align="left">Link</a></td>
+            @if (item.Team.Owner.Email == User.Identity.Name)
+            {
+                <td align="right">
+                    <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromTeam"
+                            data-taskname="@item.Name" data-taskid="@item.Id" data-teamname="@Model.First().Team.TeamName">
+                        <i class='far fa-trash-alt'></i>
+                    </button>
+                </td>
+            }
+            else
+            {
+                <td align="right"></td>
+            }
         </tr>
     }
 </table>
+
+<form>
+    <div class="modal fade" id="removeTaskFromTeam" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p align="center" id="task"></p>
+                    <input type="hidden" id="taskId" name="taskId" value="" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-secondary" asp-controller="ManageTasks" asp-action="RemoveInTeam">OK</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function () {
+        $("#removeTaskFromTeam").on("show.bs.modal", function (event) {
+            var button = $(event.relatedTarget);
+            var taskId = button.data('taskid')
+            var taskName = button.data('taskname');
+            var teamName = button.data('teamname');
+            var removeTask = $("#removeTaskFromTeam");
+            removeTask.find("#taskId").val(taskId);
+            document.getElementById('task').innerHTML =
+                "Are you sure you want to remove " + "<strong>" + taskName + "</strong>" + " from " + "<strong>" + teamName + "</strong>" + " ?";
+        });
+    });
+</script>
