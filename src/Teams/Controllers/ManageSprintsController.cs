@@ -77,6 +77,10 @@ namespace Teams.Controllers
         public async Task<IActionResult> GetSprintById(int sprintId)
         {
             var sprint = await _manageSprintsService.GetSprintAsync(sprintId, true);
+
+            if (await _accessCheckService.IsOwnerAsync(sprint.TeamId)) ViewBag.AddVision = "visible";
+            else ViewBag.AddVision = "collapse";
+
             if (sprint == null)
                 return View("ErrorGetAllSprints");
             return View(sprint);
