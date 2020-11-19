@@ -72,6 +72,30 @@ namespace Teams.Controllers
             return View(task);
         }
 
+
+        [Authorize]
+        public async Task<IActionResult> RemoveInSprint(int taskId)
+        {
+            var task = await _manageTasksService.GetTaskByIdAsync(taskId);
+            var sprintId = task.SprintId;
+            var result = await _manageTasksService.RemoveAsync(taskId);
+            if (result)
+                return RedirectToAction("GetSprintById","ManageSprints", new { sprintId });
+            return RedirectToAction("ErrorRemoveTask");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> RemoveInTeam(int taskId)
+        {
+            var task = await _manageTasksService.GetTaskByIdAsync(taskId);
+            var teamId = task.TeamId;
+            var result = await _manageTasksService.RemoveAsync(taskId);
+            if (result)
+                return RedirectToAction("AllTasksForTeam",  new { teamId });
+            return RedirectToAction("ErrorRemoveTask");
+        }
+
+
         [Authorize]
         public async Task<IActionResult> EditTaskAsync(int teamId, int taskId, string errorMessage)
         {

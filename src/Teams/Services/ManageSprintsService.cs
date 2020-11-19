@@ -51,6 +51,7 @@ namespace Teams.Services
                 return await _sprintRepository.GetAll().Where(t => t.Id == sprintId)
                     .Include(t => t.Tasks)
                     .ThenInclude(x => x.TeamMember.Member)
+                    .Include(x=>x.Team)
                     .FirstOrDefaultAsync(t => t.Id == sprintId);
             }
             return await _sprintRepository.GetByIdAsync(sprintId);

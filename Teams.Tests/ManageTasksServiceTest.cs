@@ -19,14 +19,17 @@ namespace Teams.Tests
     {
         private Mock<IRepository<Task, int>> _tasksRepository;
         private ManageTasksService _manageTasksService;
+        private Mock<ICurrentUser> _currentUser;
 
         [SetUp]
         public void Setup()
         {
+            _currentUser = new Mock<ICurrentUser>();
             _tasksRepository = new Mock<IRepository<Task, int>>();
-            _manageTasksService = new ManageTasksService(_tasksRepository.Object);
+            _manageTasksService = new ManageTasksService(_tasksRepository.Object, _currentUser.Object);
             var mock = getFakeDbTasks().AsQueryable().BuildMock();
             _tasksRepository.Setup(x => x.GetAll()).Returns(mock.Object);
+            _tasksRepository.Setup(t => t.DeleteAsync(It.IsAny<Task>())).ReturnsAsync(true);
         }
 
         [Test]
@@ -55,18 +58,6 @@ namespace Teams.Tests
             Assert.IsEmpty(result);
         }
 
-        private List<Task> getFakeDbTasks()
-        {
-            var tasks = new List<Task>()
-            {
-                new Task{Id = 1,SprintId = 1,TeamId = 1},
-                new Task{Id = 2,SprintId = 1,TeamId = 1},
-                new Task{Id = 3,SprintId = 3,TeamId = 3},
-                new Task{Id = 4,SprintId = 3,TeamId = 3},
-            };
-            return tasks;
-        }
-        
         [Test]
         public async System.Threading.Tasks.Task GetTaskByIdAsync_ManageTasksServiceReturnsTaskWithId1_ReturnTaskWithId1()
         {
@@ -100,6 +91,55 @@ namespace Teams.Tests
             // Assert
             Assert.AreEqual(1, result.Id);
         }
+
+        [Test]
+        public async System.Threading.Tasks.Task RemoveAsync_ManageTasksServiceReturnsTrue_ReturnsTrue()
+        {
+            //Arrange
+            const string ownerId = "1";
+            const int taskId = 1;
+            var user = new Mock<UserDetails>(null);
+            user.Setup(x => x.Id()).Returns(ownerId);
+            user.Setup(x => x.Name()).Returns("name");
+            _currentUser.SetupGet(x => x.Current).Returns(user.Object);
+
+            //Act
+            bool result = await _manageTasksService.RemoveAsync(taskId);
+
+            //Assert
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public async System.Threading.Tasks.Task RemoveAsync_ManageTasksServiceReturnsFalse_ReturnsFalse()
+        {
+            //Arrange
+            const string ownerId = "2";
+            const int taskId = 1;
+            var user = new Mock<UserDetails>(null);
+            user.Setup(x => x.Id()).Returns(ownerId);
+            user.Setup(x => x.Name()).Returns("name");
+            _currentUser.SetupGet(x => x.Current).Returns(user.Object);
+
+            //Act
+            bool result = await _manageTasksService.RemoveAsync(taskId);
+
+            //Assert
+            Assert.IsFalse(result);
+        }
+
+        private List<Task> getFakeDbTasks()
+        {
+            var tasks = new List<Task>()
+            {
+                new Task{Id = 1,SprintId = 1,TeamId = 1,Team = new Team{TeamOwner = "1"}},
+                new Task{Id = 2,SprintId = 1,TeamId = 1,Team = new Team{TeamOwner = "2"}},
+                new Task{Id = 3,SprintId = 3,TeamId = 3,Team = new Team{TeamOwner = "3"}},
+                new Task{Id = 4,SprintId = 3,TeamId = 3,Team = new Team{TeamOwner = "4"}},
+            };
+            return tasks;
+        }
+
 
         [Test]
         public async System.Threading.Tasks.Task EditTaskAsync_ManageTaskServiceReturns_True()

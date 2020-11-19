@@ -4,6 +4,7 @@
 }
 
 <script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 
 <div style="margin: 10px 0px 0px 30px" align="left">
     <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to Sprints", "AllSprints", new { teamId = Model.TeamId })</a></h>
@@ -47,16 +48,61 @@
 
     @foreach (var item in @Model.Tasks)
     {
-<tr align="center">
-    <td align="left">@item.Name</td>
-    <td align="left">@item.TeamMember.Member.Email</td>
-    <td align="left">@item.StoryPoints</td>
-    <td href="https://@item.Link"><a href="@item.Link" align="left">Link</a></td>
+        <tr align="center">
+            <td align="left">@item.Name</td>
+            <td align="left">@item.TeamMember.Member.Email</td>
+            <td align="left">@item.StoryPoints</td>
+            <td href="https://@item.Link"><a href="@item.Link" align="left">Link</a></td>
 
-    <td style="visibility: @ViewBag.AddVision" align="right">
-        @Html.ActionLink("", "EditTask", "ManageTasks", new { teamId = Model.TeamId, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })
-    </td>
-</tr>
+            @if (item.Team.Owner.Email == User.Identity.Name)
+            {
+                <td style="visibility: @ViewBag.AddVision" align="right">
+                    @Html.ActionLink("", "EditTask", "ManageTasks", new { teamId = Model.TeamId, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })
+                </td>
+                <td align="right">
+                    <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromSprint"
+                            data-taskname="@item.Name" data-taskid="@item.Id" data-sprintname="@Model.Name">
+                        <i class='far fa-trash-alt'></i>
+                    </button>
+                </td>
+            }
+            else
+            {
+                <td align="right"></td>
+            }
+        </tr>
     }
 
 </table>
+
+<form>
+    <div class="modal fade" id="removeTaskFromSprint" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p align="center" id="task"></p>
+                    <input type="hidden" id="taskId" name="taskId" value="" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-secondary" asp-controller="ManageTasks" asp-action="RemoveInSprint">OK</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div
+        </div>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function () {
+        $("#removeTaskFromSprint").on("show.bs.modal", function (event) {
+            var button = $(event.relatedTarget);
+            var taskId = button.data('taskid')
+            var taskName = button.data('taskname');
+            var sprintName = button.data('sprintname');
+            var removeTask = $("#removeTaskFromSprint");
+            removeTask.find("#taskId").val(taskId);
+            document.getElementById('task').innerHTML =
+                "Are you sure you want to remove " + "<strong>" + taskName + "</strong>" + " from " + "<strong>" + sprintName + "</strong>" + " ?";
+        });
+    });
+</script>
