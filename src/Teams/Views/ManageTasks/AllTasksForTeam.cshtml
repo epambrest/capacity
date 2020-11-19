@@ -1,7 +1,9 @@
-﻿@model IEnumerable<Teams.Models.Task>
+﻿@model Teams.ViewModels.AllTasksForTeamViewModel
+
 @{
-    ViewBag.Title = "Tasks";
+    ViewData["Title"] = "AllTasksForTeam";
 }
+
 
 <script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
 
@@ -9,7 +11,7 @@
     <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to your teams", "GetMyTeams", "ManageTeams")</a></h>
 </div>
 <div align="center">
-    <h><font size="6" color="black"><strong>@Model.First().Team.TeamName</strong></font></h>
+    <h><font size="6" color="black"><strong>@Model.TeamName</strong></font></h>
 </div>
 <table class="table">
 
@@ -18,9 +20,10 @@
         <td align="left" style="border-top: hidden; font-weight: bold">User</td>
         <td align="left" style="border-top: hidden; font-weight: bold">Story Point</td>
         <td align="left" style="border-top: hidden; font-weight: bold">Link</td>
+        <td style="border-top: hidden"></td>
     </tr>
 
-    @foreach (var item in Model)
+    @foreach (var item in Model.Tasks)
     {
         <tr align="center">
             <td align="left">@item.Name</td>
@@ -29,6 +32,9 @@
             <td href="https://@item.Link"><a href="@item.Link" align="left">Link</a></td>
             @if (item.Team.Owner.Email == User.Identity.Name)
             {
+                <td style="visibility: @ViewBag.AddVision" align="right">
+                    @Html.ActionLink("", "EditTask", new { teamId = Model.First().Team.Id, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })
+                </td>
                 <td align="right">
                     <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromTeam"
                             data-taskname="@item.Name" data-taskid="@item.Id" data-teamname="@Model.First().Team.TeamName">

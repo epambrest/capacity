@@ -40,6 +40,7 @@ namespace Teams.Repository
             task.Name = entity.Name;
             task.Link = entity.Link;
             task.StoryPoints = entity.StoryPoints;
+            task.MemberId = entity.MemberId;
             var result = _dbContext.Entry(task).State == EntityState.Modified ? true : false;
             await _dbContext.SaveChangesAsync();
             return result;

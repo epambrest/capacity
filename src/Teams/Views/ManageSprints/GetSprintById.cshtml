@@ -43,6 +43,7 @@
         <td align="left" style="border-top: hidden; font-weight: bold">User</td>
         <td align="left" style="border-top: hidden; font-weight: bold">Story Point</td>
         <td align="left" style="border-top: hidden; font-weight: bold">Link</td>
+        <td style="border-top: hidden"></td>
     </tr>
 
     @foreach (var item in @Model.Tasks)
@@ -55,6 +56,9 @@
 
             @if (item.Team.Owner.Email == User.Identity.Name)
             {
+                <td style="visibility: @ViewBag.AddVision" align="right">
+                    @Html.ActionLink("", "EditTask", "ManageTasks", new { teamId = Model.TeamId, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })
+                </td>
                 <td align="right">
                     <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromSprint"
                             data-taskname="@item.Name" data-taskid="@item.Id" data-sprintname="@Model.Name">
