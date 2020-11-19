@@ -1,7 +1,9 @@
-﻿@model IEnumerable<Teams.Models.Task>
+﻿@model Teams.ViewModels.AllTasksForTeamViewModel
+
 @{
-    ViewBag.Title = "Tasks";
+    ViewData["Title"] = "AllTasksForTeam";
 }
+
 
 <script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
 
@@ -9,7 +11,7 @@
     <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to your teams", "GetMyTeams", "ManageTeams")</a></h>
 </div>
 <div align="center">
-    <h><font size="6" color="black"><strong>@Model.First().Team.TeamName</strong></font></h>
+    <h><font size="6" color="black"><strong>@Model.TeamName</strong></font></h>
 </div>
 <table class="table">
 
@@ -21,7 +23,7 @@
         <td style="border-top: hidden"></td>
     </tr>
 
-    @foreach (var item in Model)
+    @foreach (var item in Model.Tasks)
     {
 <tr align="center">
     <td align="left">@item.Name</td>
