@@ -38,7 +38,7 @@ namespace Teams.Controllers
             {
                 return View("ErrorGetAllTasks");
             }
-            AllTasksForTeamViewModel tasksForTeamViewModel = new AllTasksForTeamViewModel();
+            var tasksForTeamViewModel = new AllTasksForTeamViewModel();
             var team = await _manageTeamsService.GetTeamAsync(teamId);
             tasksForTeamViewModel.TeamName = team.TeamName;
             tasksForTeamViewModel.Tasks = tasks;
