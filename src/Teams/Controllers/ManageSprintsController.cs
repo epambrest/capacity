@@ -93,9 +93,9 @@ namespace Teams.Controllers
             var sprint = await _manageSprintsService.GetSprintAsync(sprintId,false);
 
             EditSprintViewModel model = new EditSprintViewModel {TeamId = teamId, TeamName = team.TeamName, SprintId = sprint.Id, SprintName = sprint.Name,
-                SprintDaysInSprint = sprint.DaysInSprint, SprintStorePointInHours = sprint.StoryPointInHours, ErrorMessage=errorMessage};
+                SprintDaysInSprint = sprint.DaysInSprint, SprintStorePointInHours = sprint.StoryPointInHours, ErrorMessage=errorMessage, IsActive = sprint.IsActive };
 
-            if(sprint.IsActive)
+            if (sprint.IsActive)
             {
                 ViewBag.SprintActive = "checked";
                 ViewBag.SprintNotActive = "";
@@ -122,7 +122,7 @@ namespace Teams.Controllers
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> EditSprintAsync(int teamId, int sprintId, string sprintName, int daysInSprint, int storePointsInHours, bool isActive)
-        {
+            {
             if (string.IsNullOrEmpty(sprintName))
             {
                 return RedirectToAction("EditSprint", new { teamId = teamId, sprintId = sprintId, errorMessage = _localizer["NameFieldError"] });
