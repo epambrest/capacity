@@ -14,8 +14,12 @@ namespace Teams.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index()    
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("GetMyTeams", "ManageTeams");
+            }
             return View();
         }
 
