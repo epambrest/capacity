@@ -35,28 +35,28 @@ namespace Teams.Controllers
         }
 
         [Authorize, NonAction]
-        public async Task<Team> GetTeamAsync(int team_id)
+        public async Task<Team> GetTeamAsync(int teamId)
         {
-            if (await _accessCheckService.OwnerOrMemberAsync(team_id))
+            if (await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
-                return await _manageTeamsService.GetTeamAsync(team_id);
+                return await _manageTeamsService.GetTeamAsync(teamId);
             }
             else return null;
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> EditTeamNameAsync(int team_id)
+        public async Task<IActionResult> EditTeamNameAsync(int teamId)
         {
-            return View(await GetTeamAsync(team_id));
+            return View(await GetTeamAsync(teamId));
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> EditTeamNameAsync(int team_id, string team_name)
+        public async Task<IActionResult> EditTeamNameAsync(int teamId, string teamName)
         {
-            ViewBag.resultOfEditing = await _manageTeamsService.EditTeamNameAsync(team_id, team_name);
-            return View(await GetTeamAsync(team_id));
+            ViewBag.resultOfEditing = await _manageTeamsService.EditTeamNameAsync(teamId, teamName);
+            return View(await GetTeamAsync(teamId));
         }
 
         public IActionResult Privacy()
@@ -90,9 +90,9 @@ namespace Teams.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Remove(int team_id)
+        public async Task<IActionResult> Remove(int teamId)
         {
-            var result = await _manageTeamsService.RemoveAsync(team_id);
+            var result = await _manageTeamsService.RemoveAsync(teamId);
             if (result) 
                return RedirectToAction("GetMyTeams");
             return RedirectToAction("ErrorRemove");
