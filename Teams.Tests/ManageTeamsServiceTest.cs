@@ -125,7 +125,7 @@ namespace Teams.Tests
         {
             //Arrange
             const string id = "abc-def";
-            const int team_id = 3;
+            const int teamId = 3;
             Team team = new Team { Id= 3, TeamOwner = "def-abc", TeamName = "Team3", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}};
 
             _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(team);
@@ -136,7 +136,7 @@ namespace Teams.Tests
             _currentUserMock.SetupGet(x => x.Current).Returns(ud.Object);
 
             //Act
-            var result = await _manageTeamsService.GetTeamAsync(team_id);
+            var result = await _manageTeamsService.GetTeamAsync(teamId);
 
             //Assert
             Assert.AreEqual(3, result.Id);
@@ -147,8 +147,8 @@ namespace Teams.Tests
         {
             //Arrange
             const string id = "abc-def";
-            const int team_id = 4;
-            const string team_name = "NewName";
+            const int teamId = 4;
+            const string teamName = "NewName";
 
             var mock = GetFakeDbTeams().AsQueryable().BuildMock();
             _teamRepository.Setup(x => x.GetAll()).Returns(mock.Object);
@@ -161,7 +161,7 @@ namespace Teams.Tests
             _currentUserMock.SetupGet(x => x.Current).Returns(ud.Object);
 
             //Act
-            var result = await _manageTeamsService.EditTeamNameAsync(team_id, team_name);
+            var result = await _manageTeamsService.EditTeamNameAsync(teamId, teamName);
 
             //Assert
             Assert.IsTrue(result);
@@ -172,9 +172,9 @@ namespace Teams.Tests
         {
             //Arrange
             const string id = "abc-def";
-            const int team_id = 4;
-            const string exist_team_name = "Team5";
-            const string error_team_name = "ERR##$$OR";
+            const int teamId = 4;
+            const string existTeamName = "Team5";
+            const string errorTeamName = "ERR##$$OR";
 
             var mock = GetFakeDbTeams().AsQueryable().BuildMock();
             _teamRepository.Setup(x => x.GetAll()).Returns(mock.Object);
@@ -187,8 +187,8 @@ namespace Teams.Tests
             _currentUserMock.SetupGet(x => x.Current).Returns(ud.Object);
 
             //Act
-            var result1 = await _manageTeamsService.EditTeamNameAsync(team_id, exist_team_name);         //team with the same name already exists 
-            var result2 = await _manageTeamsService.EditTeamNameAsync(team_id, error_team_name);         //team name contains invalid characters
+            var result1 = await _manageTeamsService.EditTeamNameAsync(teamId, existTeamName);         //team with the same name already exists 
+            var result2 = await _manageTeamsService.EditTeamNameAsync(teamId, errorTeamName);         //team name contains invalid characters
 
             //Assert
             Assert.IsFalse(result1);
@@ -200,8 +200,8 @@ namespace Teams.Tests
         {
             //Arrange
             const string id = "not-owner";
-            const int team_id = 4;
-            const string team_name = "NewName";
+            const int teamId = 4;
+            const string teamName = "NewName";
 
             var mock = GetFakeDbTeams().AsQueryable().BuildMock();
             _teamRepository.Setup(x => x.GetAll()).Returns(mock.Object);
@@ -214,7 +214,7 @@ namespace Teams.Tests
             _currentUserMock.SetupGet(x => x.Current).Returns(ud.Object);
 
             //Act
-            var result = await _manageTeamsService.EditTeamNameAsync(team_id, team_name);        //current user is not a team owner
+            var result = await _manageTeamsService.EditTeamNameAsync(teamId, teamName);        //current user is not a team owner
 
             //Assert
             Assert.IsFalse(result);

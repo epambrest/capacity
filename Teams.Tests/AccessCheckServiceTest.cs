@@ -37,9 +37,9 @@ namespace Teams.Tests
         public async System.Threading.Tasks.Task OwnerOrMemberAsync_FccessCheckServiceReturnsTrue_ReturnsTrue()
         {
             //Arrange
-            const int team_id1 = 1;
-            const int team_id2 = 2;
-            const int team_id3 = 3;
+            const int teamId1 = 1;
+            const int teamId2 = 2;
+            const int teamId3 = 3;
             const string id = "abc-def";
 
             var teams = new List<Team>
@@ -65,9 +65,9 @@ namespace Teams.Tests
             _currentUser.SetupGet(x => x.Current).Returns(ud.Object);
 
             //Act
-            var result1 =await _accessCheckService.OwnerOrMemberAsync(team_id1);        //Owner
-            var result2 =await _accessCheckService.OwnerOrMemberAsync(team_id2);       //Member
-            var result3 =await _accessCheckService.OwnerOrMemberAsync(team_id3);       //Not Owner or member
+            var result1 =await _accessCheckService.OwnerOrMemberAsync(teamId1);        //Owner
+            var result2 =await _accessCheckService.OwnerOrMemberAsync(teamId2);       //Member
+            var result3 =await _accessCheckService.OwnerOrMemberAsync(teamId3);       //Not Owner or member
 
             //Assert
             Assert.AreEqual(true, result1);
@@ -79,8 +79,8 @@ namespace Teams.Tests
         public async System.Threading.Tasks.Task IsOwnerAsync_AccessCheckServiceReturnsTrue_ReturnsTrue()
         {
             //Arrange
-            const int team_id1 = 1;
-            const int team_id2 = 3;
+            const int teamId1 = 1;
+            const int teamId2 = 3;
             const string id = "abc-def";
 
             var teams = new List<Team>
@@ -104,12 +104,12 @@ namespace Teams.Tests
             ud.Setup(x => x.Id()).Returns(id);
             ud.Setup(x => x.Name()).Returns("name");
             _currentUser.SetupGet(x => x.Current).Returns(ud.Object);
-
+                
             //Act
-            var result1 = await _accessCheckService.IsOwnerAsync(team_id1);        //Owner
-            var result2 = await _accessCheckService.IsOwnerAsync(team_id2);       //Not Owner
+            var result1 = await _accessCheckService.IsOwnerAsync(teamId1);        //Owner
+            var result2 = await _accessCheckService.IsOwnerAsync(teamId2);       //Not Owner
 
-            //Assert
+            //Assert>
             Assert.AreEqual(true, result1);
             Assert.AreEqual(false, result2);
         }

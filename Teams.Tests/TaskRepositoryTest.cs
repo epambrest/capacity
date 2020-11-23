@@ -44,7 +44,7 @@ namespace Teams.Tests
         public async System.Threading.Tasks.Task GetAll_TaskRepositoryReturns_ListCount5()
         {
             //Arrange
-            const int task_count = 5;
+            const int taskCount = 5;
             _context.Task.AddRange(GetFakeTaskDb());
             _context.SaveChanges();
 
@@ -52,30 +52,30 @@ namespace Teams.Tests
             var result = await _taskRepository.GetAll().ToListAsync();
 
             //Assert
-            Assert.AreEqual(result.Count(), task_count);
+            Assert.AreEqual(result.Count(), taskCount);
         }
 
         [Test]
         public async System.Threading.Tasks.Task GetByIdAsync_TaskRepositoryReturns_Id3()
         {
             //Arrange
-            const int task_id = 5;
+            const int taskId = 5;
 
             //Act
-            var result = await _taskRepository.GetByIdAsync(task_id);
+            var result = await _taskRepository.GetByIdAsync(taskId);
 
             //Assert
-            Assert.AreEqual(task_id, result.Id);
+            Assert.AreEqual(taskId, result.Id);
         }
 
         [Test]
         public async System.Threading.Tasks.Task GetByIdAsync_TaskRepositoryReturns_Null()
         {
             //Arrange
-            const int task_id = 6;
+            const int taskId = 6;
 
             //Act
-            var result = await _taskRepository.GetByIdAsync(task_id);
+            var result = await _taskRepository.GetByIdAsync(taskId);
 
             //Assert
             Assert.IsNull(result);
