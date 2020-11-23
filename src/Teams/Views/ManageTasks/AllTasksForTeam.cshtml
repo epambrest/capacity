@@ -25,28 +25,21 @@
 
     @foreach (var item in Model.Tasks)
     {
-        <tr align="center">
-            <td align="left">@item.Name</td>
-            <td align="left">@item.TeamMember.Member.Email</td>
-            <td align="left">@item.StoryPoints</td>
-            <td href="https://@item.Link"><a href="@item.Link" align="left">Link</a></td>
-            @if (item.Team.Owner.Email == User.Identity.Name)
-            {
-                <td style="visibility: @ViewBag.AddVision" align="right">
-                    @Html.ActionLink("", "EditTask", new { teamId = Model.Tasks.First().Team.Id, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })
-                </td>
-                <td align="right">
-                    <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromTeam"
-                            data-taskname="@item.Name" data-taskid="@item.Id" data-teamname="@Model.Tasks.First().Team.TeamName">
-                        <i class='far fa-trash-alt'></i>
-                    </button>
-                </td>
-            }
-            else
-            {
-                <td align="right"></td>
-            }
-        </tr>
+    <tr align="center">
+        <td align="left">@item.Name</td>
+        <td align="left">@item.TeamMember.Member.Email</td>
+        <td align="left">@item.StoryPoints</td>
+        <td href="https://@item.Link"><a href="@item.Link" align="left">Link</a></td>
+        <td style="visibility: @ViewBag.AddVision" align="right">
+            @Html.ActionLink("", "EditTask", new { teamId = Model.Tasks.First().Team.Id, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })
+        </td>
+        <td style="visibility: @ViewBag.AddVision" align="right">
+            <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromTeam"
+            data-taskname="@item.Name" data-taskid="@item.Id" data-teamname="@Model.Tasks.First().Team.TeamName">
+                <i class='far fa-trash-alt'></i>
+            </button>
+        </td>
+    </tr>
     }
 </table>
 
@@ -69,15 +62,15 @@
 
 <script>
     $(document).ready(function () {
-        $("#removeTaskFromTeam").on("show.bs.modal", function (event) {
-            var button = $(event.relatedTarget);
-            var taskId = button.data('taskid')
-            var taskName = button.data('taskname');
-            var teamName = button.data('teamname');
-            var removeTask = $("#removeTaskFromTeam");
-            removeTask.find("#taskId").val(taskId);
-            document.getElementById('task').innerHTML =
-                "Are you sure you want to remove " + "<strong>" + taskName + "</strong>" + " from " + "<strong>" + teamName + "</strong>" + " ?";
-        });
+    $("#removeTaskFromTeam").on("show.bs.modal", function (event) {
+    var button = $(event.relatedTarget);
+    var taskId = button.data('taskid')
+    var taskName = button.data('taskname');
+    var teamName = button.data('teamname');
+    var removeTask = $("#removeTaskFromTeam");
+    removeTask.find("#taskId").val(taskId);
+    document.getElementById('task').innerHTML =
+    "Are you sure you want to remove " + "<strong>" + taskName + "</strong>" + " from " + "<strong>" + teamName + "</strong>" + " ?";
+    });
     });
 </script>

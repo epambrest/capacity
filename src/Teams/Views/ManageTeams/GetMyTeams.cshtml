@@ -32,7 +32,7 @@
     <td align="right" onclick="location.href = '@Url.Action("AllTasksForTeam", "ManageTasks", new { teamId = item.Id })'"><button type='button' class='btn btn-outline-secondary border-0'>Tasks</button></td>
     @if (item.Owner.Email == User.Identity.Name)
     {
-        <td align="right" onclick="location.href='@Url.Action("EditTeamName", "ManageTeams", new { team_id = item.Id })'">
+        <td align="right" onclick="location.href='@Url.Action("EditTeamName", "ManageTeams", new { teamId = item.Id })'">
             <button type='button' class='btn btn-outline-primary border-0'>
                 <i class='fas fa-edit'></i>
             </button>
