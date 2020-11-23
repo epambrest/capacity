@@ -34,22 +34,22 @@ namespace Teams.Services
                 .Where(x => x.TeamOwner == _currentUser.Current.Id() || x.TeamMembers.Any(p => p.MemberId == _currentUser.Current.Id()))
                 .OrderByDescending(y => y.TeamOwner == _currentUser.Current.Id()).ToListAsync();
 
-        public async Task<Team> GetTeamAsync(int team_id) => await _teamRepository.GetByIdAsync(team_id);
+        public async Task<Team> GetTeamAsync(int teamId) => await _teamRepository.GetByIdAsync(teamId);
 
-        public async Task<bool> EditTeamNameAsync(int team_id, string team_name)
+        public async Task<bool> EditTeamNameAsync(int teamId, string teamName)
         {
-            var team = await _teamRepository.GetByIdAsync(team_id);
+            var team = await _teamRepository.GetByIdAsync(teamId);
 
-            if (team != null && team.TeamOwner == _currentUser.Current.Id() && !_teamRepository.GetAll().Any(x => x.TeamName.ToUpper() == team_name.ToUpper()) && Regex.IsMatch(team_name, ("^[a-zA-Z0-9-_.]+$")))
+            if (team != null && team.TeamOwner == _currentUser.Current.Id() && !_teamRepository.GetAll().Any(x => x.TeamName.ToUpper() == teamName.ToUpper()) && Regex.IsMatch(teamName, ("^[a-zA-Z0-9-_.]+$")))
             {
-                return await _teamRepository.UpdateAsync(new Team { Id = team_id, TeamOwner = _currentUser.Current.Id(), TeamName = team_name });
+                return await _teamRepository.UpdateAsync(new Team { Id = teamId, TeamOwner = _currentUser.Current.Id(), TeamName = teamName });
             }
             else return false;
         }   
             
-        public async Task<bool> RemoveAsync(int team_id)
+        public async Task<bool> RemoveAsync(int teamId)
         {
-            var team = await _teamRepository.GetAll().FirstOrDefaultAsync(i => i.TeamOwner == _currentUser.Current.Id() && i.Id == team_id);
+            var team = await _teamRepository.GetAll().FirstOrDefaultAsync(i => i.TeamOwner == _currentUser.Current.Id() && i.Id == teamId);
             if (team == null)
                 return false;
             
