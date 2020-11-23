@@ -66,7 +66,7 @@
             <td align="left" width="1%"></td>
             <td align="left" style="font-weight: bold">@ViewData["MemberEmail"]</td>
             <td style="visibility: @ViewBag.AddVision" align="right">
-                @Html.ActionLink("", "AddMember", "ManageTeamMembers", new { team_id = ViewBag.TeamId }, new { @class = "fas fa-user-plus", title = ViewData["AddMember"], style = "margin: 10px 0px 0px 30px", align = "right" })
+                @Html.ActionLink("", "AddMember", "ManageTeamMembers", new { teamId = ViewBag.TeamId }, new { @class = "fas fa-user-plus", title = ViewData["AddMember"], style = "margin: 10px 0px 0px 30px", align = "right" })
             </td>
         </tr>
         <tr align="center">
@@ -80,7 +80,7 @@
                 <td align="left" width="1%"><i title="@ViewData["Member"]" class="fas fa-user"></i></td>
                 <td align="left">@item.Member.Email</td>
                 <td style="visibility: @ViewBag.AddVision" align="right">
-                    @Html.ActionLink("", "Remove", "ManageTeamMembers", new { team_id = ViewBag.TeamId, member_id = item.MemberId, team_name = @ViewBag.TeamName, owner_name=ViewBag.TeamOwner }, new { @class = "far fa-trash-alt", title = ViewData["RemoveMember"], style = "margin: 10px 0px 0px 30px", align = "right" })
+                    @Html.ActionLink("", "Remove", "ManageTeamMembers", new { teamId = ViewBag.TeamId, memberId = item.MemberId, teamName = @ViewBag.TeamName, ownerName=ViewBag.TeamOwner }, new { @class = "far fa-trash-alt", title = ViewData["RemoveMember"], style = "margin: 10px 0px 0px 30px", align = "right" })
                 </td>
             </tr>
         }

@@ -9,7 +9,7 @@
 <div>
     @using (Html.BeginForm("AddMember", "ManageTeamMembers", FormMethod.Post))
     {
-        @Html.Hidden("team_id", @ViewBag.TeamId as string)
+        @Html.Hidden("teamId", @ViewBag.TeamId as string)
         @section scripts{
             <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
