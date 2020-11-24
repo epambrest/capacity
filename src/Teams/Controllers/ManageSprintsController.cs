@@ -213,7 +213,7 @@ namespace Teams.Controllers
             var teamId = sprint.TeamId;
             var result = await _manageSprintsService.RemoveAsync(sprintId);
             if (result)
-                return RedirectToAction("AllSprints",new { team_id = teamId});
+                return RedirectToAction("AllSprints",new { teamId = teamId});
             return RedirectToAction("ErrorRemove");
         }
 
