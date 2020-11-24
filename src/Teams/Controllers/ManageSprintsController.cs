@@ -122,25 +122,33 @@ namespace Teams.Controllers
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> EditSprintAsync(int teamId, int sprintId, string sprintName, int daysInSprint, int storePointsInHours, bool isActive)
-            {
+        {
             if (string.IsNullOrEmpty(sprintName))
             {
                 return RedirectToAction("EditSprint", new { teamId = teamId, sprintId = sprintId, errorMessage = _localizer["NameFieldError"] });
             }
+
             if (daysInSprint <= 0)
             {
                 return RedirectToAction("EditSprint", new { teamId = teamId, sprintId = sprintId, errorMessage = _localizer["DaysFieldError"] });
             }
+
             if (storePointsInHours <= 0)
             {
-                return RedirectToAction("EditSprint", new { teamId = teamId, sprintId=sprintId, errorMessage = _localizer["PointsFieldError"] });
+                return RedirectToAction("EditSprint", new { teamId = teamId, sprintId = sprintId, errorMessage = _localizer["PointsFieldError"] });
             }
 
             var sprint = new Sprint { Id = sprintId, TeamId = teamId, Name = sprintName, DaysInSprint = daysInSprint, StoryPointInHours = storePointsInHours, IsActive = isActive };
             var result = await EditSprintAsync(sprint);
 
-            if (result) return RedirectToAction("AllSprints", new { teamId = teamId });
-            else return RedirectToAction("AddError", new { teamId = teamId });
+            if (result)
+            {
+                return RedirectToAction("AllSprints", new { teamId = teamId });
+            }
+            else
+            {
+                return RedirectToAction("AddError", new { teamId = teamId });
+            }
 
         }
 
