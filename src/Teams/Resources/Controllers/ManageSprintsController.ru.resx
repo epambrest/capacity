@@ -120,6 +120,9 @@
   <data name="Active" xml:space="preserve">
     <value>Активный</value>
   </data>
+  <data name="ActiveFieldError" xml:space="preserve">
+    <value>В команде может быть только один активный спринт</value>
+  </data>
   <data name="AddMember" xml:space="preserve">
     <value>Добавить участника</value>
   </data>

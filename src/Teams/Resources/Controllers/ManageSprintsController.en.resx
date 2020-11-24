@@ -120,6 +120,9 @@
   <data name="Active" xml:space="preserve">
     <value>Active</value>
   </data>
+  <data name="ActiveFieldError" xml:space="preserve">
+    <value>Only one sprint in team can be active</value>
+  </data>
   <data name="AddMember" xml:space="preserve">
     <value>Add Member</value>
   </data>
