@@ -6,11 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Teams.Business.Services;
 using Teams.Data;
-using Teams.Models;
+using Teams.Data.Models;
 using Teams.Security;
-using Teams.Services;
-using Task = Teams.Models.Task;
+using Task = Teams.Data.Models.Task;
 
 namespace Teams.Tests
 {
@@ -64,9 +64,9 @@ namespace Teams.Tests
             // Arrange
             const int taskId = 1;
 
-            var task = new List<Models.Task>()
+            var task = new List<Data.Models.Task>()
             {
-                new Models.Task
+                new Data.Models.Task
                 {
                     Id = 1,
                     Link = "google.com",

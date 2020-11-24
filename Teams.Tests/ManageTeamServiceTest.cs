@@ -2,12 +2,12 @@
 using NUnit.Framework;
 using System.Linq;
 using Teams.Data;
-using Teams.Models;
 using Teams.Security;
 using Moq;
 using MockQueryable.Moq;
-using Teams.Services;
 using System.Threading.Tasks;
+using Teams.Business.Services;
+using Teams.Data.Models;
 
 namespace Teams.Tests
 {
