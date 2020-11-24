@@ -93,9 +93,9 @@ namespace Teams.Controllers
             var sprint = await _manageSprintsService.GetSprintAsync(sprintId,false);
 
             EditSprintViewModel model = new EditSprintViewModel {TeamId = teamId, TeamName = team.TeamName, SprintId = sprint.Id, SprintName = sprint.Name,
-                SprintDaysInSprint = sprint.DaysInSprint, SprintStorePointInHours = sprint.StoryPointInHours, ErrorMessage=errorMessage};
+                SprintDaysInSprint = sprint.DaysInSprint, SprintStorePointInHours = sprint.StoryPointInHours, ErrorMessage=errorMessage, IsActive = sprint.IsActive };
 
-            if(sprint.IsActive)
+            if (sprint.IsActive)
             {
                 ViewBag.SprintActive = "checked";
                 ViewBag.SprintNotActive = "";
@@ -129,13 +129,15 @@ namespace Teams.Controllers
             {
                 return RedirectToAction("EditSprint", new { teamId = teamId, sprintId = sprintId, errorMessage = _localizer["NameFieldError"] });
             }
+
             if (daysInSprint <= 0)
             {
                 return RedirectToAction("EditSprint", new { teamId = teamId, sprintId = sprintId, errorMessage = _localizer["DaysFieldError"] });
             }
+
             if (storePointsInHours <= 0)
             {
-                return RedirectToAction("EditSprint", new { teamId = teamId, sprintId=sprintId, errorMessage = _localizer["PointsFieldError"] });
+                return RedirectToAction("EditSprint", new { teamId = teamId, sprintId = sprintId, errorMessage = _localizer["PointsFieldError"] });
             }
             if(activeSprints != null && isActive == true)
             {
@@ -145,8 +147,14 @@ namespace Teams.Controllers
             var sprint = new Sprint { Id = sprintId, TeamId = teamId, Name = sprintName, DaysInSprint = daysInSprint, StoryPointInHours = storePointsInHours, IsActive = isActive };
             var result = await EditSprintAsync(sprint);
 
-            if (result) return RedirectToAction("AllSprints", new { teamId = teamId });
-            else return RedirectToAction("AddError", new { teamId = teamId });
+            if (result)
+            {
+                return RedirectToAction("AllSprints", new { teamId = teamId });
+            }
+            else
+            {
+                return RedirectToAction("AddError", new { teamId = teamId });
+            }
 
         }
 
