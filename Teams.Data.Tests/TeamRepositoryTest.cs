@@ -9,7 +9,7 @@ using Teams.Data;
 using Teams.Data.Models;
 using Teams.Data.Repository;
 
-namespace Teams.Tests
+namespace Teams.Data.Tests
 {
     [TestFixture]
     class TeamRepositoryTest

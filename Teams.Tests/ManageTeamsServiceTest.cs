@@ -8,11 +8,10 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Teams.Data;
-using Teams.Models;
-using Teams.Services;
-using Teams.Repository;
 using Microsoft.EntityFrameworkCore;
 using System;
+using Teams.Business.Services;
+using Teams.Data.Models;
 
 namespace Teams.Tests
 {

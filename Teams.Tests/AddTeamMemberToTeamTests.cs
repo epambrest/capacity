@@ -3,12 +3,12 @@ using Moq;
 using Teams.Security;
 using System.Security.Claims;
 using Teams.Data;
-using Teams.Models;
-using Teams.Services;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using MockQueryable.Moq;
+using Teams.Business.Services;
+using Teams.Data.Models;
 
 namespace Teams.Tests
 {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Teams.Data;
 using Teams.Data.Repository;
 
-namespace Teams.Tests
+namespace Teams.Data.Tests
 {
     [TestFixture]
     class TaskRepositoryTest
