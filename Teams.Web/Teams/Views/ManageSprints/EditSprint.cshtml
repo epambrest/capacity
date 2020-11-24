@@ -32,10 +32,8 @@
         </div>
 
         <div>
-            <label for="active">@Localizer["Active"]</label>
-            <input @ViewBag.SprintActive name="isActive" id="active" type="radio" value="true" />
-            <label for="nonactive">@Localizer["NotActive"]</label>
-            <input @ViewBag.SprintNotActive id="nonactive" name="isActive" type="radio" value="false" />
+            <label>@Localizer["Active"]</label>
+            @Html.CheckBox("isActive", Model.IsActive)
         </div>
         <div style="display: table">
             <input id="sub" type="submit" class="btn btn-success" value="@Localizer["EditSprint"]" />

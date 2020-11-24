@@ -82,16 +82,15 @@ namespace Teams.Business.Services
 
         public async Task<bool> EditSprintAsync(Sprint sprint)
         {
-            var sprintForCheck = await _sprintRepository.GetByIdAsync(sprint.Id);
-            bool nameCheck;
-            if (sprintForCheck.Name == sprint.Name) nameCheck = false;
-            else nameCheck = _sprintRepository.GetAll()
-                .Where(x => x.TeamId == sprint.TeamId)
-                .Any(x => x.Name == sprint.Name);
-            if (nameCheck || sprint.DaysInSprint <= 0 || sprint.StoryPointInHours <= 0 || !Regex.IsMatch(sprint.Name, ("^[a-zA-Z0-9-_.]+$")))
+            var oldSprint = await _sprintRepository.GetByIdAsync(sprint.Id);
+
+            if (oldSprint == null || 
+                sprint.DaysInSprint <= 0 || sprint.StoryPointInHours <= 0 || 
+                !Regex.IsMatch(sprint.Name, ("^[a-zA-Z0-9-_.]+$")))
             {
                 return false;
             }
+
             return await _sprintRepository.UpdateAsync(sprint);
         }
     }
