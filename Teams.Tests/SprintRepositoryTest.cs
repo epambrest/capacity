@@ -44,7 +44,7 @@ namespace Teams.Tests
         public async System.Threading.Tasks.Task GetAll_SprintRepositoryReturns_ListCount5()
         {
             //Arrange
-            const int sprint_count = 5;
+            const int sprintCount = 5;
             _context.Sprint.AddRange(GetFakeSprintDb());
             _context.SaveChanges();
 
@@ -52,30 +52,30 @@ namespace Teams.Tests
             var result = await _sprintRepository.GetAll().ToListAsync();
 
             //Assert
-            Assert.AreEqual(result.Count(), sprint_count);
+            Assert.AreEqual(result.Count(), sprintCount);
         }
 
         [Test]
         public async System.Threading.Tasks.Task GetByIdAsync_SprintRepositoryReturns_Id3()
         {
             //Arrange
-            const int sprint_id = 3;
+            const int sprintId = 3;
 
             //Act
-            var result = await _sprintRepository.GetByIdAsync(sprint_id);
+            var result = await _sprintRepository.GetByIdAsync(sprintId);
 
             //Assert
-            Assert.AreEqual(sprint_id, result.Id);
+            Assert.AreEqual(sprintId, result.Id);
         }
 
         [Test]
         public async System.Threading.Tasks.Task GetByIdAsync_SprintRepositoryReturns_Null()
         {
             //Arrange
-            const int sprint_id = 30;
+            const int sprintId = 30;
 
             //Act
-            var result = await _sprintRepository.GetByIdAsync(sprint_id);
+            var result = await _sprintRepository.GetByIdAsync(sprintId);
 
             //Assert
             Assert.IsNull(result);

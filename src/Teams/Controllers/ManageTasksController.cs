@@ -45,12 +45,14 @@ namespace Teams.Controllers
             if (await _accessCheckService.IsOwnerAsync(teamId)) ViewBag.AddVision = "visible";
             else ViewBag.AddVision = "collapse";
 
-            if (tasks == null)
+            var tasksForTeamViewModel = new AllTasksForTeamViewModel();
+            var team = await _manageTeamsService.GetTeamAsync(teamId);
+
+            if (tasks == null || team == null)
             {
                 return View("ErrorGetAllTasks");
             }
-            var tasksForTeamViewModel = new AllTasksForTeamViewModel();
-            var team = await _manageTeamsService.GetTeamAsync(teamId);
+
             tasksForTeamViewModel.TeamName = team.TeamName;
             tasksForTeamViewModel.Tasks = tasks;
             return View(tasksForTeamViewModel);
@@ -80,7 +82,7 @@ namespace Teams.Controllers
             var sprintId = task.SprintId;
             var result = await _manageTasksService.RemoveAsync(taskId);
             if (result)
-                return RedirectToAction("GetSprintById","ManageSprints", new { sprintId });
+                return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId });
             return RedirectToAction("ErrorRemoveTask");
         }
 
@@ -91,7 +93,7 @@ namespace Teams.Controllers
             var teamId = task.TeamId;
             var result = await _manageTasksService.RemoveAsync(taskId);
             if (result)
-                return RedirectToAction("AllTasksForTeam",  new { teamId });
+                return RedirectToAction("AllTasksForTeam", new { teamId });
             return RedirectToAction("ErrorRemoveTask");
         }
 
@@ -107,7 +109,7 @@ namespace Teams.Controllers
             {
                 TeamId = teamId,
                 TaskId = task.Id,
-                TaskSprintId = task.SprintId, 
+                TaskSprintId = task.SprintId,
                 TeamName = team.TeamName,
                 TaskName = task.Name,
                 TaskLink = task.Link,
@@ -140,8 +142,16 @@ namespace Teams.Controllers
                 return RedirectToAction("EditTask", new { teamId = teamId, taskId = taskId, errorMessage = _localizer["MemberFieldError"] });
             }
 
-            var task = new Models.Task { Id = taskId, TeamId = teamId, Name = taskName,
-            StoryPoints = taskStoryPoints, Link = taskLink, SprintId = taskSprintId, MemberId = taskMemberId};
+            var task = new Models.Task
+            {
+                Id = taskId,
+                TeamId = teamId,
+                Name = taskName,
+                StoryPoints = taskStoryPoints,
+                Link = taskLink,
+                SprintId = taskSprintId,
+                MemberId = taskMemberId
+            };
             var result = await EditTaskAsync(task);
 
             if (result) return RedirectToAction("AllTasksForTeam", new { teamId = teamId });

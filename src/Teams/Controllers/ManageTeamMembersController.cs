@@ -41,36 +41,36 @@ namespace Teams.Controllers
         }
 
         [Authorize, NonAction]
-        public async Task<TeamMember> GetMemberAsync(int team_id, string member_id)
+        public async Task<TeamMember> GetMemberAsync(int teamId, string memberId)
         {
-            if (await _accessCheckService.OwnerOrMemberAsync(team_id))
+            if (await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
-                return await _manageTeamsMembersService.GetMemberAsync(team_id, member_id);
+                return await _manageTeamsMembersService.GetMemberAsync(teamId, memberId);
             }
             else return null;
         }
 
         [Authorize, NonAction]
-        public async Task<List<TeamMember>> GetAllTeamMembersAsync(int team_id, DisplayOptions options)
+        public async Task<List<TeamMember>> GetAllTeamMembersAsync(int teamId, DisplayOptions options)
         {
-            if (await _accessCheckService.OwnerOrMemberAsync(team_id))
+            if (await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
-                return await _manageTeamsMembersService.GetAllTeamMembersAsync(team_id, options);
+                return await _manageTeamsMembersService.GetAllTeamMembersAsync(teamId, options);
             }
             else return null;
         }
 
         [Authorize]
-        public async Task<IActionResult> TeamMembersAsync(int team_id)
+        public async Task<IActionResult> TeamMembersAsync(int teamId)
         {
-            List<TeamMember> members = await GetAllTeamMembersAsync(team_id, new DisplayOptions { });
+            List<TeamMember> members = await GetAllTeamMembersAsync(teamId, new DisplayOptions { });
 
             if (members == null) return View("MembersError");
 
             var teams = await _manageTeamsService.GetMyTeamsAsync();
-            var team = teams.Where(x => x.Id == team_id).FirstOrDefault();
+            var team = teams.Where(x => x.Id == teamId).FirstOrDefault();
 
-            if (await _accessCheckService.IsOwnerAsync(team_id)) ViewBag.AddVision = "visible";
+            if (await _accessCheckService.IsOwnerAsync(teamId)) ViewBag.AddVision = "visible";
             else ViewBag.AddVision = "collapse";
 
             ViewBag.TeamName = team.TeamName;
@@ -95,26 +95,26 @@ namespace Teams.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> AddMemberAsync(int team_id)
+        public async Task<IActionResult> AddMemberAsync(int teamId)
         {
-            Team team = await _manageTeamsService.GetTeamAsync(team_id);
+            Team team = await _manageTeamsService.GetTeamAsync(teamId);
             var users = await _userManager.Users.ToListAsync();
 
             ViewBag.TeamId = team.Id;
             ViewBag.TeamName = team.TeamName;
             ViewBag.Users = users;
 
-            return View(await TeamMembersAsync(team_id));
+            return View(await TeamMembersAsync(teamId));
         }
 
 
         [Authorize]
-        public async Task<IActionResult> RemoveAsync(int team_id, string member_id, string owner_name, string team_name)
+        public async Task<IActionResult> RemoveAsync(int teamId, string memberId, string ownerName, string teamName)
         {
-            var result = await _manageTeamsMembersService.RemoveAsync(team_id, member_id);
+            var result = await _manageTeamsMembersService.RemoveAsync(teamId, memberId);
             if (result)
             {
-                return RedirectToAction("TeamMembers", new { team_id = team_id, team_name = team_name, owner_name = owner_name });
+                return RedirectToAction("TeamMembers", new { teamId, teamName, ownerName });
             }
             return RedirectToAction("ErrorRemoveMember");
         }
@@ -127,21 +127,21 @@ namespace Teams.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AddMemberAsync(int team_id, string member_id)
+        public async Task<IActionResult> AddMemberAsync(int teamId, string memberId)
         {
-            if (member_id == null) return RedirectToAction("AddError", new { error_message = "Field is empty" });
+            if (memberId == null) return RedirectToAction("AddError", new { errorMessage = "Field is empty" });
             var users = await _userManager.Users.ToListAsync();
             ViewBag.Users = users;
-            bool result = await _manageTeamsMembersService.AddAsync(team_id, member_id);
+            bool result = await _manageTeamsMembersService.AddAsync(teamId, memberId);
 
 
-            if (result) return RedirectToAction("TeamMembers", new { team_id = team_id });
-            else return RedirectToAction("AddError", new { error_message = "Current user already in team" });
+            if (result) return RedirectToAction("TeamMembers", new { teamId });
+            else return RedirectToAction("AddError", new { errorMessage = "Current user already in team" });
         }
 
-        public IActionResult AddError(string error_message)
+        public IActionResult AddError(string errorMessage)
         {
-            ViewBag.ErrorMessage = error_message;
+            ViewBag.ErrorMessage = errorMessage;
             return View();
         }
     }

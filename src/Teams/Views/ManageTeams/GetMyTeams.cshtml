@@ -27,12 +27,12 @@
     {
         <td align="left" width="1%"><i title="Member" class="fas fa-user"></i></td>
     }
-    <td align="left"><a>@Html.ActionLink(item.TeamName, "TeamMembers", "ManageTeamMembers", new { team_id = item.Id })</a></td>
+    <td align="left"><a>@Html.ActionLink(item.TeamName, "TeamMembers", "ManageTeamMembers", new { teamId = item.Id })</a></td>
     <td align="right" onclick="location.href = '@Url.Action("AllSprints", "ManageSprints", new { teamId= item.Id })'"><button type='button' class='btn btn-outline-secondary border-0'>Sprints</button></td>
     <td align="right" onclick="location.href = '@Url.Action("AllTasksForTeam", "ManageTasks", new { teamId = item.Id })'"><button type='button' class='btn btn-outline-secondary border-0'>Tasks</button></td>
     @if (item.Owner.Email == User.Identity.Name)
     {
-        <td align="right" onclick="location.href='@Url.Action("EditTeamName", "ManageTeams", new { team_id = item.Id })'">
+        <td align="right" onclick="location.href='@Url.Action("EditTeamName", "ManageTeams", new { teamId = item.Id })'">
             <button type='button' class='btn btn-outline-primary border-0'>
                 <i class='fas fa-edit'></i>
             </button>
@@ -62,7 +62,7 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <p align="center" id="team"></p>
-                    <input type="hidden" id="team_id" name="team_id" value="" />
+                    <input type="hidden" id="teamId" name="teamId" value="" />
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-outline-secondary" asp-action="Remove">OK</button>
@@ -81,7 +81,7 @@
             var team = button.data('content')
             var teamId = button.data('whatever')
             var removeModal = $("#myModal");
-            removeModal.find("#team_id").val(teamId);
+            removeModal.find("#teamId").val(teamId);
             document.getElementById('team').innerHTML = "Are you sure you want to remove " + "<strong>" + team + "</strong>" + "?";
         });
     });

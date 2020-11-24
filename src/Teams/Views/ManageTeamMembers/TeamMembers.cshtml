@@ -17,7 +17,7 @@
         <td align="left" style="border-top: hidden" width="1%"></td>
         <td align="left" style="border-top: hidden; font-weight: bold">Member Email</td>
         <td style="border-top: hidden; visibility: @ViewBag.AddVision" align="right">
-            @Html.ActionLink("", "AddMember", new { team_id = ViewBag.TeamId }, new { @class = "fas fa-user-plus", title = "Add Member", style = "margin: 10px 0px 0px 30px", align = "right" })
+            @Html.ActionLink("", "AddMember", new { teamId = ViewBag.TeamId }, new { @class = "fas fa-user-plus", title = "Add Member", style = "margin: 10px 0px 0px 30px", align = "right" })
         </td>
     </tr>
     <tr align="center">
@@ -51,10 +51,10 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <p align="center" id="member"></p>
-                    <input type="hidden" id="team_id" name="team_id" value="team_id" />
-                    <input type="hidden" id="member_id" name="member_id" value="member_id" />
-                    <input type="hidden" id="owner_name" name="owner_name" value="owner_name" />
-                    <input type="hidden" id="team_name" name="team_name" value="team_name" />
+                    <input type="hidden" id="teamId" name="teamId" value="" />
+                    <input type="hidden" id="memberId" name="memberId" value="" />
+                    <input type="hidden" id="ownerName" name="ownerName" value="" />
+                    <input type="hidden" id="teamName" name="teamName" value="" />
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-outline-secondary" asp-action="Remove">OK</button>
@@ -77,10 +77,10 @@
             var memberId = button.data('memberid')
             var owner = button.data('owner')
             var removeModal = $("#removeMember");
-            removeModal.find("#team_id").val(teamId);
-            removeModal.find("#team_name").val(teamName);
-            removeModal.find("#member_id").val(memberId);
-            removeModal.find("#owner_name").val(owner);
+            removeModal.find("#teamId").val(teamId);
+            removeModal.find("#teamName").val(teamName);
+            removeModal.find("#memberId").val(memberId);
+            removeModal.find("#ownerName").val(owner);
             document.getElementById('member').innerHTML =
                 "Are you sure you want to remove " + "<strong>" + memberName + "</strong>" + " from " + "<strong>" + teamName + "</strong>" + " ?";
         });

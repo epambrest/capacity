@@ -30,15 +30,15 @@ namespace Teams.Tests
             public async System.Threading.Tasks.Task RemoveAsync_ManageTeamsServiceReturnsTrue_ReturnsTrue()
             {
                 // Arrange
-                const string team_owner = "1234";
-                const int team_id = 1;
+                const string teamOwner = "1234";
+                const int teamId = 1;
                 var teams = new List<Team>
                 {
                  new Team { Id= 1, TeamOwner = "1234", TeamName = "First_Team"},
                  new Team { Id= 2, TeamOwner = "1234", TeamName = "Second_Team"}
                 };
                 var user = new Mock<UserDetails>(null);
-                user.Setup(x => x.Id()).Returns(team_owner);
+                user.Setup(x => x.Id()).Returns(teamOwner);
                 _currentUser.SetupGet(x => x.Current).Returns(user.Object);
                 var mock = teams.AsQueryable().BuildMock();
                 _teamRepository.Setup(x => x.GetAll()).Returns(mock.Object);
@@ -46,7 +46,7 @@ namespace Teams.Tests
                 .ReturnsAsync(true);
 
                 //Act
-                var result = await _manageTeamsService.RemoveAsync(team_id);
+                var result = await _manageTeamsService.RemoveAsync(teamId);
               
                 //Assert
                 Assert.IsTrue(result); 
@@ -56,9 +56,9 @@ namespace Teams.Tests
             public async System.Threading.Tasks.Task RemoveAsync_ManageTeamsServiceReturnsFalse_ReturnsFalse()
             {
                 // Arrange
-                const string team_owner = "1234";
-                const int team_id1 = 4;
-                const int team_id2 = 3;
+                const string teamOwner = "1234";
+                const int teamId1 = 4;
+                const int teamId2 = 3;
                 var teams = new List<Team>
                 {
                  new Team { Id= 1, TeamOwner = "1234", TeamName = "First_Team"},
@@ -66,7 +66,7 @@ namespace Teams.Tests
                  new Team { Id= 3, TeamOwner = "4152", TeamName = "Third_Team"},
                 };
                 var user = new Mock<UserDetails>(null);
-                user.Setup(x => x.Id()).Returns(team_owner);
+                user.Setup(x => x.Id()).Returns(teamOwner);
                 _currentUser.SetupGet(x => x.Current).Returns(user.Object);
                 var mock = teams.AsQueryable().BuildMock();
                 _teamRepository.Setup(x => x.GetAll()).Returns(mock.Object);
@@ -74,8 +74,8 @@ namespace Teams.Tests
                 .ReturnsAsync(true);
 
                 //Act
-                var result1 = await _manageTeamsService.RemoveAsync(team_id1);
-                var result2 = await _manageTeamsService.RemoveAsync(team_id2);
+                var result1 = await _manageTeamsService.RemoveAsync(teamId1);
+                var result2 = await _manageTeamsService.RemoveAsync(teamId2);
 
                 //Assert
                 Assert.IsFalse(result1);

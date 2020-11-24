@@ -20,17 +20,17 @@ namespace Teams.Services
             _teamRepository = teamRepository;
         }
 
-        public async Task<bool> OwnerOrMemberAsync(int team_id)
+        public async Task<bool> OwnerOrMemberAsync(int teamId)
         {
              return await _teamRepository.GetAll().Include(x => x.TeamMembers)
-                .Where(t => t.Id == team_id)
+                .Where(t => t.Id == teamId)
                 .AnyAsync(y => y.TeamOwner == _currentUser.Current.Id() || y.TeamMembers.Any(z => z.MemberId == _currentUser.Current.Id()));
         }
 
-        public async Task<bool> IsOwnerAsync(int team_id)
+        public async Task<bool> IsOwnerAsync(int teamId)
         {
             return await _teamRepository.GetAll()
-               .Where(t => t.Id == team_id)
+               .Where(t => t.Id == teamId)
                .AnyAsync(y => y.TeamOwner == _currentUser.Current.Id());
         }
     }

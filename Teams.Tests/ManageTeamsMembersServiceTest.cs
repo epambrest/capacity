@@ -15,11 +15,11 @@ namespace Teams.Tests
 {
     class ManageTeamsMembersServiceTest
     {
-        public IManageTeamsMembersService _manageTeamsMembersService;
+        private IManageTeamsMembersService _manageTeamsMembersService;
 
-        public Mock<IRepository<TeamMember, int>> _teamMemberRepository;
+        private Mock<IRepository<TeamMember, int>> _teamMemberRepository;
 
-        public Mock<IRepository<Team, int>> _teamRepository;
+        private Mock<IRepository<Team, int>> _teamRepository;
 
         private Mock<ICurrentUser> _currentUserMock;
 
@@ -36,35 +36,35 @@ namespace Teams.Tests
         public async System.Threading.Tasks.Task GetMembers_ManageTeamsMembersServiceReturnTeamMember_ReturnTeamMember()
         {
             //Arrange
-            const int team_id = 4;
-            const string member_id = "def-abc";
+            const int teamId = 4;
+            const string memberId = "def-abc";
 
             var mock = GetFakeDbTeamMembers().AsQueryable().BuildMock();
             _teamMemberRepository.Setup(x => x.GetAll()).Returns(mock.Object);
 
             //Act
-            var result =await  _manageTeamsMembersService.GetMemberAsync(team_id, member_id);
+            var result =await  _manageTeamsMembersService.GetMemberAsync(teamId, memberId);
 
             //Assert
-            Assert.AreEqual(result.TeamId, team_id);
-            Assert.AreEqual(result.MemberId, member_id);
+            Assert.AreEqual(result.TeamId, teamId);
+            Assert.AreEqual(result.MemberId, memberId);
         }
 
         [Test]
         public async System.Threading.Tasks.Task GetMembers_ManageTeamsMembersServiceReturnNull_ReturnNull()     //Team or member not exist
         {
             //Arrange
-            const int team_id = 4;
-            const int team_id_eror = 99;
-            const string member_id = "def-abc";
-            const string member_id_eror = "eror-id";
+            const int teamId = 4;
+            const int teamIdError = 99;
+            const string memberId = "def-abc";
+            const string memberIdError = "eror-id";
 
             var mock = GetFakeDbTeamMembers().AsQueryable().BuildMock();
             _teamMemberRepository.Setup(x => x.GetAll()).Returns(mock.Object);
 
             //Act
-            var result1 =await _manageTeamsMembersService.GetMemberAsync(team_id, member_id_eror);
-            var result2 =await _manageTeamsMembersService.GetMemberAsync(team_id_eror, member_id);
+            var result1 =await _manageTeamsMembersService.GetMemberAsync(teamId, memberIdError);
+            var result2 =await _manageTeamsMembersService.GetMemberAsync(teamIdError, memberId);
 
             //Assert
             Assert.AreEqual(result1, null);
@@ -75,13 +75,13 @@ namespace Teams.Tests
         public async System.Threading.Tasks.Task GetAllTeamMembersAsync_ManageTeamsMembersServiceReturnList_ReturnList()
         {
             //Arrange
-            const int team_id = 4;
+            const int teamId = 4;
 
             var mock = GetFakeDbTeamMembers().AsQueryable().BuildMock();
             _teamMemberRepository.Setup(x => x.GetAll()).Returns(mock.Object);
 
             //Act
-            var result = await _manageTeamsMembersService.GetAllTeamMembersAsync(team_id, new DisplayOptions { });
+            var result = await _manageTeamsMembersService.GetAllTeamMembersAsync(teamId, new DisplayOptions { });
 
             //Assert
             Assert.AreEqual(result[0].Id, 5);
@@ -92,13 +92,13 @@ namespace Teams.Tests
         public async System.Threading.Tasks.Task GetAllTeamMembersAsync_ManageTeamsMembersServiceReturnNull_ReturnNull()
         {
             //Arrange
-            const int team_id = 40;
+            const int teamId = 40;
 
             var mock = GetFakeDbTeamMembers().AsQueryable().BuildMock();
             _teamMemberRepository.Setup(x => x.GetAll()).Returns(mock.Object);
 
             //Act
-            var result = await _manageTeamsMembersService.GetAllTeamMembersAsync(team_id, new DisplayOptions { });
+            var result = await _manageTeamsMembersService.GetAllTeamMembersAsync(teamId, new DisplayOptions { });
 
             //Assert
             Assert.AreEqual(result.Count, 0);
