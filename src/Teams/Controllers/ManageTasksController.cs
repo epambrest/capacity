@@ -9,6 +9,7 @@ using Microsoft.Extensions.Localization;
 using Teams.Models;
 using Teams.Services;
 using Teams.ViewModels;
+using Task = Teams.Models.Task;
 
 namespace Teams.Controllers
 {
@@ -105,7 +106,7 @@ namespace Teams.Controllers
             var task = await _manageTasksService.GetTaskByIdAsync(taskId);
             var teamMembers = await GetAllTeamMembersAsync(teamId);
 
-            EditTaskViewModel model = new EditTaskViewModel
+            TaskFormViewModel model = new TaskFormViewModel
             {
                 TeamId = teamId,
                 TaskId = task.Id,
@@ -188,6 +189,35 @@ namespace Teams.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        public IActionResult AddError(int teamId)
+        {
+            ViewBag.TeamId = teamId;
+            return View();
+        }
+
+        [Authorize]
+        public async Task<IActionResult> AddTaskAsync(int teamId, int taskId, string errorMessage)
+        {
+            var team = await _manageSprintsService.GetTeam(teamId);
+            var task = await _manageTasksService.GetTaskByIdAsync(taskId);
+            var teamMembers = await GetAllTeamMembersAsync(teamId);
+
+            TaskFormViewModel model = new TaskFormViewModel
+            {
+                TeamId = teamId,
+                TaskId = task.Id,
+                TaskSprintId = task.SprintId,
+                TeamName = team.TeamName,
+                TaskName = task.Name,
+                TaskLink = task.Link,
+                TaskStoryPoints = task.StoryPoints,
+                TaskMemberId = task.MemberId,
+                ErrorMessage = errorMessage,
+                TeamMembers = teamMembers
+            };
+            return View(model);
         }
     }
 }

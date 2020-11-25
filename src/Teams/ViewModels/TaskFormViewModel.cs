@@ -1,9 +1,9 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Teams.Models;
 
-namespace Teams.Models
+namespace Teams.ViewModels
 {
-    public class EditTaskViewModel
+    public class TaskFormViewModel
     {
         public int TaskId { get; set; }
         public int TaskStoryPoints { get; set; }

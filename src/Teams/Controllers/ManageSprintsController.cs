@@ -8,6 +8,7 @@ using Teams.Models;
 using Teams.Services;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Primitives;
+using Teams.ViewModels;
 
 namespace Teams.Controllers
 {
