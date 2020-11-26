@@ -20,9 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Teams.Business\Teams.Business.csproj" />
-    <ProjectReference Include="..\Teams.Data\Teams.Data.csproj" />
-    <ProjectReference Include="..\Teams.Security\Teams.Security.csproj" />
+    <ProjectReference Include="..\..\src\Teams.Business\Teams.Business.csproj" />
+    <ProjectReference Include="..\..\src\Teams.Data\Teams.Data.csproj" />
+    <ProjectReference Include="..\..\src\Teams.Security\Teams.Security.csproj" />
   </ItemGroup>
 
 </Project>

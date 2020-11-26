@@ -14,8 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Teams.Data\Teams.Data.csproj" />
-    <ProjectReference Include="..\Teams.Web\Teams\Teams.Web.csproj" />
+    <ProjectReference Include="..\..\src\Teams.Data\Teams.Data.csproj" />
+    <ProjectReference Include="..\..\src\Teams.Security\Teams.Security.csproj" />
+    <ProjectReference Include="..\..\src\Teams.Web\Teams.Web.csproj" />
   </ItemGroup>
 
 </Project>
