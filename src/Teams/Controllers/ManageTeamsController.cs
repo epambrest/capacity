@@ -84,7 +84,7 @@ namespace Teams.Controllers
             if (ModelState.IsValid)
             {
                 await _manageTeamsService.AddTeamAsync(teamName);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("GetMyTeams");
             }
             return View(teamName);
         }
