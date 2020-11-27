@@ -198,26 +198,68 @@ namespace Teams.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> AddTaskAsync(int teamId, int taskId, string errorMessage)
+        public async Task<IActionResult> AddTaskAsync(int teamId, int sprintId, string errorMessage)
         {
             var team = await _manageSprintsService.GetTeam(teamId);
-            var task = await _manageTasksService.GetTaskByIdAsync(taskId);
             var teamMembers = await GetAllTeamMembersAsync(teamId);
 
             TaskFormViewModel model = new TaskFormViewModel
             {
                 TeamId = teamId,
-                TaskId = task.Id,
-                TaskSprintId = task.SprintId,
+                TaskSprintId = sprintId,
                 TeamName = team.TeamName,
-                TaskName = task.Name,
-                TaskLink = task.Link,
-                TaskStoryPoints = task.StoryPoints,
-                TaskMemberId = task.MemberId,
                 ErrorMessage = errorMessage,
                 TeamMembers = teamMembers
             };
             return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AddTaskAsync(TaskFormViewModel taskFormViewModel)
+        {
+            if (string.IsNullOrEmpty(taskFormViewModel.TaskName))
+            {
+                return RedirectToAction("AddTask", new { teamId = taskFormViewModel.TeamId, taskId = taskFormViewModel.TaskId, errorMessage = _localizer["NameFieldError"] });
+            }
+            if (string.IsNullOrEmpty(taskFormViewModel.TaskLink) || !Regex.IsMatch(taskFormViewModel.TaskLink, (@"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$")))
+            {
+                return RedirectToAction("AddTask", new { teamId = taskFormViewModel.TeamId, taskId = taskFormViewModel.TaskId, errorMessage = _localizer["LinkFieldError"] });
+            }
+            if (taskFormViewModel.TaskStoryPoints <= 0)
+            {
+                return RedirectToAction("AddTask", new { teamId = taskFormViewModel.TeamId, taskId = taskFormViewModel.TaskId, errorMessage = _localizer["PointsFieldError"] });
+            }
+            if (taskFormViewModel.TaskMemberId <= 0)
+            {
+                return RedirectToAction("AddTask", new { teamId = taskFormViewModel.TeamId, taskId = taskFormViewModel.TaskId, errorMessage = _localizer["MemberFieldError"] });
+            }
+
+            var task = new Models.Task
+            {
+                Id = taskFormViewModel.TaskId,
+                TeamId = taskFormViewModel.TeamId,
+                Name = taskFormViewModel.TaskName,
+                StoryPoints = taskFormViewModel.TaskStoryPoints,
+                Link = taskFormViewModel.TaskLink,
+                SprintId = taskFormViewModel.TaskSprintId,
+                MemberId = taskFormViewModel.TaskMemberId
+            };
+            var result = await AddTaskAsync(task);
+
+            if (result) return RedirectToAction("AllTasksForTeam", new { teamId = taskFormViewModel.TeamId });
+            else return RedirectToAction("AddError", new { teamId = taskFormViewModel.TeamId });
+
+        }
+
+        [Authorize, NonAction]
+        public async Task<bool> AddTaskAsync(Models.Task task)
+        {
+            if (await _accessCheckService.IsOwnerAsync(task.TeamId))
+            {
+                return await _manageTasksService.AddTaskAsync(task);
+            }
+            else return false;
         }
     }
 }
