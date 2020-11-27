@@ -247,13 +247,13 @@ namespace Teams.Controllers
             };
             var result = await AddTaskAsync(task);
 
-            if (result) return RedirectToAction("AllTasksForTeam", new { teamId = taskFormViewModel.TeamId });
+            if (result) return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId = taskFormViewModel.TaskSprintId });
             else return RedirectToAction("AddError", new { teamId = taskFormViewModel.TeamId });
 
         }
 
         [Authorize, NonAction]
-        public async Task<bool> AddTaskAsync(Models.Task task)
+        private async Task<bool> AddTaskAsync(Models.Task task)
         {
             if (await _accessCheckService.IsOwnerAsync(task.TeamId))
             {
