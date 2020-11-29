@@ -9,6 +9,7 @@ using System.Linq;
 using Teams.Data;
 using Teams.Security;
 using Teams.Services;
+using Microsoft.Extensions.Localization;
 
 namespace Teams.Controllers
 {
@@ -16,11 +17,13 @@ namespace Teams.Controllers
     {
         private readonly IManageTeamsService _manageTeamsService;
         private readonly IAccessCheckService _accessCheckService;
+        private readonly IStringLocalizer<ManageTeamsController> _localizer;
 
-        public ManageTeamsController(IManageTeamsService manageTeamsService, IAccessCheckService accessCheckService)
+        public ManageTeamsController(IManageTeamsService manageTeamsService, IAccessCheckService accessCheckService,IStringLocalizer<ManageTeamsController> localizer)
         {
             _manageTeamsService = manageTeamsService;
             _accessCheckService = accessCheckService;
+            _localizer = localizer;
         }
 
         public IActionResult Index()
@@ -55,6 +58,8 @@ namespace Teams.Controllers
         [Authorize]
         public async Task<IActionResult> EditTeamNameAsync(int teamId, string teamName)
         {
+            if (string.IsNullOrEmpty(teamName))
+                return RedirectToAction("NameError");
             ViewBag.resultOfEditing = await _manageTeamsService.EditTeamNameAsync(teamId, teamName);
             return View(await GetTeamAsync(teamId));
         }
@@ -81,14 +86,20 @@ namespace Teams.Controllers
         [Authorize]
         public async Task<IActionResult> AddTeam(string teamName)
         {
-            if (ModelState.IsValid)
+            if (string.IsNullOrEmpty(teamName))
             {
-                await _manageTeamsService.AddTeamAsync(teamName);
-                return RedirectToAction(nameof(Index));
+               return RedirectToAction("NameError");
             }
-            return View(teamName);
+            await _manageTeamsService.AddTeamAsync(teamName);
+            return RedirectToAction("Index");
         }
 
+        public IActionResult NameError()
+        {
+            ViewData["Error"] = _localizer["Error"];
+            ViewData["Cause"] = _localizer["NameEmpty"];
+            return View();
+        }
         [Authorize]
         public async Task<IActionResult> Remove(int teamId)
         {

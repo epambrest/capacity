@@ -19,11 +19,11 @@ namespace Teams.Controllers
         private readonly IManageTeamsService _manageTeamsService;
         private readonly IManageSprintsService _manageSprintsService;
         private readonly IManageTeamsMembersService _manageTeamsMembersService;
-        private readonly IStringLocalizer<ManageSprintsController> _localizer;
+        private readonly IStringLocalizer<ManageTasksController> _localizer;
 
         public ManageTasksController(IManageTasksService manageTasksService, IAccessCheckService accessCheckService,
             IManageTeamsService manageTeamsService, IManageTeamsMembersService manageTeamsMembersService,
-            IManageSprintsService manageSprintsService, IStringLocalizer<ManageSprintsController> localizer)
+            IManageSprintsService manageSprintsService, IStringLocalizer<ManageTasksController> localizer)
         {
             _manageTasksService = manageTasksService;
             _accessCheckService = accessCheckService;
@@ -155,7 +155,7 @@ namespace Teams.Controllers
             var result = await EditTaskAsync(task);
 
             if (result) return RedirectToAction("AllTasksForTeam", new { teamId = teamId });
-            else return RedirectToAction("EditError", new { teamId = teamId });
+            else return RedirectToAction("NotOwnerError", new { teamId = teamId });
 
         }
 
@@ -179,9 +179,11 @@ namespace Teams.Controllers
             return await _manageTeamsMembersService.GetAllTeamMembersAsync(teamId, new DisplayOptions { });
         }
 
-        public IActionResult EditError(int teamId)
+        public IActionResult NotOwnerError(int teamId)
         {
             ViewBag.TeamId = teamId;
+            ViewData["Error"] = _localizer["Error"];
+            ViewData["Cause"] = _localizer["NotOwner"];
             return View();
         }
 

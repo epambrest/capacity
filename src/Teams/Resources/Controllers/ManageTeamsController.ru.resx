@@ -120,19 +120,7 @@
   <data name="Error" xml:space="preserve">
     <value>Упс... Похоже что-то пошло не так!</value>
   </data>
-  <data name="LinkFieldError" xml:space="preserve">
-    <value>Неправильная ссылка!</value>
-  </data>
-  <data name="MemberFieldError" xml:space="preserve">
-    <value>Пожалуйста, выберите пользователя!</value>
-  </data>
-  <data name="NameFieldError" xml:space="preserve">
-    <value>Поле для имени не может быть пустым!</value>
-  </data>
-  <data name="NotOwner" xml:space="preserve">
-    <value>Вы не являетесь владельцем</value>
-  </data>
-  <data name="PointsFieldError" xml:space="preserve">
-    <value>Кол-во СП не может быть меньше либо равно нулю!</value>
+  <data name="NameEmpty" xml:space="preserve">
+    <value>Название команды не может быть пустым</value>
   </data>
 </root>

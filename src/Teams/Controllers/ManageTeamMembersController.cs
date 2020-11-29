@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,14 +18,12 @@ namespace Teams.Controllers
     public class ManageTeamMembersController : Controller
     {
         private readonly IManageTeamsMembersService _manageTeamsMembersService;
-
         private readonly IManageTeamsService _manageTeamsService;
-
         private readonly UserManager<IdentityUser> _userManager;
-
         private readonly IAccessCheckService _accessCheckService;
+        private readonly IStringLocalizer<ManageTeamMembersController> _localizer;
 
-        public ManageTeamMembersController(IManageTeamsMembersService manageTeamsMembersService, IManageTeamsService manageTeamsService, IAccessCheckService accessCheckService, UserManager<IdentityUser> userManager)
+        public ManageTeamMembersController(IManageTeamsMembersService manageTeamsMembersService, IManageTeamsService manageTeamsService, IAccessCheckService accessCheckService, UserManager<IdentityUser> userManager,IStringLocalizer<ManageTeamMembersController> localizer)
         {
             _manageTeamsMembersService = manageTeamsMembersService;
 
@@ -33,6 +32,8 @@ namespace Teams.Controllers
             _accessCheckService = accessCheckService;
 
             _userManager = userManager;
+
+            _localizer = localizer;
         }
 
         public IActionResult Index()
@@ -129,19 +130,21 @@ namespace Teams.Controllers
         [Authorize]
         public async Task<IActionResult> AddMemberAsync(int teamId, string memberId)
         {
-            if (memberId == null) return RedirectToAction("AddError", new { errorMessage = "Field is empty" });
+            if (memberId == null) return RedirectToAction("AddError", new { errorMessage = _localizer["MemberFieldError"],teamId=teamId });
             var users = await _userManager.Users.ToListAsync();
             ViewBag.Users = users;
             bool result = await _manageTeamsMembersService.AddAsync(teamId, memberId);
 
 
             if (result) return RedirectToAction("TeamMembers", new { teamId });
-            else return RedirectToAction("AddError", new { errorMessage = "Current user already in team" });
+            else return RedirectToAction("AddError", new { errorMessage = _localizer["CurrentUser"], teamId = teamId });
         }
 
-        public IActionResult AddError(string errorMessage)
+        public IActionResult AddError(string errorMessage,int teamId)
         {
-            ViewBag.ErrorMessage = errorMessage;
+            ViewData["Error"] = _localizer["Error"];
+            ViewBag.TeamId = teamId;
+            ViewData["Cause"] = errorMessage;
             return View();
         }
     }

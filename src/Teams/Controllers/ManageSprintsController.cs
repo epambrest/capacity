@@ -153,7 +153,7 @@ namespace Teams.Controllers
             }
             else
             {
-                return RedirectToAction("AddError", new { teamId = teamId });
+                return RedirectToAction("NotOwnerError", new { teamId = teamId });
             }
 
         }
@@ -187,13 +187,15 @@ namespace Teams.Controllers
             var result = await AddSprintAsync(sprint);
 
                 if (result) return RedirectToAction("AllSprints", new { teamId = teamId});
-                else return RedirectToAction("AddError", new { teamId = teamId });
+                else return RedirectToAction("NotOwnerError", new { teamId = teamId });
             
         }
 
-        public IActionResult AddError(int teamId)
+        public IActionResult NotOwnerError(int teamId)
         {
             ViewBag.TeamId = teamId;
+            ViewData["Error"] = _localizer["Error"];
+            ViewData["Cause"] = _localizer["NotOwner"];
             return View();
         }
 
