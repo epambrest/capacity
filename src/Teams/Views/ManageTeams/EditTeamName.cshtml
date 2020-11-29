@@ -1,36 +1,35 @@
-﻿@using Teams.Models
-@model Teams.Models.Team
-
+﻿@model Teams.Models.Team
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "Edit Team Name";
+    ViewData["Title"] = @Localizer["EditTeam"];
 }
-
-<h1>Team Editing</h1>
-
+<h1>@Localizer["EditTeam"]</h1>
+<hr />
 
 @using (Html.BeginForm())
 {
     <input type="hidden" value="@Model.Id" />
     <table>
         <tr>
-            <td>Name</td>
+            <td>@Localizer["Name"]</td>
         </tr>
         <tr>
             <td><input type="text" name="teamName" value="@Model.TeamName" /></td>
             @if (ViewBag.resultOfEditing != null && ViewBag.resultOfEditing)
             {
-                <td>Saved</td>
+               <td>@Localizer["Saved"]</td>
             }
             else if (ViewBag.resultOfEditing != null)
             {
-                <td>Name is taken</td>
+               <td>@Localizer["NameIsTaken"]</td>
             }
         </tr>
         <tr>
-            <td><input type="submit" class="btn btn-primary" value="Save" /></td>
+            <td><input type="submit" class="btn btn-success" value="@Localizer["Save"]" /></td>
         </tr>
         <tr>
-            <td><a class="btn btn-primary" href="GetMyTeams" role="button">Back</a></td>
+            <td><a class="btn btn-danger" href="GetMyTeams" role="button">@Localizer["Back"]</a></td>
         </tr>
     </table>
 }
