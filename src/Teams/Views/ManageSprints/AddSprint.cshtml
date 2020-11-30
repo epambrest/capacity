@@ -31,10 +31,8 @@
         </div>
 
         <div>
-            <label for="active">@Localizer["Active"]</label>
-            <input name="isActive" id="active" type="radio" value="true" />
-            <label for="nonactive">@Localizer["NotActive"]</label>
-            <input checked="checked" id="nonactive" name="isActive" type="radio" value="false" />
+            <label>@Localizer["Active"]</label>
+            @Html.CheckBox("isActive", false)
         </div>
 
         <div style="display: table">
