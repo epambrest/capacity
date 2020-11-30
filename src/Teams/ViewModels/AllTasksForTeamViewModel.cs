@@ -7,5 +7,6 @@ namespace Teams.ViewModels
     {
         public IEnumerable<Task> Tasks { get; set; }
         public string TeamName { get; set; }
+        public int TeamId { get; set; }
     }
 }

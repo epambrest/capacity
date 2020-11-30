@@ -1,0 +1,84 @@
+﻿@model Teams.ViewModels.TaskFormViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = @Localizer["AddTask"];
+}
+<script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
+
+<div align="center">
+    <h1 size="4" align="left">@Model.TeamName | @Localizer["AddTask"]</h1>
+</div>
+
+<div>
+    @using (Html.BeginForm("AddTaskIntoTeam", "ManageTasks", FormMethod.Post))
+    {
+        <div><p align="center" style="color:red">@Model.ErrorMessage</p></div>
+        @Html.Hidden("taskFormViewModel.TeamId", @Model.TeamId)
+        @Html.Hidden("taskFormViewModel.TaskId", @Model.TaskId)
+        @section scripts{
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+            <script>
+                function userFunction(e) {
+                    document.getElementById("user").value = e.target.value
+                }
+                $(document).ready(function () {
+                    $('.js-example-basic-single').select2();
+                });
+            </script>
+            
+            <script>
+                function sprintFunction(e) {
+                    document.getElementById("sprint").value = e.target.value
+                }
+                $(document).ready(function () {
+                    $('.js-example-basic-single').select2();
+                });
+            </script>
+        }
+        <div>
+            <label for="name">@Localizer["Name"] :</label>
+            <input id="name" name="taskFormViewModel.TaskName" class="form-control" value="" />
+        </div>
+
+        <div>
+            <label for="days">@Localizer["TaskLink"] :</label>
+            <input id="days" name="taskFormViewModel.TaskLink" class="form-control" value="" />
+        </div>
+
+        <div>
+            <label for="points">@Localizer["StoryPoints"]</label>
+            <input id="points" name="taskFormViewModel.TaskStoryPoints" class="form-control" value="" />
+        </div>
+        
+        <div style="margin-top:4px">
+            <label for="user">@Localizer["User"]</label>
+            <input hidden="hidden" id="user" name="taskFormViewModel.TaskMemberId">
+            <select class="js-example-basic-single" id="members" onchange="userFunction(event)">
+                <option disabled selected>@Localizer["SelectUser"]</option>
+                @foreach (var item in Model.TeamMembers)
+                {
+                    <option value=@item.Id>@item.Member.Email</option>
+                }
+            </select>
+        </div>
+
+        <div style="margin-top:4px">
+            <label for="user">@Localizer["Sprint"]</label>
+            <input hidden="hidden" id="sprint" name="taskFormViewModel.TaskSprintId">
+            <select class="js-example-basic-single" id="sprint" onchange="sprintFunction(event)">
+                <option disabled selected>@Localizer["SelectSprint"]</option>
+                @foreach (var item in Model.Sprints)
+                {
+                    <option value=@item.Id>@item.Name</option>
+                }
+            </select>
+        </div>
+
+        <div style="display: table">
+            <input id="sub" type="submit" class="btn btn-success" value="@Localizer["AddTask"]" />
+            <button style="margin-left:7px" type='button' class="btn btn-danger" onclick="location.href = '@Url.Action("AllTasksForTeam", "ManageTasks", new { teamId = Model.TeamId })'">@Localizer["Close"]</button>
+        </div>
+    }
+</div>
