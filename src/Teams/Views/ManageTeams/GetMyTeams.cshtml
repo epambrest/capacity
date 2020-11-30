@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<Teams.Models.Team>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
-    ViewBag.Title = "My teams";
+    ViewData["Title"] = @Localizer["MyTeams"];
 }
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -9,7 +11,7 @@
 <table class="table">
     <tr align="center">
         <td align="left" style="border-top: hidden" width="1%"></td>
-        <td align="left" style="font-weight: bold;border-top: hidden">Team Name</td>
+        <td align="left" style="font-weight: bold;border-top: hidden">@Localizer["TeamName"]</td>
         <td align="right" style="border-top: hidden" width="1%"></td>
         <td align="right" style="border-top: hidden" width="1%"></td>
         <td align="right" style="border-top: hidden" width="1%"></td>
@@ -17,39 +19,39 @@
     </tr>
     @foreach (var item in Model)
     {
-<tr align="center">
-    @if (item.Owner.Email == User.Identity.Name)
-    {
-        <td align="left" width="1%"><i title="Owner" class="fas fa-crown"></i></td>
+        <tr align="center">
+            @if (item.Owner.Email == User.Identity.Name)
+            {
+                <td align="left" width="1%"><i title="Owner" class="fas fa-crown"></i></td>
 
-    }
-    else
-    {
-        <td align="left" width="1%"><i title="Member" class="fas fa-user"></i></td>
-    }
-    <td align="left"><a>@Html.ActionLink(item.TeamName, "TeamMembers", "ManageTeamMembers", new { teamId = item.Id })</a></td>
-    <td align="right" onclick="location.href = '@Url.Action("AllSprints", "ManageSprints", new { teamId= item.Id })'"><button type='button' class='btn btn-outline-secondary border-0'>Sprints</button></td>
-    <td align="right" onclick="location.href = '@Url.Action("AllTasksForTeam", "ManageTasks", new { teamId = item.Id })'"><button type='button' class='btn btn-outline-secondary border-0'>Tasks</button></td>
-    @if (item.Owner.Email == User.Identity.Name)
-    {
-        <td align="right" onclick="location.href='@Url.Action("EditTeamName", "ManageTeams", new { teamId = item.Id })'">
-            <button type='button' class='btn btn-outline-primary border-0'>
-                <i class='fas fa-edit'></i>
-            </button>
-        </td>
-        <td align="right">
-            <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#myModal"
-                    data-content="@item.TeamName" data-whatever="@item.Id">
-                <i class='far fa-trash-alt'></i>
-            </button>
-        </td>
-    }
-    else
-    {
-        <td align="right"></td>
-        <td align="right"></td>
-    }
-</tr>
+            }
+            else
+            {
+                <td align="left" width="1%"><i title="Member" class="fas fa-user"></i></td>
+            }
+            <td align="left"><a>@Html.ActionLink(item.TeamName, "TeamMembers", "ManageTeamMembers", new { teamId = item.Id })</a></td>
+            <td align="right" onclick="location.href = '@Url.Action("AllSprints", "ManageSprints", new { teamId= item.Id })'"><button type='button' class='btn btn-outline-secondary border-0'>@Localizer["Sprints"]</button></td>
+            <td align="right" onclick="location.href = '@Url.Action("AllTasksForTeam", "ManageTasks", new { teamId = item.Id })'"><button type='button' class='btn btn-outline-secondary border-0'>@Localizer["Tasks"]</button></td>
+            @if (item.Owner.Email == User.Identity.Name)
+            {
+                <td align="right" onclick="location.href='@Url.Action("EditTeamName", "ManageTeams", new { teamId = item.Id })'">
+                    <button type='button' class='btn btn-outline-primary border-0'>
+                        <i class='fas fa-edit'></i>
+                    </button>
+                </td>
+                <td align="right">
+                    <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#myModal"
+                            data-content="@item.TeamName" data-whatever="@item.Id">
+                        <i class='far fa-trash-alt'></i>
+                    </button>
+                </td>
+            }
+            else
+            {
+                <td align="right"></td>
+                <td align="right"></td>
+            }
+        </tr>
 
 
     }
@@ -66,7 +68,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-outline-secondary" asp-action="Remove">OK</button>
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">@Localizer["Cancel"]</button>
                 </div>
             </div>
 
@@ -82,7 +84,7 @@
             var teamId = button.data('whatever')
             var removeModal = $("#myModal");
             removeModal.find("#teamId").val(teamId);
-            document.getElementById('team').innerHTML = "Are you sure you want to remove " + "<strong>" + team + "</strong>" + "?";
+            document.getElementById('team').innerHTML = "@Localizer["RemoveTeam"]" + "<strong>" + team + "</strong>" + "?";
         });
     });
 </script>

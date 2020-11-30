@@ -129,6 +129,9 @@
   <data name="AddSprint" xml:space="preserve">
     <value>Добавить спринт</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
   <data name="Close" xml:space="preserve">
     <value>Закрыть</value>
   </data>
@@ -169,6 +172,9 @@
   </data>
   <data name="PointsFieldError" xml:space="preserve">
     <value>Поле для СП не может быть пустым или содержать значениие меньше нуля</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить </value>
   </data>
   <data name="RemoveMember" xml:space="preserve">
     <value>Удалить участника</value>

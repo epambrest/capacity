@@ -53,7 +53,9 @@ namespace Teams.Controllers
             ViewData["Member"] = _localizer["Member"];
             ViewData["AddMember"] = _localizer["AddMember"];
             ViewData["RemoveMember"] = _localizer["RemoveMember"];
-
+            ViewData["Remove"] = _localizer["Remove"];
+            ViewData["Cancel"] = _localizer["Cancel"];
+            
             ViewBag.TeamId = teamId;
             ViewBag.TeamName = team.TeamName;
             ViewBag.TeamOwner = team.Owner.Email;
