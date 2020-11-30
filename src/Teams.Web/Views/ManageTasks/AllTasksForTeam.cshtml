@@ -1,0 +1,78 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model Teams.Web.ViewModels.AllTasksForTeamViewModel
+
+@{
+    ViewData["Title"] = @Localizer["AllTasksForTeam"];
+}
+
+
+<script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
+
+<div style="margin: 10px 0px 0px 30px" align="left">
+    <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to your teams", "GetMyTeams", "ManageTeams")</a></h>
+</div>
+<div align="center">
+    <h><font size="6" color="black"><strong>@Model.TeamName</strong></font></h>
+</div>
+<table class="table">
+
+    <tr align="center">
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["NameofTask"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["User"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPoint"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Link"]</td>
+        <td style="border-top: hidden"></td>
+    </tr>
+
+    @foreach (var item in Model.Tasks)
+    {
+        <tr align="center">
+            <td align="left">@item.Name</td>
+            <td align="left">@item.TeamMember.Member.Email</td>
+            <td align="left">@item.StoryPoints</td>
+            <td href="https://@item.Link"><a href="@item.Link" align="left">@Localizer["Link"]</a></td>
+            <td style="visibility: @ViewBag.AddVision" align="right">
+                @Html.ActionLink("", "EditTask", new { teamId = Model.Tasks.First().Team.Id, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })
+            </td>
+            <td style="visibility: @ViewBag.AddVision" align="right">
+                <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromTeam"
+                        data-taskname="@item.Name" data-taskid="@item.Id" data-teamname="@Model.Tasks.First().Team.TeamName">
+                    <i class='far fa-trash-alt'></i>
+                </button>
+            </td>
+        </tr>
+    }
+</table>
+
+<form>
+    <div class="modal fade" id="removeTaskFromTeam" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p align="center" id="task"></p>
+                    <input type="hidden" id="taskId" name="taskId" value="" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-secondary" asp-controller="ManageTasks" asp-action="RemoveInTeam">OK</button>
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">@Localizer["Cancel"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function () {
+        $("#removeTaskFromTeam").on("show.bs.modal", function (event) {
+            var button = $(event.relatedTarget);
+            var taskId = button.data('taskid')
+            var taskName = button.data('taskname');
+            var teamName = button.data('teamname');
+            var removeTask = $("#removeTaskFromTeam");
+            removeTask.find("#taskId").val(taskId);
+            document.getElementById('task').innerHTML =
+                "@Localizer["Remove"]" + "<strong>" + taskName + "</strong>" + "@Localizer["from"]" + "<strong>" + teamName + "</strong>" + " ?";
+        });
+    });
+</script>
