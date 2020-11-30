@@ -1,4 +1,6 @@
-﻿@model Teams.Data.Models.Sprint
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model Teams.Data.Models.Sprint
 @{
     ViewBag.Title = Model.Name;
 }
@@ -12,13 +14,14 @@
 <div align="center">
     <h><font size="6" color="black"><strong>@Model.Name</strong></font></h>
 </div>
+<hr />
 <table class="table">
 
     <tr align="center">
         <td align="left" style="border-top: hidden" width="1%"></td>
-        <td align="left" style="border-top: hidden; font-weight: bold">Name of Sprint</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">Days in Sprint</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">Story Point in Hours</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["NameofSprint"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["DaysinSprint"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPointinHours"]</td>
     </tr>
 
     <tr align="center">
@@ -33,16 +36,16 @@
         <td align="left">@Model.Name</td>
         <td align="left">@Model.DaysInSprint</td>
         <td align="left">@Model.StoryPointInHours</td>
-    </tr>   
+    </tr>
 
 </table>
 <table class="table">
-    
+
     <tr align="center">
-        <td align="left" style="border-top: hidden; font-weight: bold">Name of Task</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">User</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">Story Point</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">Link</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["NameofTask"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["User"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPoint"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Link"]</td>
         <td style="border-top: hidden"></td>
     </tr>
 
@@ -52,17 +55,17 @@
             <td align="left">@item.Name</td>
             <td align="left">@item.TeamMember.Member.Email</td>
             <td align="left">@item.StoryPoints</td>
-            <td href="https://@item.Link"><a href="@item.Link" align="left">Link</a></td>
+            <td href="https://@item.Link"><a href="@item.Link" align="left">@Localizer["Link"]</a></td>
 
             <td style="visibility: @ViewBag.AddVision" align="right">
-                    @Html.ActionLink("", "EditTask", "ManageTasks", new { teamId = Model.TeamId, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })
-                </td>
+                @Html.ActionLink("", "EditTask", "ManageTasks", new { teamId = Model.TeamId, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })
+            </td>
             <td style="visibility: @ViewBag.AddVision" align="right">
                 <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromSprint"
                         data-taskname="@item.Name" data-taskid="@item.Id" data-sprintname="@Model.Name">
                     <i class='far fa-trash-alt'></i>
                 </button>
-           </td>
+            </td>
         </tr>
     }
 
@@ -78,9 +81,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-outline-secondary" asp-controller="ManageTasks" asp-action="RemoveInSprint">OK</button>
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">@Localizer["Cancel"]</button>
                 </div>
-            </div
+            </div>
         </div>
     </div>
 </form>
@@ -95,7 +98,7 @@
             var removeTask = $("#removeTaskFromSprint");
             removeTask.find("#taskId").val(taskId);
             document.getElementById('task').innerHTML =
-                "Are you sure you want to remove " + "<strong>" + taskName + "</strong>" + " from " + "<strong>" + sprintName + "</strong>" + " ?";
+                "@Localizer["Remove"]" + "<strong>" + taskName + "</strong>" + "@Localizer["from"]" + "<strong>" + sprintName + "</strong>" + " ?";
         });
     });
 </script>

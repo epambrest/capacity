@@ -1,4 +1,6 @@
 ﻿@model Teams.Data.Models.Task
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
     ViewData["Title"] = Model.Name;
 }
@@ -17,9 +19,9 @@
 
     <tr align="center">
 
-        <td align="left" style="border-top: hidden; font-weight: bold">Member name</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">Link of task</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">Story Point in Hours</td>
+        <td align="left" style="border-top: hidden; font-weight: bold"> @Localizer["Membername"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold"> @Localizer["Linkoftask"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold"> @Localizer["StoryPointinHours"]</td>
     </tr>
 
     <tr>

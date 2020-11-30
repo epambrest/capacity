@@ -1,7 +1,9 @@
-﻿@model Teams.Web.ViewModels.AllTasksForTeamViewModel
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model Teams.Web.ViewModels.AllTasksForTeamViewModel
 
 @{
-    ViewData["Title"] = "AllTasksForTeam";
+    ViewData["Title"] = @Localizer["AllTasksForTeam"];
 }
 
 
@@ -16,30 +18,30 @@
 <table class="table">
 
     <tr align="center">
-        <td align="left" style="border-top: hidden; font-weight: bold">Name of Task</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">User</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">Story Point</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">Link</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["NameofTask"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["User"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPoint"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Link"]</td>
         <td style="border-top: hidden"></td>
     </tr>
 
     @foreach (var item in Model.Tasks)
     {
-    <tr align="center">
-        <td align="left">@item.Name</td>
-        <td align="left">@item.TeamMember.Member.Email</td>
-        <td align="left">@item.StoryPoints</td>
-        <td href="https://@item.Link"><a href="@item.Link" align="left">Link</a></td>
-        <td style="visibility: @ViewBag.AddVision" align="right">
-            @Html.ActionLink("", "EditTask", new { teamId = Model.Tasks.First().Team.Id, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })
-        </td>
-        <td style="visibility: @ViewBag.AddVision" align="right">
-            <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromTeam"
-            data-taskname="@item.Name" data-taskid="@item.Id" data-teamname="@Model.Tasks.First().Team.TeamName">
-                <i class='far fa-trash-alt'></i>
-            </button>
-        </td>
-    </tr>
+        <tr align="center">
+            <td align="left">@item.Name</td>
+            <td align="left">@item.TeamMember.Member.Email</td>
+            <td align="left">@item.StoryPoints</td>
+            <td href="https://@item.Link"><a href="@item.Link" align="left">@Localizer["Link"]</a></td>
+            <td style="visibility: @ViewBag.AddVision" align="right">
+                @Html.ActionLink("", "EditTask", new { teamId = Model.Tasks.First().Team.Id, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })
+            </td>
+            <td style="visibility: @ViewBag.AddVision" align="right">
+                <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromTeam"
+                        data-taskname="@item.Name" data-taskid="@item.Id" data-teamname="@Model.Tasks.First().Team.TeamName">
+                    <i class='far fa-trash-alt'></i>
+                </button>
+            </td>
+        </tr>
     }
 </table>
 
@@ -53,7 +55,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-outline-secondary" asp-controller="ManageTasks" asp-action="RemoveInTeam">OK</button>
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">@Localizer["Cancel"]</button>
                 </div>
             </div>
         </div>
@@ -62,15 +64,15 @@
 
 <script>
     $(document).ready(function () {
-    $("#removeTaskFromTeam").on("show.bs.modal", function (event) {
-    var button = $(event.relatedTarget);
-    var taskId = button.data('taskid')
-    var taskName = button.data('taskname');
-    var teamName = button.data('teamname');
-    var removeTask = $("#removeTaskFromTeam");
-    removeTask.find("#taskId").val(taskId);
-    document.getElementById('task').innerHTML =
-    "Are you sure you want to remove " + "<strong>" + taskName + "</strong>" + " from " + "<strong>" + teamName + "</strong>" + " ?";
-    });
+        $("#removeTaskFromTeam").on("show.bs.modal", function (event) {
+            var button = $(event.relatedTarget);
+            var taskId = button.data('taskid')
+            var taskName = button.data('taskname');
+            var teamName = button.data('teamname');
+            var removeTask = $("#removeTaskFromTeam");
+            removeTask.find("#taskId").val(taskId);
+            document.getElementById('task').innerHTML =
+                "@Localizer["Remove"]" + "<strong>" + taskName + "</strong>" + "@Localizer["from"]" + "<strong>" + teamName + "</strong>" + " ?";
+        });
     });
 </script>
