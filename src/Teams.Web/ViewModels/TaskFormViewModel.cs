@@ -3,7 +3,7 @@ using Teams.Data.Models;
 
 namespace Teams.Web.ViewModels
 {
-    public class EditTaskViewModel
+    public class TaskFormViewModel
     {
         public int TaskId { get; set; }
         public int TaskStoryPoints { get; set; }
@@ -15,5 +15,6 @@ namespace Teams.Web.ViewModels
         public string TaskName { get; set; }
         public string ErrorMessage { get; set; }
         public List<TeamMember> TeamMembers { get; set; }
+        public List<Sprint> Sprints { get; set; }
     }
 }

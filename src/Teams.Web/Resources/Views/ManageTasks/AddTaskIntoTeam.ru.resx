@@ -117,19 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="LinkFieldError" xml:space="preserve">
-    <value>Неправильная ссылка!</value>
+  <data name="AddTask" xml:space="preserve">
+    <value>Добавить Таск</value>
   </data>
-  <data name="MemberFieldError" xml:space="preserve">
-    <value>Пожалуйста, выберите пользователя!</value>
+  <data name="Close" xml:space="preserve">
+    <value>Закрыть</value>
   </data>
-  <data name="NameFieldError" xml:space="preserve">
-    <value>Поле для имени не может быть пустым!</value>
+  <data name="Name" xml:space="preserve">
+    <value>Название</value>
   </data>
-  <data name="PointsFieldError" xml:space="preserve">
-    <value>Кол-во СП не может быть меньше либо равно нулю!</value>
+  <data name="SelectSprint" xml:space="preserve">
+    <value>Выбрать спринт</value>
   </data>
-  <data name="SprintFieldError" xml:space="preserve">
-    <value>Пожалуйста, выберите спринт!</value>
+  <data name="SelectUser" xml:space="preserve">
+    <value>Выбрать пользователя</value>
+  </data>
+  <data name="Sprint" xml:space="preserve">
+    <value>Спринт</value>
+  </data>
+  <data name="StoryPoints" xml:space="preserve">
+    <value>Кол-во СП</value>
+  </data>
+  <data name="TaskLink" xml:space="preserve">
+    <value>Ссылка на Таск</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Пользователь</value>
   </data>
 </root>

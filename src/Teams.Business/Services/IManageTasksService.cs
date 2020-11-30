@@ -12,5 +12,6 @@ namespace Teams.Business.Services
         Task<IEnumerable<Data.Models.Task>> GetAllTasksForTeamAsync(int teamId, DisplayOptions options);
         Task<bool> RemoveAsync(int taskId);
         Task<bool> EditTaskAsync(Data.Models.Task task);
+        Task<bool> AddTaskAsync(Data.Models.Task task);
     }
 }

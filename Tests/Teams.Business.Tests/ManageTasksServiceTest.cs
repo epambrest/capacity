@@ -157,6 +157,7 @@ namespace Teams.Tests
             Assert.IsTrue(result);
         }
 
+        [Test]
         public async System.Threading.Tasks.Task EditTaskAsync_ManageSpiritsServiceReturns_False()
         {
             //Arrange
@@ -172,6 +173,42 @@ namespace Teams.Tests
             var result2 = await _manageTasksService.EditTaskAsync(task2); //Incorrect link count
             var result3 = await _manageTasksService.EditTaskAsync(task3); //Incorrect SP count
 
+
+            //Assert
+            Assert.IsFalse(result1);
+            Assert.IsFalse(result2);
+            Assert.IsFalse(result3);
+        }
+
+        [Test]
+        public async System.Threading.Tasks.Task AddTaskAsync_ManageTaskServiceReturns_True()
+        {
+            //Arrange
+            var task = new Task { Id = 1, TeamId = 1, Name = "Task1",Link = "https://github.com/",StoryPoints = 1};
+
+            _tasksRepository.Setup(x => x.InsertAsync(It.IsAny<Task>())).ReturnsAsync(true);
+
+            //Act
+            var result = await _manageTasksService.AddTaskAsync(task);
+
+            //Assert
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public async System.Threading.Tasks.Task AddTasksAsync_ManageTasksServiceReturns_False()
+        {
+            //Arrange
+            var task1 = new Task { Id = 1, TeamId = 1, Name = "Task 1@@ ", Link = "https://github.com/", StoryPoints = 1 };
+            var task2 = new Task { Id = 2, TeamId = 2, Name = "Task2", Link = "https://github.com/", StoryPoints = -5 };
+            var task3 = new Task { Id = 3, TeamId = 3, Name = "Task3", Link = "https:/ qq/github.com/", StoryPoints = 3 };
+
+            _tasksRepository.Setup(x => x.InsertAsync(It.IsAny<Task>())).ReturnsAsync(true);
+
+            //Act
+            var result1 = await _manageTasksService.AddTaskAsync(task1); //Incorrect name
+            var result2 = await _manageTasksService.AddTaskAsync(task2); //Incorrect SP count
+            var result3 = await _manageTasksService.AddTaskAsync(task3); //Incorrect link
 
             //Assert
             Assert.IsFalse(result1);

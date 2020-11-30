@@ -46,7 +46,9 @@
         <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["User"]</td>
         <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPoint"]</td>
         <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Link"]</td>
-        <td style="border-top: hidden"></td>
+        <td style="visibility: @ViewBag.AddVision" align="right">
+            @Html.ActionLink("", "AddTask", "ManageTasks", new {teamId = Model.TeamId, sprintId = Model.Id, errorMessage = ""}, new { @class = "fas fa-plus", title = "Add Task", style = "margin: 10px 0px 0px 30px", align = "right" })
+        </td>
     </tr>
 
     @foreach (var item in @Model.Tasks)
@@ -66,6 +68,7 @@
                     <i class='far fa-trash-alt'></i>
                 </button>
             </td>
+
         </tr>
     }
 
