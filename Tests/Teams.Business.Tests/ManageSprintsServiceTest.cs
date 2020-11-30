@@ -13,7 +13,7 @@ using Teams.Data.Models;
 using Teams.Security;
 using Task = System.Threading.Tasks.Task;
 
-namespace Teams.Tests
+namespace Teams.Business.Tests
 {
     [TestFixture]
     class ManageSprintsServiceTest

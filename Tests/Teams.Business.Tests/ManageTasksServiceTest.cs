@@ -12,7 +12,7 @@ using Teams.Data.Models;
 using Teams.Security;
 using Task = Teams.Data.Models.Task;
 
-namespace Teams.Tests
+namespace Teams.Business.Tests
 {
     [TestFixture]
     class ManageTasksServiceTest

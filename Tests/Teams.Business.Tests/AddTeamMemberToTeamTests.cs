@@ -10,7 +10,7 @@ using MockQueryable.Moq;
 using Teams.Business.Services;
 using Teams.Data.Models;
 
-namespace Teams.Tests
+namespace Teams.Business.Tests
 {
     [TestFixture]
     class AddTeamMemberToTeamTests

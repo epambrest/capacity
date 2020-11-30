@@ -5,7 +5,7 @@ using Teams.Security;
 using System.Security.Authentication;
 using NUnit.Framework;
 
-namespace Teams.Tests
+namespace Teams.Business.Tests
 {
     [TestFixture]
     public class CurrentUserTest
