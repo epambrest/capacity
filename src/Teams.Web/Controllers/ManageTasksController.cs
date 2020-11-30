@@ -235,7 +235,7 @@ namespace Teams.Web.Controllers
                 return RedirectToAction("AddTask", new { teamId = taskFormViewModel.TeamId, taskId = taskFormViewModel.TaskId, errorMessage = _localizer["MemberFieldError"] });
             }
 
-            var task = new Models.Task
+            var task = new Data.Models.Task
             {
                 Id = taskFormViewModel.TaskId,
                 TeamId = taskFormViewModel.TeamId,
@@ -253,7 +253,7 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize, NonAction]
-        private async Task<bool> AddTaskAsync(Models.Task task)
+        private async Task<bool> AddTaskAsync(Data.Models.Task task)
         {
             if (await _accessCheckService.IsOwnerAsync(task.TeamId))
             {
@@ -286,22 +286,26 @@ namespace Teams.Web.Controllers
         {
             if (string.IsNullOrEmpty(taskFormViewModel.TaskName))
             {
-                return RedirectToAction("AddTaskIntoTeamAsync", new { teamId = taskFormViewModel.TeamId, taskId = taskFormViewModel.TaskId, errorMessage = _localizer["NameFieldError"] });
+                return RedirectToAction("AddTaskIntoTeam", new { teamId = taskFormViewModel.TeamId, errorMessage = _localizer["NameFieldError"] });
             }
             if (string.IsNullOrEmpty(taskFormViewModel.TaskLink) || !Regex.IsMatch(taskFormViewModel.TaskLink, (@"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$")))
             {
-                return RedirectToAction("AddTaskIntoTeamAsync", new { teamId = taskFormViewModel.TeamId, taskId = taskFormViewModel.TaskId, errorMessage = _localizer["LinkFieldError"] });
+                return RedirectToAction("AddTaskIntoTeam", new { teamId = taskFormViewModel.TeamId,errorMessage = _localizer["LinkFieldError"] });
             }
             if (taskFormViewModel.TaskStoryPoints <= 0)
             {
-                return RedirectToAction("AddTaskIntoTeamAsync", new { teamId = taskFormViewModel.TeamId, taskId = taskFormViewModel.TaskId, errorMessage = _localizer["PointsFieldError"] });
+                return RedirectToAction("AddTaskIntoTeam", new { teamId = taskFormViewModel.TeamId,errorMessage = _localizer["PointsFieldError"] });
             }
             if (taskFormViewModel.TaskMemberId <= 0)
             {
-                return RedirectToAction("AddTaskIntoTeamAsync", new { teamId = taskFormViewModel.TeamId, taskId = taskFormViewModel.TaskId, errorMessage = _localizer["MemberFieldError"] });
+                return RedirectToAction("AddTaskIntoTeam", new { teamId = taskFormViewModel.TeamId, errorMessage = _localizer["MemberFieldError"] });
+            }
+            if (taskFormViewModel.TaskSprintId <= 0)
+            {
+                return RedirectToAction("AddTaskIntoTeam", new { teamId = taskFormViewModel.TeamId, errorMessage = _localizer["SprintFieldError"] });
             }
 
-            var task = new Models.Task
+            var task = new Data.Models.Task
             {
                 Id = taskFormViewModel.TaskId,
                 TeamId = taskFormViewModel.TeamId,
@@ -313,7 +317,7 @@ namespace Teams.Web.Controllers
             };
             var result = await AddTaskAsync(task);
 
-            if (result) return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId = taskFormViewModel.TaskSprintId });
+            if (result) return RedirectToAction( "AllTasksForTeam", new { teamId = taskFormViewModel.TeamId });
             else return RedirectToAction("AddTaskError", new { teamId = taskFormViewModel.TeamId });
 
         }

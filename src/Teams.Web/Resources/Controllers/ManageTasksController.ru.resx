@@ -129,4 +129,7 @@
   <data name="PointsFieldError" xml:space="preserve">
     <value>Кол-во СП не может быть меньше либо равно нулю!</value>
   </data>
+  <data name="SprintFieldError" xml:space="preserve">
+    <value>Пожалуйста, выберите спринт!</value>
+  </data>
 </root>

@@ -129,4 +129,7 @@
   <data name="PointsFieldError" xml:space="preserve">
     <value>Points field can not be empty or less than 0!</value>
   </data>
+  <data name="SprintFieldError" xml:space="preserve">
+    <value>Please select sprint!</value>
+  </data>
 </root>

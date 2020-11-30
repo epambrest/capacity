@@ -1,4 +1,4 @@
-﻿namespace Teams.ViewModels
+﻿namespace Teams.Web.ViewModels
 {
     public class SprintViewModel
     {

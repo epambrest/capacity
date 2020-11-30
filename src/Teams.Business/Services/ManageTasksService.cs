@@ -71,7 +71,7 @@ namespace Teams.Business.Services
             return result;
         }
 
-        public async Task<bool> AddTaskAsync(Task task)
+        public async Task<bool> AddTaskAsync(Teams.Data.Models.Task task)
         {
             if (await _taskRepository.GetAll()
                 .Where(t => t.SprintId == task.SprintId)
