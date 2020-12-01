@@ -11,6 +11,7 @@ using Teams.Data;
 using Teams.Data.Models;
 using Teams.Security;
 using Teams.Web.ViewModels;
+using Teams.Web.ViewModels.Team;
 
 namespace Teams.Web.Controllers
 {

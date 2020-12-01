@@ -14,7 +14,7 @@ namespace Teams.Web.ViewModels
         public string TeamName { get; set; }
         public string TaskName { get; set; }
         public string ErrorMessage { get; set; }
-        public List<TeamMember> TeamMembers { get; set; }
+        public List<Data.Models.TeamMember> TeamMembers { get; set; }
         public List<Sprint> Sprints { get; set; }
     }
 }

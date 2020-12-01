@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Teams.Web.ViewModels.TeamMember;
 
 namespace Teams.Web.ViewModels.Team
 {
@@ -8,5 +10,6 @@ namespace Teams.Web.ViewModels.Team
         public string TeamName { get; set; }
         public string TeamOwner { get; set; }
         public virtual IdentityUser Owner { get; set; }
+        public List<TeamMemberViewModel> TeamMembers { get; set; }
     }
 }

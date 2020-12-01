@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
-@model IEnumerable<Teams.Data.Models.TeamMember>
+@model Teams.Web.ViewModels.Team.TeamViewModel
 @{
     ViewBag.Title = @Localizer["TeamMembers"];
 }
@@ -12,7 +12,7 @@
     <h><a color="black" onclick="location.href = '@Url.Action("GetMyTeams", "ManageTeams")'"><i class="fas fa-arrow-left"></i>@Localizer["Return"]</a></h>
 </div>
 <div align="center">
-    <h><font size="6" color="black">@ViewBag.TeamName</font></h>
+    <h><font size="6" color="black">@Model.TeamName</font></h>
 </div>
 <table class="table">
 
@@ -21,27 +21,27 @@
         <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["EmailMember"]</td>
         <td align="right" style="border-top: hidden"></td>
         <td style="border-top: hidden; visibility: @ViewBag.AddVision" align="right">
-            @Html.ActionLink("", "AddMember", new { teamId = ViewBag.TeamId }, new { @class = "fas fa-user-plus", title = "Add Member", style = "margin: 10px 0px 0px 30px", align = "right" })
+            @Html.ActionLink("", "AddMember", new { teamId = Model.Id }, new { @class = "fas fa-user-plus", title = "Add Member", style = "margin: 10px 0px 0px 30px", align = "right" })
         </td>
     </tr>
     <tr align="center">
         <td align="left" width="1%"><i title="Owner" class="fas fa-crown"></i></td>
-        <td align="left">@ViewBag.TeamOwner</td>
+        <td align="left">@Model.Owner.Email</td>
         <td align="right"></td>
         <td align="right"></td>
     </tr>
-    @foreach (var item in Model)
+    @foreach (var item in Model.TeamMembers)
     {
         <tr align="center">
             <td align="left" width="1%"><i title="Member" class="fas fa-user"></i></td>
             <td align="left">@item.Member.Email</td>
             <td align="right"></td>
-            @if (ViewBag.TeamOwner == User.Identity.Name)
+            @if (@Model.Owner.Email == User.Identity.Name)
             {
                 <td align="right">
                     <button type='button' id="1" class='btn btn-outline-danger border-0' data-toggle="modal"
-                            data-target="#removeMember" data-teamname="@ViewBag.TeamName" data-teamid="@ViewBag.TeamId"
-                            data-membername="@item.Member.Email" data-memberid="@item.MemberId" data-owner="@ViewBag.TeamOwner">
+                            data-target="#removeMember" data-teamname="@Model.TeamName" data-teamid="@Model.Id"
+                            data-membername="@item.Member.Email" data-memberid="@item.MemberId">
                         <i class='far fa-trash-alt'></i>
                     </button>
                 </td>
@@ -58,8 +58,6 @@
                     <p align="center" id="member"></p>
                     <input type="hidden" id="teamId" name="teamId" value="" />
                     <input type="hidden" id="memberId" name="memberId" value="" />
-                    <input type="hidden" id="ownerName" name="ownerName" value="" />
-                    <input type="hidden" id="teamName" name="teamName" value="" />
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-outline-secondary" asp-action="Remove">OK</button>
@@ -80,12 +78,9 @@
             var teamId = button.data('teamid')
             var memberName = button.data('membername')
             var memberId = button.data('memberid')
-            var owner = button.data('owner')
             var removeModal = $("#removeMember");
             removeModal.find("#teamId").val(teamId);
-            removeModal.find("#teamName").val(teamName);
             removeModal.find("#memberId").val(memberId);
-            removeModal.find("#ownerName").val(owner);
             document.getElementById('member').innerHTML =
                 "@Localizer["Remove"]" + "<strong>" + memberName + "</strong>" + "@Localizer["from"]" + "<strong>" + teamName + "</strong>" + " ?";
         });
