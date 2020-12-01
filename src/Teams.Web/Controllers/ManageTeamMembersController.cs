@@ -117,8 +117,7 @@ namespace Teams.Web.Controllers
         public async Task<IActionResult> AddMemberAsync(int teamId, string memberId)
         {
             if (memberId == null) return RedirectToAction("AddError", new { errorMessage = "Field is empty" });
-            /*var users = await _userManager.Users.ToListAsync();
-            ViewBag.Users = users;*/
+
             bool result = await _manageTeamsMembersService.AddAsync(teamId, memberId);
 
             if (result) return RedirectToAction("TeamMembers", new { teamId });
