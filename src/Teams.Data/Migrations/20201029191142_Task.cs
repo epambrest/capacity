@@ -31,8 +31,9 @@ namespace Teams.Data.Migrations
                         name: "FK_Task_TeamMembers_MemberId",
                         column: x => x.MemberId,
                         principalTable: "TeamMembers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+            table.ForeignKey(
                         name: "FK_Task_Sprint_SprintId",
                         column: x => x.SprintId,
                         principalTable: "Sprint",
