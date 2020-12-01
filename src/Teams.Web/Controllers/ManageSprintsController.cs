@@ -9,6 +9,9 @@ using Microsoft.Extensions.Primitives;
 using Teams.Business.Services;
 using Teams.Data.Models;
 using Teams.Web.ViewModels;
+using Teams.Web.ViewModels.Sprint;
+using Teams.Web.ViewModels.Team;
+using Teams.Web.ViewModels.TeamMember;
 
 namespace Teams.Web.Controllers
 {
@@ -56,18 +59,29 @@ namespace Teams.Web.Controllers
             ViewData["RemoveMember"] = _localizer["RemoveMember"];
             ViewData["Remove"] = _localizer["Remove"];
             ViewData["Cancel"] = _localizer["Cancel"];
-            
-            ViewBag.TeamId = teamId;
-            ViewBag.TeamName = team.TeamName;
-            ViewBag.TeamOwner = team.Owner.Email;
-            List<TeamMember> teamMembers = await GetAllTeamMembersAsync(teamId, new DisplayOptions { });
 
-            CombinedModel combinedModel = new CombinedModel { Sprints = sprints, TeamMembers = teamMembers };
-            return View(combinedModel);
+            List<TeamMember> teamMembers = await GetAllTeamMembersAsync(teamId, new DisplayOptions { });
+            var sprintAndTeam = new SprintAndTeamViewModel
+            {
+                Sprints = new List<SprintViewModel>()
+            };
+            sprints.ForEach(t=>sprintAndTeam.Sprints.Add(new SprintViewModel()
+                {
+                    Id = t.Id,
+                    DaysInSprint =t.DaysInSprint,
+                    IsActive = t.IsActive,
+                    Name = t.Name,
+                    StoryPointInHours = t.StoryPointInHours,
+                    TeamId = t.TeamId
+                }
+            ));
+            sprintAndTeam.Team = new TeamViewModel(){Id = team.Id,Owner = team.Owner,TeamName = team.TeamName,TeamMembers = new List<TeamMemberViewModel>()};
+            teamMembers.ForEach(t=>sprintAndTeam.Team.TeamMembers.Add(new TeamMemberViewModel(){Member = t.Member,MemberId = t.MemberId}));
+            return View(sprintAndTeam);
         }
 
         [Authorize, NonAction]
-        public async Task<List<TeamMember>> GetAllTeamMembersAsync(int teamId, DisplayOptions options)
+        private async Task<List<TeamMember>> GetAllTeamMembersAsync(int teamId, DisplayOptions options)
         {
             if (!await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
@@ -207,7 +221,7 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize, NonAction]
-        public async Task<bool> AddSprintAsync(Sprint sprint)
+        private async Task<bool> AddSprintAsync(Sprint sprint)
         {
             if (await _accessCheckService.IsOwnerAsync(sprint.TeamId))
             {
@@ -217,7 +231,7 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize, NonAction]
-        public async Task<bool> EditSprintAsync(Sprint sprint)
+        private async Task<bool> EditSprintAsync(Sprint sprint)
         {
             if (await _accessCheckService.IsOwnerAsync(sprint.TeamId))
             {

@@ -9,7 +9,7 @@ using Microsoft.Extensions.Localization;
 using Teams.Business.Services;
 using Teams.Data.Models;
 using Teams.Web.Controllers;
-using Teams.Web.ViewModels;
+using Teams.Web.ViewModels.Task;
 
 namespace Teams.Web.Controllers
 {

@@ -1,7 +1,8 @@
-﻿namespace Teams.Web.ViewModels
+﻿namespace Teams.Web.ViewModels.Sprint
 {
     public class SprintViewModel
     {
+        public int Id { get; set; }
         public int TeamId { get; set; }
         public string Name { get; set; }
         public int DaysInSprint { get; set; }
