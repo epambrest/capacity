@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Teams.Web.ViewModels
+namespace Teams.Web.ViewModels.Team
 {
     public class TeamViewModel
     {
