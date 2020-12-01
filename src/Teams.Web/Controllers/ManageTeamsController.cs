@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Teams.Business.Services;
 using Teams.Data;
 using Teams.Data.Models;
 using Teams.Security;
+using Teams.Web.ViewModels;
 
 namespace Teams.Web.Controllers
 {
@@ -31,11 +33,14 @@ namespace Teams.Web.Controllers
         [Authorize]
         public async Task<IActionResult> GetMyTeamsAsync()
         {
-            return View(await _manageTeamsService.GetMyTeamsAsync());
+            var teams = await _manageTeamsService.GetMyTeamsAsync();
+            var teamModelView = new List<TeamViewModel>();
+            teams.ToList().ForEach(t=>teamModelView.Add(new TeamViewModel(){Owner = t.Owner,TeamName = t.TeamName,TeamOwner = t.TeamOwner,Id = t.Id}));
+            return View(teamModelView);
         }
 
         [Authorize, NonAction]
-        public async Task<Team> GetTeamAsync(int teamId)
+        private async Task<Team> GetTeamAsync(int teamId)
         {
             if (await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
@@ -48,7 +53,9 @@ namespace Teams.Web.Controllers
         [Authorize]
         public async Task<IActionResult> EditTeamNameAsync(int teamId)
         {
-            return View(await GetTeamAsync(teamId));
+            var team = await GetTeamAsync(teamId);
+            var teamModelView = new TeamViewModel(){Id = team.Id,TeamName =team.TeamName};
+            return View(teamModelView);
         }
 
         [HttpPost]
@@ -56,7 +63,9 @@ namespace Teams.Web.Controllers
         public async Task<IActionResult> EditTeamNameAsync(int teamId, string teamName)
         {
             ViewBag.resultOfEditing = await _manageTeamsService.EditTeamNameAsync(teamId, teamName);
-            return View(await GetTeamAsync(teamId));
+            var team = await GetTeamAsync(teamId);
+            var teamModelView = new TeamViewModel() { Id = team.Id, TeamName = team.TeamName };
+            return View(teamModelView);
         }
 
         public IActionResult Privacy()
