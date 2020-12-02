@@ -10,6 +10,7 @@ using Teams.Business.Services;
 using Teams.Data.Models;
 using Teams.Web.ViewModels;
 using Teams.Web.ViewModels.Sprint;
+using Teams.Web.ViewModels.Task;
 using Teams.Web.ViewModels.Team;
 using Teams.Web.ViewModels.TeamMember;
 
@@ -95,12 +96,34 @@ namespace Teams.Web.Controllers
         {
             var sprint = await _manageSprintsService.GetSprintAsync(sprintId, true);
 
+            if (sprint == null)
+                return View("ErrorGetAllSprints");
+
+            var sprintViewModel = new SprintViewModel()
+            {
+                DaysInSprint = sprint.DaysInSprint,
+                Id = sprint.Id,
+                Tasks = new List<TaskViewModel>(),
+                IsActive = sprint.IsActive,
+                Name = sprint.Name,
+                StoryPointInHours = sprint.StoryPointInHours,
+                TeamId = sprint.TeamId
+            };
+
+            sprint.Tasks.ToList().ForEach(t=>sprintViewModel.Tasks.Add(new TaskViewModel()
+                {
+                    TeamMember = new TeamMemberViewModel(){Member = t.TeamMember.Member},
+                    Name = t.Name,
+                    StoryPoints = t.StoryPoints,
+                    Id = t.Id
+                }
+            ));
+
             if (await _accessCheckService.IsOwnerAsync(sprint.TeamId)) ViewBag.AddVision = "visible";
             else ViewBag.AddVision = "collapse";
 
-            if (sprint == null)
-                return View("ErrorGetAllSprints");
-            return View(sprint);
+            
+            return View(sprintViewModel);
         }
 
         [Authorize]
@@ -109,7 +132,7 @@ namespace Teams.Web.Controllers
             var team = await _manageSprintsService.GetTeam(teamId);
             var sprint = await _manageSprintsService.GetSprintAsync(sprintId,false);
 
-            EditSprintViewModel model = new EditSprintViewModel {TeamId = teamId, TeamName = team.TeamName, SprintId = sprint.Id, SprintName = sprint.Name,
+            EditSprintViewModel SprintViewModel = new EditSprintViewModel {TeamId = teamId, TeamName = team.TeamName, SprintId = sprint.Id, SprintName = sprint.Name,
                 SprintDaysInSprint = sprint.DaysInSprint, SprintStorePointInHours = sprint.StoryPointInHours, ErrorMessage=errorMessage, IsActive = sprint.IsActive };
 
             if (sprint.IsActive)
@@ -122,26 +145,24 @@ namespace Teams.Web.Controllers
                 ViewBag.SprintActive = "";
                 ViewBag.SprintNotActive = "checked";
             }
-            return View(model);
+            return View(SprintViewModel);
         }
 
         [Authorize]
         public async Task<IActionResult> AddSprintAsync(int teamId, string errorMessage)
         {
             var team = await _manageSprintsService.GetTeam(teamId);
-
+            var teamViewModel = new TeamViewModel() {Id = teamId, TeamName = team.TeamName};
             ViewBag.ErrorMessage = errorMessage;
-            ViewBag.TeamName = team.TeamName;
-            ViewBag.TeamId = teamId;
-            return View();
+            return View(teamViewModel);
         }
 
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> EditSprintAsync(int teamId, int sprintId, string sprintName, int daysInSprint, int storePointsInHours, bool isActive)
         {
-            var Sprints = await _manageSprintsService.GetAllSprintsAsync(teamId, new DisplayOptions());
-            var activeSprints = Sprints.FirstOrDefault(i => i.IsActive == true);
+            var sprints = await _manageSprintsService.GetAllSprintsAsync(teamId, new DisplayOptions());
+            var activeSprints = sprints.FirstOrDefault(i => i.IsActive == true);
             if (string.IsNullOrEmpty(sprintName))
             {
                 return RedirectToAction("EditSprint", new { teamId = teamId, sprintId = sprintId, errorMessage = _localizer["NameFieldError"] });
@@ -181,8 +202,8 @@ namespace Teams.Web.Controllers
         {
             var sprint = new Sprint { TeamId = teamId, Name = sprintName, DaysInSprint = daysInSprint, StoryPointInHours = storePointsInHours, IsActive = isActive };
             
-            var Sprints = await _manageSprintsService.GetAllSprintsAsync(teamId, new DisplayOptions());
-            var activeSprint = Sprints.FirstOrDefault(i => i.IsActive == true);
+            var sprints = await _manageSprintsService.GetAllSprintsAsync(teamId, new DisplayOptions());
+            var activeSprint = sprints.FirstOrDefault(i => i.IsActive == true);
 
             if (string.IsNullOrEmpty(sprintName))
             {
@@ -210,8 +231,7 @@ namespace Teams.Web.Controllers
 
         public IActionResult AddError(int teamId)
         {
-            ViewBag.TeamId = teamId;
-            return View();
+            return View(teamId);
         }
 
         public IActionResult Error()

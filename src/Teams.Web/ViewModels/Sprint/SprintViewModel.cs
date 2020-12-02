@@ -1,4 +1,7 @@
-﻿namespace Teams.Web.ViewModels.Sprint
+﻿using System.Collections.Generic;
+using Teams.Web.ViewModels.Task;
+
+namespace Teams.Web.ViewModels.Sprint
 {
     public class SprintViewModel
     {
@@ -8,5 +11,6 @@
         public int DaysInSprint { get; set; }
         public int StoryPointInHours { get; set; }
         public bool IsActive { get; set; }
+        public List<TaskViewModel> Tasks { get; set; }
     }
 }
