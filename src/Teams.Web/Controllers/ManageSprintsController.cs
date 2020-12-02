@@ -115,7 +115,8 @@ namespace Teams.Web.Controllers
                     TeamMember = new TeamMemberViewModel(){Member = t.TeamMember.Member},
                     Name = t.Name,
                     StoryPoints = t.StoryPoints,
-                    Id = t.Id
+                    Id = t.Id,
+                    Link = t.Link
                 }
             ));
 

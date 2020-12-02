@@ -10,6 +10,7 @@ using Teams.Business.Services;
 using Teams.Data.Models;
 using Teams.Web.Controllers;
 using Teams.Web.ViewModels.Task;
+using Teams.Web.ViewModels.TeamMember;
 
 namespace Teams.Web.Controllers
 {
@@ -73,7 +74,16 @@ namespace Teams.Web.Controllers
             else ViewBag.AddVision = "collapse";
 
             var task = await _manageTasksService.GetTaskByIdAsync(taskId);
-            return View(task);
+            var taskViewModel = new TaskViewModel()
+            {
+                Id=task.Id,
+                Link = task.Link,
+                Name = task.Name,
+                TeamId = task.TeamId,
+                TeamMember = new TeamMemberViewModel(){Member = task.TeamMember.Member}
+            };
+
+            return View(taskViewModel);
         }
 
 
