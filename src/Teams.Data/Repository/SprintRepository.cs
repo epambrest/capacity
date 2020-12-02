@@ -39,7 +39,7 @@ namespace Teams.Data.Repository
             sprint.Name = entity.Name;
             sprint.StoryPointInHours = entity.StoryPointInHours;
             sprint.DaysInSprint = entity.DaysInSprint;
-            sprint.IsActive = entity.IsActive;
+            sprint.Status = entity.Status;
             var result = _dbContext.Entry(sprint).State == EntityState.Modified ? true : false;
             await _dbContext.SaveChangesAsync();
             return result;

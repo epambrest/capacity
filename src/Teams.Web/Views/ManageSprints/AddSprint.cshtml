@@ -31,8 +31,12 @@
         </div>
 
         <div>
-            <label>@Localizer["Active"]</label>
-            @Html.CheckBox("isActive", false)
+            @Html.RadioButton("status", 0)
+            <span>@Localizer["Сompleted"]</span> <br />
+            @Html.RadioButton("status", 1)
+            <span>@Localizer["Active"]</span> <br />
+            @Html.RadioButton("status", 2, true)
+            <span>@Localizer["Created"]</span>
         </div>
 
         <div style="display: table">

@@ -32,12 +32,16 @@
         </div>
 
         <div>
-            <label>@Localizer["Active"]</label>
-            @Html.CheckBox("isActive", Model.IsActive)
+            @Html.RadioButton("status", 0)
+            <span>@Localizer["Сompleted"]</span> <br />
+            @Html.RadioButton("status", 1)
+            <span>@Localizer["Active"]</span> <br />
+            @Html.RadioButton("status", 2, true)
+            <span>@Localizer["Created"]</span>
         </div>
         <div style="display: table">
             <input id="sub" type="submit" class="btn btn-success" value="@Localizer["EditSprint"]" />
             <button style="margin-left:7px" type='button' class="btn btn-danger" onclick="location.href = '@Url.Action("AllSprints", "ManageSprints", new { teamId = Model.TeamId })'">@Localizer["Close"]</button>
-         </div>
+        </div>
     }
 </div>
