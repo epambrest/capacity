@@ -27,8 +27,9 @@ namespace Teams.Data.Models
         [Range(1, 99999, ErrorMessage = "Please enter a value greater than 0")]
         [Column("StoryPointInHours")]
         public int StoryPointInHours { get; set; }
-        [Column("IsActive"), DefaultValue(false)]
-        public bool IsActive { get; set; }
+
+        [Column("Status"), DefaultValue(2)]
+        public int Status { get; set; }
         public virtual ICollection<Task> Tasks { get; set; }
     }
 }

@@ -132,8 +132,17 @@
   <data name="Cancel" xml:space="preserve">
     <value>Отмена</value>
   </data>
+  <data name="CantChangeStatus" xml:space="preserve">
+    <value>Статусы могут быть обновлены только с «Создан» на «Активный» и с «Активный» на «Завершёный». Возможен только 1 активный и завершённый спринт </value>
+  </data>
   <data name="Close" xml:space="preserve">
     <value>Закрыть</value>
+  </data>
+  <data name="Completed" xml:space="preserve">
+    <value>Завершённый</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Созданый</value>
   </data>
   <data name="DaysFieldError" xml:space="preserve">
     <value>Поле для дней не может быть пустым или содержать значениие меньше нуля</value>
@@ -146,6 +155,9 @@
   </data>
   <data name="Error" xml:space="preserve">
     <value>Упс... Похоже что-то пошло не так!</value>
+  </data>
+  <data name="HasntAnyChange" xml:space="preserve">
+    <value>Вы ничего не изменили в своём спринте</value>
   </data>
   <data name="Member" xml:space="preserve">
     <value>Участник</value>
@@ -182,7 +194,16 @@
   <data name="ReturnToSprint" xml:space="preserve">
     <value>Вернуться к спринтам</value>
   </data>
+  <data name="SprintWithSameName" xml:space="preserve">
+    <value>Спринт с таким именем уже существует</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Статус</value>
+  </data>
   <data name="StoryPointInHours" xml:space="preserve">
     <value>Кол-во часов в СП</value>
+  </data>
+  <data name="СreatedSprintExist" xml:space="preserve">
+    <value>В комманде может быть только один спринт с типом "Создан"</value>
   </data>
 </root>

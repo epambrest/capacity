@@ -6,6 +6,6 @@
         public string Name { get; set; }
         public int DaysInSprint { get; set; }
         public int StoryPointInHours { get; set; }
-        public bool IsActive { get; set; }
+        public int Status { get; set; }
     }
 }

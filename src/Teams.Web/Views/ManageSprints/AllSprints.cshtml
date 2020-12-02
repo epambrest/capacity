@@ -28,13 +28,17 @@
         @foreach (var item in Model.Sprints)
         {
             <tr align="center">
-                @if (item.IsActive)
+                @if (item.Status == 1)
                 {
                     <td align="left" width="1%" bgcolor="green"></td>
                 }
-                else
+                else if (item.Status == 0)
                 {
-                    <td align="left" width="1%" bgcolor="red"></td>
+                    <td align="left" width="1%" bgcolor="yellow"></td>
+                }
+                else if (item.Status == 2)
+                {
+                    <td align="left" width="1%" bgcolor="blue"></td>
                 }
                 <td align="left">@Html.ActionLink(item.Name, "GetSprintById", new { sprintId = item.Id })</td>
                 <td align="left">@item.DaysInSprint</td>
@@ -66,7 +70,7 @@
             <td align="left" width="1%"></td>
             <td align="left" style="font-weight: bold">@ViewData["MemberEmail"]</td>
             <td style="visibility: @ViewBag.AddVision" align="right">
-                @Html.ActionLink("", "AddMember", "ManageTeamMembers", new { teamId = ViewBag.TeamId }, new { @class = "fas fa-user-plus", title = ViewData["AddMember"], style = "margin: 10px 0px 0px 30px", align = "right" })
+                @Html.ActionLink("", "AddSprint", new { teamId = ViewBag.TeamId, errorMessage = "" }, new { @class = "fas fa-plus", title = "Add Sprint", style = "margin: 10px 0px 0px 30px", align = "right" })
             </td>
         </tr>
         <tr align="center">
@@ -80,7 +84,7 @@
                 <td align="left" width="1%"><i title="@ViewData["Member"]" class="fas fa-user"></i></td>
                 <td align="left">@item.Member.Email</td>
                 <td style="visibility: @ViewBag.AddVision" align="right">
-                    @Html.ActionLink("", "Remove", "ManageTeamMembers", new { teamId = ViewBag.TeamId, memberId = item.MemberId, teamName = @ViewBag.TeamName, ownerName=ViewBag.TeamOwner }, new { @class = "far fa-trash-alt", title = ViewData["RemoveMember"], style = "margin: 10px 0px 0px 30px", align = "right" })
+                    @Html.ActionLink("", "Remove", "ManageTeamMembers", new { teamId = ViewBag.TeamId, memberId = item.MemberId, teamName = @ViewBag.TeamName, ownerName = ViewBag.TeamOwner }, new { @class = "far fa-trash-alt", title = ViewData["RemoveMember"], style = "margin: 10px 0px 0px 30px", align = "right" })
                 </td>
             </tr>
         }
