@@ -20,7 +20,6 @@ namespace Teams.Web.Controllers
         private readonly IManageTeamsMembersService _manageTeamsMembersService;
         private readonly IStringLocalizer<ManageSprintsController> _localizer;
 
-
         public ManageSprintsController(IManageSprintsService manageSprintsService, IAccessCheckService accessCheckService, IManageTeamsService manageTeamsService, IManageTeamsMembersService manageTeamsMembersService, IStringLocalizer<ManageSprintsController> localizer)
         {
             _manageSprintsService = manageSprintsService;
@@ -118,6 +117,9 @@ namespace Teams.Web.Controllers
         {
             var Sprints = await _manageSprintsService.GetAllSprintsAsync(teamId, new DisplayOptions());
             var currentSprint = Sprints.FirstOrDefault(i => i.Id == sprintId);
+            var activeSprint = Sprints.FirstOrDefault(i => i.Status == PossibleStatuses.activeStatus);
+            var createdSprint = Sprints.FirstOrDefault(i => i.Status == PossibleStatuses.createdStatus);
+
             if (string.IsNullOrEmpty(sprintName))
             {
                 return RedirectToAction("EditSprint", new { teamId = teamId, sprintId = sprintId, errorMessage = _localizer["NameFieldError"] });
@@ -138,8 +140,13 @@ namespace Teams.Web.Controllers
                 return RedirectToAction("EditSprint", new { teamId = teamId, sprintId = sprintId, errorMessage = _localizer["HasntAnyChange"] });
             }
 
-            if ((currentSprint.Status == 2 && status == 1) || (currentSprint.Status == 1 && status == 0) || currentSprint.Status == status)
+            if ((currentSprint.Status == PossibleStatuses.createdStatus && status == PossibleStatuses.activeStatus) || (currentSprint.Status == PossibleStatuses.activeStatus && status == PossibleStatuses.completedStatus) || currentSprint.Status == status)
             {
+                if(activeSprint != null && currentSprint.Status != PossibleStatuses.activeStatus)
+                {
+                    return RedirectToAction("EditSprint", new { teamId = teamId, sprintId = sprintId, errorMessage = _localizer["ActiveFieldError"] });
+                }
+
                 var sprint = new Sprint { Id = sprintId, TeamId = teamId, Name = sprintName, DaysInSprint = daysInSprint, StoryPointInHours = storePointsInHours, Status = status };
                 var result = await EditSprintAsync(sprint);
 
@@ -165,11 +172,10 @@ namespace Teams.Web.Controllers
             var sprint = new Sprint { TeamId = teamId, Name = sprintName, DaysInSprint = daysInSprint, StoryPointInHours = storePointsInHours, Status = status };
 
             var Sprints = await _manageSprintsService.GetAllSprintsAsync(teamId, new DisplayOptions());
-            var activeSprint = Sprints.FirstOrDefault(i => i.Status == 1);
-            var createdSprint = Sprints.FirstOrDefault(i => i.Status == 2);
+            var activeSprint = Sprints.FirstOrDefault(i => i.Status == PossibleStatuses.activeStatus);
+            var createdSprint = Sprints.FirstOrDefault(i => i.Status == PossibleStatuses.createdStatus);
             var sameSprint = Sprints.FirstOrDefault(i => i.Name == sprintName);
 
-            //var 2;
             if (string.IsNullOrEmpty(sprintName))
             {
                 return RedirectToAction("AddSprint", new { teamId = teamId, errorMessage = _localizer["NameFieldError"] });
@@ -183,11 +189,11 @@ namespace Teams.Web.Controllers
                 return RedirectToAction("AddSprint", new { teamId = teamId, errorMessage = _localizer["PointsFieldError"] });
             }
 
-            if (activeSprint != null && status == 1)
+            if (activeSprint != null && status == PossibleStatuses.activeStatus)
             {
                 return RedirectToAction("AddSprint", new { teamId = teamId, errorMessage = _localizer["ActiveFieldError"] });
             }
-            else if (createdSprint != null && status == 2)
+            else if (createdSprint != null && status == PossibleStatuses.createdStatus)
             {
                 return RedirectToAction("AddSprint", new { teamId = teamId, errorMessage = _localizer["СreatedSprintExist"] });
             }

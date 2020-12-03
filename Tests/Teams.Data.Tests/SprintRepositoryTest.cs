@@ -31,11 +31,11 @@ namespace Teams.Business.Tests
         {
             var data = new List<Sprint>
             {
-                new Sprint{ Id=1, DaysInSprint= 3, Name = "Sprint1", TeamId= 1, StoryPointInHours= 4, Status = 2 },
-                new Sprint{ Id=2, DaysInSprint= 3, Name = "Sprint2", TeamId= 2, StoryPointInHours= 4, Status = 2 },
-                new Sprint{ Id=3, DaysInSprint= 3, Name = "Sprint3", TeamId= 3, StoryPointInHours= 4, Status = 2 },
-                new Sprint{ Id=4, DaysInSprint= 3, Name = "Sprint4", TeamId= 4, StoryPointInHours= 4, Status = 2 },
-                new Sprint{ Id=5, DaysInSprint= 3, Name = "Sprint5", TeamId= 5, StoryPointInHours= 4, Status = 2 }
+                new Sprint{ Id=1, DaysInSprint= 3, Name = "Sprint1", TeamId= 1, StoryPointInHours= 4, Status = PossibleStatuses.activeStatus },
+                new Sprint{ Id=2, DaysInSprint= 3, Name = "Sprint2", TeamId= 2, StoryPointInHours= 4, Status = PossibleStatuses.completedStatus },
+                new Sprint{ Id=3, DaysInSprint= 3, Name = "Sprint3", TeamId= 3, StoryPointInHours= 4, Status = PossibleStatuses.completedStatus },
+                new Sprint{ Id=4, DaysInSprint= 3, Name = "Sprint4", TeamId= 4, StoryPointInHours= 4, Status = PossibleStatuses.completedStatus },
+                new Sprint{ Id=5, DaysInSprint= 3, Name = "Sprint5", TeamId= 5, StoryPointInHours= 4, Status = PossibleStatuses.completedStatus }
             }.AsQueryable();
             return data;
         }
@@ -85,7 +85,7 @@ namespace Teams.Business.Tests
         public async System.Threading.Tasks.Task InsertAsync_SprintRepositoryReturns_True()
         {
             //Arrange
-            Sprint sprint = new Sprint { Id = 6, DaysInSprint = 3, Name = "Sprint6", TeamId = 6, StoryPointInHours = 4, Status = 2 };
+            Sprint sprint = new Sprint { Id = 6, DaysInSprint = 3, Name = "Sprint6", TeamId = 6, StoryPointInHours = 4, Status = PossibleStatuses.completedStatus };
 
             //Act
             var result = await _sprintRepository.InsertAsync(sprint);
@@ -98,7 +98,7 @@ namespace Teams.Business.Tests
         public async System.Threading.Tasks.Task DeleteAsync_SprintRepositoryReturns_True()
         {
             //Arrange
-            Sprint sprint = new Sprint { Id = 3, DaysInSprint = 3, Name = "Sprint3", TeamId = 3, StoryPointInHours = 4, Status = 2 };
+            Sprint sprint = new Sprint { Id = 3, DaysInSprint = 3, Name = "Sprint3", TeamId = 3, StoryPointInHours = 4, Status = PossibleStatuses.completedStatus };
             _context.Sprint.Add(sprint);
             _context.SaveChanges();
 
@@ -113,7 +113,7 @@ namespace Teams.Business.Tests
         public async System.Threading.Tasks.Task UpdateAsync_SprintRepositoryReturns_True()
         {
             //Arrange
-            Sprint sprint = new Sprint { Id = 2, DaysInSprint = 3, Name = "Update", TeamId = 5, StoryPointInHours = 4, Status = 2 };
+            Sprint sprint = new Sprint { Id = 2, DaysInSprint = 3, Name = "Update", TeamId = 5, StoryPointInHours = 4, Status = PossibleStatuses.completedStatus };
 
             //Act
             var result = await _sprintRepository.UpdateAsync(sprint);
@@ -126,7 +126,7 @@ namespace Teams.Business.Tests
         public async System.Threading.Tasks.Task UpdateAsync_SprintRepositoryReturns_False()
         {
             //Arrange
-            Sprint sprint = new Sprint { Id = 10, DaysInSprint = 3, Name = "Sprint5", TeamId = 6, StoryPointInHours = 4, Status = 2 };
+            Sprint sprint = new Sprint { Id = 10, DaysInSprint = 3, Name = "Sprint5", TeamId = 6, StoryPointInHours = 4, Status = PossibleStatuses.completedStatus };
 
             //Act
             var result = await _sprintRepository.UpdateAsync(sprint);
