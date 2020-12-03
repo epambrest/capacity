@@ -120,6 +120,12 @@
   <data name="Cancel" xml:space="preserve">
     <value>Отмена</value>
   </data>
+  <data name="Completed" xml:space="preserve">
+    <value>Завершённый</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Созданный</value>
+  </data>
   <data name="DaysinSprint" xml:space="preserve">
     <value>Количество дней</value>
   </data>

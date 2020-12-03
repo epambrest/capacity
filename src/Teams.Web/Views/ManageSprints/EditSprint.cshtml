@@ -32,11 +32,21 @@
         </div>
 
         <div>
-            @Html.RadioButton("status", 0)
+            @{
+                List<bool> activeButtonKeys = new List<bool>() { false, false, false };
+
+                switch(Model.Status)
+                {
+                    case 0: activeButtonKeys[0] = true; break;
+                    case 1: activeButtonKeys[1] = true; break;
+                    case 2: activeButtonKeys[2] = true; break;
+                }
+            }
+            @Html.RadioButton("status", PossibleStatuses.completedStatus, activeButtonKeys[0])
             <span>@Localizer["Сompleted"]</span> <br />
-            @Html.RadioButton("status", 1)
+            @Html.RadioButton("status", PossibleStatuses.activeStatus, activeButtonKeys[1])
             <span>@Localizer["Active"]</span> <br />
-            @Html.RadioButton("status", 2, true)
+            @Html.RadioButton("status", PossibleStatuses.createdStatus, activeButtonKeys[2])
             <span>@Localizer["Created"]</span>
         </div>
         <div style="display: table">

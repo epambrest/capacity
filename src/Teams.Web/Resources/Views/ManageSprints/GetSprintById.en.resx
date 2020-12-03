@@ -120,6 +120,9 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="Created" xml:space="preserve">
+    <value>Created</value>
+  </data>
   <data name="DaysinSprint" xml:space="preserve">
     <value>Days in Sprint</value>
   </data>
@@ -146,5 +149,8 @@
   </data>
   <data name="User" xml:space="preserve">
     <value>User</value>
+  </data>
+  <data name="Сompleted" xml:space="preserve">
+    <value>Completed</value>
   </data>
 </root>

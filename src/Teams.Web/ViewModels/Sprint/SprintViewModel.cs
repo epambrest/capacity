@@ -11,5 +11,6 @@ namespace Teams.Web.ViewModels.Sprint
         public int DaysInSprint { get; set; }
         public int StoryPointInHours { get; set; }
         public int Status { get; set; }
+        public List<TaskViewModel> Tasks { get; set; }
     }
 }

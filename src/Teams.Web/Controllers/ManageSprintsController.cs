@@ -69,7 +69,7 @@ namespace Teams.Web.Controllers
                 {
                     Id = t.Id,
                     DaysInSprint =t.DaysInSprint,
-                    IsActive = t.IsActive,
+                    Status = t.Status,
                     Name = t.Name,
                     StoryPointInHours = t.StoryPointInHours,
                     TeamId = t.TeamId
@@ -103,7 +103,7 @@ namespace Teams.Web.Controllers
                 DaysInSprint = sprint.DaysInSprint,
                 Id = sprint.Id,
                 Tasks = new List<TaskViewModel>(),
-                IsActive = sprint.IsActive,
+                Status = sprint.Status,
                 Name = sprint.Name,
                 StoryPointInHours = sprint.StoryPointInHours,
                 TeamId = sprint.TeamId

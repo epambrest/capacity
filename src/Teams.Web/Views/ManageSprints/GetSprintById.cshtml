@@ -25,17 +25,17 @@
     </tr>
 
     <tr align="center">
-        @if (Model.Status == 1)
+        @if (Model.Status == PossibleStatuses.activeStatus)
         {
             <td align="left" width="1%" bgcolor="green"></td>
         }
-        else if (Model.Status == 0)
-        {
-            <td align="left" width="1%" bgcolor="blue"></td>
-        }
-        else if (Model.Status == 2)
+        else if (Model.Status == PossibleStatuses.completedStatus)
         {
             <td align="left" width="1%" bgcolor="yellow"></td>
+        }
+        else if (Model.Status == PossibleStatuses.createdStatus)
+        {
+            <td align="left" width="1%" bgcolor="blue"></td>
         }
         <td align="left">@Model.Name</td>
         <td align="left">@Model.DaysInSprint</td>
