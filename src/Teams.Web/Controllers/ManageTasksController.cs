@@ -9,6 +9,7 @@ using Microsoft.Extensions.Localization;
 using Teams.Business.Services;
 using Teams.Data.Models;
 using Teams.Web.Controllers;
+using Teams.Web.ViewModels.Sprint;
 using Teams.Web.ViewModels.Task;
 using Teams.Web.ViewModels.TeamMember;
 
@@ -56,7 +57,14 @@ namespace Teams.Web.Controllers
             }
 
             tasksForTeamViewModel.TeamName = team.TeamName;
-            tasksForTeamViewModel.Tasks = tasks;
+            tasksForTeamViewModel.Tasks = new List<TaskViewModel>();
+            tasks.ToList().ForEach(t=> tasksForTeamViewModel.Tasks.Add(new TaskViewModel()
+            {
+                Id = t.Id,
+                Link = t.Link,
+                Name = t.Name,
+                TeamMember = new TeamMemberViewModel(){Member = t.TeamMember.Member}
+            }));
             tasksForTeamViewModel.TeamId = team.Id;
             return View(tasksForTeamViewModel);
         }
@@ -128,8 +136,15 @@ namespace Teams.Web.Controllers
                 TaskStoryPoints = task.StoryPoints,
                 TaskMemberId = task.MemberId,
                 ErrorMessage = errorMessage,
-                TeamMembers = teamMembers
+                TeamMembers = new List<TeamMemberViewModel>()
             };
+
+            teamMembers.ForEach(t=>model.TeamMembers.Add(new TeamMemberViewModel()
+            {
+                Member = t.Member,
+                Id = t.Id
+            }));
+
             return View(model);
         }
 
@@ -172,7 +187,7 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize, NonAction]
-        public async Task<bool> EditTaskAsync(Data.Models.Task task)
+        private async Task<bool> EditTaskAsync(Data.Models.Task task)
         {
             if (await _accessCheckService.IsOwnerAsync(task.TeamId))
             {
@@ -182,7 +197,7 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize, NonAction]
-        public async Task<List<TeamMember>> GetAllTeamMembersAsync(int teamId)
+        private async Task<List<TeamMember>> GetAllTeamMembersAsync(int teamId)
         {
             if (!await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
@@ -219,8 +234,13 @@ namespace Teams.Web.Controllers
                 TaskSprintId = sprintId,
                 TeamName = team.TeamName,
                 ErrorMessage = errorMessage,
-                TeamMembers = teamMembers
+                TeamMembers = new List<TeamMemberViewModel>()
             };
+            teamMembers.ForEach(t=>model.TeamMembers.Add(new TeamMemberViewModel()
+            {
+                Member = t.Member,
+                Id = t.Id
+            }));
             return View(model);
         }
 
@@ -258,7 +278,7 @@ namespace Teams.Web.Controllers
             var result = await AddTaskAsync(task);
 
             if (result) return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId = taskFormViewModel.TaskSprintId });
-            else return RedirectToAction("AddError", new { teamId = taskFormViewModel.TeamId });
+            else return RedirectToAction("AddTaskError", new { teamId = taskFormViewModel.TeamId });
 
         }
 
@@ -282,11 +302,21 @@ namespace Teams.Web.Controllers
             TaskFormViewModel model = new TaskFormViewModel
             {
                 TeamId = teamId,
-                Sprints = sprints,
+                Sprints = new List<SprintViewModel>(),
                 TeamName = team.TeamName,
                 ErrorMessage = errorMessage,
-                TeamMembers = teamMembers
+                TeamMembers = new List<TeamMemberViewModel>()
             };
+            sprints.ForEach(t=>model.Sprints.Add(new SprintViewModel()
+            {
+                Id = t.Id,
+                Name = t.Name
+            }));
+            teamMembers.ForEach(t=>model.TeamMembers.Add(new TeamMemberViewModel()
+            {
+                Id = t.Id,
+                Member = t.Member
+            }));
             return View(model);
         }
 

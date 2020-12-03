@@ -35,11 +35,11 @@
             <td align="left">@item.StoryPoints</td>
             <td><a href="@item.Link" align="left">@Localizer["Link"]</a></td>
             <td style="visibility: @ViewBag.AddVision" align="right">
-                @Html.ActionLink("", "EditTask", new { teamId = Model.Tasks.First().Team.Id, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })
+                @Html.ActionLink("", "EditTask", new { teamId = Model.TeamId, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })
             </td>
             <td style="visibility: @ViewBag.AddVision" align="right">
                 <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromTeam"
-                        data-taskname="@item.Name" data-taskid="@item.Id" data-teamname="@Model.Tasks.First().Team.TeamName">
+                        data-taskname="@item.Name" data-taskid="@item.Id" data-teamname="@Model.TeamName">
                     <i class='far fa-trash-alt'></i>
                 </button>
             </td>
