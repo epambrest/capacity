@@ -18,15 +18,23 @@ namespace Teams.Web.Controllers
         private readonly IAccessCheckService _accessCheckService;
         private readonly IManageTeamsService _manageTeamsService;
         private readonly IManageTeamsMembersService _manageTeamsMembersService;
+        private readonly IManageTasksService _manageTasksService;
         private readonly IStringLocalizer<ManageSprintsController> _localizer;
 
 
-        public ManageSprintsController(IManageSprintsService manageSprintsService, IAccessCheckService accessCheckService, IManageTeamsService manageTeamsService, IManageTeamsMembersService manageTeamsMembersService, IStringLocalizer<ManageSprintsController> localizer)
+        public ManageSprintsController(
+            IManageSprintsService manageSprintsService, 
+            IAccessCheckService accessCheckService, 
+            IManageTeamsService manageTeamsService, 
+            IManageTeamsMembersService manageTeamsMembersService, 
+            IManageTasksService manageTasksService,
+            IStringLocalizer<ManageSprintsController> localizer)
         {
             _manageSprintsService = manageSprintsService;
             _manageTeamsService = manageTeamsService;
             _accessCheckService = accessCheckService;
             _manageTeamsMembersService = manageTeamsMembersService;
+            _manageTasksService = manageTasksService;
             _localizer = localizer;
         }
 
@@ -38,7 +46,7 @@ namespace Teams.Web.Controllers
             {
                 sprints = (List<Sprint>)await _manageSprintsService.GetAllSprintsAsync(teamId, options);
             }
-            else 
+            else
                 return View("ErrorGetAllSprints");
 
             var team = await _manageSprintsService.GetTeam(teamId);
@@ -56,7 +64,7 @@ namespace Teams.Web.Controllers
             ViewData["RemoveMember"] = _localizer["RemoveMember"];
             ViewData["Remove"] = _localizer["Remove"];
             ViewData["Cancel"] = _localizer["Cancel"];
-            
+
             ViewBag.TeamId = teamId;
             ViewBag.TeamName = team.TeamName;
             ViewBag.TeamOwner = team.Owner.Email;
@@ -87,6 +95,28 @@ namespace Teams.Web.Controllers
             if (sprint == null)
                 return View("ErrorGetAllSprints");
             return View(sprint);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> CompleteTaskInSprint(int taskId, bool isCompleted)
+        {
+            // Представление не передает данные об объекте
+            //task.Completed = isCompleted;
+
+            var task = await _manageTasksService.GetTaskByIdAsync(taskId);
+            
+            task.Completed = isCompleted;
+
+            var result = await _manageTasksService.EditTaskAsync(task);
+
+            if (result)
+            {
+                return RedirectToAction("GetSprintById", new { sprintId = task.SprintId });
+            }
+            else
+            {
+                return View("Error");
+            }
         }
 
         [Authorize]
