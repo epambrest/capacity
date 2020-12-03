@@ -26,5 +26,7 @@ namespace Teams.Data.Models
         public string Link { get; set; }
         [Column("StoryPoints"), Required]
         public int StoryPoints { get; set; }
+        [Column("Completed"), Required]
+        public bool Completed { get; set; }
     }
 }
