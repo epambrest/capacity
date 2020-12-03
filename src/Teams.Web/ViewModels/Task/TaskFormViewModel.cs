@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using Teams.Data.Models;
+using Teams.Web.ViewModels.Sprint;
+using Teams.Web.ViewModels.TeamMember;
 
-namespace Teams.Web.ViewModels
+namespace Teams.Web.ViewModels.Task
 {
     public class TaskFormViewModel
     {
@@ -14,7 +15,7 @@ namespace Teams.Web.ViewModels
         public string TeamName { get; set; }
         public string TaskName { get; set; }
         public string ErrorMessage { get; set; }
-        public List<TeamMember> TeamMembers { get; set; }
-        public List<Sprint> Sprints { get; set; }
+        public List<TeamMemberViewModel> TeamMembers { get; set; }
+        public List<SprintViewModel> Sprints { get; set; }
     }
 }

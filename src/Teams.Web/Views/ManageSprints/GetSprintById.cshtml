@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
-@model Teams.Data.Models.Sprint
+@model Teams.Web.ViewModels.Sprint.SprintViewModel
 @{
     ViewBag.Title = Model.Name;
 }
@@ -57,13 +57,13 @@
             <td align="left">@item.Name</td>
             <td align="left">@item.TeamMember.Member.Email</td>
             <td align="left">@item.StoryPoints</td>
-            <td href="https://@item.Link"><a href="@item.Link" align="left">@Localizer["Link"]</a></td>
+            <td><a href="@item.Link" align="left">@Localizer["Link"]</a></td>
 
             <td style="visibility: @ViewBag.AddVision" align="right">
                 @Html.ActionLink("", "EditTask", "ManageTasks", new { teamId = Model.TeamId, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })
             </td>
             <td style="visibility: @ViewBag.AddVision" align="right">
-                <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromSprint"
+                  <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromSprint"
                         data-taskname="@item.Name" data-taskid="@item.Id" data-sprintname="@Model.Name">
                     <i class='far fa-trash-alt'></i>
                 </button>
