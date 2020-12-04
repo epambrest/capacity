@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
@@ -26,7 +27,7 @@ namespace Teams.Data.Models
         public string Link { get; set; }
         [Column("StoryPoints"), Required]
         public int StoryPoints { get; set; }
-        [Column("Completed"), Required]
+        [Column("Completed"), Required, DefaultValue(false)]
         public bool Completed { get; set; }
     }
 }
