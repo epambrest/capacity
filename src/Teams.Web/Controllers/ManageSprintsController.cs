@@ -100,12 +100,17 @@ namespace Teams.Web.Controllers
         [Authorize]
         public async Task<IActionResult> CompleteTaskInSprint(int taskId, bool isCompleted)
         {
-            // Представление не передает данные об объекте
-            //task.Completed = isCompleted;
-
             var task = await _manageTasksService.GetTaskByIdAsync(taskId);
-            
-            task.Completed = isCompleted;
+            var sprint = await _manageSprintsService.GetSprintAsync(task.SprintId, false);
+
+            if (sprint != null && sprint.IsActive)
+            {
+                task.Completed = isCompleted;
+            }
+            else
+            {
+                return View("Error");
+            }
 
             var result = await _manageTasksService.EditTaskAsync(task);
 
@@ -115,6 +120,7 @@ namespace Teams.Web.Controllers
             }
             else
             {
+                task.Completed = false;
                 return View("Error");
             }
         }
