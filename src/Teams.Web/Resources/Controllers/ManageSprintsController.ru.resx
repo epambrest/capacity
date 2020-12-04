@@ -167,6 +167,9 @@
   <data name="NotActive" xml:space="preserve">
     <value>Не активный</value>
   </data>
+  <data name="NotOwner" xml:space="preserve">
+    <value>Вы не являетесь владельцем</value>
+  </data>
   <data name="Owner" xml:space="preserve">
     <value>Владелец</value>
   </data>
