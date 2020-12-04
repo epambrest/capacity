@@ -245,8 +245,10 @@ namespace Teams.Web.Controllers
 
         }
 
-        public IActionResult AddError(int teamId)
+        public IActionResult NotOwnerError(int teamId)
         {
+            ViewData["Error"] = _localizer["Error"];
+            ViewData["Cause"] = _localizer["NotOwner"];
             return View(teamId);
         }
 

@@ -179,6 +179,9 @@
   <data name="NotActive" xml:space="preserve">
     <value>Not Active</value>
   </data>
+  <data name="NotOwner" xml:space="preserve">
+    <value>You are not the owner</value>
+  </data>
   <data name="Owner" xml:space="preserve">
     <value>Owner</value>
   </data>
