@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,7 +27,9 @@ namespace Teams.Web.Controllers
 
         private readonly IAccessCheckService _accessCheckService;
 
-        public ManageTeamMembersController(IManageTeamsMembersService manageTeamsMembersService, IManageTeamsService manageTeamsService, IAccessCheckService accessCheckService, UserManager<IdentityUser> userManager)
+        private readonly IStringLocalizer<ManageTeamMembersController> _localizer;
+
+        public ManageTeamMembersController(IManageTeamsMembersService manageTeamsMembersService, IManageTeamsService manageTeamsService, IAccessCheckService accessCheckService, UserManager<IdentityUser> userManager, IStringLocalizer<ManageTeamMembersController> localizer)
         {
             _manageTeamsMembersService = manageTeamsMembersService;
 
@@ -35,6 +38,8 @@ namespace Teams.Web.Controllers
             _accessCheckService = accessCheckService;
 
             _userManager = userManager;
+
+            _localizer = localizer;
         }
 
         public IActionResult Index()
@@ -116,16 +121,18 @@ namespace Teams.Web.Controllers
         [Authorize]
         public async Task<IActionResult> AddMemberAsync(int teamId, string memberId)
         {
-            if (memberId == null) return RedirectToAction("AddError", new { errorMessage = "Field is empty" });
+            if (memberId == null) return RedirectToAction("AddError", new { errorMessage = _localizer["MemberFieldError"], teamId = teamId });
 
             bool result = await _manageTeamsMembersService.AddAsync(teamId, memberId);
 
             if (result) return RedirectToAction("TeamMembers", new { teamId });
-            else return RedirectToAction("AddError", new { errorMessage = "Current user already in team" });
+            else return RedirectToAction("AddError", new { errorMessage= _localizer["CurrentUser"], teamId = teamId });
         }
-        public IActionResult AddError(string errorMessage)
+        public IActionResult AddError(string errorMessage, int teamId)
         {
-            ViewBag.errorMessage = errorMessage;
+            ViewData["Error"] = _localizer["Error"];
+            ViewBag.TeamId = teamId;
+            ViewData["Cause"] = errorMessage;
             return View();
         }
 

@@ -4,7 +4,8 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Ooops... Something went wrong!</h1>
+    <h1 class="display-4">@ViewData["Error"]</h1>
+    <p style="color:red"> @ViewData["Cause"]</p>
 </div>
 <div style="margin: 10px 0px 0px 30px" align="center">
     <h><a color="black">@Html.ActionLink("  Return to sprints", "AllSprints", "ManageSprints", new { teamId = Model })</a></h>
