@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -9,6 +10,9 @@ using Teams.Business.Services;
 using Teams.Data;
 using Teams.Data.Models;
 using Teams.Security;
+using Teams.Web.ViewModels;
+using Teams.Web.ViewModels.Team;
+using Microsoft.Extensions.Localization;
 
 namespace Teams.Web.Controllers
 {
@@ -16,11 +20,13 @@ namespace Teams.Web.Controllers
     {
         private readonly IManageTeamsService _manageTeamsService;
         private readonly IAccessCheckService _accessCheckService;
+        private readonly IStringLocalizer<ManageTeamsController> _localizer;
 
-        public ManageTeamsController(IManageTeamsService manageTeamsService, IAccessCheckService accessCheckService)
+        public ManageTeamsController(IManageTeamsService manageTeamsService, IAccessCheckService accessCheckService, IStringLocalizer<ManageTeamsController> localizer)
         {
             _manageTeamsService = manageTeamsService;
             _accessCheckService = accessCheckService;
+            _localizer = localizer;
         }
 
         public IActionResult Index()
@@ -31,11 +37,14 @@ namespace Teams.Web.Controllers
         [Authorize]
         public async Task<IActionResult> GetMyTeamsAsync()
         {
-            return View(await _manageTeamsService.GetMyTeamsAsync());
+            var teams = await _manageTeamsService.GetMyTeamsAsync();
+            var teamModelView = new List<TeamViewModel>();
+            teams.ToList().ForEach(t=>teamModelView.Add(new TeamViewModel(){Owner = t.Owner,TeamName = t.TeamName,TeamOwner = t.TeamOwner,Id = t.Id}));
+            return View(teamModelView);
         }
 
         [Authorize, NonAction]
-        public async Task<Team> GetTeamAsync(int teamId)
+        private async Task<Team> GetTeamAsync(int teamId)
         {
             if (await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
@@ -48,15 +57,21 @@ namespace Teams.Web.Controllers
         [Authorize]
         public async Task<IActionResult> EditTeamNameAsync(int teamId)
         {
-            return View(await GetTeamAsync(teamId));
+            var team = await GetTeamAsync(teamId);
+            var teamModelView = new TeamViewModel(){Id = team.Id,TeamName =team.TeamName};
+            return View(teamModelView);
         }
 
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> EditTeamNameAsync(int teamId, string teamName)
         {
+            if (string.IsNullOrEmpty(teamName))
+                return RedirectToAction("NameError");
             ViewBag.resultOfEditing = await _manageTeamsService.EditTeamNameAsync(teamId, teamName);
-            return View(await GetTeamAsync(teamId));
+            var team = await GetTeamAsync(teamId);
+            var teamModelView = new TeamViewModel() { Id = team.Id, TeamName = team.TeamName };
+            return View(teamModelView);
         }
 
         public IActionResult Privacy()
@@ -81,12 +96,19 @@ namespace Teams.Web.Controllers
         [Authorize]
         public async Task<IActionResult> AddTeam(string teamName)
         {
-            if (ModelState.IsValid)
+            if (string.IsNullOrEmpty(teamName))
             {
-                await _manageTeamsService.AddTeamAsync(teamName);
-                return RedirectToAction("GetMyTeams");
+                return RedirectToAction("NameError");
             }
-            return View(teamName);
+            await _manageTeamsService.AddTeamAsync(teamName);
+            return RedirectToAction("GetMyTeams");
+        }
+
+        public IActionResult NameError()
+        {
+            ViewData["Error"] = _localizer["Error"];
+            ViewData["Cause"] = _localizer["NameEmpty"];
+            return View();
         }
 
         [Authorize]
