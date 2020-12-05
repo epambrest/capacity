@@ -120,6 +120,9 @@
   <data name="Cancel" xml:space="preserve">
     <value>Отмена</value>
   </data>
+  <data name="Complete" xml:space="preserve">
+    <value>Завершить</value>
+  </data>
   <data name="DaysinSprint" xml:space="preserve">
     <value>Количество дней</value>
   </data>
@@ -137,6 +140,9 @@
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Вы уверены, что хотите удалить </value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Статус</value>
   </data>
   <data name="StoryPoint" xml:space="preserve">
     <value>Количество СП</value>
