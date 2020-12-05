@@ -178,7 +178,7 @@ namespace Teams.Web.Controllers
 
             if ((currentSprint.Status == PossibleStatuses.createdStatus && status == PossibleStatuses.activeStatus) || (currentSprint.Status == PossibleStatuses.activeStatus && status == PossibleStatuses.completedStatus) || currentSprint.Status == status)
             {
-                if(activeSprint != null && currentSprint.Status != PossibleStatuses.activeStatus)
+                if(activeSprint != null && currentSprint.Status == PossibleStatuses.activeStatus && activeSprint.Id != currentSprint.Id)
                 {
                     return RedirectToAction("EditSprint", new { teamId = teamId, sprintId = sprintId, errorMessage = _localizer["ActiveFieldError"] });
                 }
