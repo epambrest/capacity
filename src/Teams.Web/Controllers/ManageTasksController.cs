@@ -206,6 +206,56 @@ namespace Teams.Web.Controllers
             return await _manageTeamsMembersService.GetAllTeamMembersAsync(teamId, new DisplayOptions { });
         }
 
+        [Authorize]
+        public async Task<IActionResult> GetResultTeamMember(int sprintId, int teamId, int teamMemberId = 1)
+        {
+            var members = await GetAllTeamMembersAsync(teamId);
+            var currentMember = members.FirstOrDefault(member => member.Id == teamMemberId);
+            var completedSprint = await _manageSprintsService.GetSprintAsync(sprintId, true);
+            var allMemberTasks = completedSprint.Tasks.Where(t => t.MemberId == teamMemberId).ToList();
+            var allSprintTasks = completedSprint.Tasks.ToList();
+
+            if (completedSprint == null || currentMember == null || completedSprint == null)
+                return View("GetResultError");
+            if(completedSprint.Status != 2)
+                return View("GetResultError");
+
+            int totalStoryPoints = 0;
+            allMemberTasks.ForEach(t => totalStoryPoints += t.StoryPoints);
+            var resultsTasksForMemberViewModel = new ResultsTasksForMemberViewModel()
+            {
+                teamMemberId = currentMember.Id,
+                teamId = teamId,
+                completedSprintId = completedSprint.Id,
+                teamMemberEmail = currentMember.Member.Email,
+                sprintName = completedSprint.Name,
+                Tasks = new List<TaskViewModel>(),
+                TeamMembers = new List<TeamMemberViewModel>(),
+                TotalStoryPoints = totalStoryPoints
+            };
+
+            allMemberTasks.ForEach(t => resultsTasksForMemberViewModel.Tasks.Add(new TaskViewModel()
+            {
+                TeamMember = new TeamMemberViewModel() { Member = t.TeamMember.Member },
+                Name = t.Name,
+                StoryPoints = t.StoryPoints,
+                Id = t.Id,
+                Link = t.Link,
+            }
+            ));
+
+            allSprintTasks.ForEach(t => resultsTasksForMemberViewModel.TeamMembers.Add(new TeamMemberViewModel()
+            {
+                Id = t.TeamMember.Id,
+                TeamId = t.TeamMember.TeamId,
+                MemberId = t.TeamMember.Id.ToString(),
+                Member = t.TeamMember.Member
+            }
+            ));
+
+            return View(resultsTasksForMemberViewModel);
+        }
+
         public IActionResult NotOwnerError(int teamId)
         {
             ViewBag.TeamId = teamId;

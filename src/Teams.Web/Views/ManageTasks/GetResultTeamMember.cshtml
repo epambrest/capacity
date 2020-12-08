@@ -1,0 +1,90 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model Teams.Web.ViewModels.Task.ResultsTasksForMemberViewModel
+@{
+    ViewBag.Title = Model.teamMemberEmail;
+}
+
+<script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+
+<div style="margin: 10px 0px 0px 30px" align="left">
+    <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink(Localizer["GoBackSprint"].Value, "GetSprintById", "ManageSprints", new { sprintId = Model.completedSprintId })</a></h>
+</div>
+<div align="center">
+    <h><font size="6" color="black"><strong>@Localizer["ResultForMember"]:@Model.teamMemberEmail</strong></font></h>
+</div>
+<hr />
+
+<table class="table">
+
+    <tr align="center">
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["NameofTask"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPoint"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Link"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Status"]</td>
+    </tr>
+
+    @foreach (var item in Model.Tasks)
+    {
+        <tr align="center">
+            <td align="left">@item.Name</td>
+            <td align="left">@item.StoryPoints</td>
+            <td align="left"><a href="@item.Link" align="left">@Localizer["Link"]</a></td>
+            <td style="visibility: @ViewBag.AddVision" align="right">
+            </td>
+        </tr>
+    }
+    <tr align="center">
+        <td align="left">@Localizer["TotalSp"]</td>
+        <td align="left">@Model.TotalStoryPoints</td>
+        <td align="right">@Localizer["TotalQuantity"]</td>
+        <td align="right">@Model.Tasks.Count</td>
+    </tr>
+
+</table>
+
+<table class="table">
+    <tr align="center">
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["QuantityСompleted"]:</td>
+    </tr>
+    <tr>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["QuantityUnСompleted"]:</td>
+    </tr>
+</table>
+
+<div style="margin-top:4px">
+    @using (Html.BeginForm("GetResultTeamMember", "ManageTasks", FormMethod.Get))
+    {
+        <div>
+            @Html.Hidden("sprintId", Model.completedSprintId)
+        </div>
+        <div>
+            @Html.Hidden("teamId", Model.teamId)
+        </div>
+        <div>
+            <select class="js-example-basic-single form-control" name="teamMemberId" onchange="myFunction(event)">
+                <option disabled selected>@Localizer["SelectUser"]</option>
+                @{  string previos = null;
+                    foreach (var item in Model.TeamMembers)
+                    {
+                        if (item.Member.Email != previos)
+                        {
+                            <option value=@item.Id>@item.Member.Email</option>
+                        }
+                        previos = item.Member.Email;
+                    }
+                 }
+            </select>
+        </div>
+        <div>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">@Localizer["Show"]</button>
+        </div>
+    }
+</div>
+
+
+

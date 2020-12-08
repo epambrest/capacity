@@ -111,7 +111,7 @@ namespace Teams.Web.Controllers
 
             sprint.Tasks.ToList().ForEach(t=>sprintViewModel.Tasks.Add(new TaskViewModel()
                 {
-                    TeamMember = new TeamMemberViewModel(){Member = t.TeamMember.Member},
+                    TeamMember = new TeamMemberViewModel(){Member = t.TeamMember.Member, MemberId = t.MemberId.ToString()},
                     Name = t.Name,
                     StoryPoints = t.StoryPoints,
                     Id = t.Id,

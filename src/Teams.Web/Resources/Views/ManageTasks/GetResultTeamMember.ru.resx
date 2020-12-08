@@ -117,43 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
-  <data name="Created" xml:space="preserve">
-    <value>Created</value>
-  </data>
-  <data name="DaysinSprint" xml:space="preserve">
-    <value>Days in Sprint</value>
-  </data>
-  <data name="from" xml:space="preserve">
-    <value> from </value>
+  <data name="GoBackSprint" xml:space="preserve">
+    <value>Вернуться обратно к спринту</value>
   </data>
   <data name="Link" xml:space="preserve">
-    <value>Link</value>
-  </data>
-  <data name="NameofSprint" xml:space="preserve">
-    <value>Name of Sprint</value>
+    <value>Ссылка</value>
   </data>
   <data name="NameofTask" xml:space="preserve">
-    <value>Name of Task</value>
+    <value>Имя задачи</value>
   </data>
-  <data name="Remove" xml:space="preserve">
-    <value>Are you sure you want to remove</value>
+  <data name="QuantityUnСompleted" xml:space="preserve">
+    <value>Количество невыполненых задач</value>
   </data>
-  <data name="ResultCompletedSprint" xml:space="preserve">
-    <value>Result</value>
+  <data name="QuantityСompleted" xml:space="preserve">
+    <value>Количество выполненых задач</value>
+  </data>
+  <data name="ResultForMember" xml:space="preserve">
+    <value>Результат задач для участника</value>
+  </data>
+  <data name="SelectUser" xml:space="preserve">
+    <value>Выберите участника</value>
+  </data>
+  <data name="Show" xml:space="preserve">
+    <value>Показать</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Статус</value>
   </data>
   <data name="StoryPoint" xml:space="preserve">
-    <value>Story Point</value>
+    <value>СП</value>
   </data>
   <data name="StoryPointinHours" xml:space="preserve">
-    <value>Story Point in Hours</value>
-  </data>
-  <data name="User" xml:space="preserve">
-    <value>User</value>
-  </data>
-  <data name="Сompleted" xml:space="preserve">
-    <value>Completed</value>
+    <value>СП в час</value>
   </data>
 </root>
