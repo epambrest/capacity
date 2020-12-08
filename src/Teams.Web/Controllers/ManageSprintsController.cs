@@ -22,15 +22,19 @@ namespace Teams.Web.Controllers
         private readonly IAccessCheckService _accessCheckService;
         private readonly IManageTeamsService _manageTeamsService;
         private readonly IManageTeamsMembersService _manageTeamsMembersService;
+        private readonly IManageTasksService _manageTasksService;
         private readonly IStringLocalizer<ManageSprintsController> _localizer;
 
 
-        public ManageSprintsController(IManageSprintsService manageSprintsService, IAccessCheckService accessCheckService, IManageTeamsService manageTeamsService, IManageTeamsMembersService manageTeamsMembersService, IStringLocalizer<ManageSprintsController> localizer)
+        public ManageSprintsController(IManageSprintsService manageSprintsService, IAccessCheckService accessCheckService, 
+            IManageTeamsService manageTeamsService, IManageTeamsMembersService manageTeamsMembersService, 
+            IManageTasksService manageTasksService, IStringLocalizer<ManageSprintsController> localizer)
         {
             _manageSprintsService = manageSprintsService;
             _manageTeamsService = manageTeamsService;
             _accessCheckService = accessCheckService;
             _manageTeamsMembersService = manageTeamsMembersService;
+            _manageTasksService = manageTasksService;
             _localizer = localizer;
         }
 
@@ -92,6 +96,34 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize]
+        public async Task<IActionResult> CompleteTaskInSprint(int taskId, bool isCompleted)
+        {
+            var task = await _manageTasksService.GetTaskByIdAsync(taskId);
+            var sprint = await _manageSprintsService.GetSprintAsync(task.SprintId, false);
+
+            if (sprint != null && sprint.IsActive)
+            {
+                task.Completed = isCompleted;
+            }
+            else
+            {
+                return View("Error");
+            }
+
+            var result = await _manageTasksService.EditTaskAsync(task);
+
+            if (result)
+            {
+                return RedirectToAction("GetSprintById", new { sprintId = task.SprintId });
+            }
+            else
+            {
+                task.Completed = false;
+                return View("Error");
+            }
+        }
+
+        [Authorize]
         public async Task<IActionResult> GetSprintById(int sprintId)
         {
             var sprint = await _manageSprintsService.GetSprintAsync(sprintId, true);
@@ -116,7 +148,8 @@ namespace Teams.Web.Controllers
                     Name = t.Name,
                     StoryPoints = t.StoryPoints,
                     Id = t.Id,
-                    Link = t.Link
+                    Link = t.Link,
+                    Completed = t.Completed
                 }
             ));
 
