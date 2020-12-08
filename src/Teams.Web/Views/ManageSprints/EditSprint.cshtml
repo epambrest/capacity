@@ -37,16 +37,16 @@
 
                 switch(Model.Status)
                 {
-                    case PossibleStatuses.completedStatus: activeButtonKeys[PossibleStatuses.completedStatus] = true; break;
-                    case PossibleStatuses.createdStatus: activeButtonKeys[PossibleStatuses.createdStatus] = true; break;
-                    case PossibleStatuses.activeStatus: activeButtonKeys[PossibleStatuses.activeStatus] = true; break;                  
+                    case PossibleStatuses.CompletedStatus: activeButtonKeys[PossibleStatuses.CompletedStatus] = true; break;
+                    case PossibleStatuses.CreatedStatus: activeButtonKeys[PossibleStatuses.CreatedStatus] = true; break;
+                    case PossibleStatuses.ActiveStatus: activeButtonKeys[PossibleStatuses.ActiveStatus] = true; break;                  
                 }
             }
-            @Html.RadioButton("status", PossibleStatuses.completedStatus, activeButtonKeys[PossibleStatuses.completedStatus])
+            @Html.RadioButton("status", PossibleStatuses.CompletedStatus, activeButtonKeys[PossibleStatuses.CompletedStatus])
             <span>@Localizer["Сompleted"]</span> <br />
-            @Html.RadioButton("status", PossibleStatuses.activeStatus, activeButtonKeys[PossibleStatuses.activeStatus])
+            @Html.RadioButton("status", PossibleStatuses.ActiveStatus, activeButtonKeys[PossibleStatuses.ActiveStatus])
             <span>@Localizer["Active"]</span> <br />
-            @Html.RadioButton("status", PossibleStatuses.createdStatus, activeButtonKeys[PossibleStatuses.createdStatus])
+            @Html.RadioButton("status", PossibleStatuses.CreatedStatus, activeButtonKeys[PossibleStatuses.CreatedStatus])
             <span>@Localizer["Created"]</span>
         </div>
         <div style="display: table">

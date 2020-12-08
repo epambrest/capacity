@@ -25,15 +25,15 @@
     </tr>
 
     <tr align="center">
-        @if (Model.Status == PossibleStatuses.activeStatus)
+        @if (Model.Status == PossibleStatuses.ActiveStatus)
         {
             <td align="left" width="1%" bgcolor="green"></td>
         }
-        else if (Model.Status == PossibleStatuses.completedStatus)
+        else if (Model.Status == PossibleStatuses.CompletedStatus)
         {
             <td align="left" width="1%" bgcolor="yellow"></td>
         }
-        else if (Model.Status == PossibleStatuses.createdStatus)
+        else if (Model.Status == PossibleStatuses.CreatedStatus)
         {
             <td align="left" width="1%" bgcolor="blue"></td>
         }
@@ -46,6 +46,7 @@
 <table class="table">
 
     <tr align="center">
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Status"]</td>
         <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["NameofTask"]</td>
         <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["User"]</td>
         <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPoint"]</td>
@@ -58,6 +59,16 @@
     @foreach (var item in @Model.Tasks)
     {
         <tr align="center">
+
+            @if (item.Completed)
+            {
+                <td align="left" width="1%" bgcolor="green"></td>
+            }
+            else
+            {
+                 <td align="left">@Html.ActionLink(Localizer["Complete"].Value, "CompleteTaskInSprint", new { taskId = item.Id, isCompleted = true })</td>
+            }
+
             <td align="left">@item.Name</td>
             <td align="left">@item.TeamMember.Member.Email</td>
             <td align="left">@item.StoryPoints</td>
