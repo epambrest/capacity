@@ -8,7 +8,7 @@ using Teams.Data;
 using Teams.Data.Models;
 using Teams.Data.Repository;
 
-namespace Teams.Business.Tests
+namespace Teams.Data.Tests
 {
     [TestFixture]
     class SprintRepositoryTest
