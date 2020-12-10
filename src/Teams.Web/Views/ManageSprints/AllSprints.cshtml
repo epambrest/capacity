@@ -28,15 +28,15 @@
         @foreach (var item in Model.Sprints)
         {
             <tr align="center">
-                @if (item.Status == PossibleStatuses.activeStatus)
+                @if (item.Status == PossibleStatuses.ActiveStatus)
                 {
                     <td align="left" width="1%" bgcolor="green"></td>
                 }
-                else if (item.Status == PossibleStatuses.completedStatus)
+                else if (item.Status == PossibleStatuses.CompletedStatus)
                 {
                     <td align="left" width="1%" bgcolor="yellow"></td>
                 }
-                else if (item.Status == PossibleStatuses.createdStatus)
+                else if (item.Status == PossibleStatuses.CreatedStatus)
                 {
                     <td align="left" width="1%" bgcolor="blue"></td>
                 }

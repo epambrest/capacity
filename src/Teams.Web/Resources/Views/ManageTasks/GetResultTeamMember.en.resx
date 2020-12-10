@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Complete" xml:space="preserve">
+    <value>Complete</value>
+  </data>
   <data name="GoBackSprint" xml:space="preserve">
     <value>Go back to sprint</value>
   </data>
@@ -141,6 +144,12 @@
   <data name="Show" xml:space="preserve">
     <value>Show</value>
   </data>
+  <data name="SpForUnСompleted" xml:space="preserve">
+    <value>Sp for Uncompleted Tasks</value>
+  </data>
+  <data name="SpForСompleted" xml:space="preserve">
+    <value>Sp for Completed Tasks</value>
+  </data>
   <data name="Status" xml:space="preserve">
     <value>Status</value>
   </data>
@@ -149,5 +158,14 @@
   </data>
   <data name="StoryPointinHours" xml:space="preserve">
     <value>Story Point in Hours</value>
+  </data>
+  <data name="TotalQuantity" xml:space="preserve">
+    <value>Total quantity </value>
+  </data>
+  <data name="TotalSp" xml:space="preserve">
+    <value>Total Sp</value>
+  </data>
+  <data name="UnComplete" xml:space="preserve">
+    <value>UnComplete</value>
   </data>
 </root>

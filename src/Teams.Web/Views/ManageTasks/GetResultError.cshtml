@@ -1,9 +1,11 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model Teams.Web.ViewModels.Task.GetResultErrorViewModel
+
+@{
     ViewData["Title"] = "GetResultError";
 }
-@using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer Localizer
 
 <div class="text-center">
-    <h1 class="display-4">Ooops... Something went wrong!</h1>
+    <h1 class="display-4">@Model.ErrorMessage</h1>
 </div>
