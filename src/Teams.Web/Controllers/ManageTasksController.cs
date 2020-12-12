@@ -150,40 +150,27 @@ namespace Teams.Web.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> EditTaskAsync(int teamId, int taskId, int taskMemberId, int taskSprintId, string taskName, string taskLink, int taskStoryPoints)
+        public async Task<IActionResult> EditTaskAsync(TaskFormViewModel taskViewModel)
         {
-            if (string.IsNullOrEmpty(taskName))
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("EditTask", new { teamId = teamId, taskId = taskId, errorMessage = _localizer["NameFieldError"] });
-            }
-            if (string.IsNullOrEmpty(taskLink) || !Regex.IsMatch(taskLink, (@"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$")))
-            {
-                return RedirectToAction("EditTask", new { teamId = teamId, taskId = taskId, errorMessage = _localizer["LinkFieldError"] });
-            }
-            if (taskStoryPoints <= 0)
-            {
-                return RedirectToAction("EditTask", new { teamId = teamId, taskId = taskId, errorMessage = _localizer["PointsFieldError"] });
-            }
-            if (taskMemberId <= 0)
-            {
-                return RedirectToAction("EditTask", new { teamId = teamId, taskId = taskId, errorMessage = _localizer["MemberFieldError"] });
+                var task = new Data.Models.Task
+                {
+                    Id = taskViewModel.TaskId,
+                    TeamId = taskViewModel.TeamId,
+                    Name = taskViewModel.TaskName,
+                    StoryPoints = taskViewModel.TaskStoryPoints,
+                    Link = taskViewModel.TaskLink,
+                    SprintId = taskViewModel.TaskSprintId,
+                    MemberId = taskViewModel.TaskMemberId
+                };
+                var result = await EditTaskAsync(task);
+
+                if (result) return RedirectToAction("AllTasksForTeam", new { teamId = taskViewModel.TaskId });
+                else return RedirectToAction("NotOwnerError", new { teamId = taskViewModel.TaskId });
             }
 
-            var task = new Data.Models.Task
-            {
-                Id = taskId,
-                TeamId = teamId,
-                Name = taskName,
-                StoryPoints = taskStoryPoints,
-                Link = taskLink,
-                SprintId = taskSprintId,
-                MemberId = taskMemberId
-            };
-            var result = await EditTaskAsync(task);
-
-            if (result) return RedirectToAction("AllTasksForTeam", new { teamId = teamId });
-            else return RedirectToAction("NotOwnerError", new { teamId = teamId });
-
+            return View(taskViewModel);
         }
 
         [Authorize, NonAction]
