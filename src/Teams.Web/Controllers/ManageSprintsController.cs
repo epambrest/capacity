@@ -199,20 +199,7 @@ namespace Teams.Web.Controllers
             {
                 var sprints = await _manageSprintsService.GetAllSprintsAsync(editSprintViewModel.TeamId, new DisplayOptions());
                 var activeSprints = sprints.FirstOrDefault(i => i.IsActive == true);
-                if (string.IsNullOrEmpty(editSprintViewModel.SprintName))
-                {
-                    return RedirectToAction("EditSprint", new { teamId = editSprintViewModel.TeamId, sprintId = editSprintViewModel.SprintId, errorMessage = _localizer["NameFieldError"] });
-                }
-
-                if (editSprintViewModel.SprintDaysInSprint <= 0)
-                {
-                    return RedirectToAction("EditSprint", new { teamId = editSprintViewModel.TeamId, sprintId = editSprintViewModel.SprintId, errorMessage = _localizer["DaysFieldError"] });
-                }
-
-                if (editSprintViewModel.SprintStorePointInHours <= 0)
-                {
-                    return RedirectToAction("EditSprint", new { teamId = editSprintViewModel.TeamId, sprintId = editSprintViewModel.SprintId, errorMessage = _localizer["PointsFieldError"] });
-                }
+                
                 if (activeSprints != null && editSprintViewModel.IsActive == true)
                 {
                     return RedirectToAction("EditSprint", new { teamId = editSprintViewModel.TeamId, sprintId = editSprintViewModel.SprintId, errorMessage = _localizer["ActiveFieldError"] });
