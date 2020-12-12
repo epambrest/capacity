@@ -19,16 +19,19 @@
         <div>
             <label for="name">@Localizer["Name"] :</label>
             <input id="name" name="sprintName" class="form-control" value="@Model.SprintName" />
+            <span asp-validation-for="SprintName"></span>
         </div>
 
         <div>
             <label for="days">@Localizer["DaysInSprint"] :</label>
             <input id="days" name="daysInSprint" class="form-control" value="@Model.SprintDaysInSprint" />
+            <span asp-validation-for="SprintDaysInSprint"></span>
         </div>
 
         <div>
             <label for="points">@Localizer["StoryPointInHours"]</label>
             <input id="points" name="storePointsInHours" class="form-control" value="@Model.SprintStorePointInHours" />
+            <span asp-validation-for="SprintStorePointInHours"></span>
         </div>
 
         <div>
