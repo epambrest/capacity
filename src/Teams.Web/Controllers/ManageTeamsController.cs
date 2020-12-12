@@ -64,14 +64,16 @@ namespace Teams.Web.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> EditTeamNameAsync(int teamId, string teamName)
+        public async Task<IActionResult> EditTeamNameAsync(TeamViewModel teamViewModel)
         {
-            if (string.IsNullOrEmpty(teamName))
-                return RedirectToAction("NameError");
-            ViewBag.resultOfEditing = await _manageTeamsService.EditTeamNameAsync(teamId, teamName);
-            var team = await GetTeamAsync(teamId);
-            var teamModelView = new TeamViewModel() { Id = team.Id, TeamName = team.TeamName };
-            return View(teamModelView);
+            if (ModelState.IsValid)
+            {
+                ViewBag.resultOfEditing = await _manageTeamsService.EditTeamNameAsync(teamViewModel.Id, teamViewModel.TeamName);
+                var team = await GetTeamAsync(teamViewModel.Id);
+                return RedirectToAction("GetMyTeams");
+            }
+
+            return View(teamViewModel);
         }
 
         public IActionResult Privacy()
