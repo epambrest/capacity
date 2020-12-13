@@ -15,6 +15,7 @@ namespace Teams.Data
         public DbSet<TeamMember> TeamMembers { get; set; }
         public DbSet<Sprint> Sprint { get; set; }
         public DbSet<Task> Task { get; set; }
+        public DbSet<MemberWorkingDays> MemberWorkingDays { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

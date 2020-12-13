@@ -38,10 +38,12 @@ namespace Teams.Web
             services.AddTransient<IManageTeamsService, ManageTeamsService>();
             services.AddTransient<IManageSprintsService, ManageSprintsService>();
             services.AddTransient<IManageTasksService, ManageTasksService>();
+            services.AddTransient<IManageMemberWorkingDaysService, ManageMemberWorkingDaysService>();
             services.AddTransient<IRepository<Team, int>, TeamRepository>();
             services.AddTransient<IRepository<TeamMember, int>, TeamMemberRepository>();
             services.AddTransient<IRepository<Sprint, int>, SprintRepository>();
             services.AddTransient<IRepository<Task, int>, TaskRepository>();
+            services.AddTransient<IRepository<MemberWorkingDays, int>, MemberWorkingDaysRepository>();
             services.AddHttpContextAccessor();
             services.AddTransient<ICurrentUser, CurrentUser>();
             services.AddTransient<IManageTeamsMembersService, ManageTeamsMembersService>();

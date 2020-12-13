@@ -188,4 +188,7 @@
   <data name="StoryPointInHours" xml:space="preserve">
     <value>Кол-во часов в СП</value>
   </data>
+  <data name="WorkingDays" xml:space="preserve">
+    <value>Кол-во рабочих дней</value>
+  </data>
 </root>

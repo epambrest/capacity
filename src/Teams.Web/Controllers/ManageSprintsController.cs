@@ -57,9 +57,6 @@ namespace Teams.Web.Controllers
             ViewData["DaysInSprint"] = _localizer["DaysInSprint"];
             ViewData["StoryPointInHours"] = _localizer["StoryPointInHours"];
             ViewData["NameOfSprint"] = _localizer["NameOfSprint"];
-            ViewData["MemberEmail"] = _localizer["MemberEmail"];
-            ViewData["Owner"] = _localizer["Owner"];
-            ViewData["Member"] = _localizer["Member"];
             ViewData["AddMember"] = _localizer["AddMember"];
             ViewData["RemoveMember"] = _localizer["RemoveMember"];
             ViewData["Remove"] = _localizer["Remove"];

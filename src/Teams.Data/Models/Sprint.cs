@@ -30,5 +30,6 @@ namespace Teams.Data.Models
         [Column("IsActive"), DefaultValue(false)]
         public bool IsActive { get; set; }
         public virtual ICollection<Task> Tasks { get; set; }
+        public virtual ICollection<MemberWorkingDays> MemberWorkingDays { get; set; }
     }
 }
