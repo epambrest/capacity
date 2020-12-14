@@ -1,0 +1,33 @@
+﻿@model Teams.Web.ViewModels.Task.TaskViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
+
+<div style="margin: 10px 0px 0px 30px" align="left">
+    <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("Return to sprint", "AllTasksInTeam", new { teamId = Model.TeamId })</a></h>
+</div>
+
+<div align="center">
+    <h><font size="6" color="black"><strong>@Model.Name</strong></font></h>
+</div>
+
+<table class="table">
+
+    <tr align="center">
+
+        <td align="left" style="border-top: hidden; font-weight: bold"> @Localizer["Membername"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold"> @Localizer["Linkoftask"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold"> @Localizer["StoryPointinHours"]</td>
+    </tr>
+
+    <tr>
+        <td align="left">@Model.TeamMember.Member.UserName</td>
+        <td align="left">@Model.Link</td>
+        <td align="left">@Model.StoryPoints</td>
+    </tr>
+
+</table>

@@ -1,0 +1,88 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model Teams.Web.ViewModels.Team.TeamViewModel
+@{
+    ViewBag.Title = @Localizer["TeamMembers"];
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
+
+<div style="margin: 10px 0px 0px 30px" align="left">
+    <h><a color="black" onclick="location.href = '@Url.Action("GetMyTeams", "ManageTeams")'"><i class="fas fa-arrow-left"></i>@Localizer["Return"]</a></h>
+</div>
+<div align="center">
+    <h><font size="6" color="black">@Model.TeamName</font></h>
+</div>
+<table class="table">
+
+    <tr align="center">
+        <td align="left" style="border-top: hidden" width="1%"></td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["EmailMember"]</td>
+        <td align="right" style="border-top: hidden"></td>
+        <td style="border-top: hidden; visibility: @ViewBag.AddVision" align="right">
+            @Html.ActionLink("", "AddMember", new { teamId = Model.Id }, new { @class = "fas fa-user-plus", title = "Add Member", style = "margin: 10px 0px 0px 30px", align = "right" })
+        </td>
+    </tr>
+    <tr align="center">
+        <td align="left" width="1%"><i title="Owner" class="fas fa-crown"></i></td>
+        <td align="left">@Model.Owner.Email</td>
+        <td align="right"></td>
+        <td align="right"></td>
+    </tr>
+    @foreach (var item in Model.TeamMembers)
+    {
+        <tr align="center">
+            <td align="left" width="1%"><i title="Member" class="fas fa-user"></i></td>
+            <td align="left">@item.Member.Email</td>
+            <td align="right"></td>
+            @if (@Model.Owner.Email == User.Identity.Name)
+            {
+                <td align="right">
+                    <button type='button' id="1" class='btn btn-outline-danger border-0' data-toggle="modal"
+                            data-target="#removeMember" data-teamname="@Model.TeamName" data-teamid="@Model.Id"
+                            data-membername="@item.Member.Email" data-memberid="@item.MemberId">
+                        <i class='far fa-trash-alt'></i>
+                    </button>
+                </td>
+            }
+        </tr>
+    }
+</table>
+
+<form>
+    <div class="modal fade" id="removeMember" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p align="center" id="member"></p>
+                    <input type="hidden" id="teamId" name="teamId" value="" />
+                    <input type="hidden" id="memberId" name="memberId" value="" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-secondary" asp-action="Remove">OK</button>
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">@Localizer["Cancel"]</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+
+<script>
+    $(document).ready(function () {
+        $("#removeMember").on("show.bs.modal", function (event) {
+            var button = $(event.relatedTarget)
+            var teamName = button.data('teamname')
+            var teamId = button.data('teamid')
+            var memberName = button.data('membername')
+            var memberId = button.data('memberid')
+            var removeModal = $("#removeMember");
+            removeModal.find("#teamId").val(teamId);
+            removeModal.find("#memberId").val(memberId);
+            document.getElementById('member').innerHTML =
+                "@Localizer["Remove"]" + "<strong>" + memberName + "</strong>" + "@Localizer["from"]" + "<strong>" + teamName + "</strong>" + " ?";
+        });
+    });
+</script>

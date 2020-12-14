@@ -1,0 +1,29 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model Teams.Web.ViewModels.Team.TeamViewModel
+
+@{
+    ViewData["Title"] = @Localizer["AddTeam"];
+}
+
+<h1>@Localizer["AddTeam"]</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddTeam">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TeamName" class="control-label">@Localizer["EnterName"]</label>
+                <input asp-for="TeamName" class="form-control" />
+                <span asp-validation-for="TeamName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+
+                <input type="submit" value="@Localizer["AddTeam"]" class="btn btn-primary" />
+                <button style="margin-left:7px" type='button' class="btn btn-danger" onclick="location.href = '@Url.Action("GetMyTeams", "ManageTeams")'">@Localizer["BackToTeams"]</button>
+
+            </div>
+        </form>
+    </div>
+</div>
+

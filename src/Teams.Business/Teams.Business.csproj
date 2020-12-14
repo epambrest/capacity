@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Teams.Data\Teams.Data.csproj" />
+    <ProjectReference Include="..\Teams.Security\Teams.Security.csproj" />
+  </ItemGroup>
+
+</Project>
