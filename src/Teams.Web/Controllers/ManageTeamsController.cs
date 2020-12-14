@@ -96,14 +96,15 @@ namespace Teams.Web.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AddTeam(string teamName)
+        public async Task<IActionResult> AddTeam(TeamViewModel teamViewModel)
         {
-            if (string.IsNullOrEmpty(teamName))
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("NameError");
+                await _manageTeamsService.AddTeamAsync(teamViewModel.TeamName);
+                return RedirectToAction("GetMyTeams");
             }
-            await _manageTeamsService.AddTeamAsync(teamName);
-            return RedirectToAction("GetMyTeams");
+
+            return View();
         }
 
         public IActionResult NameError()
