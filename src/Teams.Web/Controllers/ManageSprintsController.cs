@@ -186,9 +186,10 @@ namespace Teams.Web.Controllers
         public async Task<IActionResult> AddSprintAsync(int teamId, string errorMessage)
         {
             var team = await _manageSprintsService.GetTeam(teamId);
-            var teamViewModel = new TeamViewModel() {Id = teamId, TeamName = team.TeamName};
+            var sprintViewModel = new SprintViewModel() { Id = teamId, Name = team.TeamName };
             ViewBag.ErrorMessage = errorMessage;
-            return View(teamViewModel);
+
+            return View(sprintViewModel);
         }
 
         [HttpPost]

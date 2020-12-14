@@ -1,4 +1,4 @@
-﻿@model Teams.Web.ViewModels.Team.TeamViewModel
+﻿@model Teams.Web.ViewModels.Sprint.SprintViewModel
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
 @{
@@ -17,17 +17,20 @@
         @Html.Hidden("teamId", @ViewBag.TeamId as string)
         <div>
             <label for="name">@Localizer["Name"] :</label>
-            <input id="name" name="sprintName" class="form-control" />
+            <input id="name" name="Name" class="form-control" />
+            <span asp-validation-for="Name"></span>
         </div>
 
         <div>
             <label for="days">@Localizer["DaysInSprint"] :</label>
-            <input id="days" name="daysInSprint" class="form-control" />
+            <input id="days" name="DaysInSprint" class="form-control" />
+            <span asp-validation-for="DaysInSprint"></span>
         </div>
 
         <div>
             <label for="points">@Localizer["StoryPointInHours"]</label>
-            <input id="points" name="storePointsInHours" class="form-control" />
+            <input id="points" name="StoryPointInHours" class="form-control" />
+            <span asp-validation-for="StoryPointInHours"></span>
         </div>
 
         <div>
