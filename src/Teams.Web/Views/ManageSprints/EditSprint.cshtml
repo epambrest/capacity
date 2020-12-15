@@ -14,33 +14,34 @@
     @using (Html.BeginForm("EditSprint", "ManageSprints", FormMethod.Post))
     {
         <div><p align="center" style="color:red">@Model.ErrorMessage</p></div>
-        @Html.Hidden("teamId", @Model.TeamId)
-        @Html.Hidden("sprintId", @Model.SprintId)
+        @Html.Hidden("TeamId", @Model.TeamId)
+        @Html.Hidden("SprintId", @Model.SprintId)
+        @Html.Hidden("TeamName", @Model.TeamName)
         <div>
             <label for="name">@Localizer["Name"] :</label>
-            <input id="name" name="sprintName" class="form-control" value="@Model.SprintName" />
+            <input id="name" name="SprintName" class="form-control" value="@Model.SprintName" />
             <span asp-validation-for="SprintName"></span>
         </div>
 
         <div>
             <label for="days">@Localizer["DaysInSprint"] :</label>
-            <input id="days" name="daysInSprint" class="form-control" value="@Model.SprintDaysInSprint" />
+            <input id="days" name="SprintDaysInSprint" class="form-control" value="@Model.SprintDaysInSprint" />
             <span asp-validation-for="SprintDaysInSprint"></span>
         </div>
 
         <div>
             <label for="points">@Localizer["StoryPointInHours"]</label>
-            <input id="points" name="storePointsInHours" class="form-control" value="@Model.SprintStorePointInHours" />
+            <input id="points" name="SprintStorePointInHours" class="form-control" value="@Model.SprintStorePointInHours" />
             <span asp-validation-for="SprintStorePointInHours"></span>
         </div>
 
         <div>
             <label>@Localizer["Active"]</label>
-            @Html.CheckBox("isActive", Model.IsActive)
+            @Html.CheckBox("IsActive", Model.IsActive)
         </div>
         <div style="display: table">
             <input id="sub" type="submit" class="btn btn-success" value="@Localizer["EditSprint"]" />
             <button style="margin-left:7px" type='button' class="btn btn-danger" onclick="location.href = '@Url.Action("AllSprints", "ManageSprints", new { teamId = Model.TeamId })'">@Localizer["Close"]</button>
-         </div>
+        </div>
     }
 </div>
