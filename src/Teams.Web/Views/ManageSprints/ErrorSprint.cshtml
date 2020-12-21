@@ -1,0 +1,10 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = @Localizer["Ooops"];
+}
+
+<div class="text-center">
+    <h1 class="display-4">@ViewData["Error"]</h1>
+    <p style="color:red"> @ViewData["Sprint"]=@Localizer["SprintNull"]</p>
+</div>

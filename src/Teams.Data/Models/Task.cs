@@ -20,8 +20,8 @@ namespace Teams.Data.Models
         [Column("SprintId"), ForeignKey(nameof(Sprint)), Required]
         public int SprintId { get; set; }
         public virtual Sprint Sprint { get; set; }
-        [Column("MemberId"), ForeignKey(nameof(TeamMember)), Required]
-        public int MemberId{ get; set; }
+        [Column("MemberId"), ForeignKey(nameof(TeamMember))]
+        public int? MemberId{ get; set; }
         public virtual TeamMember TeamMember { get; set; }
         [Column("Link"), Required]
         public string Link { get; set; }

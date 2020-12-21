@@ -63,7 +63,8 @@ namespace Teams.Web.Controllers
                 Id = t.Id,
                 Link = t.Link,
                 Name = t.Name,
-                TeamMember = new TeamMemberViewModel(){Member = t.TeamMember.Member}
+                StoryPoints=t.StoryPoints,
+                TeamMember = t.MemberId!=null?new TeamMemberViewModel(){Member = t.TeamMember.Member}:null
             }));
             tasksForTeamViewModel.TeamId = team.Id;
             return View(tasksForTeamViewModel);
@@ -88,7 +89,8 @@ namespace Teams.Web.Controllers
                 Link = task.Link,
                 Name = task.Name,
                 TeamId = task.TeamId,
-                TeamMember = new TeamMemberViewModel(){Member = task.TeamMember.Member}
+                StoryPoints=task.StoryPoints,
+                TeamMember = task.MemberId != null ? new TeamMemberViewModel() { Member = task.TeamMember.Member } : null
             };
 
             return View(taskViewModel);
@@ -163,10 +165,6 @@ namespace Teams.Web.Controllers
             if (taskStoryPoints <= 0)
             {
                 return RedirectToAction("EditTask", new { teamId = teamId, taskId = taskId, errorMessage = _localizer["PointsFieldError"] });
-            }
-            if (taskMemberId <= 0)
-            {
-                return RedirectToAction("EditTask", new { teamId = teamId, taskId = taskId, errorMessage = _localizer["MemberFieldError"] });
             }
 
             var task = new Data.Models.Task
@@ -262,10 +260,6 @@ namespace Teams.Web.Controllers
             {
                 return RedirectToAction("AddTask", new { teamId = taskFormViewModel.TeamId, taskId = taskFormViewModel.TaskId, errorMessage = _localizer["PointsFieldError"] });
             }
-            if (taskFormViewModel.TaskMemberId <= 0)
-            {
-                return RedirectToAction("AddTask", new { teamId = taskFormViewModel.TeamId, taskId = taskFormViewModel.TaskId, errorMessage = _localizer["MemberFieldError"] });
-            }
 
             var task = new Data.Models.Task
             {
@@ -337,10 +331,6 @@ namespace Teams.Web.Controllers
             if (taskFormViewModel.TaskStoryPoints <= 0)
             {
                 return RedirectToAction("AddTaskIntoTeam", new { teamId = taskFormViewModel.TeamId,errorMessage = _localizer["PointsFieldError"] });
-            }
-            if (taskFormViewModel.TaskMemberId <= 0)
-            {
-                return RedirectToAction("AddTaskIntoTeam", new { teamId = taskFormViewModel.TeamId, errorMessage = _localizer["MemberFieldError"] });
             }
             if (taskFormViewModel.TaskSprintId <= 0)
             {

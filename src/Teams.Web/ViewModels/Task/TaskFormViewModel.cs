@@ -8,7 +8,7 @@ namespace Teams.Web.ViewModels.Task
     {
         public int TaskId { get; set; }
         public int TaskStoryPoints { get; set; }
-        public int TaskMemberId { get; set; }
+        public int? TaskMemberId { get; set; }
         public int TeamId { get; set; }
         public int TaskSprintId { get; set; }
         public string TaskLink { get; set; }

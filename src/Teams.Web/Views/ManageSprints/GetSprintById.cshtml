@@ -66,7 +66,14 @@
             }
 
             <td align="left">@item.Name</td>
-            <td align="left">@item.TeamMember.Member.Email</td>
+            @if (item.TeamMember != null)
+            {
+                <td align="left">@item.TeamMember.Member.Email</td>
+            }
+            else
+            {
+                 <td align="left"></td>
+            }
             <td align="left">@item.StoryPoints</td>
             <td><a href="@item.Link" align="left">@Localizer["Link"]</a></td>
 
