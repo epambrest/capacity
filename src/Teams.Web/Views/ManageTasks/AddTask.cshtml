@@ -15,9 +15,11 @@
     @using (Html.BeginForm("AddTask", "ManageTasks", FormMethod.Post))
     {
         <div><p align="center" style="color:red">@Model.ErrorMessage</p></div>
-        @Html.Hidden("taskFormViewModel.TeamId", @Model.TeamId)
-        @Html.Hidden("taskFormViewModel.TaskSprintId", @Model.TaskSprintId)
-        @Html.Hidden("taskFormViewModel.TaskId", @Model.TaskId)
+        @Html.Hidden("TeamId", @Model.TeamId)
+        @Html.Hidden("TaskSprintId", @Model.TaskSprintId)
+        @Html.Hidden("TaskId", @Model.TaskId)
+        @Html.Hidden("TeamName", @Model.TeamName)
+
         @section scripts{
             <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
@@ -32,22 +34,25 @@
         }
         <div>
             <label for="name">@Localizer["Name"] :</label>
-            <input id="name" name="taskFormViewModel.TaskName" class="form-control" value="" />
+            <input id="name" name="TaskName" class="form-control" value="" />
+            @Html.ValidationMessageFor(model => model.TaskName)
         </div>
 
         <div>
             <label for="days">@Localizer["TaskLink"] :</label>
-            <input id="days" name="taskFormViewModel.TaskLink" class="form-control" value="" />
+            <input id="days" name="TaskLink" class="form-control" value="" />
+            @Html.ValidationMessageFor(model => model.TaskLink)
         </div>
 
         <div>
             <label for="points">@Localizer["StoryPoints"]</label>
-            <input id="points" name="taskFormViewModel.TaskStoryPoints" class="form-control" value="" />
+            <input id="points" name="TaskStoryPoints" class="form-control" value="" />
+            @Html.ValidationMessageFor(model => model.TaskStoryPoints)
         </div>
-        
+
         <div style="margin-top:4px">
             <label for="user">@Localizer["User"]</label>
-            <input hidden="hidden" id="user" name="taskFormViewModel.TaskMemberId">
+            <input hidden="hidden" id="user" name="TaskMemberId">
             <select class="js-example-basic-single" id="members" onchange="myFunction(event)">
                 <option disabled selected>@Localizer["SelectUser"]</option>
                 @foreach (var item in Model.TeamMembers)
@@ -55,6 +60,7 @@
                     <option value=@item.Id>@item.Member.Email</option>
                 }
             </select>
+            @Html.ValidationMessageFor(model => model.TaskMemberId)
         </div>
         <div style="display: table">
             <input id="sub" type="submit" class="btn btn-success" value="@Localizer["AddTask"]" />

@@ -237,38 +237,34 @@ namespace Teams.Web.Controllers
         [Authorize]
         public async Task<IActionResult> AddTaskAsync(TaskFormViewModel taskFormViewModel)
         {
-            if (string.IsNullOrEmpty(taskFormViewModel.TaskName))
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("AddTask", new { teamId = taskFormViewModel.TeamId, taskId = taskFormViewModel.TaskId, errorMessage = _localizer["NameFieldError"] });
-            }
-            if (string.IsNullOrEmpty(taskFormViewModel.TaskLink) || !Regex.IsMatch(taskFormViewModel.TaskLink, (@"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$")))
-            {
-                return RedirectToAction("AddTask", new { teamId = taskFormViewModel.TeamId, taskId = taskFormViewModel.TaskId, errorMessage = _localizer["LinkFieldError"] });
-            }
-            if (taskFormViewModel.TaskStoryPoints <= 0)
-            {
-                return RedirectToAction("AddTask", new { teamId = taskFormViewModel.TeamId, taskId = taskFormViewModel.TaskId, errorMessage = _localizer["PointsFieldError"] });
-            }
-            if (taskFormViewModel.TaskMemberId <= 0)
-            {
-                return RedirectToAction("AddTask", new { teamId = taskFormViewModel.TeamId, taskId = taskFormViewModel.TaskId, errorMessage = _localizer["MemberFieldError"] });
+                var task = new Data.Models.Task
+                {
+                    Id = taskFormViewModel.TaskId,
+                    TeamId = taskFormViewModel.TeamId,
+                    Name = taskFormViewModel.TaskName,
+                    StoryPoints = taskFormViewModel.TaskStoryPoints,
+                    Link = taskFormViewModel.TaskLink,
+                    SprintId = taskFormViewModel.TaskSprintId,
+                    MemberId = taskFormViewModel.TaskMemberId
+                };
+                var result = await AddTaskAsync(task);
+
+                if (result) return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId = taskFormViewModel.TaskSprintId });
+                else return RedirectToAction("NotOwnerError", new { teamId = taskFormViewModel.TeamId });
             }
 
-            var task = new Data.Models.Task
+            var teamMembers = await GetAllTeamMembersAsync(taskFormViewModel.TeamId);
+
+            taskFormViewModel.TeamMembers = new List<TeamMemberViewModel>();
+            teamMembers.ForEach(t => taskFormViewModel.TeamMembers.Add(new TeamMemberViewModel()
             {
-                Id = taskFormViewModel.TaskId,
-                TeamId = taskFormViewModel.TeamId,
-                Name = taskFormViewModel.TaskName,
-                StoryPoints = taskFormViewModel.TaskStoryPoints,
-                Link = taskFormViewModel.TaskLink,
-                SprintId = taskFormViewModel.TaskSprintId,
-                MemberId = taskFormViewModel.TaskMemberId
-            };
-            var result = await AddTaskAsync(task);
+                Member = t.Member,
+                Id = t.Id
+            }));
 
-            if (result) return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId = taskFormViewModel.TaskSprintId });
-            else return RedirectToAction("NotOwnerError", new { teamId = taskFormViewModel.TeamId });
-
+            return View(taskFormViewModel);
         }
 
         [Authorize, NonAction]

@@ -17,8 +17,8 @@ namespace Teams.Web.ViewModels.Task
         [Required]
         [RegularExpression(@"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$")]
         public string TaskLink { get; set; }
-        [Required]
         public string TeamName { get; set; }
+        [Required]
         public string TaskName { get; set; }
         public string ErrorMessage { get; set; }
         public List<TeamMemberViewModel> TeamMembers { get; set; }
