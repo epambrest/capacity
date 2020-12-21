@@ -60,6 +60,7 @@
                     <option value=@item.Id>@item.Member.Email</option>
                 }
             </select>
+            <span asp-validation-for="TaskMemberId"></span>
         </div>
         <div style="display: table">
             <input id="sub" type="submit" class="btn btn-success" value="@Localizer["EditTask"]" />

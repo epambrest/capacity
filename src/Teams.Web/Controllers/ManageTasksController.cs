@@ -170,8 +170,10 @@ namespace Teams.Web.Controllers
                 else return RedirectToAction("NotOwnerError", new { teamId = taskViewModel.TaskId });
             }
 
+            var teamMembers = await GetAllTeamMembersAsync(taskViewModel.TeamId);
+
             taskViewModel.TeamMembers = new List<TeamMemberViewModel>();
-            taskViewModel.TeamMembers.ForEach(t => taskViewModel.TeamMembers.Add(new TeamMemberViewModel
+            teamMembers.ForEach(t => taskViewModel.TeamMembers.Add(new TeamMemberViewModel
             {
                 Member = t.Member,
                 Id = t.Id
