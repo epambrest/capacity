@@ -166,9 +166,16 @@ namespace Teams.Web.Controllers
                 };
                 var result = await EditTaskAsync(task);
 
-                if (result) return RedirectToAction("AllTasksForTeam", new { teamId = taskViewModel.TaskId });
+                if (result) return RedirectToAction("AllTasksForTeam", new { teamId = taskViewModel.TeamId });
                 else return RedirectToAction("NotOwnerError", new { teamId = taskViewModel.TaskId });
             }
+
+            taskViewModel.TeamMembers = new List<TeamMemberViewModel>();
+            taskViewModel.TeamMembers.ForEach(t => taskViewModel.TeamMembers.Add(new TeamMemberViewModel
+            {
+                Member = t.Member,
+                Id = t.Id
+            }));
 
             return View(taskViewModel);
         }
@@ -251,8 +258,14 @@ namespace Teams.Web.Controllers
                 };
                 var result = await AddTaskAsync(task);
 
-                if (result) return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId = taskFormViewModel.TaskSprintId });
-                else return RedirectToAction("NotOwnerError", new { teamId = taskFormViewModel.TeamId });
+                if (result)
+                {
+                    return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId = taskFormViewModel.TaskSprintId });
+                }
+                else
+                {
+                    return RedirectToAction("NotOwnerError", new { teamId = taskFormViewModel.TeamId });
+                }
             }
 
             var teamMembers = await GetAllTeamMembersAsync(taskFormViewModel.TeamId);
