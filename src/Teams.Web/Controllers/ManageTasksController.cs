@@ -152,7 +152,7 @@ namespace Teams.Web.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> EditTaskAsync(int teamId, int taskId, int taskMemberId, int taskSprintId, string taskName, string taskLink, int taskStoryPoints)
+        public async Task<IActionResult> EditTaskAsync(int teamId, int taskId, int? taskMemberId, int taskSprintId, string taskName, string taskLink, int taskStoryPoints)
         {
             if (string.IsNullOrEmpty(taskName))
             {
