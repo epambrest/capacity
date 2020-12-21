@@ -13,6 +13,7 @@ namespace Teams.Web.ViewModels.Task
         [Range(1, int.MaxValue)]
         public int TaskMemberId { get; set; }
         public int TeamId { get; set; }
+        [Range(1, int.MaxValue)]
         public int TaskSprintId { get; set; }
         [Required]
         [RegularExpression(@"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$")]
