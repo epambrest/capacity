@@ -28,14 +28,17 @@
         @foreach (var item in Model.Sprints)
         {
             <tr align="center">
-
-                @if (item.IsActive)
+                @if (item.Status == PossibleStatuses.ActiveStatus)
                 {
                     <td align="left" width="1%" bgcolor="green"></td>
                 }
-                else
+                else if (item.Status == PossibleStatuses.CompletedStatus)
                 {
-                    <td align="left" width="1%" bgcolor="red"></td>
+                    <td align="left" width="1%" bgcolor="yellow"></td>
+                }
+                else if (item.Status == PossibleStatuses.CreatedStatus)
+                {
+                    <td align="left" width="1%" bgcolor="blue"></td>
                 }
                 <td align="left">@Html.ActionLink(item.Name, "GetSprintById", new {sprintId = item.Id})</td>
                 <td align="left">@item.DaysInSprint</td>
