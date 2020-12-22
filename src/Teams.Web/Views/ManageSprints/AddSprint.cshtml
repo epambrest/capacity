@@ -41,7 +41,7 @@
 
         <div style="display: table">
             <input id="sub" type="submit" class="btn btn-success" value="@Localizer["AddSprint"]" />
-            <button style="margin-left:7px" type='button' class="btn btn-danger" onclick="location.href = '@Url.Action("AllSprints", "ManageSprints", new { teamId = ViewBag.TeamId })'">@Localizer["Close"]</button>
+            <button style="margin-left:7px" type='button' class="btn btn-danger" onclick="location.href = '@Url.Action("AllSprints", "ManageSprints", new { teamId = Model.Id })'">@Localizer["Close"]</button>
         </div>
     }
 </div>
