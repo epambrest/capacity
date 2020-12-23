@@ -138,4 +138,10 @@
   <data name="StoryPointInHours" xml:space="preserve">
     <value>Store Point in Hours</value>
   </data>
+  <data name="Сompleted" xml:space="preserve">
+    <value>Сompleted</value>
+  </data>
+  <data name="Сreated" xml:space="preserve">
+    <value>Created</value>
+  </data>
 </root>

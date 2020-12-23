@@ -132,8 +132,17 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="CantChangeStatus" xml:space="preserve">
+    <value>Statuses can be updated only from Created to Active and from Active to Completed. Possible: 1 completed, 1 active, and many completed statuses</value>
+  </data>
   <data name="Close" xml:space="preserve">
     <value>Close</value>
+  </data>
+  <data name="Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Created</value>
   </data>
   <data name="DaysFieldError" xml:space="preserve">
     <value>Days field can not be empty or less than 0!</value>
@@ -146,6 +155,9 @@
   </data>
   <data name="Error" xml:space="preserve">
     <value>Ooops... Something went wrong!</value>
+  </data>
+  <data name="HasntAnyChange" xml:space="preserve">
+    <value>You hasn't change your Sprint</value>
   </data>
   <data name="Member" xml:space="preserve">
     <value>Member</value>
@@ -183,12 +195,21 @@
     <value>Remove Member</value>
   </data>
   <data name="ReturnToSprint" xml:space="preserve">
-    <value>   Return to sprints</value>
+    <value>Return to sprints</value>
+  </data>
+  <data name="SprintWithSameName" xml:space="preserve">
+    <value>Sprint with this name already exist</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
   </data>
   <data name="StoryPointInHours" xml:space="preserve">
     <value>Story Point in Hours</value>
   </data>
   <data name="WorkingDays" xml:space="preserve">
     <value>Member Working Days</value>
+  </data>
+  <data name="СreatedSprintExist" xml:space="preserve">
+    <value>Сreated Sprint already exist. You can create only 1 sprint with such type</value>
   </data>
 </root>

@@ -9,6 +9,6 @@
         public int TeamId { get; set; }
         public string TeamName { get; set; }
         public string ErrorMessage { get; set; }
-        public bool IsActive { get; set; }
+        public int Status { get; set; }
     }
 }
