@@ -12,6 +12,7 @@ using Teams.Security;
 using Teams.Data;
 using Teams.Data.Models;
 using Teams.Data.Repository;
+using Teams.Web.Resources.ViewModels;
 
 namespace Teams.Web
 {
@@ -48,7 +49,10 @@ namespace Teams.Web
             services.AddTransient<IAccessCheckService, AccessCheckService>();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddControllersWithViews()
-                .AddViewLocalization();
+                .AddViewLocalization()
+                .AddDataAnnotationsLocalization(options =>
+                    options.DataAnnotationLocalizerProvider = (type, factory) => 
+                        factory.Create(typeof(ValidationResource)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
