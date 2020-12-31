@@ -206,6 +206,9 @@
   <data name="StoryPointInHours" xml:space="preserve">
     <value>Story Point in Hours</value>
   </data>
+  <data name="WorkingDays" xml:space="preserve">
+    <value>Member Working Days</value>
+  </data>
   <data name="СreatedSprintExist" xml:space="preserve">
     <value>Сreated Sprint already exist. You can create only 1 sprint with such type</value>
   </data>

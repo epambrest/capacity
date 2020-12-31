@@ -1,9 +1,16 @@
-﻿@model Teams.Web.ViewModels.Sprint.SprintAndTeamViewModel
+﻿@model Teams.Web.ViewModels.Sprint.SprintAndTeamViewModel;
 @{
     ViewBag.Title = "Sprints";
 }
 
 <script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
+
+<style>
+    tbody tr:hover {
+        background: rgba(0, 0, 0, 0.20);
+        color: #fff;
+    }
+</style>
 
 <div style="margin: 10px 0px 0px 30px" align="left">
     <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to your teams", "GetMyTeams", "ManageTeams")</a></h>
@@ -12,21 +19,24 @@
     <h><font size="6" color="black"><strong>@Model.Team.TeamName</strong></font></h>
 </div>
 <div sstyle="display: inline-block">
-    <table align="left" style="width:50%" class="table">
-
-        <tr align="center">
-            <td align="left" style="border-top: hidden" width="1%"></td>
-            <td align="left" style="border-top: hidden; font-weight: bold">@ViewData["NameOfSprint"]</td>
-            <td align="left" style="border-top: hidden; font-weight: bold">@ViewData["DaysInSprint"]</td>
-            <td align="left" style="border-top: hidden; font-weight: bold">@ViewData["StoryPointInHours"]</td>
-            <td style="border-top: hidden"></td>
-            <td style="border-top: hidden; visibility: @ViewBag.AddVision" align="right">
-                @Html.ActionLink("", "AddSprint", new { teamId = @Model.Team.Id, errorMessage = "" }, new { @class = "fas fa-plus", title = "Add Sprint", style = "margin: 10px 0px 0px 30px", align = "right" })
-            </td>
-        </tr>
+    <table align="left" style="width:50%" class="table" id="grid">
+        <thead>
+            <tr align="center">
+                <td align="left" style="border-top: hidden" width="1%"></td>
+                <td align="left" style="border-top: hidden; font-weight: bold">@ViewData["NameOfSprint"]</td>
+                <td align="left" style="border-top: hidden; font-weight: bold">@ViewData["DaysInSprint"]</td>
+                <td align="left" style="border-top: hidden; font-weight: bold">@ViewData["StoryPointInHours"]</td>
+                <td style="border-top: hidden"></td>
+                <td style="border-top: hidden; visibility: @ViewBag.AddVision" align="right">
+                    @Html.ActionLink("", "AddSprint", new { teamId = @Model.Team.Id, errorMessage = "" }, new { @class = "fas fa-plus", title = "Add Sprint", style = "margin: 10px 0px 0px 30px", align = "right" })
+                </td>
+            </tr>
+        </thead>
 
         @foreach (var item in Model.Sprints)
         {
+            <tbody>
+
             <tr align="center">
                 @if (item.Status == PossibleStatuses.ActiveStatus)
                 {
@@ -45,43 +55,25 @@
                 <td align="left">@item.StoryPointInHours</td>
                 <td style="visibility: @ViewBag.AddVision" align="right">
                         @Html.ActionLink("", "EditSprint", new {teamId = Model.Team.Id, sprintId = item.Id, errorMessage = ""}, new {@class = "fas fa-pen", title = "Edit Sprint", style = "margin: 10px 0px 0px 30px", align = "right"})
+
                     </td>
-                    <td style="visibility: @ViewBag.AddVision" align="right">
+                    <td style="visibility: @ViewBag.AddVision" align="right" data-type="@item.Id">
                         <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#myModal"
                                 data-content="@item.Name" data-whatever="@item.Id">
                             <i class='far fa-trash-alt'></i>
                         </button>
-                    </td
-            </tr>
+                    </td>
+                </tr>
+            </tbody>
         }
-    </table>
 
-    <table align="right" style="width:40%; border: 2px solid black" class="table">
-
-        <tr align="center">
-            <td align="left" width="1%"></td>
-            <td align="left" style="font-weight: bold">@ViewData["MemberEmail"]</td>
-            <td style="visibility: @ViewBag.AddVision" align="right">
-                @Html.ActionLink("", "AddMember", "ManageTeamMembers", new { teamId = Model.Team.Id }, new { @class = "fas fa-user-plus", title = ViewData["AddMember"], style = "margin: 10px 0px 0px 30px", align = "right" })
-            </td>
-        </tr>
-        <tr align="center">
-            <td align="left" width="1%"><i title="@ViewData["Owner"]" class="fas fa-crown"></i></td>
-            <td align="left">@Model.Team.Owner.Email</td>
-            <td align="right"></td>
-        </tr>
-        @foreach (var item in Model.Team.TeamMembers)
-        {
-            <tr align="center">
-                <td align="left" width="1%"><i title="@ViewData["Member"]" class="fas fa-user"></i></td>
-                <td align="left">@item.Member.Email</td>
-                <td style="visibility: @ViewBag.AddVision" align="right">
-                    @Html.ActionLink("", "Remove", "ManageTeamMembers", new { teamId = @Model.Team.Id, memberId = item.MemberId}, new { @class = "far fa-trash-alt", title = ViewData["RemoveMember"], style = "margin: 10px 0px 0px 30px", align = "right" })
-                </td>
-            </tr>
-        }
     </table>
 </div>
+
+        <form id="workingDaysPartial">
+            <partial name="~/Views/ManageMemberWorkingDays/_WorkingDaysPartial.cshtml" model="Model">
+        </form>
+
 
 <form>
     <div class="modal fade" id="myModal" role="dialog">
@@ -113,5 +105,23 @@
             document.getElementById('sprint').innerHTML = "@ViewData["Remove"]" + "<strong>" + sprint + "</strong>" + "?";
         });
     });
+
+    grid.onclick = function (e) {
+        if (e.target.tagName != 'TD') return;
+        let th = e.target;
+        var sprintId = th.dataset.type;
+        $.ajax({
+                type: "Get",
+                url: "/ManageMemberWorkingDays/GetAllWorkingDays/",
+                data: "sprintId=" + sprintId,
+                dataType: "html",
+                success: function (data) {
+                    $('#workingDaysPartial').html(data);
+                },
+                error: function () {
+                    alert("Content load failed.");
+                }
+            });
+    };
 </script>
 
