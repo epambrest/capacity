@@ -117,34 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CouldntGetData" xml:space="preserve">
-    <value>Не удалось получить данные!</value>
+  <data name="Complete" xml:space="preserve">
+    <value>Завершена</value>
   </data>
-  <data name="Error" xml:space="preserve">
-    <value>Упс... Похоже что-то пошло не так</value>
+  <data name="GoBackSprint" xml:space="preserve">
+    <value>Вернуться обратно к спринту</value>
   </data>
-  <data name="LinkFieldError" xml:space="preserve">
-    <value>Неправильная ссылка!</value>
+  <data name="Link" xml:space="preserve">
+    <value>Ссылка</value>
   </data>
-  <data name="MemberFieldError" xml:space="preserve">
-    <value>Пожалуйста, выберите пользователя!</value>
+  <data name="NameofTask" xml:space="preserve">
+    <value>Имя задачи</value>
   </data>
-  <data name="NameFieldError" xml:space="preserve">
-    <value>Поле для имени не может быть пустым!</value>
+  <data name="QuantityUnСompleted" xml:space="preserve">
+    <value>Количество невыполненых задач</value>
   </data>
-  <data name="NotOwner" xml:space="preserve">
-    <value>Вы не являетесь владельцем</value>
+  <data name="QuantityСompleted" xml:space="preserve">
+    <value>Количество выполненых задач</value>
   </data>
-  <data name="PointsFieldError" xml:space="preserve">
-    <value>Кол-во СП не может быть меньше либо равно нулю!</value>
+  <data name="ResultForMember" xml:space="preserve">
+    <value>Результат задач для участника</value>
   </data>
-  <data name="SprintFieldError" xml:space="preserve">
-    <value>Пожалуйста, выберите спринт!</value>
+  <data name="SelectUser" xml:space="preserve">
+    <value>Выберите участника</value>
   </data>
-  <data name="StatusIsNotComplete" xml:space="preserve">
-    <value>Этот спринт не является завершенным</value>
+  <data name="Show" xml:space="preserve">
+    <value>Показать</value>
   </data>
-  <data name="TasksNotExists" xml:space="preserve">
-    <value>У спринта отсутствуют задачи</value>
+  <data name="SpForUnСompleted" xml:space="preserve">
+    <value>СП за все невыполненые задачи</value>
+  </data>
+  <data name="SpForСompleted" xml:space="preserve">
+    <value>СП за все выполненые задачи</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="StoryPoint" xml:space="preserve">
+    <value>СП</value>
+  </data>
+  <data name="StoryPointinHours" xml:space="preserve">
+    <value>СП в час</value>
+  </data>
+  <data name="TotalQuantity" xml:space="preserve">
+    <value>Общее количество задач</value>
+  </data>
+  <data name="TotalSp" xml:space="preserve">
+    <value>Общее количество СП</value>
+  </data>
+  <data name="UnComplete" xml:space="preserve">
+    <value>Не завершена</value>
   </data>
 </root>

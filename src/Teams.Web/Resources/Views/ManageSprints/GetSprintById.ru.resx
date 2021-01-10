@@ -147,6 +147,9 @@
   <data name="Remove" xml:space="preserve">
     <value>Вы уверены, что хотите удалить </value>
   </data>
+  <data name="ResultCompletedSprint" xml:space="preserve">
+    <value>Результат</value>
+  </data>
   <data name="Status" xml:space="preserve">
     <value>Статус</value>
   </data>

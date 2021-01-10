@@ -202,6 +202,105 @@ namespace Teams.Web.Controllers
             return await _manageTeamsMembersService.GetAllTeamMembersAsync(teamId, new DisplayOptions { });
         }
 
+        [Authorize]
+        private Dictionary<string, int> GetTasksStoryPoints(List<Teams.Data.Models.Task> tasks)
+        {
+            Dictionary<string, int> tasksSp = new Dictionary<string, int>();
+            int spCompletedTasks = 0;
+            int spUnCompletedTasks = 0;
+            foreach (var task in tasks)
+            {
+                if(task.Completed == true)
+                {
+                    spCompletedTasks += task.StoryPoints;
+                }
+                else
+                {
+                    spUnCompletedTasks += task.StoryPoints;
+                }
+            }
+            tasksSp.Add("spCompletedTasks", spCompletedTasks);
+            tasksSp.Add("spUnCompletedTasks", spUnCompletedTasks);
+            return tasksSp;
+        }
+
+        [Authorize]
+        public IActionResult GetResultError(string errorMessage)
+        {
+                        
+            GetResultErrorViewModel getResultErrorViewModel = new GetResultErrorViewModel
+            {
+                ErrorMessage = errorMessage,
+            };
+            return View(getResultErrorViewModel);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetResultTeamMember(int sprintId, int teamId, int teamMemberId = 1)
+        {
+            var members = await GetAllTeamMembersAsync(teamId);
+            var currentMember = members.FirstOrDefault(member => member.Id == teamMemberId);
+            var completedSprint = await _manageSprintsService.GetSprintAsync(sprintId, true);
+            
+            if (completedSprint == null || currentMember == null || completedSprint == null)
+                return RedirectToAction("GetResultError", new { errorMessage = _localizer["CouldntGetData"] });
+            if (completedSprint.Status != 2)
+                return RedirectToAction("GetResultError", new { errorMessage = _localizer["StatusIsNotComplete"] });
+
+            var allMemberTasks = completedSprint.Tasks.Where(t => t.MemberId == teamMemberId).ToList();
+            var allSprintTasks = completedSprint.Tasks.ToList();
+
+            if(allMemberTasks == null)
+                return RedirectToAction("GetResultError", new { errorMessage = _localizer["TasksNotExists"] });
+
+            Dictionary<string, int> tasksSp = GetTasksStoryPoints(allMemberTasks);
+            int spCompletedTasks = tasksSp.GetValueOrDefault("spCompletedTasks");
+            int spUnCompletedTasks = tasksSp.GetValueOrDefault("spUnCompletedTasks");
+            int totalStoryPoints = 0;
+            int quantityСompletedTasks = allMemberTasks.Count(t => t.Completed == true);
+            int quantityUnСompletedTasks = allMemberTasks.Count(t => t.Completed == false);
+
+            allMemberTasks.ForEach(t => totalStoryPoints += t.StoryPoints);
+
+            var resultsTasksForMemberViewModel = new ResultsTasksForMemberViewModel()
+            {
+                TeamMemberId = currentMember.Id,
+                TeamId = teamId,
+                CompletedSprintId = completedSprint.Id,
+                TeamMemberEmail = currentMember.Member.Email,
+                SprintName = completedSprint.Name,
+                Tasks = new List<TaskViewModel>(),
+                TeamMembers = new List<TeamMemberViewModel>(),
+                TotalStoryPoints = totalStoryPoints,
+                QuantityСompletedTasks = quantityСompletedTasks,
+                QuantityUnСompletedTasks = quantityUnСompletedTasks,
+                SpСompletedTasks = spCompletedTasks,
+                SpUnСompletedTasks = spUnCompletedTasks
+            };
+
+            allMemberTasks.ForEach(t => resultsTasksForMemberViewModel.Tasks.Add(new TaskViewModel()
+            {
+                TeamMember = new TeamMemberViewModel() { Member = t.TeamMember.Member },
+                Name = t.Name,
+                StoryPoints = t.StoryPoints,
+                Id = t.Id,
+                Link = t.Link,
+                Completed = t.Completed
+            }
+            ));
+
+            allSprintTasks.ForEach(t => resultsTasksForMemberViewModel.TeamMembers.Add(new TeamMemberViewModel()
+            {
+                Id = t.TeamMember.Id,
+                TeamId = t.TeamMember.TeamId,
+                MemberId = t.TeamMember.Id.ToString(),
+                Member = t.TeamMember.Member
+            }
+            ));
+
+            return View(resultsTasksForMemberViewModel);
+        }
+
         public IActionResult NotOwnerError(int teamId)
         {
             ViewBag.TeamId = teamId;
