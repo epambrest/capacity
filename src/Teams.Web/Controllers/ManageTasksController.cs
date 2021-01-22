@@ -63,8 +63,8 @@ namespace Teams.Web.Controllers
                 Id = t.Id,
                 Link = t.Link,
                 Name = t.Name,
-                StoryPoints=t.StoryPoints,
-                TeamMember = t.MemberId!=null?new TeamMemberViewModel(){Member = t.TeamMember.Member}:null
+                StoryPoints = t.StoryPoints,
+                TeamMember = t.MemberId != null ? new TeamMemberViewModel() {Member = t.TeamMember.Member} : null
             }));
             tasksForTeamViewModel.TeamId = team.Id;
             return View(tasksForTeamViewModel);
@@ -89,7 +89,7 @@ namespace Teams.Web.Controllers
                 Link = task.Link,
                 Name = task.Name,
                 TeamId = task.TeamId,
-                StoryPoints=task.StoryPoints,
+                StoryPoints = task.StoryPoints,
                 TeamMember = task.MemberId != null ? new TeamMemberViewModel() { Member = task.TeamMember.Member } : null
             };
 
