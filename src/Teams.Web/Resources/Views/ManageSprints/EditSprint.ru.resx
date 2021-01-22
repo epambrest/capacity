@@ -123,6 +123,9 @@
   <data name="Close" xml:space="preserve">
     <value>Закрыть</value>
   </data>
+  <data name="Created" xml:space="preserve">
+    <value>Созданный</value>
+  </data>
   <data name="DaysInSprint" xml:space="preserve">
     <value>Кол-во дней</value>
   </data>
@@ -137,5 +140,8 @@
   </data>
   <data name="StoryPointInHours" xml:space="preserve">
     <value>Кол-во часов в СП</value>
+  </data>
+  <data name="Сompleted" xml:space="preserve">
+    <value>Завершённый</value>
   </data>
 </root>

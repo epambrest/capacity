@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Teams.Web", "src\Teams.Web\Teams.Web.csproj", "{A782FC50-20B2-429A-BDAE-4252FD33277C}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "Docker\docker-compose.dcproj", "{A74E17C6-FC8A-4755-99BD-6F03F7947F55}"
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "src\docker-compose.dcproj", "{A74E17C6-FC8A-4755-99BD-6F03F7947F55}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Teams.Business.Tests", "Tests\Teams.Business.Tests\Teams.Business.Tests.csproj", "{5B5B362A-4DBC-4830-9BB6-F8184A3FBDBD}"
 EndProject
@@ -17,9 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Teams.Data", "src\Teams.Dat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Teams.Data.Tests", "Tests\Teams.Data.Tests\Teams.Data.Tests.csproj", "{74894BED-D3F3-40E6-BD2B-68A8FD9DC24C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{3F76D005-D9D2-4A20-A0A2-4BE9688BF545}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{3F76D005-D9D2-4A20-A0A2-4BE9688BF545}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FCF94A3B-EC75-4315-B730-C84C671F461E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FCF94A3B-EC75-4315-B730-C84C671F461E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CFFA1904-7527-4A0E-85DC-ADB9139B1B4D}"
 EndProject

@@ -25,7 +25,14 @@
     </tr>
 
     <tr>
-        <td align="left">@Model.TeamMember.Member.UserName</td>
+        @if (Model.TeamMember != null)
+            {
+                <td align="left">@Model.TeamMember.Member.Email</td>
+            }
+            else
+            {
+                 <td align="left"></td>
+            }
         <td align="left">@Model.Link</td>
         <td align="left">@Model.StoryPoints</td>
     </tr>

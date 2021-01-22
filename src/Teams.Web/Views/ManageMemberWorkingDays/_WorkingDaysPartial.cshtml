@@ -1,0 +1,210 @@
+﻿@model Teams.Web.ViewModels.Sprint.SprintAndTeamViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<script>
+
+        $(document).ready(function () {
+        $("#workingDaysModal").on("show.bs.modal", function (event) {
+            var button = $(event.relatedTarget)
+            var Member = button.data('content')
+            var workingDaysId = button.data('whatever')
+            var workingModal = $("#workingDaysModal");
+            workingModal.find("#workingDaysId").val(workingDaysId);
+            document.getElementById('Member').innerHTML = "@Localizer["MemberWorkingDays"]" + "<strong>" + Member + "</strong>" + ":";
+        });
+    });
+
+        Submit.onclick = function () {
+        var workingDaysId = document.getElementById('workingDaysId').value;
+        var workingDays = document.getElementById('workingDays').value;
+        $.ajax({
+            type: "Get",
+            url: '@Url.Action("EditWorkingDays", "ManageMemberWorkingDays")/',
+            data: { workingDaysId: workingDaysId, workingDays: workingDays },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data) {
+                    var id = workingDaysId.valueOf();
+                    document.getElementById(id).innerHTML = workingDays;
+                    $('#success').toast('show');
+                }
+                else {
+                    $('#element').toast('show');
+                }
+            }
+        });
+    };
+
+        $(document).ready(function () {
+        $("#workingDaysModalAdd").on("show.bs.modal", function (event) {
+            var button = $(event.relatedTarget)
+            var memberId = button.data('content')
+            var sprintId = button.data('whatever')
+            var Member = button.data('description')
+            var workingModal = $("#workingDaysModalAdd");
+            workingModal.find("#sprintId").val(sprintId);
+            workingModal.find("#memberId").val(memberId);
+            workingModal.find("#MemberAdd").val(Member);
+            document.getElementById('AskForAdd').innerHTML = "@Localizer["MemberWorkingDays"]" + "<strong>" + Member + "</strong>" + ":";
+        });
+    });
+
+    function AddDays() {
+        var sprintId = document.getElementById('sprintId').value;
+        var memberId = document.getElementById('memberId').value;
+        var workingDays = document.getElementById('AddWorkingDays').value;
+        var Member = document.getElementById('MemberAdd').value;
+
+        $.ajax({
+            type: "Get",
+            url: '@Url.Action("AddWorkingDays", "ManageMemberWorkingDays")/',
+            data: { sprintId: sprintId, memberId: memberId, workingDays: workingDays },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data >= 0) {
+                    var id = memberId.valueOf();
+                    document.getElementById(id).innerHTML = workingDays;
+                    document.getElementById('Add').innerHTML = "<i class=\"fas fa-pen\" data-toggle=\"modal\" data-target=\"#workingDaysModal\" data-content=\"" + Member + "\" data-whatever=\"" + data + "\"></i>";
+                    $('#success').toast('show');
+                }
+                else {
+                    $('#element').toast('show');
+                }
+            }
+        });
+    }
+
+</script>
+
+<table align="right" style="width:40%; border: 2px solid black" class="table">
+
+    <thead>
+        <tr align="center">
+            <th align="left" width="1%"></th>
+            <th align="left" style="font-weight: bold">@Localizer["MemberEmail"]</th>
+            <th align="left" style="font-weight: bold">@Localizer["WorkingDays"]</th>
+            <th style="visibility: @ViewBag.AddVision" align="right">
+                @Html.ActionLink("", "AddMember", "ManageTeamMembers", new { teamId = Model.Team.Id }, new { @class = "fas fa-user-plus", title = ViewData["AddMember"], style = "margin: 10px 0px 0px 30px", align = "right" })
+            </th>
+        </tr>
+
+
+        <tr align="center">
+            <td align="left" width="1%"><i title="@Localizer["Owner"]" class="fas fa-crown"></i></td>
+            <td align="left">@Model.Team.Owner.Email</td>
+            <td align="left"></td>
+            <td align="right"></td>
+        </tr>
+
+        @if (Model.memberWorkingDays == null)
+        {
+            @foreach (var item in Model.Team.TeamMembers)
+            {
+                <tr align="center">
+                    <td align="left" width="1%"><i title="@Localizer["Member"]" class="fas fa-user"></i></td>
+                    <td align="left">@item.Member.Email</td>
+                    <td align="left"></td>
+                    <td align="right"></td>
+                </tr>
+            }
+        }
+        else
+        {
+            @foreach (var item in Model.Team.TeamMembers)
+            {
+                <tr align="center">
+                    <td align="left" width="1%"><i title="@Localizer["Member"]" class="fas fa-user"></i></td>
+                    <td align="left">@item.Member.Email</td>
+
+                    @if (Model.memberWorkingDays.FirstOrDefault(i => i.MemberId == item.Id) == null)
+                    {
+                        <td align="center" id="@item.Id"></td>
+                        <td align="right"><button type='button' class='btn btn-outline-primary border-0' id="Add">
+                            <i class="fas fa-plus" data-toggle="modal" data-target="#workingDaysModalAdd" data-description="@item.Member.Email"
+                               data-whatever="@Model.sprintId" data-content="@item.Id"></i></button></td>
+                    }
+                    else
+                    {
+                        <td align="center" id="@Model.memberWorkingDays.FirstOrDefault(i => i.MemberId == item.Id).Id">
+                                                     @Model.memberWorkingDays.FirstOrDefault(i => i.MemberId == item.Id).WorkingDays</td>
+                        <td align="right">
+                            <button type='button' class='btn btn-outline-primary border-0'>
+                                <i class="fas fa-pen" data-toggle="modal" data-target="#workingDaysModal"
+                                   data-content="@item.Member.Email" data-whatever="@Model.memberWorkingDays.FirstOrDefault(i => i.MemberId == item.Id).Id"></i>
+                            </button>
+                        </td>
+                    }
+                </tr>
+            }
+        }
+    </thead>
+</table>
+
+<form>
+    <div class="modal fade" id="workingDaysModal" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+                <div align="center" class="modal-body">
+                    <p align="center" id="Member"></p>
+                    <input type="hidden" id="workingDaysId" name="workingDaysId" value="" />
+                    <input type="number" min="0" id="workingDays" name="workingDays" value="" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-secondary" id="Submit" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">@Localizer["Cancel"]</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+    <div id="element" class="toast" role="alert" style="position: absolute; top: 0; right: 0;">
+        <div class="toast-header" style="background-color:lightcoral">
+            <strong class="mr-auto">@Localizer["Error"]</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            </button>
+        </div>
+        <div class="toast-body" style="background-color:salmon">
+            @Localizer["DoNotSave"]
+        </div>
+    </div>
+</div>
+
+<form>
+    <div class="modal fade" id="workingDaysModalAdd" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div align="center" class="modal-body">
+                    <p align="center" id="AskForAdd"></p>
+                    <input type="hidden" id="sprintId" name="sprintId" value="" />
+                    <input type="hidden" id="memberId" name="memberId" value="" />
+                    <input type="hidden" id="MemberAdd" name="Member" value="" />
+                    <input type="number" min="0" id="AddWorkingDays" name="workingDays" value="" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-secondary" onclick="AddDays()" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">@Localizer["Cancel"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
+    <div id="success" class="toast" role="alert" style="position: absolute; top: 0; right: 0;">
+        <div class="toast-header" style="background-color:mediumspringgreen">
+            <strong class="mr-auto">@Localizer["Success"]</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            </button>
+        </div>
+        <div class="toast-body" style="background-color:aquamarine">
+            @Localizer["Save"]
+        </div>
+    </div>
+</div>

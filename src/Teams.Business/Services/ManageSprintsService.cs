@@ -72,7 +72,10 @@ namespace Teams.Business.Services
 
         public async Task<bool> RemoveAsync(int sprintId)
         {
-            var sprint = await _sprintRepository.GetAll().Include(x => x.Tasks).FirstOrDefaultAsync(i => i.Team.TeamOwner == _currentUser.Current.Id() && i.Id == sprintId);
+            var sprint = await _sprintRepository.GetAll()
+                .Include(x => x.Tasks)
+                .Include(x => x.MemberWorkingDays)
+                .FirstOrDefaultAsync(i => i.Team.TeamOwner == _currentUser.Current.Id() && i.Id == sprintId);
             if (sprint == null)
                 return false;
 

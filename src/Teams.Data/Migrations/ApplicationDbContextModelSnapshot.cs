@@ -231,14 +231,14 @@ namespace Teams.Data.Migrations
                         .HasColumnName("DaysInSprint")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnName("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnName("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnName("Status")
+                        .HasColumnType("int");
 
                     b.Property<int>("StoryPointInHours")
                         .HasColumnName("StoryPointInHours")

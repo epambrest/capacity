@@ -17,7 +17,10 @@
             <td>@Localizer["Name"]</td>
         </tr>
         <tr>
-            <td><input type="text" name="teamName" value="@Model.TeamName" /></td>
+            <td>
+                <input type="text" name="teamName" value="@Model.TeamName" />
+                @Html.ValidationMessageFor(model => model.TeamName)
+            </td>
             @if (ViewBag.resultOfEditing != null && ViewBag.resultOfEditing)
             {
                <td>@Localizer["Saved"]</td>

@@ -57,9 +57,6 @@ namespace Teams.Web.Controllers
             ViewData["DaysInSprint"] = _localizer["DaysInSprint"];
             ViewData["StoryPointInHours"] = _localizer["StoryPointInHours"];
             ViewData["NameOfSprint"] = _localizer["NameOfSprint"];
-            ViewData["MemberEmail"] = _localizer["MemberEmail"];
-            ViewData["Owner"] = _localizer["Owner"];
-            ViewData["Member"] = _localizer["Member"];
             ViewData["AddMember"] = _localizer["AddMember"];
             ViewData["RemoveMember"] = _localizer["RemoveMember"];
             ViewData["Remove"] = _localizer["Remove"];
@@ -74,7 +71,7 @@ namespace Teams.Web.Controllers
                 {
                     Id = t.Id,
                     DaysInSprint =t.DaysInSprint,
-                    IsActive = t.IsActive,
+                    Status = t.Status,
                     Name = t.Name,
                     StoryPointInHours = t.StoryPointInHours,
                     TeamId = t.TeamId
@@ -101,14 +98,18 @@ namespace Teams.Web.Controllers
             var task = await _manageTasksService.GetTaskByIdAsync(taskId);
             var sprint = await _manageSprintsService.GetSprintAsync(task.SprintId, false);
 
-            if (sprint != null && sprint.IsActive)
+            if (sprint == null)
             {
-                task.Completed = isCompleted;
+                return View("ErrorSprint");               
             }
-            else
+            if (sprint.Status != PossibleStatuses.ActiveStatus) 
             {
-                return View("Error");
+               return RedirectToAction("ErrorTask",new {Cause="SprintNotActive", task.SprintId });
             }
+            if(task.MemberId == null)
+                return RedirectToAction("ErrorTask", new { Cause = "NotAssigned", task.SprintId });
+
+            task.Completed = isCompleted;
 
             var result = await _manageTasksService.EditTaskAsync(task);
 
@@ -136,7 +137,7 @@ namespace Teams.Web.Controllers
                 DaysInSprint = sprint.DaysInSprint,
                 Id = sprint.Id,
                 Tasks = new List<TaskViewModel>(),
-                IsActive = sprint.IsActive,
+                Status = sprint.Status,
                 Name = sprint.Name,
                 StoryPointInHours = sprint.StoryPointInHours,
                 TeamId = sprint.TeamId
@@ -144,7 +145,7 @@ namespace Teams.Web.Controllers
 
             sprint.Tasks.ToList().ForEach(t=>sprintViewModel.Tasks.Add(new TaskViewModel()
                 {
-                    TeamMember = new TeamMemberViewModel(){Member = t.TeamMember.Member},
+                    TeamMember = t.MemberId != null ? new TeamMemberViewModel(){Member = t.TeamMember.Member, MemberId = t.MemberId.ToString()} : null,
                     Name = t.Name,
                     StoryPoints = t.StoryPoints,
                     Id = t.Id,
@@ -166,101 +167,91 @@ namespace Teams.Web.Controllers
             var team = await _manageSprintsService.GetTeam(teamId);
             var sprint = await _manageSprintsService.GetSprintAsync(sprintId,false);
 
-            EditSprintViewModel SprintViewModel = new EditSprintViewModel {TeamId = teamId, TeamName = team.TeamName, SprintId = sprint.Id, SprintName = sprint.Name,
-                SprintDaysInSprint = sprint.DaysInSprint, SprintStorePointInHours = sprint.StoryPointInHours, ErrorMessage=errorMessage, IsActive = sprint.IsActive };
+            EditSprintViewModel model = new EditSprintViewModel 
+            {
+                TeamId = teamId,
+                TeamName = team.TeamName,
+                SprintId = sprint.Id,
+                SprintName = sprint.Name,
+                SprintDaysInSprint = sprint.DaysInSprint,
+                SprintStorePointInHours = sprint.StoryPointInHours,
+                ErrorMessage = errorMessage
+            };
 
-            if (sprint.IsActive)
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> EditSprintAsync(EditSprintViewModel editSprintViewModel)
+        {
+            if (ModelState.IsValid)
             {
-                ViewBag.SprintActive = "checked";
-                ViewBag.SprintNotActive = "";
+                var sprints = await _manageSprintsService.GetAllSprintsAsync(editSprintViewModel.TeamId, new DisplayOptions());
+
+                var sprint = new Sprint
+                {
+                    Id = editSprintViewModel.SprintId,
+                    TeamId = editSprintViewModel.TeamId,
+                    Name = editSprintViewModel.SprintName,
+                    DaysInSprint = editSprintViewModel.SprintDaysInSprint,
+                    StoryPointInHours = editSprintViewModel.SprintStorePointInHours
+                };
+
+                var result = await EditSprintAsync(sprint);
+
+                if (result)
+                {
+                    return RedirectToAction("AllSprints", new { teamId = editSprintViewModel.TeamId });
+                }
+                else
+                {
+                    return RedirectToAction("NotOwnerError", new { teamId = editSprintViewModel.TeamId });
+                }
             }
-            else
-            {
-                ViewBag.SprintActive = "";
-                ViewBag.SprintNotActive = "checked";
-            }
-            return View(SprintViewModel);
+
+            return View(editSprintViewModel);
         }
 
         [Authorize]
         public async Task<IActionResult> AddSprintAsync(int teamId, string errorMessage)
         {
             var team = await _manageSprintsService.GetTeam(teamId);
-            var teamViewModel = new TeamViewModel() {Id = teamId, TeamName = team.TeamName};
+            var sprintViewModel = new SprintViewModel() { Id = teamId, Name = team.TeamName };
             ViewBag.ErrorMessage = errorMessage;
-            return View(teamViewModel);
+
+            return View(sprintViewModel);
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> EditSprintAsync(int teamId, int sprintId, string sprintName, int daysInSprint, int storePointsInHours, bool isActive)
+        public async Task<IActionResult> AddSprintAsync(SprintViewModel sprintViewModel)
         {
-            var sprints = await _manageSprintsService.GetAllSprintsAsync(teamId, new DisplayOptions());
-            var activeSprints = sprints.FirstOrDefault(i => i.IsActive == true);
-            if (string.IsNullOrEmpty(sprintName))
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("EditSprint", new { teamId = teamId, sprintId = sprintId, errorMessage = _localizer["NameFieldError"] });
+                var sprints = await _manageSprintsService.GetAllSprintsAsync(sprintViewModel.TeamId, new DisplayOptions());
+
+                var sprint = new Sprint
+                {
+                    TeamId = sprintViewModel.TeamId,
+                    Name = sprintViewModel.Name,
+                    DaysInSprint = sprintViewModel.DaysInSprint,
+                    StoryPointInHours = sprintViewModel.StoryPointInHours
+                };
+
+                var result = await AddSprintAsync(sprint);
+
+                if (result)
+                {
+                    return RedirectToAction("AllSprints", new { teamId = sprintViewModel.TeamId });
+                }
+                else
+                {
+                    return RedirectToAction("NotOwnerError", new { teamId = sprintViewModel.TeamId });
+                }
             }
 
-            if (daysInSprint <= 0)
-            {
-                return RedirectToAction("EditSprint", new { teamId = teamId, sprintId = sprintId, errorMessage = _localizer["DaysFieldError"] });
-            }
-
-            if (storePointsInHours <= 0)
-            {
-                return RedirectToAction("EditSprint", new { teamId = teamId, sprintId = sprintId, errorMessage = _localizer["PointsFieldError"] });
-            }
-            if(activeSprints != null && isActive == true)
-            {
-                return RedirectToAction("EditSprint", new { teamId = teamId, sprintId = sprintId, errorMessage = _localizer["ActiveFieldError"] });
-            }
-
-            var sprint = new Sprint { Id = sprintId, TeamId = teamId, Name = sprintName, DaysInSprint = daysInSprint, StoryPointInHours = storePointsInHours, IsActive = isActive };
-            var result = await EditSprintAsync(sprint);
-
-            if (result)
-            {
-                return RedirectToAction("AllSprints", new { teamId = teamId });
-            }
-            else
-            {
-                return RedirectToAction("NotOwnerError", new { teamId = teamId });
-            }
-
-        }
-
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> AddSprintAsync(int teamId, string sprintName, int daysInSprint, int storePointsInHours, bool isActive)
-        {
-            var sprint = new Sprint { TeamId = teamId, Name = sprintName, DaysInSprint = daysInSprint, StoryPointInHours = storePointsInHours, IsActive = isActive };
-            
-            var sprints = await _manageSprintsService.GetAllSprintsAsync(teamId, new DisplayOptions());
-            var activeSprint = sprints.FirstOrDefault(i => i.IsActive == true);
-
-            if (string.IsNullOrEmpty(sprintName))
-            {
-                return RedirectToAction("AddSprint", new { teamId = teamId, errorMessage = _localizer["NameFieldError"] });
-            }
-            if (daysInSprint <= 0)
-            {
-                return RedirectToAction("AddSprint", new { teamId = teamId, errorMessage = _localizer["DaysFieldError"] });
-            }
-            if (storePointsInHours <= 0)
-            {
-                return RedirectToAction("AddSprint", new { teamId = teamId, errorMessage = _localizer["PointsFieldError"] });
-            }
-            if (activeSprint != null && isActive == true)
-            {
-                return RedirectToAction("AddSprint", new { teamId = teamId, errorMessage = _localizer["ActiveFieldError"] });
-            }
-
-            var result = await AddSprintAsync(sprint);
-
-                if (result) return RedirectToAction("AllSprints", new { teamId = teamId});
-                else return RedirectToAction("NotOwnerError", new { teamId = teamId });
-            
+            return View(sprintViewModel);
         }
 
         public IActionResult NotOwnerError(int teamId)
@@ -275,7 +266,18 @@ namespace Teams.Web.Controllers
             ViewData["Error"] = _localizer["Error"];
             return View();
         }
-
+        public IActionResult ErrorTask(string Cause,int sprintId)
+        {
+            ViewData["Error"] = _localizer["Error"];
+            ViewData["Cause"] = _localizer[Cause];
+            return View(sprintId);
+        }
+        public IActionResult ErrorSprint()
+        {
+            ViewData["Error"] = _localizer["Error"];
+            ViewData["Sprint"] = _localizer["SprintNull"];
+            return View();
+        }
         [Authorize, NonAction]
         private async Task<bool> AddSprintAsync(Sprint sprint)
         {

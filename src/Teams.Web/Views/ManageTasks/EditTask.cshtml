@@ -17,6 +17,9 @@
         @Html.Hidden("teamId", @Model.TeamId)
         @Html.Hidden("taskSprintId", @Model.TaskSprintId)
         @Html.Hidden("taskId", @Model.TaskId)
+        @Html.Hidden("TeamMembers", @Model.TeamMembers)
+        @Html.Hidden("TeamName", @Model.TeamName)
+
         @section scripts{
             <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
@@ -32,16 +35,19 @@
         <div>
             <label for="name">@Localizer["Name"] :</label>
             <input id="name" name="taskName" class="form-control" value="@Model.TaskName" />
+            <span asp-validation-for="TaskName"></span>
         </div>
 
         <div>
             <label for="days">@Localizer["TaskLink"] :</label>
             <input id="days" name="taskLink" class="form-control" value="@Model.TaskLink" />
+            <span asp-validation-for="TaskLink"></span>
         </div>
 
         <div>
             <label for="points">@Localizer["StoryPoints"]</label>
             <input id="points" name="taskStoryPoints" class="form-control" value="@Model.TaskStoryPoints" />
+            <span asp-validation-for="TaskStoryPoints"></span>
         </div>
         
         <div style="margin-top:4px">
@@ -54,6 +60,7 @@
                     <option value=@item.Id>@item.Member.Email</option>
                 }
             </select>
+            <span asp-validation-for="TaskMemberId"></span>
         </div>
         <div style="display: table">
             <input id="sub" type="submit" class="btn btn-success" value="@Localizer["EditTask"]" />

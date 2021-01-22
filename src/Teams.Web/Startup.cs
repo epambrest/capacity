@@ -12,6 +12,7 @@ using Teams.Security;
 using Teams.Data;
 using Teams.Data.Models;
 using Teams.Data.Repository;
+using Teams.Web.Resources.ViewModels;
 
 namespace Teams.Web
 {
@@ -38,22 +39,33 @@ namespace Teams.Web
             services.AddTransient<IManageTeamsService, ManageTeamsService>();
             services.AddTransient<IManageSprintsService, ManageSprintsService>();
             services.AddTransient<IManageTasksService, ManageTasksService>();
+            services.AddTransient<IManageMemberWorkingDaysService, ManageMemberWorkingDaysService>();
             services.AddTransient<IRepository<Team, int>, TeamRepository>();
             services.AddTransient<IRepository<TeamMember, int>, TeamMemberRepository>();
             services.AddTransient<IRepository<Sprint, int>, SprintRepository>();
             services.AddTransient<IRepository<Task, int>, TaskRepository>();
+            services.AddTransient<IRepository<MemberWorkingDays, int>, MemberWorkingDaysRepository>();
             services.AddHttpContextAccessor();
             services.AddTransient<ICurrentUser, CurrentUser>();
             services.AddTransient<IManageTeamsMembersService, ManageTeamsMembersService>();
             services.AddTransient<IAccessCheckService, AccessCheckService>();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddControllersWithViews()
-                .AddViewLocalization();
+                .AddViewLocalization()
+                .AddDataAnnotationsLocalization(options =>
+                    options.DataAnnotationLocalizerProvider = (type, factory) => 
+                        factory.Create(typeof(ValidationResource)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                context.Database.Migrate();
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
