@@ -202,6 +202,7 @@
   </data>
   <data name="SprintNotActive" xml:space="preserve">
     <value>Спринт не активен</value>
+  </data>
   <data name="SprintWithSameName" xml:space="preserve">
     <value>Спринт с таким именем уже существует</value>
   </data>
