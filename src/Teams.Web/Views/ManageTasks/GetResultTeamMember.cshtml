@@ -1,0 +1,108 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model Teams.Web.ViewModels.Task.ResultsTasksForMemberViewModel
+@{
+    ViewBag.Title = Model.TeamMemberEmail;
+}
+
+<script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+
+<div style="margin: 10px 0px 0px 30px" align="left">
+    <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink(Localizer["GoBackSprint"].Value, "GetSprintById", "ManageSprints", new { sprintId = Model.CompletedSprintId })</a></h>
+</div>
+<div align="center">
+    <h><font size="6" color="black"><strong>@Localizer["ResultForMember"]:@Model.TeamMemberEmail</strong></font></h>
+</div>
+<hr />
+
+<table class="table">
+
+    <tr align="center">
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["NameofTask"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPoint"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Link"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Status"]</td>
+    </tr>
+
+    @foreach (var item in Model.Tasks)
+    {
+        <tr align="center">
+            <td align="left">@item.Name</td>
+            <td align="left">@item.StoryPoints</td>
+            <td align="left"><a href="@item.Link" align="left">@Localizer["Link"]</a></td>
+            @if (item.Completed)
+            {
+                <td align="left" class="text-success">@Localizer["Complete"]</td>
+            }
+            else
+            {
+                <td align="left" class="text-warning">@Localizer["UnComplete"]</td>
+            }
+            <td style="visibility: @ViewBag.AddVision" align="right">
+            </td>
+        </tr>
+    }
+    <tr align="center">
+        <td align="left" style="font-weight: bold">@Localizer["TotalSp"]:</td>
+        <td align="left">@Model.TotalStoryPoints</td>
+    </tr>
+    <tr>
+        <td align="left" style="font-weight: bold">@Localizer["TotalQuantity"]:</td>
+        <td align="left">@Model.Tasks.Count</td>
+    </tr>
+    <tr align="center">
+        <td align="left" style="font-weight: bold">@Localizer["QuantityСompleted"]:</td>
+        <td align="left">@Model.QuantityСompletedTasks</td>
+    </tr>
+    <tr>
+        <td align="left" style="font-weight: bold">@Localizer["QuantityUnСompleted"]:</td>
+        <td align="left">@Model.QuantityUnСompletedTasks</td>
+    </tr>
+    <tr>
+        <td align="left" style="font-weight: bold">@Localizer["SpForСompleted"]:</td>
+        <td align="left">@Model.SpСompletedTasks</td>
+    </tr>
+    <tr>
+        <td align="left" style="font-weight: bold">@Localizer["SpForUnСompleted"]:</td>
+        <td align="left">@Model.SpUnСompletedTasks</td>
+    </tr>
+</table>
+
+
+<div style="margin-top:4px">
+    @using (Html.BeginForm("GetResultTeamMember", "ManageTasks", FormMethod.Get))
+    {
+        <div>
+            @Html.Hidden("sprintId", Model.CompletedSprintId)
+        </div>
+        <div>
+            @Html.Hidden("teamId", Model.TeamId)
+        </div>
+        <div>
+            <select class="js-example-basic-single form-control" name="teamMemberId" onchange="myFunction(event)">
+                <option disabled selected>@Localizer["SelectUser"]</option>
+                @{  Dictionary<int, string> allMembers = new Dictionary<int,string>();
+                    foreach (var item in Model.TeamMembers)
+                    {
+                        if(!allMembers.ContainsKey(item.Id))
+                            allMembers.Add(item.Id,item.Member.Email);
+                    }
+                    foreach (var member in allMembers)
+                    {
+                        <option value=@member.Key>@member.Value</option>
+                    }
+                }
+            </select>
+        </div>
+        <div>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">@Localizer["Show"]</button>
+        </div>
+    }
+</div>
+
+
+

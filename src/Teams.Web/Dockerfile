@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["Teams/Teams.csproj", "Teams/"]
-RUN dotnet restore "Teams/Teams.csproj"
+COPY ["Teams.Web/Teams.Web.csproj", "Teams.Web/"]
+RUN dotnet restore "Teams.Web/Teams.Web.csproj"
 COPY . .
-WORKDIR "/src/Teams"
-RUN dotnet build "Teams.csproj" -c Release -o /app/build
+WORKDIR "/src/Teams.Web"
+RUN dotnet build "Teams.Web.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Teams.csproj" -c Release -o /app/publish
+RUN dotnet publish "Teams.Web.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Teams.dll"]
+ENTRYPOINT ["dotnet", "Teams.Web.dll"]

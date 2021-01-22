@@ -1,4 +1,4 @@
-﻿@model Teams.Web.ViewModels.Team.TeamViewModel
+﻿@model Teams.Web.ViewModels.Sprint.SprintViewModel
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
 @{
@@ -17,27 +17,34 @@
         @Html.Hidden("teamId", @ViewBag.TeamId as string)
         <div>
             <label for="name">@Localizer["Name"] :</label>
-            <input id="name" name="sprintName" class="form-control" />
+            <input id="name" name="Name" class="form-control" />
+            <span asp-validation-for="Name"></span>
         </div>
 
         <div>
             <label for="days">@Localizer["DaysInSprint"] :</label>
-            <input id="days" name="daysInSprint" class="form-control" />
+            <input id="days" name="DaysInSprint" class="form-control" />
+            <span asp-validation-for="DaysInSprint"></span>
         </div>
 
         <div>
             <label for="points">@Localizer["StoryPointInHours"]</label>
-            <input id="points" name="storePointsInHours" class="form-control" />
+            <input id="points" name="StoryPointInHours" class="form-control" />
+            <span asp-validation-for="StoryPointInHours"></span>
         </div>
 
         <div>
-            <label>@Localizer["Active"]</label>
-            @Html.CheckBox("isActive", false)
+            @Html.RadioButton("status", PossibleStatuses.CompletedStatus)
+            <span>@Localizer["Сompleted"]</span> <br />
+            @Html.RadioButton("status", PossibleStatuses.ActiveStatus)
+            <span>@Localizer["Active"]</span> <br />
+            @Html.RadioButton("status", PossibleStatuses.CreatedStatus, true)
+            <span>@Localizer["Created"]</span>
         </div>
 
         <div style="display: table">
             <input id="sub" type="submit" class="btn btn-success" value="@Localizer["AddSprint"]" />
-            <button style="margin-left:7px" type='button' class="btn btn-danger" onclick="location.href = '@Url.Action("AllSprints", "ManageSprints", new { teamId = ViewBag.TeamId })'">@Localizer["Close"]</button>
+            <button style="margin-left:7px" type='button' class="btn btn-danger" onclick="location.href = '@Url.Action("AllSprints", "ManageSprints", new { teamId = Model.Id })'">@Localizer["Close"]</button>
         </div>
     }
 </div>

@@ -126,6 +126,12 @@
   <data name="Close" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Created</value>
+  </data>
   <data name="DaysInSprint" xml:space="preserve">
     <value>Days in Sprint</value>
   </data>

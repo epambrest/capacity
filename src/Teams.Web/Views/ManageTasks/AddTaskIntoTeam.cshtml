@@ -11,11 +11,12 @@
 </div>
 
 <div>
-    @using (Html.BeginForm("AddTaskIntoTeam", "ManageTasks", FormMethod.Post))
+    @using (Html.BeginForm())
     {
         <div><p align="center" style="color:red">@Model.ErrorMessage</p></div>
-        @Html.Hidden("taskFormViewModel.TeamId", @Model.TeamId)
-        @Html.Hidden("taskFormViewModel.TaskId", @Model.TaskId)
+        @Html.Hidden("TeamId", @Model.TeamId)
+        @Html.Hidden("TaskId", @Model.TaskId)
+        @Html.Hidden("TeamName", @Model.TeamName)
         @section scripts{
             <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
@@ -37,24 +38,27 @@
                 });
             </script>
         }
-        <div>
-            <label for="name">@Localizer["Name"] :</label>
-            <input id="name" name="taskFormViewModel.TaskName" class="form-control" value="" />
-        </div>
+<div>
+    <label for="name">@Localizer["Name"] :</label>
+    <input id="name" name="TaskName" class="form-control" value="" />
+    @Html.ValidationMessageFor(model => model.TaskName)
+</div>
 
         <div>
             <label for="days">@Localizer["TaskLink"] :</label>
-            <input id="days" name="taskFormViewModel.TaskLink" class="form-control" value="" />
+            <input id="days" name="TaskLink" class="form-control" value="" />
+            @Html.ValidationMessageFor(model => model.TaskLink)
         </div>
 
         <div>
-            <label for="points">@Localizer["StoryPoints"]</label>
-            <input id="points" name="taskFormViewModel.TaskStoryPoints" class="form-control" value="" />
+            <label for="points">@Localizer["StoryPoints"] :</label>
+            <input id="points" name="TaskStoryPoints" class="form-control" value="" />
+            @Html.ValidationMessageFor(model => model.TaskStoryPoints)
         </div>
         
         <div style="margin-top:4px">
             <label for="user">@Localizer["User"]</label>
-            <input hidden="hidden" id="user" name="taskFormViewModel.TaskMemberId">
+            <input hidden="hidden" id="user" name="TaskMemberId">
             <select class="js-example-basic-single" id="members" onchange="userFunction(event)">
                 <option disabled selected>@Localizer["SelectUser"]</option>
                 @foreach (var item in Model.TeamMembers)
@@ -62,11 +66,12 @@
                     <option value=@item.Id>@item.Member.Email</option>
                 }
             </select>
+            @Html.ValidationMessageFor(model => model.TaskMemberId)
         </div>
 
         <div style="margin-top:4px">
             <label for="user">@Localizer["Sprint"]</label>
-            <input hidden="hidden" id="sprint" name="taskFormViewModel.TaskSprintId">
+            <input hidden="hidden" id="sprint" name="TaskSprintId">
             <select class="js-example-basic-single" id="sprint" onchange="sprintFunction(event)">
                 <option disabled selected>@Localizer["SelectSprint"]</option>
                 @foreach (var item in Model.Sprints)
@@ -74,6 +79,7 @@
                     <option value=@item.Id>@item.Name</option>
                 }
             </select>
+            @Html.ValidationMessageFor(model => model.TaskSprintId)
         </div>
 
         <div style="display: table">

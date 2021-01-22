@@ -117,13 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Link" xml:space="preserve">
+    <value>Ссылка</value>
+  </data>
   <data name="Linkoftask" xml:space="preserve">
     <value>Ссылка на таск</value>
   </data>
   <data name="Membername" xml:space="preserve">
     <value>Имя участника</value>
   </data>
+  <data name="StoryPoint" xml:space="preserve">
+    <value>Количество СП</value>
+  </data>
   <data name="StoryPointinHours" xml:space="preserve">
     <value>Количество СП</value>
+  </data>
+  <data name="StoryPointinHours1" xml:space="preserve">
+    <value>Количество СП в часах</value>
   </data>
 </root>
