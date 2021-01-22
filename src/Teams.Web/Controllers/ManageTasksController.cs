@@ -63,7 +63,8 @@ namespace Teams.Web.Controllers
                 Id = t.Id,
                 Link = t.Link,
                 Name = t.Name,
-                TeamMember = new TeamMemberViewModel(){Member = t.TeamMember.Member}
+                StoryPoints = t.StoryPoints,
+                TeamMember = t.MemberId != null ? new TeamMemberViewModel() {Member = t.TeamMember.Member} : null
             }));
             tasksForTeamViewModel.TeamId = team.Id;
             return View(tasksForTeamViewModel);
@@ -88,7 +89,8 @@ namespace Teams.Web.Controllers
                 Link = task.Link,
                 Name = task.Name,
                 TeamId = task.TeamId,
-                TeamMember = new TeamMemberViewModel(){Member = task.TeamMember.Member}
+                StoryPoints = task.StoryPoints,
+                TeamMember = task.MemberId != null ? new TeamMemberViewModel() { Member = task.TeamMember.Member } : null
             };
 
             return View(taskViewModel);
@@ -440,7 +442,7 @@ namespace Teams.Web.Controllers
                 if (result) return RedirectToAction("AllTasksForTeam", new { teamId = taskFormViewModel.TeamId });
                 else return RedirectToAction("NotOwnerError", new { teamId = taskFormViewModel.TeamId });
             }
-
+            
             var teamMembers = await GetAllTeamMembersAsync(taskFormViewModel.TeamId);
             var teamSprints = await _manageSprintsService.GetAllSprintsAsync(taskFormViewModel.TeamId, new DisplayOptions());
 

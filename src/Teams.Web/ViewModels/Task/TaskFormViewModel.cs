@@ -10,8 +10,7 @@ namespace Teams.Web.ViewModels.Task
         public int TaskId { get; set; }
         [Range(1, 100)]
         public int TaskStoryPoints { get; set; }
-        [Range(1, int.MaxValue)]
-        public int TaskMemberId { get; set; }
+        public int? TaskMemberId { get; set; }
         public int TeamId { get; set; }
         [Range(1, int.MaxValue)]
         public int TaskSprintId { get; set; }

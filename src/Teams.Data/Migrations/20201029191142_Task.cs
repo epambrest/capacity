@@ -20,7 +20,7 @@ namespace Teams.Data.Migrations
                     TeamId = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     SprintId = table.Column<int>(nullable: false),
-                    MemberId = table.Column<int>(nullable: false),
+                    MemberId = table.Column<int>(nullable: true),
                     Link = table.Column<string>(nullable: false),
                     StoryPoints = table.Column<int>(nullable: false)
                 },

@@ -98,14 +98,18 @@ namespace Teams.Web.Controllers
             var task = await _manageTasksService.GetTaskByIdAsync(taskId);
             var sprint = await _manageSprintsService.GetSprintAsync(task.SprintId, false);
 
-            if (sprint != null && sprint.Status == PossibleStatuses.ActiveStatus)
+            if (sprint == null)
             {
-                task.Completed = isCompleted;
+                return View("ErrorSprint");               
             }
-            else
+            if (sprint.Status != PossibleStatuses.ActiveStatus) 
             {
-                return View("Error");
+               return RedirectToAction("ErrorTask",new {Cause="SprintNotActive", task.SprintId });
             }
+            if(task.MemberId == null)
+                return RedirectToAction("ErrorTask", new { Cause = "NotAssigned", task.SprintId });
+
+            task.Completed = isCompleted;
 
             var result = await _manageTasksService.EditTaskAsync(task);
 
@@ -141,7 +145,7 @@ namespace Teams.Web.Controllers
 
             sprint.Tasks.ToList().ForEach(t=>sprintViewModel.Tasks.Add(new TaskViewModel()
                 {
-                    TeamMember = new TeamMemberViewModel(){Member = t.TeamMember.Member, MemberId = t.MemberId.ToString()},
+                    TeamMember = t.MemberId != null ? new TeamMemberViewModel(){Member = t.TeamMember.Member, MemberId = t.MemberId.ToString()} : null,
                     Name = t.Name,
                     StoryPoints = t.StoryPoints,
                     Id = t.Id,
@@ -262,7 +266,18 @@ namespace Teams.Web.Controllers
             ViewData["Error"] = _localizer["Error"];
             return View();
         }
-
+        public IActionResult ErrorTask(string Cause,int sprintId)
+        {
+            ViewData["Error"] = _localizer["Error"];
+            ViewData["Cause"] = _localizer[Cause];
+            return View(sprintId);
+        }
+        public IActionResult ErrorSprint()
+        {
+            ViewData["Error"] = _localizer["Error"];
+            ViewData["Sprint"] = _localizer["SprintNull"];
+            return View();
+        }
         [Authorize, NonAction]
         private async Task<bool> AddSprintAsync(Sprint sprint)
         {

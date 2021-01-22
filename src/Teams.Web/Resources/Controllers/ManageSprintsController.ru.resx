@@ -179,6 +179,9 @@
   <data name="NotActive" xml:space="preserve">
     <value>Не активный</value>
   </data>
+  <data name="NotAssigned" xml:space="preserve">
+    <value>Участник не назначен</value>
+  </data>
   <data name="NotOwner" xml:space="preserve">
     <value>Вы не являетесь владельцем</value>
   </data>
@@ -197,6 +200,8 @@
   <data name="ReturnToSprint" xml:space="preserve">
     <value>Вернуться к спринтам</value>
   </data>
+  <data name="SprintNotActive" xml:space="preserve">
+    <value>Спринт не активен</value>
   <data name="SprintWithSameName" xml:space="preserve">
     <value>Спринт с таким именем уже существует</value>
   </data>

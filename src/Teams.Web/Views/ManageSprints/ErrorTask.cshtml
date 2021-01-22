@@ -1,0 +1,15 @@
+﻿@model int
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = @Localizer["Ooops"];
+}
+
+<div class="text-center">
+    <h1 class="display-4">@ViewData["Error"]</h1>
+    <p style="color:red"> @ViewData["Cause"]</p>
+</div>
+<div style="margin: 10px 0px 0px 30px" align="center">
+    <h><a color="black">@Html.ActionLink("  Return to sprint", "GetSprintById", "ManageSprints", new { sprintId = Model })</a></h>
+
+</div>
