@@ -1,14 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Teams.Web.ViewModels.Sprint;
 using Teams.Web.ViewModels.MemberWorkingDays;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Teams.Business.Services;
 using Teams.Data.Models;
-using Teams.Web.Controllers;
-using Teams.Web.ViewModels.Task;
 using Teams.Web.ViewModels.TeamMember;
 using Microsoft.AspNetCore.Authorization;
 using Teams.Web.ViewModels.Team;
@@ -61,22 +58,35 @@ namespace Teams.Web.Controllers
             var memberWorkingDays = await _manageMemberWorkingDaysService.GetWorkingDaysByIdAsync(workingDaysId);
             if (memberWorkingDays == null)
                 return false;
-            var newMemberWorkingDays = new MemberWorkingDays { Id = memberWorkingDays.Id, MemberId = memberWorkingDays.MemberId, SprintId = memberWorkingDays.SprintId, WorkingDays = workingDays };
-            return await _manageMemberWorkingDaysService.EditMemberWorkingDaysAsync(newMemberWorkingDays);
+            
+            var newMemberWorkingDays = new MemberWorkingDays { Id = memberWorkingDays.Id, MemberId = memberWorkingDays.MemberId, SprintId = memberWorkingDays.SprintId, Sprint = memberWorkingDays.Sprint, WorkingDays = workingDays };
+            if (newMemberWorkingDays.WorkingDays >= 0 && newMemberWorkingDays.WorkingDays <= newMemberWorkingDays.Sprint.DaysInSprint)
+            {
+                return await _manageMemberWorkingDaysService.EditMemberWorkingDaysAsync(newMemberWorkingDays);
+            }
+            else
+                return false;
         }
 
         [Authorize]
         [HttpGet]
         public async Task<int> AddWorkingDays(int sprintId, int memberId, int workingDays)
         {
-            var result = await _manageMemberWorkingDaysService.AddMemberWorkingDaysAsync(new MemberWorkingDays { SprintId = sprintId, MemberId = memberId, WorkingDays = workingDays });
-            if (result)
+            var sprint = await _manageSprintsService.GetSprintAsync(sprintId, false);
+            if (TryValidateModel(new MemberWorkingDays { SprintId = sprintId, MemberId = memberId, WorkingDays = workingDays, Sprint = sprint }))
             {
-                var memberWorkingDays = await _manageMemberWorkingDaysService.GetAllWorkingDaysForSprintAsync(sprintId);
-                return memberWorkingDays.FirstOrDefault(i => i.MemberId == memberId).Id;
+                var result = await _manageMemberWorkingDaysService.AddMemberWorkingDaysAsync(new MemberWorkingDays { SprintId = sprintId, MemberId = memberId, WorkingDays = workingDays });
+                if (result)
+                {
+                    var memberWorkingDays = await _manageMemberWorkingDaysService.GetAllWorkingDaysForSprintAsync(sprintId);
+                    return memberWorkingDays.FirstOrDefault(i => i.MemberId == memberId).Id;
+                }
+                else
+                    return -1;
             }
-            else 
+            else
                 return -1;
         }
+
     }
 }

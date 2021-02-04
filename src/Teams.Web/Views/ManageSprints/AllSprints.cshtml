@@ -50,10 +50,10 @@
                 {
                     <td align="left" width="1%" bgcolor="blue"></td>
                 }
-                <td align="left">@Html.ActionLink(item.Name, "GetSprintById", new {sprintId = item.Id})</td>
-                <td align="left">@item.DaysInSprint</td>
-                <td align="left">@item.StoryPointInHours</td>
-                <td style="visibility: @ViewBag.AddVision" align="right">
+                <td align="left" data-type="@item.Id">@Html.ActionLink(item.Name, "GetSprintById", new {sprintId = item.Id})</td>
+                <td align="left" data-type="@item.Id">@item.DaysInSprint</td>
+                <td align="left" data-type="@item.Id">@item.StoryPointInHours</td>
+                <td style="visibility: @ViewBag.AddVision" align="right" data-type="@item.Id">
                         @Html.ActionLink("", "EditSprint", new {teamId = Model.Team.Id, sprintId = item.Id, errorMessage = ""}, new {@class = "fas fa-pen", title = "Edit Sprint", style = "margin: 10px 0px 0px 30px", align = "right"})
 
                     </td>
