@@ -13,9 +13,9 @@ namespace Teams.Data.Models
         }
 
         public override bool IsValid(object value)
-        {
+        { 
             MemberWorkingDays memberWorkingDays = value as MemberWorkingDays;
-            if (memberWorkingDays.WorkingDays >= 0 && memberWorkingDays.WorkingDays <= memberWorkingDays.Sprint.DaysInSprint)
+            if(memberWorkingDays.WorkingDays >= 0 && memberWorkingDays.WorkingDays <= memberWorkingDays.Sprint.DaysInSprint)
                 return true;
             return false;
         }

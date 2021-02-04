@@ -1,14 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Teams.Web.ViewModels.Sprint;
 using Teams.Web.ViewModels.MemberWorkingDays;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Teams.Business.Services;
 using Teams.Data.Models;
-using Teams.Web.Controllers;
-using Teams.Web.ViewModels.Task;
 using Teams.Web.ViewModels.TeamMember;
 using Microsoft.AspNetCore.Authorization;
 using Teams.Web.ViewModels.Team;
@@ -61,6 +58,7 @@ namespace Teams.Web.Controllers
             var memberWorkingDays = await _manageMemberWorkingDaysService.GetWorkingDaysByIdAsync(workingDaysId);
             if (memberWorkingDays == null)
                 return false;
+            
             var newMemberWorkingDays = new MemberWorkingDays { Id = memberWorkingDays.Id, MemberId = memberWorkingDays.MemberId, SprintId = memberWorkingDays.SprintId, Sprint = memberWorkingDays.Sprint, WorkingDays = workingDays };
             if (newMemberWorkingDays.WorkingDays >= 0 && newMemberWorkingDays.WorkingDays <= newMemberWorkingDays.Sprint.DaysInSprint)
             {
@@ -74,7 +72,7 @@ namespace Teams.Web.Controllers
         [HttpGet]
         public async Task<int> AddWorkingDays(int sprintId, int memberId, int workingDays)
         {
-            var sprint = _manageSprintsService.GetSprintAsync(sprintId, false).Result;
+            var sprint = await _manageSprintsService.GetSprintAsync(sprintId, false);
             if (TryValidateModel(new MemberWorkingDays { SprintId = sprintId, MemberId = memberId, WorkingDays = workingDays, Sprint = sprint }))
             {
                 var result = await _manageMemberWorkingDaysService.AddMemberWorkingDaysAsync(new MemberWorkingDays { SprintId = sprintId, MemberId = memberId, WorkingDays = workingDays });
@@ -89,5 +87,6 @@ namespace Teams.Web.Controllers
             else
                 return -1;
         }
+
     }
 }
