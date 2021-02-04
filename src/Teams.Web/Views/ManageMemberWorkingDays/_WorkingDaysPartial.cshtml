@@ -15,26 +15,34 @@
         });
     });
 
-        Submit.onclick = function () {
+    Submit.onclick = function () {
+        
+        var DaysInSprint = document.getElementById("DaysInSprint").value;
         var workingDaysId = document.getElementById('workingDaysId').value;
         var workingDays = document.getElementById('workingDays').value;
-        $.ajax({
-            type: "Get",
-            url: '@Url.Action("EditWorkingDays", "ManageMemberWorkingDays")/',
-            data: { workingDaysId: workingDaysId, workingDays: workingDays },
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (data) {
-                if (data) {
-                    var id = workingDaysId.valueOf();
-                    document.getElementById(id).innerHTML = workingDays;
-                    $('#success').toast('show');
+        if (!(isNaN(workingDays) || workingDays < 0 || workingDays > DaysInSprint)) {
+            $('#element').toast('show');
+        }       
+        else {
+
+            $.ajax({
+                type: "Get",
+                url: '@Url.Action("EditWorkingDays", "ManageMemberWorkingDays")/',
+                data: { workingDaysId: workingDaysId, workingDays: workingDays },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    if (data) {
+                        var id = workingDaysId.valueOf();
+                        document.getElementById(id).innerHTML = workingDays;
+                        $('#success').toast('show');
+                    }
+                    else {
+                        $('#element').toast('show');
+                    }
                 }
-                else {
-                    $('#element').toast('show');
-                }
-            }
-        });
+            });
+        }
     };
 
         $(document).ready(function () {
@@ -52,29 +60,34 @@
     });
 
     function AddDays() {
+        var DaysInSprint = document.getElementById("DaysInSprint").value;
         var sprintId = document.getElementById('sprintId').value;
         var memberId = document.getElementById('memberId').value;
         var workingDays = document.getElementById('AddWorkingDays').value;
         var Member = document.getElementById('MemberAdd').value;
-
-        $.ajax({
-            type: "Get",
-            url: '@Url.Action("AddWorkingDays", "ManageMemberWorkingDays")/',
-            data: { sprintId: sprintId, memberId: memberId, workingDays: workingDays },
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (data) {
-                if (data >= 0) {
-                    var id = memberId.valueOf();
-                    document.getElementById(id).innerHTML = workingDays;
-                    document.getElementById('Add').innerHTML = "<i class=\"fas fa-pen\" data-toggle=\"modal\" data-target=\"#workingDaysModal\" data-content=\"" + Member + "\" data-whatever=\"" + data + "\"></i>";
-                    $('#success').toast('show');
+        if (!(isNaN(workingDays) || workingDays < 0 || workingDays > DaysInSprint)) {
+            $('#element').toast('show');
+        }
+        else {
+            $.ajax({
+                type: "Get",
+                url: '@Url.Action("AddWorkingDays", "ManageMemberWorkingDays")/',
+                data: { sprintId: sprintId, memberId: memberId, workingDays: workingDays },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    if (data >= 0) {
+                        var id = memberId.valueOf();
+                        document.getElementById(id).innerHTML = workingDays;
+                        document.getElementById('Add').innerHTML = "<i class=\"fas fa-pen\" data-toggle=\"modal\" data-target=\"#workingDaysModal\" data-content=\"" + Member + "\" data-whatever=\"" + data + "\"></i>";
+                        $('#success').toast('show');
+                    }
+                    else {
+                        $('#element').toast('show');
+                    }
                 }
-                else {
-                    $('#element').toast('show');
-                }
-            }
-        });
+            });
+        }
     }
 
 </script>
@@ -124,7 +137,7 @@
                         <td align="center" id="@item.Id"></td>
                         <td align="right"><button type='button' class='btn btn-outline-primary border-0' id="Add">
                             <i class="fas fa-plus" data-toggle="modal" data-target="#workingDaysModalAdd" data-description="@item.Member.Email"
-                               data-whatever="@Model.sprintId" data-content="@item.Id"></i></button></td>
+                               data-whatever="@Model.sprintId" data-container="@Model.DaysInSprint" data-content="@item.Id"></i></button></td>
                     }
                     else
                     {
@@ -151,7 +164,8 @@
                 <div align="center" class="modal-body">
                     <p align="center" id="Member"></p>
                     <input type="hidden" id="workingDaysId" name="workingDaysId" value="" />
-                    <input type="number" min="0" id="workingDays" name="workingDays" value="" />
+                    <input type="hidden" id="DaysInSprint" value="@Model.DaysInSprint" />
+                    <input type="number" min="0" max="@Model.DaysInSprint" id="workingDays" name="workingDays" value="" />
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-outline-secondary" id="Submit" data-dismiss="modal">OK</button>
@@ -185,7 +199,8 @@
                     <input type="hidden" id="sprintId" name="sprintId" value="" />
                     <input type="hidden" id="memberId" name="memberId" value="" />
                     <input type="hidden" id="MemberAdd" name="Member" value="" />
-                    <input type="number" min="0" id="AddWorkingDays" name="workingDays" value="" />
+                    <input type="hidden" id="DaysInSprint" value="@Model.DaysInSprint" />
+                    <input type="number" min="0" id="AddWorkingDays" name="workingDays" value="" max="@Model.DaysInSprint" />
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-outline-secondary" onclick="AddDays()" data-dismiss="modal">OK</button>
