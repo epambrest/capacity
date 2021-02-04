@@ -40,7 +40,14 @@
                  <td align="left"></td>
             }
             <td align="left">@item.StoryPoints</td>
-            <td><a href="@item.Link" align="left">@Localizer["Link"]</a></td>
+            @if (!item.Link.Contains("https://"))
+            {
+                <td><a href="https://@item.Link" align="left">@Localizer["Link"]</a></td>
+            }
+            else
+            {
+                <td><a href="@item.Link" align="left">@Localizer["Link"]</a></td>
+            }
             <td style="visibility: @ViewBag.AddVision" align="right">
                 @Html.ActionLink("", "EditTask", new { teamId = Model.TeamId, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })
             </td>
