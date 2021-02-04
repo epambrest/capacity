@@ -52,7 +52,6 @@ namespace Teams.Business.Services
             var team = await _teamRepository.GetAll().FirstOrDefaultAsync(i => i.TeamOwner == _currentUser.Current.Id() && i.Id == teamId);
             if (team == null)
                 return false;
-            
             var result = await _teamRepository.DeleteAsync(team);
             return result;
         }

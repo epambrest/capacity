@@ -19,6 +19,20 @@ namespace Teams.Data.Repository
 
         public async Task<bool> DeleteAsync(Team entity)
         {
+            var tasks = _dbContext.Task.Where(t => t.TeamId == entity.Id).ToList();
+            
+            foreach(var task in tasks)
+            {
+                _dbContext.Task.Remove(task);
+            }
+            
+            var teamMembers = _dbContext.TeamMembers.Where(t => t.TeamId == entity.Id);
+
+            foreach(var teamMember in teamMembers)
+            {
+                _dbContext.TeamMembers.Remove(teamMember);
+            }
+
             _dbContext.Team.Remove(entity);
             var result = await _dbContext.SaveChangesAsync() > 0 ? true : false;
             return result;

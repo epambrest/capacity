@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Teams.Data.Models
 {
+    [WorkingDays]
     public class MemberWorkingDays
     {
         [Key]
