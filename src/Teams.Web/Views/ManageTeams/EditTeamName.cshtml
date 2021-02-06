@@ -10,8 +10,7 @@
 <hr />
 
 @using (Html.BeginForm())
-{
-    <input type="hidden" value="@Model.Id" />
+{   <input type="hidden" name="Id" value="@Model.Id" />
     <table>
         <tr>
             <td>@Localizer["Name"]</td>
