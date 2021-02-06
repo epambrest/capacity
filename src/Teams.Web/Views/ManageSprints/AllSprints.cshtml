@@ -40,15 +40,15 @@
             <tr align="center">
                 @if (item.Status == PossibleStatuses.ActiveStatus)
                 {
-                    <td align="left" width="1%" bgcolor="green"></td>
+                    <td class="colorBlock" align="left" width="1%" bgcolor="green"></td>
                 }
                 else if (item.Status == PossibleStatuses.CompletedStatus)
                 {
-                    <td align="left" width="1%" bgcolor="yellow"></td>
+                    <td class="colorBlock" align="left" width="1%" bgcolor="yellow"></td>
                 }
                 else if (item.Status == PossibleStatuses.CreatedStatus)
                 {
-                    <td align="left" width="1%" bgcolor="blue"></td>
+                    <td class="colorBlock" align="left" width="1%" bgcolor="blue"></td>
                 }
                 <td align="left" data-type="@item.Id">@Html.ActionLink(item.Name, "GetSprintById", new {sprintId = item.Id})</td>
                 <td align="left" data-type="@item.Id">@item.DaysInSprint</td>
@@ -108,6 +108,8 @@
 
     grid.onclick = function (e) {
         if (e.target.tagName != 'TD') return;
+        if (e.target.classList.contains("colorBlock")) return;
+        console.log(e.target.className);
         let th = e.target;
         var sprintId = th.dataset.type;
         $.ajax({
