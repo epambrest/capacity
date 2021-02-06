@@ -12,13 +12,13 @@ namespace Teams.Data.Models
         [Key]
         [Column("Id"), Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Column("TeamId"), ForeignKey(nameof(Team)), Required]
+        [Column("TeamId"), ForeignKey(nameof(Team))]
         public int TeamId { get; set; }
         public virtual Team Team { get; set; }
         [Column("Name"), Required]
         public string Name { get; set; }
-        [Column("SprintId"), ForeignKey(nameof(Sprint)), Required]
-        public int SprintId { get; set; }
+        [Column("SprintId"), ForeignKey(nameof(Sprint))]
+        public int? SprintId { get; set; }
         public virtual Sprint Sprint { get; set; }
         [Column("MemberId"), ForeignKey(nameof(TeamMember))]
         public int? MemberId{ get; set; }

@@ -131,7 +131,7 @@ namespace Teams.Web.Controllers
             {
                 TeamId = teamId,
                 TaskId = task.Id,
-                TaskSprintId = task.SprintId,
+                TaskSprintId = task.SprintId.GetValueOrDefault(),
                 TeamName = team.TeamName,
                 TaskName = task.Name,
                 TaskLink = task.Link,
@@ -294,7 +294,7 @@ namespace Teams.Web.Controllers
             allSprintTasks.ForEach(t => resultsTasksForMemberViewModel.TeamMembers.Add(new TeamMemberViewModel()
             {
                 Id = t.TeamMember.Id,
-                TeamId = t.TeamMember.TeamId,
+                TeamId = t.TeamMember.TeamId.GetValueOrDefault(),
                 MemberId = t.TeamMember.Id.ToString(),
                 Member = t.TeamMember.Member
             }

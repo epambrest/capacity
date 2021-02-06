@@ -96,7 +96,7 @@ namespace Teams.Web.Controllers
         public async Task<IActionResult> CompleteTaskInSprint(int taskId, bool isCompleted)
         {
             var task = await _manageTasksService.GetTaskByIdAsync(taskId);
-            var sprint = await _manageSprintsService.GetSprintAsync(task.SprintId, false);
+            var sprint = await _manageSprintsService.GetSprintAsync(task.SprintId.GetValueOrDefault(), false);
 
             if (sprint == null)
             {
