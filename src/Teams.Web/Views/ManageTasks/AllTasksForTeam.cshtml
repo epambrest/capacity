@@ -22,9 +22,12 @@
         <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["User"]</td>
         <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPoint"]</td>
         <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Link"]</td>
-        <td style="border-top: hidden; visibility: @ViewBag.AddVision" align="right">
-            @Html.ActionLink("", "AddTaskIntoTeam","ManageTasks", new { teamId = Model.TeamId, errorMessage = "" }, new { @class = "fas fa-plus", title = "Add Task", style = "margin: 10px 0px 0px 30px", align = "right" })
-        </td>
+        @if (Model.IsOwner)
+        {
+            <td style="border-top: hidden;" align="right">
+                @Html.ActionLink("", "AddTaskIntoTeam", "ManageTasks", new { teamId = Model.TeamId, errorMessage = "" }, new { @class = "fas fa-plus", title = "Add Task", style = "margin: 10px 0px 0px 30px", align = "right" })
+            </td>
+        }
     </tr>
 
     @foreach (var item in Model.Tasks)
@@ -41,15 +44,19 @@
             }
             <td align="left">@item.StoryPoints</td>
             <td><a href="@item.Link" align="left">@Localizer["Link"]</a></td>
-            <td style="visibility: @ViewBag.AddVision" align="right">
+
+            @if (Model.IsOwner)
+            {
+                <td align="right">
                 @Html.ActionLink("", "EditTask", new { teamId = Model.TeamId, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })
-            </td>
-            <td style="visibility: @ViewBag.AddVision" align="right">
-                <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromTeam"
-                        data-taskname="@item.Name" data-taskid="@item.Id" data-teamname="@Model.TeamName">
-                    <i class='far fa-trash-alt'></i>
-                </button>
-            </td>
+                </td>
+                <td align="right">
+                    <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromTeam"
+                            data-taskname="@item.Name" data-taskid="@item.Id" data-teamname="@Model.TeamName">
+                        <i class='far fa-trash-alt'></i>
+                    </button>
+                </td>
+            }
         </tr>
     }
 </table>

@@ -42,44 +42,60 @@ namespace Teams.Web.Controllers
         public async Task<IActionResult> AllSprints(int teamId, DisplayOptions options)
         {
             List<Sprint> sprints;
+
             if (await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
                 sprints = (List<Sprint>)await _manageSprintsService.GetAllSprintsAsync(teamId, options);
             }
-            else 
+            else
+            {
                 return View("ErrorGetAllSprints");
-
-            var team = await _manageSprintsService.GetTeam(teamId);
-
-            if (await _accessCheckService.IsOwnerAsync(teamId)) ViewBag.AddVision = "visible";
-            else ViewBag.AddVision = "collapse";
-
-            ViewData["DaysInSprint"] = _localizer["DaysInSprint"];
-            ViewData["StoryPointInHours"] = _localizer["StoryPointInHours"];
-            ViewData["NameOfSprint"] = _localizer["NameOfSprint"];
-            ViewData["AddMember"] = _localizer["AddMember"];
-            ViewData["RemoveMember"] = _localizer["RemoveMember"];
-            ViewData["Remove"] = _localizer["Remove"];
-            ViewData["Cancel"] = _localizer["Cancel"];
+            }
 
             List<TeamMember> teamMembers = await GetAllTeamMembersAsync(teamId, new DisplayOptions { });
-            var sprintAndTeam = new SprintAndTeamViewModel
+
+            var sprintViewModel = new SprintAndTeamViewModel
             {
                 Sprints = new List<SprintViewModel>()
             };
-            sprints.ForEach(t=>sprintAndTeam.Sprints.Add(new SprintViewModel()
-                {
-                    Id = t.Id,
-                    DaysInSprint =t.DaysInSprint,
-                    Status = t.Status,
-                    Name = t.Name,
-                    StoryPointInHours = t.StoryPointInHours,
-                    TeamId = t.TeamId
-                }
+
+            if (await _accessCheckService.IsOwnerAsync(teamId))
+            {
+                sprintViewModel.IsOwner = true;
+            }
+            else
+            {
+                sprintViewModel.IsOwner = false;
+            }
+
+            sprints.ForEach(t => sprintViewModel.Sprints.Add(new SprintViewModel()
+            {
+                Id = t.Id,
+                DaysInSprint = t.DaysInSprint,
+                Status = t.Status,
+                Name = t.Name,
+                StoryPointInHours = t.StoryPointInHours,
+                TeamId = t.TeamId
+            }
             ));
-            sprintAndTeam.Team = new TeamViewModel(){Id = team.Id,Owner = team.Owner,TeamName = team.TeamName,TeamMembers = new List<TeamMemberViewModel>()};
-            teamMembers.ForEach(t=>sprintAndTeam.Team.TeamMembers.Add(new TeamMemberViewModel(){Member = t.Member,MemberId = t.MemberId}));
-            return View(sprintAndTeam);
+
+            var team = await _manageSprintsService.GetTeam(teamId);
+
+            sprintViewModel.Team = new TeamViewModel()
+            {
+                Id = team.Id,
+                Owner = team.Owner,
+                TeamName = team.TeamName,
+                TeamMembers = new List<TeamMemberViewModel>()
+            };
+
+            teamMembers.ForEach(t => sprintViewModel.Team.TeamMembers.Add(new TeamMemberViewModel()
+            {
+                Member = t.Member,
+                MemberId = t.MemberId
+            }));
+
+            return View(sprintViewModel);
         }
 
         [Authorize, NonAction]
@@ -130,7 +146,9 @@ namespace Teams.Web.Controllers
             var sprint = await _manageSprintsService.GetSprintAsync(sprintId, true);
 
             if (sprint == null)
+            {
                 return View("ErrorGetAllSprints");
+            }
 
             var sprintViewModel = new SprintViewModel()
             {
@@ -143,7 +161,7 @@ namespace Teams.Web.Controllers
                 TeamId = sprint.TeamId
             };
 
-            sprint.Tasks.ToList().ForEach(t=>sprintViewModel.Tasks.Add(new TaskViewModel()
+            sprint.Tasks.ToList().ForEach(t => sprintViewModel.Tasks.Add(new TaskViewModel()
                 {
                     TeamMember = t.MemberId != null ? new TeamMemberViewModel(){Member = t.TeamMember.Member, MemberId = t.MemberId.ToString()} : null,
                     Name = t.Name,
@@ -154,8 +172,14 @@ namespace Teams.Web.Controllers
                 }
             ));
 
-            if (await _accessCheckService.IsOwnerAsync(sprint.TeamId)) ViewBag.AddVision = "visible";
-            else ViewBag.AddVision = "collapse";
+            if (await _accessCheckService.IsOwnerAsync(sprint.TeamId))
+            {
+                sprintViewModel.IsOwner = true;
+            }
+            else
+            {
+                sprintViewModel.IsOwner = false;
+            }
 
             
             return View(sprintViewModel);
@@ -229,8 +253,6 @@ namespace Teams.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var sprints = await _manageSprintsService.GetAllSprintsAsync(sprintViewModel.TeamId, new DisplayOptions());
-
                 var sprint = new Sprint
                 {
                     TeamId = sprintViewModel.TeamId,

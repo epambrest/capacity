@@ -45,10 +45,6 @@ namespace Teams.Web.Controllers
             }
             var tasks = await _manageTasksService.GetAllTasksForTeamAsync(teamId, options);
 
-            if (await _accessCheckService.IsOwnerAsync(teamId)) ViewBag.AddVision = "visible";
-            else ViewBag.AddVision = "collapse";
-
-            var tasksForTeamViewModel = new AllTasksForTeamViewModel();
             var team = await _manageTeamsService.GetTeamAsync(teamId);
 
             if (tasks == null || team == null)
@@ -56,9 +52,12 @@ namespace Teams.Web.Controllers
                 return View("ErrorGetAllTasks");
             }
 
+            var tasksForTeamViewModel = new AllTasksForTeamViewModel();
+
             tasksForTeamViewModel.TeamName = team.TeamName;
             tasksForTeamViewModel.Tasks = new List<TaskViewModel>();
-            tasks.ToList().ForEach(t=> tasksForTeamViewModel.Tasks.Add(new TaskViewModel()
+
+            tasks.ToList().ForEach(t => tasksForTeamViewModel.Tasks.Add(new TaskViewModel()
             {
                 Id = t.Id,
                 Link = t.Link,
@@ -66,7 +65,18 @@ namespace Teams.Web.Controllers
                 StoryPoints = t.StoryPoints,
                 TeamMember = t.MemberId != null ? new TeamMemberViewModel() {Member = t.TeamMember.Member} : null
             }));
+
             tasksForTeamViewModel.TeamId = team.Id;
+
+            if (await _accessCheckService.IsOwnerAsync(teamId))
+            {
+                tasksForTeamViewModel.IsOwner = true;
+            }
+            else
+            {
+                tasksForTeamViewModel.IsOwner = false;
+            }
+
             return View(tasksForTeamViewModel);
         }
 

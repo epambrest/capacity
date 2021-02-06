@@ -12,6 +12,7 @@ namespace Teams.Web.ViewModels.Team
         [Display(Name = "TeamName")]
         public string TeamName { get; set; }
         public string TeamOwner { get; set; }
+        public bool IsOwner { get; set; }
         public virtual IdentityUser Owner { get; set; }
         public List<TeamMemberViewModel> TeamMembers { get; set; }
     }

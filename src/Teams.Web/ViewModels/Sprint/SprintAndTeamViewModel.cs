@@ -11,5 +11,6 @@ namespace Teams.Web.ViewModels.Sprint
         public List<MemberWorkingDaysViewModels> memberWorkingDays { get; set; }
         public int sprintId { get; set; }
         public int DaysInSprint { get; set; }
+        public bool IsOwner { get; set; }
     }
 }
