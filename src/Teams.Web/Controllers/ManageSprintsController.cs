@@ -269,18 +269,22 @@ namespace Teams.Web.Controllers
             {
                 var sprints = await _manageSprintsService.GetAllSprintsAsync(sprintViewModel.TeamId, new DisplayOptions());
                 var activeSprint = sprints.FirstOrDefault(i => i.Status == PossibleStatuses.ActiveStatus);
-                var createdSprint = sprints.FirstOrDefault(i => i.Status == PossibleStatuses.CreatedStatus);
-                var sameSprint = sprints.FirstOrDefault(i => i.Name == sprintViewModel.Name);
-
+                
                 if (activeSprint != null && sprintViewModel.Status == PossibleStatuses.ActiveStatus)
                 {
                     return RedirectToAction("AddSprint", new { teamId = sprintViewModel.TeamId, errorMessage = _localizer["ActiveFieldError"] });
                 }
-                else if (createdSprint != null && sprintViewModel.Status == PossibleStatuses.CreatedStatus)
+
+                var createdSprint = sprints.FirstOrDefault(i => i.Status == PossibleStatuses.CreatedStatus);
+
+                if (createdSprint != null && sprintViewModel.Status == PossibleStatuses.CreatedStatus)
                 {
                     return RedirectToAction("AddSprint", new { teamId = sprintViewModel.TeamId, errorMessage = _localizer["СreatedSprintExist"] });
                 }
-                else if (sameSprint != null)
+
+                var sameSprint = sprints.FirstOrDefault(i => i.Name == sprintViewModel.Name);
+
+                if (sameSprint != null)
                 {
                     return RedirectToAction("AddSprint", new { teamId = sprintViewModel.TeamId, errorMessage = _localizer["SprintWithSameName"] });
                 }
