@@ -31,7 +31,16 @@
         <tr align="center">
             <td align="left">@item.Name</td>
             <td align="left">@item.StoryPoints</td>
-            <td align="left"><a href="@item.Link" align="left">@Localizer["Link"]</a></td>
+            <td align="left">            
+            @if (!item.Link.Contains("https://"))
+            {
+                <a href="https://@item.Link" align="left">@Localizer["Link"]</a>
+            }
+            else
+            {
+                <a href="@item.Link" align="left">@Localizer["Link"]</a>
+            }
+            </td>
             @if (item.Completed)
             {
                 <td align="left" class="text-success">@Localizer["Complete"]</td>
