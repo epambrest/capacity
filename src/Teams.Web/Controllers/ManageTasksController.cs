@@ -369,7 +369,15 @@ namespace Teams.Web.Controllers
                     SprintId = taskFormViewModel.TaskSprintId,
                     MemberId = taskFormViewModel.TaskMemberId
                 };
-                var result = await AddTaskAsync(task);
+
+                var isOwner = await _accessCheckService.IsOwnerAsync(task.TeamId);
+
+                if (!isOwner)
+                {
+                    return RedirectToAction("NotOwnerError", new { teamId = taskFormViewModel.TeamId });
+                }
+
+                var result = await _manageTasksService.AddTaskAsync(task);
 
                 if (result)
                 {
@@ -377,7 +385,7 @@ namespace Teams.Web.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("NotOwnerError", new { teamId = taskFormViewModel.TeamId });
+                    return RedirectToAction("AddTaskError", new { teamId = taskFormViewModel.TeamId });
                 }
             }
 
@@ -447,10 +455,24 @@ namespace Teams.Web.Controllers
                     SprintId = taskFormViewModel.TaskSprintId,
                     MemberId = taskFormViewModel.TaskMemberId
                 };
-                var result = await AddTaskAsync(task);
 
-                if (result) return RedirectToAction("AllTasksForTeam", new { teamId = taskFormViewModel.TeamId });
-                else return RedirectToAction("NotOwnerError", new { teamId = taskFormViewModel.TeamId });
+                var isOwner = await _accessCheckService.IsOwnerAsync(task.TeamId);
+
+                if (!isOwner)
+                {
+                    return RedirectToAction("NotOwnerError", new { teamId = taskFormViewModel.TeamId });
+                }
+
+                var result = await _manageTasksService.AddTaskAsync(task);
+
+                if (result)
+                {
+                    return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId = taskFormViewModel.TaskSprintId });
+                }
+                else
+                {
+                    return RedirectToAction("AddTaskError", new { teamId = taskFormViewModel.TeamId });
+                }
             }
             
             var teamMembers = await GetAllTeamMembersAsync(taskFormViewModel.TeamId);
