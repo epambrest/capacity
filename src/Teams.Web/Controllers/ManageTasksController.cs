@@ -21,17 +21,20 @@ namespace Teams.Web.Controllers
         private readonly IAccessCheckService _accessCheckService;
         private readonly IManageTeamsService _manageTeamsService;
         private readonly IManageSprintsService _manageSprintsService;
+        private readonly IManageMemberWorkingDaysService _manageMemberWorkingDaysService;
         private readonly IManageTeamsMembersService _manageTeamsMembersService;
         private readonly IStringLocalizer<ManageTasksController> _localizer;
 
         public ManageTasksController(IManageTasksService manageTasksService, IAccessCheckService accessCheckService,
             IManageTeamsService manageTeamsService, IManageTeamsMembersService manageTeamsMembersService,
-            IManageSprintsService manageSprintsService, IStringLocalizer<ManageTasksController> localizer)
+            IManageSprintsService manageSprintsService,
+             IManageMemberWorkingDaysService manageMemberWorkingDaysService, IStringLocalizer<ManageTasksController> localizer)
         {
             _manageTasksService = manageTasksService;
             _accessCheckService = accessCheckService;
             _manageTeamsService = manageTeamsService;
             _manageSprintsService = manageSprintsService;
+            _manageMemberWorkingDaysService = manageMemberWorkingDaysService;
             _manageTeamsMembersService = manageTeamsMembersService;
             _localizer = localizer;
         }
@@ -262,7 +265,21 @@ namespace Teams.Web.Controllers
             int quantityСompletedTasks = allMemberTasks.Count(t => t.Completed == true);
             int quantityUnСompletedTasks = allMemberTasks.Count(t => t.Completed == false);
 
+
             allMemberTasks.ForEach(t => totalStoryPoints += t.StoryPoints);
+
+            var allWorkingDaysForSprint = await _manageMemberWorkingDaysService.GetAllWorkingDaysForSprintAsync(sprintId);
+
+            var memberWorkingDays = allWorkingDaysForSprint.Where(i => i.MemberId == teamMemberId).FirstOrDefault();
+
+            if (memberWorkingDays == null)
+            {
+                RedirectToAction("GetResultError", new { errorMessage = "Can't get count of working days in the current team member" });
+            }
+
+            var teamMemberTotalSp = spCompletedTasks + spUnCompletedTasks;
+            var storyPointsInDay = Convert.ToDouble(teamMemberTotalSp) / Convert.ToDouble(memberWorkingDays.WorkingDays);
+
 
             var resultsTasksForMemberViewModel = new ResultsTasksForMemberViewModel()
             {
@@ -277,7 +294,8 @@ namespace Teams.Web.Controllers
                 QuantityСompletedTasks = quantityСompletedTasks,
                 QuantityUnСompletedTasks = quantityUnСompletedTasks,
                 SpСompletedTasks = spCompletedTasks,
-                SpUnСompletedTasks = spUnCompletedTasks
+                SpUnСompletedTasks = spUnCompletedTasks,
+                StoryPointsInDay = storyPointsInDay
             };
 
             allMemberTasks.ForEach(t => resultsTasksForMemberViewModel.Tasks.Add(new TaskViewModel()

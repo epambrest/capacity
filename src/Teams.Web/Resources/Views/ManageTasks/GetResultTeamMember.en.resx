@@ -159,6 +159,9 @@
   <data name="StoryPointinHours" xml:space="preserve">
     <value>Story Point in Hours</value>
   </data>
+  <data name="StoryPointsInDay" xml:space="preserve">
+    <value>Story points in day</value>
+  </data>
   <data name="TotalQuantity" xml:space="preserve">
     <value>Total quantity </value>
   </data>
