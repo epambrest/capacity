@@ -124,7 +124,7 @@
     <value>Упс... Похоже что-то пошло не так</value>
   </data>
   <data name="HasntAnyChange" xml:space="preserve">
-    <value>Вы ничего не изменили в своёй задаче</value>
+    <value>Вы ничего не изменили в своей задаче</value>
   </data>
   <data name="LinkFieldError" xml:space="preserve">
     <value>Неправильная ссылка!</value>
