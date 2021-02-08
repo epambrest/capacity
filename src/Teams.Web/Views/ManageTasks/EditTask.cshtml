@@ -49,15 +49,25 @@
             <input id="points" name="taskStoryPoints" class="form-control" value="@Model.TaskStoryPoints" />
             <span asp-validation-for="TaskStoryPoints"></span>
         </div>
-        
+
         <div style="margin-top:4px">
             <label for="user">@Localizer["User"]</label>
             <input hidden="hidden" id="user" name="taskMemberId">
             <select class="js-example-basic-single" id="members" onchange="myFunction(event)">
-                <option disabled selected>@Localizer["SelectUser"]</option>
+                @if (Model.TaskMemberId == null)
+                {
+                    <option disabled selected>@Localizer["SelectUser"]</option>
+                }
+                else
+                {
+                    <option value="@Model.TaskMemberId">@Model.TaskMemberName</option>
+                }
                 @foreach (var item in Model.TeamMembers)
                 {
-                    <option value=@item.Id>@item.Member.Email</option>
+                    if (item.Id != Model.TaskMemberId)
+                    {
+                        <option value=@item.Id>@item.Member.Email</option>
+                    }
                 }
             </select>
             <span asp-validation-for="TaskMemberId"></span>

@@ -126,6 +126,7 @@ namespace Teams.Web.Controllers
             var team = await _manageSprintsService.GetTeam(teamId);
             var task = await _manageTasksService.GetTaskByIdAsync(taskId);
             var teamMembers = await GetAllTeamMembersAsync(teamId);
+            var taskMemberName = teamMembers.FirstOrDefault(t => t.Id == task.MemberId).Member.Email;
 
             TaskFormViewModel model = new TaskFormViewModel
             {
@@ -138,6 +139,7 @@ namespace Teams.Web.Controllers
                 TaskStoryPoints = task.StoryPoints,
                 TaskMemberId = task.MemberId,
                 ErrorMessage = errorMessage,
+                TaskMemberName = taskMemberName,
                 TeamMembers = new List<TeamMemberViewModel>()
             };
 
