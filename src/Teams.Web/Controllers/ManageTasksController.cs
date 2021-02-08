@@ -166,6 +166,18 @@ namespace Teams.Web.Controllers
                     SprintId = taskViewModel.TaskSprintId,
                     MemberId = taskViewModel.TaskMemberId
                 };
+
+                var currentTask = await _manageTasksService.GetTaskByIdAsync(taskViewModel.TaskId);
+
+                if (currentTask.Name== taskViewModel.TaskName && 
+                    currentTask.Link == taskViewModel.TaskLink &&
+                    currentTask.StoryPoints == taskViewModel.TaskStoryPoints&&
+                    currentTask.MemberId== taskViewModel.TaskMemberId
+                    )
+                {
+                    return RedirectToAction("EditTask", new { teamId = taskViewModel.TeamId, taskId = taskViewModel.TaskId, errorMessage = _localizer["HasntAnyChange"] });
+                }
+
                 var result = await EditTaskAsync(task);
 
                 if (result) return RedirectToAction("AllTasksForTeam", new { teamId = taskViewModel.TeamId });
