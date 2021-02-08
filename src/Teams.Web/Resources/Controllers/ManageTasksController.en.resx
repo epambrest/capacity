@@ -123,6 +123,9 @@
   <data name="Error" xml:space="preserve">
     <value>Ooops... Something went wrong!</value>
   </data>
+  <data name="HasntAnyChange" xml:space="preserve">
+    <value>You hasn't change your Task</value>
+  </data>
   <data name="LinkFieldError" xml:space="preserve">
     <value>Incorrect link!</value>
   </data>
