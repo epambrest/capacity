@@ -141,7 +141,7 @@ namespace Teams.Web.Controllers
             {
                 TeamId = teamId,
                 TaskId = task.Id,
-                TaskSprintId = task.SprintId,
+                TaskSprintId = task.SprintId.GetValueOrDefault(),
                 TeamName = team.TeamName,
                 TaskName = task.Name,
                 TaskLink = task.Link,
@@ -176,6 +176,18 @@ namespace Teams.Web.Controllers
                     SprintId = taskViewModel.TaskSprintId,
                     MemberId = taskViewModel.TaskMemberId
                 };
+
+                var currentTask = await _manageTasksService.GetTaskByIdAsync(taskViewModel.TaskId);
+
+                if (currentTask.Name== taskViewModel.TaskName && 
+                    currentTask.Link == taskViewModel.TaskLink &&
+                    currentTask.StoryPoints == taskViewModel.TaskStoryPoints&&
+                    currentTask.MemberId== taskViewModel.TaskMemberId
+                    )
+                {
+                    return RedirectToAction("EditTask", new { teamId = taskViewModel.TeamId, taskId = taskViewModel.TaskId, errorMessage = _localizer["HasntAnyChange"] });
+                }
+
                 var result = await EditTaskAsync(task);
 
                 if (result) return RedirectToAction("AllTasksForTeam", new { teamId = taskViewModel.TeamId });
@@ -304,7 +316,7 @@ namespace Teams.Web.Controllers
             allSprintTasks.ForEach(t => resultsTasksForMemberViewModel.TeamMembers.Add(new TeamMemberViewModel()
             {
                 Id = t.TeamMember.Id,
-                TeamId = t.TeamMember.TeamId,
+                TeamId = t.TeamMember.TeamId.GetValueOrDefault(),
                 MemberId = t.TeamMember.Id.ToString(),
                 Member = t.TeamMember.Member
             }

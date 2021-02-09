@@ -30,6 +30,8 @@ namespace Teams.Data.Models
 
         [Column("Status"), DefaultValue(0), Range(0 , 2, ErrorMessage = "Possible only 0, 1, 2 values")]
         public int Status { get; set; }
+
+        [ForeignKey("SprintId")]
         public virtual ICollection<Task> Tasks { get; set; }
         public virtual ICollection<MemberWorkingDays> MemberWorkingDays { get; set; }
     }

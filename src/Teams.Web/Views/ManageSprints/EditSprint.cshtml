@@ -47,11 +47,11 @@
                 }
             }
             @Html.RadioButton("status", PossibleStatuses.CompletedStatus, activeButtonKeys[PossibleStatuses.CompletedStatus])
-            <span>@Localizer["Сompleted"]</span> <br />
+            <span style="color:orange">@Localizer["Сompleted"]</span> <br />
             @Html.RadioButton("status", PossibleStatuses.ActiveStatus, activeButtonKeys[PossibleStatuses.ActiveStatus])
-            <span>@Localizer["Active"]</span> <br />
+            <span style="color:green">@Localizer["Active"]</span> <br />
             @Html.RadioButton("status", PossibleStatuses.CreatedStatus, activeButtonKeys[PossibleStatuses.CreatedStatus])
-            <span>@Localizer["Created"]</span>
+            <span style="color:blue">@Localizer["Created"]</span>
         </div>
         <div style="display: table">
             <input id="sub" type="submit" class="btn btn-success" value="@Localizer["EditSprint"]" />

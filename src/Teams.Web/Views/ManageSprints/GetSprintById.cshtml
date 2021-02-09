@@ -96,10 +96,15 @@
                 <td align="left"></td>
             }
 
-            <td align="left">@item.StoryPoints</td>
-            <td>
-                <a href="@item.Link" align="left">@Localizer["Link"]</a>
-            </td>
+    <td align="left">@item.StoryPoints</td>
+    @if (!item.Link.Contains("https://"))
+    {
+        <td><a href="https://@item.Link" align="left">@Localizer["Link"]</a></td>
+    }
+    else
+    {
+        <td><a href="@item.Link" align="left">@Localizer["Link"]</a></td>
+    }
 
             @if (Model.IsOwner)
             {

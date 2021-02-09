@@ -11,6 +11,9 @@ namespace Teams.Data.Migrations
                 table: "Sprint",
                 nullable: false,
                 defaultValue: 0);
+            migrationBuilder.DropColumn(
+                name: "IsActive",
+                table: "Sprint");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
