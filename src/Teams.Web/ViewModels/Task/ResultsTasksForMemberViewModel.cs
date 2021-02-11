@@ -23,5 +23,7 @@ namespace Teams.Web.ViewModels.Task
 
         public int SpСompletedTasks { get; set; }
         public int SpUnСompletedTasks { get; set; }
+
+        public double StoryPointsInDay { get; set; }
     }
 }
