@@ -59,9 +59,9 @@
         <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["User"]</td>
         <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPoint"]</td>
         <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Link"]</td>
-        @if (Model.Status != 2)
+        @if (Model.Status != 2 && Model.IsOwner)
         {
-            <td style="visibility: @ViewBag.AddVision" align="right">
+            <td align="right">
                 @Html.ActionLink("", "AddTask", "ManageTasks", new { teamId = Model.TeamId, sprintId = Model.Id, errorMessage = "" }, new { @class = "fas fa-plus", title = "Add Task", style = "margin: 10px 0px 0px 30px", align = "right" })
             </td>
         }
@@ -69,30 +69,32 @@
 
     @foreach (var item in @Model.Tasks)
     {
-<tr align="center">
+        <tr align="center">
 
-    @if (item.Completed)
-    {
-        <td align="left" width="1%" bgcolor="green"></td>
-    }
-    else if (Model.Status == 1)
-    {
-        <td align="left">@Html.ActionLink(Localizer["Complete"].Value, "CompleteTaskInSprint", new { taskId = item.Id, isCompleted = true })</td>
-    }
-    @if (Model.Status != 1 && !item.Completed)
-    {
-        <td align="left" width="1%" bgcolor="yellow"></td>
-    }
+            @if (item.Completed)
+            {
+                <td align="left" width="1%" bgcolor="green"></td>
+            }
+            else if (Model.Status == 1)
+            {
+                <td align="left">@Html.ActionLink(Localizer["Complete"].Value, "CompleteTaskInSprint", new { taskId = item.Id, isCompleted = true })</td>
+            }
 
-    <td align="left">@item.Name</td>
-    @if (item.TeamMember != null)
-    {
-        <td align="left">@item.TeamMember.Member.Email</td>
-    }
-    else
-    {
-        <td align="left"></td>
-    }
+            @if (Model.Status != 1 && !item.Completed)
+            {
+                <td align="left" width="1%" bgcolor="yellow"></td>
+            }
+
+            <td align="left">@item.Name</td>
+
+            @if (item.TeamMember != null)
+            {
+                <td align="left">@item.TeamMember.Member.Email</td>
+            }
+            else
+            {
+                <td align="left"></td>
+            }
 
     <td align="left">@item.StoryPoints</td>
     @if (!item.Link.Contains("https://"))
@@ -104,16 +106,19 @@
         <td><a href="@item.Link" align="left">@Localizer["Link"]</a></td>
     }
 
-    <td style="visibility: @ViewBag.AddVision" align="right">
-        @Html.ActionLink("", "EditTask", "ManageTasks", new { teamId = Model.TeamId, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })
-    </td>
-    <td style="visibility: @ViewBag.AddVision" align="right">
-        <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromSprint"
-                data-taskname="@item.Name" data-taskid="@item.Id" data-sprintname="@Model.Name">
-            <i class='far fa-trash-alt'></i>
-        </button>
-    </td>
-</tr>
+            @if (Model.IsOwner)
+            {
+                <td align="right">
+                    @Html.ActionLink("", "EditTask", "ManageTasks", new { teamId = Model.TeamId, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })
+                </td>
+                <td align="right">
+                    <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromSprint"
+                    data-taskname="@item.Name" data-taskid="@item.Id" data-sprintname="@Model.Name">
+                        <i class='far fa-trash-alt'></i>
+                    </button>
+                </td>
+            }
+        </tr>
     }
 
 </table>

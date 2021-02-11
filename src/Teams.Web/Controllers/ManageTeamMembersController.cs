@@ -72,16 +72,42 @@ namespace Teams.Web.Controllers
         {
             List<TeamMember> members = await GetAllTeamMembersAsync(teamId, new DisplayOptions { });
 
-            if (members == null) return View("MembersError");
+            if (members == null)
+            {
+                return View("MembersError");
+            }
 
             var teams = await _manageTeamsService.GetMyTeamsAsync();
             var team = teams.FirstOrDefault(x => x.Id == teamId);
-            if (team == null) return View("ErrorNotMember");
 
-            if (await _accessCheckService.IsOwnerAsync(teamId)) ViewBag.AddVision = "visible";
-            else ViewBag.AddVision = "collapse";
-            var teamViewModel = new TeamViewModel() { Id = team.Id, TeamName = team.TeamName, Owner = team.Owner,TeamMembers = new List<TeamMemberViewModel>()};
-            members.ForEach(t=> teamViewModel.TeamMembers.Add(new TeamMemberViewModel(){MemberId = t.MemberId,Member = t.Member}));
+            if (team == null)
+            {
+                return View("ErrorNotMember");
+            }
+
+            var teamViewModel = new TeamViewModel() 
+            { 
+                Id = team.Id, 
+                TeamName = team.TeamName, 
+                Owner = team.Owner,
+                TeamMembers = new List<TeamMemberViewModel>()
+            };
+
+            members.ForEach(t => teamViewModel.TeamMembers.Add(new TeamMemberViewModel()
+            {
+                MemberId = t.MemberId,
+                Member = t.Member
+            }));
+
+            if (await _accessCheckService.IsOwnerAsync(teamId))
+            {
+                teamViewModel.IsOwner = true;
+            }
+            else
+            {
+                teamViewModel.IsOwner = false;
+            }
+
             return View(teamViewModel);
         }
 
@@ -131,7 +157,7 @@ namespace Teams.Web.Controllers
         public IActionResult AddError(string errorMessage, int teamId)
         {
             ViewData["Error"] = _localizer["Error"];
-            ViewBag.TeamId = teamId;
+            ViewData["TeamId"] = teamId;
             ViewData["Cause"] = errorMessage;
             return View();
         }
