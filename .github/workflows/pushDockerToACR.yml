@@ -1,0 +1,32 @@
+name: Build and Push Docker Container to Azure Container Registry 
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    
+    - name: Azure Service Principal Authentication
+      uses: azure/login@v1
+      with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Docker login to ACR
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.CONTAINER_REGISTRY_NAME }}
+        username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
+        password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
+      
+    - name: Build and Push container to ACR
+      run: |
+        docker build --file=taskapp/taskapp/Dockerfile -t ${{ secrets.CONTAINER_REGISTRY_NAME }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }} .
+        docker push ${{ secrets.CONTAINER_REGISTRY_NAME }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}
+        
