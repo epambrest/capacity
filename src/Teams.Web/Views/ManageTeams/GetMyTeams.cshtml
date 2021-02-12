@@ -34,9 +34,10 @@
             <td align="right" onclick="location.href = '@Url.Action("AllTasksForTeam", "ManageTasks", new { teamId = item.Id })'"><button type='button' class='btn btn-outline-secondary border-0'>@Localizer["Tasks"]</button></td>
             @if (item.Owner.Email == User.Identity.Name)
             {
-                <td align="right" onclick="location.href='@Url.Action("EditTeamName", "ManageTeams", new { teamId = item.Id })'">
-                    <button type='button' class='btn btn-outline-primary border-0'>
-                        <i class='fas fa-edit'></i>
+                <td align="right">
+                    <button type='button' class='btn btn-outline-primary border-0' data-toggle="modal" data-target="#editModal"
+                            data-whatever="@item.Id">
+                        <i class='far fa-edit'></i>
                     </button>
                 </td>
                 <td align="right">
@@ -76,15 +77,46 @@
     </div>
 </form>
 
+<form method="post">
+    <div class="modal fade" id="editModal" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p align="center">Введте название команды</p>
+                    <input type="text" name="TeamName" value="" />
+                    <input type="hidden" id="Id" name="Id" value="" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-secondary" asp-action="EditTeamName">OK</button>
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">@Localizer["Cancel"]</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+
 <script>
     $(document).ready(function () {
         $("#myModal").on("show.bs.modal", function (event) {
-            var button = $(event.relatedTarget)
-            var team = button.data('content')
-            var teamId = button.data('whatever')
+            var button = $(event.relatedTarget);
+            var team = button.data('content');
+            var teamId = button.data('whatever');
             var removeModal = $("#myModal");
             removeModal.find("#teamId").val(teamId);
             document.getElementById('team').innerHTML = "@Localizer["RemoveTeam"]" + "<strong>" + team + "</strong>" + "?";
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#editModal").on("show.bs.modal", function (event) {
+            var button = $(event.relatedTarget);
+            var teamId = button.data('whatever');
+            var editModal = $("#editModal");
+            editModal.find("#Id").val(teamId);
         });
     });
 </script>
