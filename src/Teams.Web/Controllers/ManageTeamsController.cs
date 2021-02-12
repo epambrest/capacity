@@ -77,13 +77,6 @@ namespace Teams.Web.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        [HttpGet]
-        [Authorize]
-        public IActionResult AddTeam()
-        {
-            return View();
-        }
-
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> AddTeam(TeamViewModel teamViewModel)
@@ -94,7 +87,7 @@ namespace Teams.Web.Controllers
                 return RedirectToAction("GetMyTeams");
             }
 
-            return View();
+            return RedirectToAction("GetMyTeams");
         }
 
         public IActionResult NameError()
