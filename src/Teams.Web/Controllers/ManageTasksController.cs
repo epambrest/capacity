@@ -134,16 +134,16 @@ namespace Teams.Web.Controllers
 
 
         [Authorize]
-        public async Task<IActionResult> EditTaskAsync(int teamId, int taskId, string errorMessage)
+        public async Task<IActionResult> EditTaskAsync(int taskId, string errorMessage)
         {
-            var team = await _manageSprintsService.GetTeam(teamId);
             var task = await _manageTasksService.GetTaskByIdAsync(taskId);
-            var teamMembers = await GetAllTeamMembersAsync(teamId);
+            var team = await _manageSprintsService.GetTeam(task.TeamId);
+            var teamMembers = await GetAllTeamMembersAsync(task.TeamId);
             var taskMemberName = teamMembers.FirstOrDefault(t => t.Id == task.MemberId).Member.Email;
 
             TaskFormViewModel model = new TaskFormViewModel
             {
-                TeamId = teamId,
+                TeamId = task.TeamId,
                 TaskId = task.Id,
                 TaskSprintId = task.SprintId.GetValueOrDefault(),
                 TeamName = team.TeamName,
