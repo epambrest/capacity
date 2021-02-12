@@ -11,46 +11,38 @@
 <div style="margin: 10px 0px 0px 30px" align="left">
     <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to Sprints", "AllSprints", new { teamId = Model.TeamId })</a></h>
 </div>
-<div align="center">
-    <h><font size="6" color="black"><strong>@Model.Name</strong></font></h>
+
+<div class="text-center mt-5 mb-3">
+    <h1 class="font-weight-normal">@Model.Name</h1>
+
+    @if (Model.Status == PossibleStatuses.ActiveStatus)
+    {
+        <h3 class="font-weight-normal">Active</h3>
+    }
+    else if (Model.Status == PossibleStatuses.CompletedStatus)
+    {
+        <h3 class="font-weight-normal">Completed</h3>
+        @if (Model.Tasks.Count != 0)
+        {
+            <form>
+                <input type="hidden" name="sprintId" value="@Model.Id" />
+                <input type="hidden" name="teamMemberId" value="@Model.Tasks[0].TeamMember.MemberId" />
+                <button type='submit' class='btn btn-outline-primary border-0 btn-lg' asp-controller="ManageTasks" asp-action="GetResultTeamMember">
+                    <i class="fas fa-clipboard-list"></i>
+                </button>
+            </form>
+        }
+    }
+    else if (Model.Status == PossibleStatuses.CreatedStatus)
+    {
+        <h3 class="font-weight-normal">Created</h3>
+    }
+
+    <h4 class="font-weight-normal">@Localizer["DaysinSprint"]: @Model.DaysInSprint | @Localizer["StoryPointinHours"]: @Model.StoryPointInHours</h4>
 </div>
-<hr />
-<table class="table">
 
-    <tr align="center">
-        <td align="left" style="border-top: hidden" width="1%"></td>
-        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["NameofSprint"]</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["DaysinSprint"]</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPointinHours"]</td>
-        @if (Model.Status == 2 && Model.Tasks.Count != 0)
-        {
-            <td align="right" style="border-top: hidden; font-weight: bold">
-                @Html.ActionLink("", "GetResultTeamMember", "ManageTasks", 
-                                 new { sprintId = Model.Id, teamId = Model.TeamId, teamMemberId = Model.Tasks[0].TeamMember.MemberId }, 
-                                 new { @class = "fas fa-clipboard-list", title = Localizer["ResultCompletedSprint"].Value, style = "margin: 10px 0px 0px 30px", align = "right" })
-            </td>
-        }
-    </tr>
 
-    <tr align="center">
-        @if (Model.Status == PossibleStatuses.ActiveStatus)
-        {
-            <td align="left" width="1%" bgcolor="green"></td>
-        }
-        else if (Model.Status == PossibleStatuses.CompletedStatus)
-        {
-            <td align="left" width="1%" bgcolor="yellow"></td>
-        }
-        else if (Model.Status == PossibleStatuses.CreatedStatus)
-        {
-            <td align="left" width="1%" bgcolor="blue"></td>
-        }
-        <td align="left">@Model.Name</td>
-        <td align="left">@Model.DaysInSprint</td>
-        <td align="left">@Model.StoryPointInHours</td>  
-    </tr>
 
-</table>
 <table class="table">
 
     <tr align="center">
@@ -96,15 +88,15 @@
                 <td align="left"></td>
             }
 
-    <td align="left">@item.StoryPoints</td>
-    @if (!item.Link.Contains("https://"))
-    {
-        <td><a href="https://@item.Link" align="left">@Localizer["Link"]</a></td>
-    }
-    else
-    {
-        <td><a href="@item.Link" align="left">@Localizer["Link"]</a></td>
-    }
+            <td align="left">@item.StoryPoints</td>
+            @if (!item.Link.Contains("https://"))
+            {
+                <td><a href="https://@item.Link" align="left">@Localizer["Link"]</a></td>
+            }
+            else
+            {
+                <td><a href="@item.Link" align="left">@Localizer["Link"]</a></td>
+            }
 
             @if (Model.IsOwner)
             {
@@ -113,7 +105,7 @@
                 </td>
                 <td align="right">
                     <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromSprint"
-                    data-taskname="@item.Name" data-taskid="@item.Id" data-sprintname="@Model.Name">
+                            data-taskname="@item.Name" data-taskid="@item.Id" data-sprintname="@Model.Name">
                         <i class='far fa-trash-alt'></i>
                     </button>
                 </td>
