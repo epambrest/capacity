@@ -265,11 +265,11 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> GetResultTeamMember(int sprintId, int teamId, int teamMemberId = 1)
+        public async Task<IActionResult> GetResultTeamMember(int sprintId, int teamMemberId = 1)
         {
-            var members = await GetAllTeamMembersAsync(teamId);
-            var currentMember = members.FirstOrDefault(member => member.Id == teamMemberId);
             var completedSprint = await _manageSprintsService.GetSprintAsync(sprintId, true);
+            var members = await GetAllTeamMembersAsync(completedSprint.TeamId);
+            var currentMember = members.FirstOrDefault(member => member.Id == teamMemberId);
             
             if (completedSprint == null || currentMember == null || completedSprint == null)
                 return RedirectToAction("GetResultError", new { errorMessage = _localizer["CouldntGetData"] });
@@ -308,7 +308,7 @@ namespace Teams.Web.Controllers
             var resultsTasksForMemberViewModel = new ResultsTasksForMemberViewModel()
             {
                 TeamMemberId = currentMember.Id,
-                TeamId = teamId,
+                TeamId = completedSprint.TeamId,
                 CompletedSprintId = completedSprint.Id,
                 TeamMemberEmail = currentMember.Member.Email,
                 SprintName = completedSprint.Name,
