@@ -12,38 +12,36 @@
 <div style="margin: 10px 0px 0px 30px" align="left">
     <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink(Localizer["GoBackSprint"].Value, "GetSprintById", "ManageSprints", new { sprintId = Model.CompletedSprintId })</a></h>
 </div>
-<div align="center">
-    <h><font size="6" color="black"><strong>@Localizer["ResultForMember"]:@Model.TeamMemberEmail</strong></font></h>
-</div>
-<hr />
 
-<table class="table">
-
-    <tr align="center">
-        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["NameofTask"]</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPoint"]</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Link"]</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Status"]</td>
-    </tr>
-
-    @foreach (var item in Model.Tasks)
+<div class="mt-5 mb-5">
+    @using (Html.BeginForm("GetResultTeamMember", "ManageTasks", FormMethod.Get))
     {
-        <tr align="center">
-            <td align="left">@item.Name</td>
-            <td align="left">@item.StoryPoints</td>
-            <td align="left"><a href="@item.Link" align="left">@Localizer["Link"]</a></td>
-            @if (item.Completed)
-            {
-                <td align="left" class="text-success">@Localizer["Complete"]</td>
-            }
-            else
-            {
-                <td align="left" class="text-warning">@Localizer["UnComplete"]</td>
-            }
-            <td style="visibility: @ViewBag.AddVision" align="right">
-            </td>
-        </tr>
+        @Html.Hidden("sprintId", Model.CompletedSprintId)
+        <div>
+            <select class="js-example-basic-single form-control" name="teamMemberId" onchange="myFunction(event)">
+                <option disabled selected>@Localizer["SelectUser"]</option>
+                @{ Dictionary<int, string> allMembers = new Dictionary<int, string>();
+                    foreach (var item in Model.TeamMembers)
+                    {
+                        if (!allMembers.ContainsKey(item.Id))
+                            allMembers.Add(item.Id, item.Member.Email);
+                    }
+                    foreach (var member in allMembers)
+                    {
+                        <option value=@member.Key>@member.Value</option>
+                    }
+                }
+            </select>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-outline-primary mt-3">@Localizer["Show"]</button>
+        </div>
     }
+</div>
+
+<h1 class="text-center mt-5 mb-3 font-weight-normal">@Localizer["ResultForMember"]: @Model.TeamMemberEmail</h1>
+
+<table class="table" align="right" style="width: 40%; border: 2px solid black">
     <tr align="center">
         <td align="left" style="font-weight: bold">@Localizer["TotalSp"]:</td>
         <td align="left">@Model.TotalStoryPoints</td>
@@ -68,41 +66,53 @@
         <td align="left" style="font-weight: bold">@Localizer["SpForUnСompleted"]:</td>
         <td align="left">@Model.SpUnСompletedTasks</td>
     </tr>
+    <tr>
+        <td align="left" style="font-weight: bold">@Localizer["StoryPointsInDay"]:</td>
+        <td align="left">@Model.StoryPointsInDay</td>
+    </tr>
+</table>
+
+<table class="table" align="left" style="width: 50%">
+
+    <tr align="center">
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["NameofTask"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPoint"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Link"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Status"]</td>
+    </tr>
+
+    @foreach (var item in Model.Tasks)
+    {
+        <tr align="center">
+            <td align="left">@item.Name</td>
+            <td align="left">@item.StoryPoints</td>
+            <td align="left">
+                @if (!item.Link.Contains("https://"))
+                {
+                    <a href="https://@item.Link" align="left">@Localizer["Link"]</a>
+                }
+                else
+                {
+                    <a href="@item.Link" align="left">@Localizer["Link"]</a>
+                }
+            </td>
+            @if (item.Completed)
+            {
+                <td align="left" class="text-success">@Localizer["Complete"]</td>
+            }
+            else
+            {
+                <td align="left" class="text-warning">@Localizer["UnComplete"]</td>
+            }
+            <td style="visibility: @ViewBag.AddVision" align="right">
+            </td>
+        </tr>
+    }
+        
 </table>
 
 
-<div style="margin-top:4px">
-    @using (Html.BeginForm("GetResultTeamMember", "ManageTasks", FormMethod.Get))
-    {
-        <div>
-            @Html.Hidden("sprintId", Model.CompletedSprintId)
-        </div>
-        <div>
-            @Html.Hidden("teamId", Model.TeamId)
-        </div>
-        <div>
-            <select class="js-example-basic-single form-control" name="teamMemberId" onchange="myFunction(event)">
-                <option disabled selected>@Localizer["SelectUser"]</option>
-                @{  Dictionary<int, string> allMembers = new Dictionary<int,string>();
-                    foreach (var item in Model.TeamMembers)
-                    {
-                        if(!allMembers.ContainsKey(item.Id))
-                            allMembers.Add(item.Id,item.Member.Email);
-                    }
-                    foreach (var member in allMembers)
-                    {
-                        <option value=@member.Key>@member.Value</option>
-                    }
-                }
-            </select>
-        </div>
-        <div>
-        </div>
-        <div>
-            <button type="submit" class="btn btn-primary">@Localizer["Show"]</button>
-        </div>
-    }
-</div>
+
 
 
 

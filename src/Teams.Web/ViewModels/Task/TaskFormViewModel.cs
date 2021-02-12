@@ -11,8 +11,9 @@ namespace Teams.Web.ViewModels.Task
         [Range(1, 100)]
         public int TaskStoryPoints { get; set; }
         public int? TaskMemberId { get; set; }
+        public string TaskMemberName { get; set; }
         public int TeamId { get; set; }
-        [Range(1, int.MaxValue)]
+        [Required]
         public int TaskSprintId { get; set; }
         [Required]
         [RegularExpression(@"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$")]

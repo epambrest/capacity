@@ -8,5 +8,6 @@ namespace Teams.Web.ViewModels.Task
         public List<TaskViewModel> Tasks { get; set; }
         public string TeamName { get; set; }
         public int TeamId { get; set; }
+        public bool IsOwner { get; set; }
     }
 }

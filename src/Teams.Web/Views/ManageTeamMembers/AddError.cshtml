@@ -7,6 +7,6 @@
     <p style="color:red">@ViewData["Cause"]</p>
 </div>
 <div style="margin: 10px 0px 0px 30px" align="center">
-    <h><a color="black">@Html.ActionLink("  Return to team", "TeamMembers", new { teamId = ViewBag.TeamId })</a></h>
+    <h><a color="black">@Html.ActionLink("  Return to team", "TeamMembers", new { teamId = ViewData["TeamId"] })</a></h>
     
 </div>

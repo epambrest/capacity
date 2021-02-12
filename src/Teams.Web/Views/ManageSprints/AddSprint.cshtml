@@ -35,11 +35,11 @@
 
         <div>
             @Html.RadioButton("status", PossibleStatuses.CompletedStatus)
-            <span>@Localizer["Сompleted"]</span> <br />
+            <span style="color:orange">@Localizer["Сompleted"]</span> <br />
             @Html.RadioButton("status", PossibleStatuses.ActiveStatus)
-            <span>@Localizer["Active"]</span> <br />
+            <span style="color:green">@Localizer["Active"]</span> <br />
             @Html.RadioButton("status", PossibleStatuses.CreatedStatus, true)
-            <span>@Localizer["Created"]</span>
+            <span style="color:blue">@Localizer["Created"]</span>
         </div>
 
         <div style="display: table">
