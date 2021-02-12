@@ -12,9 +12,9 @@
 <div style="margin: 10px 0px 0px 30px" align="left">
     <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to your teams", "GetMyTeams", "ManageTeams")</a></h>
 </div>
-<div align="center">
-    <h><font size="6" color="black"><strong>@Model.TeamName</strong></font></h>
-</div>
+
+<h1 class="text-center font-weight-normal mt-5 mb-3">@Model.TeamName</h1>
+
 <table class="table">
 
     <tr align="center">
@@ -22,10 +22,17 @@
         <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["User"]</td>
         <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPoint"]</td>
         <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Link"]</td>
+        <td align="left" style="border-top: hidden; font-weight: bold"></td>
         @if (Model.IsOwner)
         {
             <td style="border-top: hidden;" align="right">
-                @Html.ActionLink("", "AddTaskIntoTeam", "ManageTasks", new { teamId = Model.TeamId, errorMessage = "" }, new { @class = "fas fa-plus", title = "Add Task", style = "margin: 10px 0px 0px 30px", align = "right" })
+                <form>
+                    <input type="hidden" name="teamId" value="@Model.TeamId"/>
+                    <button type='submit' class='btn btn-outline-primary border-0' asp-controller="ManageTasks" asp-action="AddTaskIntoTeam">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </form>
+                @*@Html.ActionLink("", "AddTaskIntoTeam", "ManageTasks", new { teamId = Model.TeamId, errorMessage = "" }, new { @class = "fas fa-plus", title = "Add Task", style = "margin: 10px 0px 0px 30px", align = "right" })*@
             </td>
         }
     </tr>
@@ -45,17 +52,23 @@
             <td align="left">@item.StoryPoints</td>
             @if (!item.Link.Contains("https://"))
             {
-                <td><a href="https://@item.Link" align="left">@Localizer["Link"]</a></td>
+                <td align="left"><a href="https://@item.Link">@Localizer["Link"]</a></td>
             }
             else
             {
-                <td><a href="@item.Link" align="left">@Localizer["Link"]</a></td>
+                <td align="left"><a href="@item.Link">@Localizer["Link"]</a></td>
             }
 
             @if (Model.IsOwner)
             {
                 <td align="right">
-                @Html.ActionLink("", "EditTask", new { teamId = Model.TeamId, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })
+                    <form>
+                        <input type="hidden" name="taskId" value="@item.Id"/>
+                        <button type='submit' class='btn btn-outline-primary border-0' asp-action="EditTask">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                    </form>
+                @*@Html.ActionLink("", "EditTask", new { teamId = Model.TeamId, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })*@
                 </td>
                 <td align="right">
                     <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromTeam"

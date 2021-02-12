@@ -17,9 +17,9 @@
 <div style="margin: 10px 0px 0px 30px" align="left">
     <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to your teams", "GetMyTeams", "ManageTeams")</a></h>
 </div>
-<div align="center">
-    <h><font size="6" color="black"><strong>@Model.Team.TeamName</strong></font></h>
-</div>
+
+<h1 class="text-center font-weight-normal mt-5 mb-3">@Model.Team.TeamName</h1>
+
 <div sstyle="display: inline-block">
     <table align="left" style="width:50%" class="table" id="grid">
         <thead>
@@ -28,11 +28,17 @@
                 <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["NameOfSprint"]</td>
                 <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["DaysInSprint"]</td>
                 <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPointInHours"]</td>
+                <td align="left" style="border-top: hidden; font-weight: bold"></td>
                 @if (Model.IsOwner)
                 {
-                    <td style="border-top: hidden;" align="right">
-                        @Html.ActionLink("", "AddSprint", new { teamId = @Model.Team.Id, errorMessage = "" }, new { @class = "fas fa-plus", title = "Add Sprint", style = "margin: 10px 0px 0px 30px", align = "right" })
-                    </td>
+                <td style="border-top: hidden;" align="right">
+                    <form>
+                        <input type="hidden" name="teamId" value="@Model.Team.Id"/>
+                        <button type='submit' class='btn btn-outline-primary border-0' asp-action="AddSprint">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </form>
+                </td>
                 }
             </tr>
         </thead>
@@ -58,17 +64,22 @@
                 <td align="left" data-type="@item.Id">@item.DaysInSprint</td>
                 <td align="left" data-type="@item.Id">@item.StoryPointInHours</td>
                 @if (Model.IsOwner)
-                    {
-                        <td align="right" data-type="@item.Id">
-                            @Html.ActionLink("", "EditSprint", new { teamId = Model.Team.Id, sprintId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Sprint", style = "margin: 10px 0px 0px 30px", align = "right" })
-                        </td>
-                        <td align="right" data-type="@item.Id">
-                            <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#myModal"
-                                    data-content="@item.Name" data-whatever="@item.Id">
-                                <i class='far fa-trash-alt'></i>
+                {
+                    <td align="right" data-type="@item.Id">
+                        <form>
+                            <input type="hidden" name="sprintId" value="@item.Id" />
+                            <button type='submit' class='btn btn-outline-primary border-0' asp-action="EditSprint">
+                                <i class="fas fa-pen"></i>
                             </button>
-                        </td>
-                    }
+                        </form>
+                    </td>
+                    <td align="right" data-type="@item.Id">
+                        <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#myModal"
+                                data-content="@item.Name" data-whatever="@item.Id">
+                            <i class='far fa-trash-alt'></i>
+                        </button>
+                    </td>
+                }
                 </tr>
             </tbody>
         }

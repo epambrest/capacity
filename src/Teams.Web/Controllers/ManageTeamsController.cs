@@ -53,15 +53,6 @@ namespace Teams.Web.Controllers
             else return null;
         }
 
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> EditTeamNameAsync(int teamId)
-        {
-            var team = await GetTeamAsync(teamId);
-            var teamModelView = new TeamViewModel(){Id = team.Id,TeamName =team.TeamName};
-            return View(teamModelView);
-        }
-
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> EditTeamNameAsync(TeamViewModel teamViewModel)
@@ -69,11 +60,10 @@ namespace Teams.Web.Controllers
             if (ModelState.IsValid)
             {
                 ViewBag.resultOfEditing = await _manageTeamsService.EditTeamNameAsync(teamViewModel.Id, teamViewModel.TeamName);
-                var team = await GetTeamAsync(teamViewModel.Id);
                 return RedirectToAction("GetMyTeams");
             }
 
-            return View(teamViewModel);
+            return RedirectToAction("GetMyTeams");
         }
 
         public IActionResult Privacy()
@@ -87,13 +77,6 @@ namespace Teams.Web.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        [HttpGet]
-        [Authorize]
-        public IActionResult AddTeam()
-        {
-            return View();
-        }
-
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> AddTeam(TeamViewModel teamViewModel)
@@ -104,7 +87,7 @@ namespace Teams.Web.Controllers
                 return RedirectToAction("GetMyTeams");
             }
 
-            return View();
+            return RedirectToAction("GetMyTeams");
         }
 
         public IActionResult NameError()

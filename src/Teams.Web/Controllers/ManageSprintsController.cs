@@ -186,14 +186,14 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> EditSprintAsync(int teamId, int sprintId, string errorMessage)
+        public async Task<IActionResult> EditSprintAsync(int sprintId, string errorMessage)
         {
-            var team = await _manageSprintsService.GetTeam(teamId);
             var sprint = await _manageSprintsService.GetSprintAsync(sprintId,false);
+            var team = await _manageSprintsService.GetTeam(sprint.TeamId);
 
             EditSprintViewModel model = new EditSprintViewModel 
             {
-                TeamId = teamId,
+                TeamId = team.Id,
                 TeamName = team.TeamName,
                 SprintId = sprint.Id,
                 SprintName = sprint.Name,
