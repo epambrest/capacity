@@ -8,10 +8,15 @@
 <script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
+<nav>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">@Html.ActionLink("My teams", "GetMyTeams", "ManageTeams")</li>
+        <li class="breadcrumb-item">@Html.ActionLink("Sprints", "AllSprints", "ManageSprints", new { teamId = Model.TeamId })</li>
+        <li class="breadcrumb-item">@Html.ActionLink(Model.SprintName, "GetSprintById", "ManageSprints", new { sprintId = Model.SprintId })</li>
+        <li class="breadcrumb-item active">@Model.TeamMemberEmail</li>
+    </ol>
+</nav>
 
-<div style="margin: 10px 0px 0px 30px" align="left">
-    <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink(Localizer["GoBackSprint"].Value, "GetSprintById", "ManageSprints", new { sprintId = Model.CompletedSprintId })</a></h>
-</div>
 <div align="center">
     <h><font size="6" color="black"><strong>@Localizer["ResultForMember"]:@Model.TeamMemberEmail</strong></font></h>
 </div>
@@ -31,15 +36,15 @@
         <tr align="center">
             <td align="left">@item.Name</td>
             <td align="left">@item.StoryPoints</td>
-            <td align="left">            
-            @if (!item.Link.Contains("https://"))
-            {
-                <a href="https://@item.Link" align="left">@Localizer["Link"]</a>
-            }
-            else
-            {
-                <a href="@item.Link" align="left">@Localizer["Link"]</a>
-            }
+            <td align="left">
+                @if (!item.Link.Contains("https://"))
+                {
+                    <a href="https://@item.Link" align="left">@Localizer["Link"]</a>
+                }
+                else
+                {
+                    <a href="@item.Link" align="left">@Localizer["Link"]</a>
+                }
             </td>
             @if (item.Completed)
             {
@@ -96,11 +101,11 @@
         <div>
             <select class="js-example-basic-single form-control" name="teamMemberId" onchange="myFunction(event)">
                 <option disabled selected>@Localizer["SelectUser"]</option>
-                @{  Dictionary<int, string> allMembers = new Dictionary<int,string>();
+                @{ Dictionary<int, string> allMembers = new Dictionary<int, string>();
                     foreach (var item in Model.TeamMembers)
                     {
-                        if(!allMembers.ContainsKey(item.Id))
-                            allMembers.Add(item.Id,item.Member.Email);
+                        if (!allMembers.ContainsKey(item.Id))
+                            allMembers.Add(item.Id, item.Member.Email);
                     }
                     foreach (var member in allMembers)
                     {

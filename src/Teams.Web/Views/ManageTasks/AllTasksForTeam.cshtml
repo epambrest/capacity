@@ -9,9 +9,13 @@
 
 <script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
 
-<div style="margin: 10px 0px 0px 30px" align="left">
-    <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to your teams", "GetMyTeams", "ManageTeams")</a></h>
-</div>
+<nav>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">@Html.ActionLink("My teams", "GetMyTeams", "ManageTeams")</li>
+        <li class="breadcrumb-item active">Tasks</li>
+    </ol>
+</nav>
+
 <div align="center">
     <h><font size="6" color="black"><strong>@Model.TeamName</strong></font></h>
 </div>

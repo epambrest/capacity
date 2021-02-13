@@ -14,6 +14,7 @@ namespace Teams.Web.ViewModels.Task
         public int TeamId { get; set; }
         public int CompletedSprintId { get; set; }
         public string SprintName { get; set; }
+        public int SprintId { get; set; }
         public string TeamMemberEmail { get; set; }
         public List<TaskViewModel> Tasks { get; set; }
         public List<TeamMemberViewModel> TeamMembers { get; set; }

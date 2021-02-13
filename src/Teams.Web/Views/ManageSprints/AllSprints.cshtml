@@ -14,9 +14,13 @@
     }
 </style>
 
-<div style="margin: 10px 0px 0px 30px" align="left">
-    <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to your teams", "GetMyTeams", "ManageTeams")</a></h>
-</div>
+<nav>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">@Html.ActionLink("My teams", "GetMyTeams", "ManageTeams")</li>
+        <li class="breadcrumb-item active">Sprints</li>
+    </ol>
+</nav>
+
 <div align="center">
     <h><font size="6" color="black"><strong>@Model.Team.TeamName</strong></font></h>
 </div>
@@ -41,23 +45,23 @@
         {
             <tbody>
 
-            <tr align="center">
-                @if (item.Status == PossibleStatuses.ActiveStatus)
-                {
-                    <td class="colorBlock" align="left" width="1%" bgcolor="green"></td>
-                }
-                else if (item.Status == PossibleStatuses.CompletedStatus)
-                {
-                    <td class="colorBlock" align="left" width="1%" bgcolor="yellow"></td>
-                }
-                else if (item.Status == PossibleStatuses.CreatedStatus)
-                {
-                    <td class="colorBlock" align="left" width="1%" bgcolor="blue"></td>
-                }
-                <td align="left" data-type="@item.Id">@Html.ActionLink(item.Name, "GetSprintById", new {sprintId = item.Id})</td>
-                <td align="left" data-type="@item.Id">@item.DaysInSprint</td>
-                <td align="left" data-type="@item.Id">@item.StoryPointInHours</td>
-                @if (Model.IsOwner)
+                <tr align="center">
+                    @if (item.Status == PossibleStatuses.ActiveStatus)
+                    {
+                        <td class="colorBlock" align="left" width="1%" bgcolor="green"></td>
+                    }
+                    else if (item.Status == PossibleStatuses.CompletedStatus)
+                    {
+                        <td class="colorBlock" align="left" width="1%" bgcolor="yellow"></td>
+                    }
+                    else if (item.Status == PossibleStatuses.CreatedStatus)
+                    {
+                        <td class="colorBlock" align="left" width="1%" bgcolor="blue"></td>
+                    }
+                    <td align="left" data-type="@item.Id">@Html.ActionLink(item.Name, "GetSprintById", new { sprintId = item.Id })</td>
+                    <td align="left" data-type="@item.Id">@item.DaysInSprint</td>
+                    <td align="left" data-type="@item.Id">@item.StoryPointInHours</td>
+                    @if (Model.IsOwner)
                     {
                         <td align="right" data-type="@item.Id">
                             @Html.ActionLink("", "EditSprint", new { teamId = Model.Team.Id, sprintId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Sprint", style = "margin: 10px 0px 0px 30px", align = "right" })

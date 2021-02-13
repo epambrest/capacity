@@ -312,6 +312,7 @@ namespace Teams.Web.Controllers
                 CompletedSprintId = completedSprint.Id,
                 TeamMemberEmail = currentMember.Member.Email,
                 SprintName = completedSprint.Name,
+                SprintId = sprintId,
                 Tasks = new List<TaskViewModel>(),
                 TeamMembers = new List<TeamMemberViewModel>(),
                 TotalStoryPoints = totalStoryPoints,
