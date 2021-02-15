@@ -15,6 +15,7 @@ namespace Teams.Web.ViewModels.Sprint
         [Range(1, 56)]
         public int StoryPointInHours { get; set; }
         public int Status { get; set; }
+        public bool IsOwner { get; set; }
         public List<TaskViewModel> Tasks { get; set; }
     }
 }

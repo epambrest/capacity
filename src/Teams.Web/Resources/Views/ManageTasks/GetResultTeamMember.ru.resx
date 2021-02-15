@@ -159,6 +159,9 @@
   <data name="StoryPointinHours" xml:space="preserve">
     <value>СП в час</value>
   </data>
+  <data name="StoryPointsInDay" xml:space="preserve">
+    <value>СП в день</value>
+  </data>
   <data name="TotalQuantity" xml:space="preserve">
     <value>Общее количество задач</value>
   </data>
