@@ -24,10 +24,10 @@ jobs:
     
     - name: Commit files
       run: |
-        git config --local user.email "{{ secrets.UPDATE_VERSION_EMAIL }}"
-        git config --local user.name "{{ secrets.UPDATE_VERSION_USERNAME }}"
+        git config --local user.email {{ secrets.UPDATE_VERSION_EMAIL }}
+        git config --local user.name {{ secrets.UPDATE_VERSION_USERNAME }}
         git add -A
-        git commit -m "update version ${{ github.run_number }}"
+        git commit -m "Set release version 1.0.${{ github.run_number }}"
         
     - name: Push changes
       uses: ad-m/github-push-action@v0.6.0
