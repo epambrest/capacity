@@ -16,27 +16,30 @@ jobs:
           file: src/Teams.Web/appsettings.json
           field: Version
           value: "1.0.${{ github.run_number }}"
-
-      - name: Create Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v3
-        with:
-          token: ${{ secrets.SECRET_TOKEN_UPDATE_VERSION }}
-          commit-message: Set release version 1.0.${{ github.run_number }}
-          committer: ${{ secrets.UPDATE_VERSION_USERNAME }} <${{ secrets.UPDATE_VERSION_EMAIL }}>
-          author: ${{ secrets.UPDATE_VERSION_USERNAME }} <${{ secrets.UPDATE_VERSION_EMAIL }}>
-          signoff: false
-          branch: 1.0.${{ github.run_number }}-release
-          delete-branch: true
-          title: 'Set release version 1.0.${{ github.run_number }}'
-          body: |
-            Set release version 1.0.${{ github.run_number }}      
-          assignees: ${{ secrets.UPDATE_VERSION_USERNAME }}
-          reviewers: ${{ secrets.UPDATE_VERSION_USERNAME }}
-          milestone: 1
-          draft: false
-
-      - name: Check outputs
+    
+      - name: Commit files
         run: |
-          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
-          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
+          git checkout -b 1.0.${{ github.run_number }}-release
+          git config --local user.email "${{ secrets.UPDATE_VERSION_EMAIL }}"
+          git config --local user.name "${{ secrets.UPDATE_VERSION_USERNAME }}"
+          git add -A
+          git commit -m "Set release version 1.0.${{ github.run_number }}"
+        
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.SECRET_TOKEN_UPDATE_VERSION }}
+          branch: 1.0.${{ github.run_number }}-release
+          
+      - uses: actions/checkout@v2
+      
+      - name: pull-request
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: "1.0.${{ github.run_number }}-release"
+          destination_branch: "master"
+          pr_title: "Set release version 1.0.${{ github.run_number }}"
+          pr_body: ":crown: *An automated PR*"
+          pr_reviewer: "SergeyMokin,halvita,desenzo,sub13,aparkhots,alehkahnovich,Y-floryanovich,SherbaKirill" 
+          pr_assignee: "SergeyMokin"
+          github_token: ${{ secrets.SECRET_TOKEN_UPDATE_VERSION }}
