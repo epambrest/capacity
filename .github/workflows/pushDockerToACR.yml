@@ -24,16 +24,15 @@ jobs:
     
     - name: Commit files
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
+        git config --local user.email "{{ secrets.UPDATE_VERSION_EMAIL }}"
+        git config --local user.name "{{ secrets.UPDATE_VERSION_USERNAME }}"
         git add -A
-        git commit -m "update version ${{ github.run_id }}"
+        git commit -m "update version ${{ github.run_number }}"
         
     - name: Push changes
       uses: ad-m/github-push-action@v0.6.0
       with:
         github_token: ${{ secrets.SECRET_TOKEN_UPDATE_VERSION }}
-        force: true
     
     - name: Docker login to ACR
       uses: azure/docker-login@v1
