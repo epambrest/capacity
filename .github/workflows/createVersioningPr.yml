@@ -1,0 +1,42 @@
+name: Create versioning PR 
+
+on:
+  push:
+    branches: [ master ]
+    
+jobs:
+  createPullRequest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Update appsettings.json version
+        uses: jossef/action-set-json-field@v1
+        with:
+          file: src/Teams.Web/appsettings.json
+          field: Version
+          value: "1.0.${{ github.run_number }}"
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.SECRET_TOKEN_UPDATE_VERSION }}
+          commit-message: Set release version 1.0.${{ github.run_number }}
+          committer: ${{ secrets.UPDATE_VERSION_USERNAME }} <${{ secrets.UPDATE_VERSION_EMAIL }}>
+          author: ${{ secrets.UPDATE_VERSION_USERNAME }} <${{ secrets.UPDATE_VERSION_EMAIL }}>
+          signoff: false
+          branch: 1.0.${{ github.run_number }}-release
+          delete-branch: true
+          title: 'Set release version 1.0.${{ github.run_number }}'
+          body: |
+            Set release version 1.0.${{ github.run_number }}      
+          assignees: ${{ secrets.UPDATE_VERSION_USERNAME }}
+          reviewers: ${{ secrets.UPDATE_VERSION_USERNAME }}
+          milestone: 1
+          draft: false
+
+      - name: Check outputs
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
