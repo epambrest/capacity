@@ -33,6 +33,7 @@ jobs:
       uses: ad-m/github-push-action@v0.6.0
       with:
         github_token: ${{ secrets.SECRET_TOKEN_UPDATE_VERSION }}
+        force: true
     
     - name: Docker login to ACR
       uses: azure/docker-login@v1
