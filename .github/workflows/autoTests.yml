@@ -12,8 +12,6 @@ jobs:
   RunTests:
     # we are using ubuntu for autoruning
     runs-on: ubuntu-latest
-    
-    if: "!contains(github.event.head_commit.message, 'Set release version')"
 
     # our action
     steps:
