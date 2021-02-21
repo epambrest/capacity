@@ -26,6 +26,6 @@ jobs:
       run: |
         cd src
         docker-compose build
-        docker image tag teams:latest ${{ secrets.CONTAINER_REGISTRY_NAME }}
-        docker image push ${{ secrets.CONTAINER_REGISTRY_NAME }}
+        docker image tag teams:latest ${{ secrets.CONTAINER_REGISTRY_NAME }}/${{ secrets.IMAGE_NAME }}:latest
+        docker image push ${{ secrets.CONTAINER_REGISTRY_NAME }}:latest
         
