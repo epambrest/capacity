@@ -14,19 +14,13 @@ jobs:
     
     - name: Checkout code
       uses: actions/checkout@v2
-      
-    - name: Output Run ID
-      run: echo ${{ github.run_id }}
-      
-    - name: Output Run Number
-      run: echo ${{ github.run_number }}
 
     - name: Update appsettings.json version
       uses: jossef/action-set-json-field@v1
       with:
         file: src/Teams.Web/appsettings.json
         field: Version
-        value: ${{ github.run_id }}
+        value: "1.0.${{ github.run_number }}"
     
     - name: Commit files
       run: |
@@ -38,7 +32,7 @@ jobs:
     - name: Push changes
       uses: ad-m/github-push-action@v0.6.0
       with:
-        github_token: ${{ github.token }}
+        github_token: ${{ secrets.SECRET_TOKEN_UPDATE_VERSION }}
     
     - name: Docker login to ACR
       uses: azure/docker-login@v1
