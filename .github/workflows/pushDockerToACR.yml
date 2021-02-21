@@ -26,6 +26,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
+        git status
         git add *
         git commit -m "update version ${{ github.run_id }}"
         
