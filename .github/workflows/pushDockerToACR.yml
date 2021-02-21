@@ -10,7 +10,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    steps:
+    steps:    
     
     - name: Docker login to ACR
       uses: azure/docker-login@v1
@@ -18,9 +18,12 @@ jobs:
         login-server: ${{ secrets.CONTAINER_REGISTRY_NAME }}
         username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
         password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
-      
+    
+    - name: Checkout code
+    - uses: actions/checkout@v2
+    
     - name: Build and Push container to ACR
       run: |
-        docker build --file=../../src/Teams.Web/Dockerfile -t ${{ secrets.CONTAINER_REGISTRY_NAME }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }} .
+        docker build --file=src/Teams.Web/Dockerfile -t ${{ secrets.CONTAINER_REGISTRY_NAME }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }} .
         docker push ${{ secrets.CONTAINER_REGISTRY_NAME }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}
         
