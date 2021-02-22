@@ -1,3 +1,3 @@
 # teams
 
-## https://capacity2020.azurewebsites.net/
+## https://capacity2020.azurewebsites.net
