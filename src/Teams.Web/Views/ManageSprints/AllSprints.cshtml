@@ -31,15 +31,18 @@
                 <td align="left" style="border-top: hidden; font-weight: bold"></td>
                 @if (Model.IsOwner)
                 {
-                <td style="border-top: hidden;" align="right">
-                    <form>
-                        <input type="hidden" name="teamId" value="@Model.Team.Id"/>
-                        <button type='submit' class='btn btn-outline-primary border-0' asp-action="AddSprint">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </form>
-                </td>
+                    <td style="border-top: hidden;" align="right">
+                        <form>
+                            <input type="hidden" name="teamId" value="@Model.Team.Id" />
+                            <button type='submit' class='btn btn-outline-primary border-0' asp-action="AddSprint">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </form>
+                    </td>
                 }
+                <td style="border-top: hidden;" align="right">
+                    <button type='submit' class='btn btn-outline-primary border-0' OnClick="CompareSprints()">Compare</button>
+                </td>
             </tr>
         </thead>
 
@@ -54,7 +57,7 @@
                 }
                 else if (item.Status == PossibleStatuses.CompletedStatus)
                 {
-                    <td class="colorBlock" align="left" width="1%" bgcolor="yellow"></td>
+                    <td class="colorBlock" align="left" width="1%" bgcolor="yellow"><input type="checkbox" class="checkBox" OnChange="SetCheckBox(event)" name="IsCompareChecked" id="@item.Id"></td>
                 }
                 else if (item.Status == PossibleStatuses.CreatedStatus)
                 {
@@ -142,5 +145,51 @@
                 }
             });
     };
+
+    function SetCheckBox(event) {
+        var checkBoxes = document.querySelectorAll('.checkBox');
+        if (checkBoxes.length > 0) {
+            var checkedCheckBoxes = Array.from(checkBoxes).filter(element => {
+                return element.checked == true
+            });
+
+            console.log(checkedCheckBoxes)
+            if (checkedCheckBoxes.length > 5) {
+                event.currentTarget.checked = false;
+                alert("Possible to choose no more than 5 sprints");
+                event.currentTarget.value = false;
+            }
+        }
+        event.currentTarget.value = true;
+    }
+
+    (document.getElementById('id of the check box here').checked)
+
+    function CompareSprints() {
+        let checkBoxes = document.querySelectorAll('.checkBox');
+        if (checkBoxes == null) return;
+        const checkedSprintsId = [];
+        Array.from(checkBoxes).forEach(element => {
+            if (element.checked == true)
+                checkedSprintsId.push(element.id);
+        });
+        if (checkedSprintsId.length == 0) {
+            alert("Please, choose sprints")
+            return;
+        }
+        let form = document.createElement('form');
+        form.action = 'CompareSprints';
+        form.method = 'GET';
+        for (var i = 0; i < checkedSprintsId.length; i++) {
+            let input = document.createElement('input');
+            input.type = "hidden"
+            input.id = "sprintsId";
+            input.name = "sprintsId";
+            input.value = checkedSprintsId[i];
+            form.appendChild(input);
+        }
+        document.body.append(form);
+        form.submit();
+    }
 </script>
 
