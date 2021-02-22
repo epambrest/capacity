@@ -17,6 +17,7 @@ namespace Teams.Web.ViewModels.Sprint
         public int Status { get; set; }
         public bool IsOwner { get; set; }
         public List<TaskViewModel> Tasks { get; set; }
-        public string TotalAverageSp { get; set; }
+        public int TotalStoryPoint { get; set; }
+        public double AverageStoryPoint { get; set; }
     }
 }

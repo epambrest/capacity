@@ -58,7 +58,14 @@
             </td>
 
         }
-        <td align="left" style="border-top: hidden; font-weight: bold">@Model.TotalAverageSp @Localizer["Sp"]</td>
+        @if (Model.AverageStoryPoint > 0)
+        {
+            <td align="left" style="border-top: hidden; font-weight: bold">@Model.TotalStoryPoint / @Model.AverageStoryPoint @Localizer["Sp"]</td>
+        }
+        else
+        {
+            <td align="left" style="border-top: hidden; font-weight: bold">@Model.TotalStoryPoint @Localizer["Sp"]</td>
+        }
     </tr>
 
     @foreach (var item in @Model.Tasks)
