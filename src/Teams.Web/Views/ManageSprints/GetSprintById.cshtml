@@ -56,7 +56,9 @@
             <td align="right">
                 @Html.ActionLink("", "AddTask", "ManageTasks", new { teamId = Model.TeamId, sprintId = Model.Id, errorMessage = "" }, new { @class = "fas fa-plus", title = "Add Task", style = "margin: 10px 0px 0px 30px", align = "right" })
             </td>
+
         }
+        <td align="left" style="border-top: hidden; font-weight: bold">@Model.TotalAverageSp @Localizer["Sp"]</td>
     </tr>
 
     @foreach (var item in @Model.Tasks)

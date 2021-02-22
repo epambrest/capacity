@@ -171,6 +171,19 @@ namespace Teams.Web.Controllers
                     Completed = t.Completed
                 }
             ));
+            var totalSp = sprint.Tasks.Count>0 ? sprint.Tasks.Sum(t => t.StoryPoints) : 0;
+            var sprints = await _manageSprintsService.GetAllSprintsAsync(sprint.TeamId, new DisplayOptions { });
+            sprints = sprints.Where(t => t.Status == PossibleStatuses.CompletedStatus);
+            sprintViewModel.TotalAverageSp = totalSp.ToString();
+
+            if (sprints.Count()>0)
+            {
+               var averageSp = Math.Round( (double)sprints.SelectMany(t => t.Tasks).Where(t=>t.Completed==true).Sum(t => t.StoryPoints)/sprints.Count() , 1);
+
+                if (averageSp > 0)
+                    sprintViewModel.TotalAverageSp += $" / {averageSp}";
+
+            }
 
             if (await _accessCheckService.IsOwnerAsync(sprint.TeamId))
             {
