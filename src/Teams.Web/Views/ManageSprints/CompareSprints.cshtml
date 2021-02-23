@@ -1,0 +1,44 @@
+﻿@model Teams.Web.ViewModels.Sprint.SprintAndTeamViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewBag.Title = "Compare Sprints";
+}
+
+<script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
+
+<style>
+    tbody tr:hover {
+        background: rgba(0, 0, 0, 0.20);
+        color: #fff;
+    }
+</style>
+
+<div style="margin: 10px 0px 0px 30px" align="left">
+    <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to sprints", "AllSprints", "ManageSprints", new { teamId = Model.Sprints[0].TeamId })</a></h>
+</div>
+
+<h1 class="text-center font-weight-normal mt-5 mb-3">Сomparison</h1>
+
+<div sstyle="display: inline-block">
+    <table align="center" style="width:50%" class="table" id="grid">
+        <thead>
+            <tr align="center">
+                <td align="center" style="border-top: hidden; font-weight: bold">@Localizer["NameOfSprint"]</td>
+                <td align="center" style="border-top: hidden; font-weight: bold">@Localizer["DaysInSprint"]</td>
+                <td align="center" style="border-top: hidden; font-weight: bold">@Localizer["StoryPointInHours"]</td>
+            </tr>
+        </thead>
+
+        @foreach (var item in Model.Sprints)
+        {
+            <tbody>
+                <tr align="center">
+                    <td align="center" data-type="@item.Id">@Html.ActionLink(item.Name, "GetSprintById", new { sprintId = item.Id })</td>
+                    <td align="center" data-type="@item.Id">@item.DaysInSprint</td>
+                    <td align="center" data-type="@item.Id">@item.StoryPointInHours</td>
+                </tr>
+            </tbody>
+        }
+    </table>
+</div>

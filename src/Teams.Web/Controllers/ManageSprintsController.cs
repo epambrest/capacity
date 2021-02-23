@@ -402,5 +402,35 @@ namespace Teams.Web.Controllers
         {
             return View();
         }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> CompareSprintsAsync(List<int> sprintsId)
+        {
+            List<Sprint> sprints = new List<Sprint>();
+
+            foreach (var sprintId in sprintsId)
+            {
+                sprints.Add(await _manageSprintsService.GetSprintAsync(sprintId, true));
+            }
+            var sprintViewModel = new SprintAndTeamViewModel
+            {
+                Sprints = new List<SprintViewModel>()
+            };
+            sprints.ForEach(t => sprintViewModel.Sprints.Add(new SprintViewModel()
+            {
+                Id = t.Id,
+                DaysInSprint = t.DaysInSprint,
+                Status = t.Status,
+                Name = t.Name,
+                StoryPointInHours = t.StoryPointInHours,
+                TeamId = t.TeamId
+            }
+            ));
+
+
+            return View(sprintViewModel);
+        }
+
     }
 }
