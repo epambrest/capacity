@@ -19,7 +19,17 @@ namespace Teams.Business.Services
 
         public async Task<bool> CheckDbConnection()
         {
-            return await _dbContext.Database.CanConnectAsync();
+            try
+            {
+                if (await _dbContext.Database.CanConnectAsync())
+                    return true;
+                else
+                    return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public string GetCurrentVersion()
