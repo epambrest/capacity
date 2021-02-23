@@ -49,6 +49,7 @@ namespace Teams.Web
             services.AddTransient<ICurrentUser, CurrentUser>();
             services.AddTransient<IManageTeamsMembersService, ManageTeamsMembersService>();
             services.AddTransient<IAccessCheckService, AccessCheckService>();
+            services.AddTransient<IDiagnosticService, DiagnosticService>();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddControllersWithViews()
                 .AddViewLocalization()
