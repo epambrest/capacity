@@ -1,0 +1,48 @@
+name: Create versioning PR 
+
+on:
+  push:
+    branches: [ master ]
+    
+jobs:
+  createPullRequest:
+    runs-on: ubuntu-latest
+    
+    if: "!contains(github.event.head_commit.message, 'Set release version')"
+    
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Update appsettings.json version
+        uses: jossef/action-set-json-field@v1
+        with:
+          file: src/Teams.Web/appsettings.json
+          field: Version
+          value: "1.0.${{ github.run_number }}"
+    
+      - name: Commit files
+        run: |
+          git checkout -b 1.0.${{ github.run_number }}-release
+          git config --local user.email "${{ secrets.UPDATE_VERSION_EMAIL }}"
+          git config --local user.name "${{ secrets.UPDATE_VERSION_USERNAME }}"
+          git add -A
+          git commit -m "Set release version 1.0.${{ github.run_number }}"
+        
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.SECRET_TOKEN_UPDATE_VERSION }}
+          branch: 1.0.${{ github.run_number }}-release
+          
+      - uses: actions/checkout@v2
+      
+      - name: pull-request
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: "1.0.${{ github.run_number }}-release"
+          destination_branch: "master"
+          pr_title: "Set release version 1.0.${{ github.run_number }}"
+          pr_body: "*An automated PR*"
+          pr_reviewer: "halvita,desenzo,sub13,aparkhots,alehkahnovich,Y-floryanovich,SherbaKirill" 
+          pr_assignee: "SergeyMokin"
+          github_token: ${{ secrets.SECRET_TOKEN_UPDATE_VERSION }}

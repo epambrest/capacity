@@ -1,0 +1,33 @@
+name: Build and Push Docker Container to Azure Container Registry 
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    
+    if: "contains(github.event.head_commit.message, 'Set release version')"
+
+    steps:        
+    
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Docker login to ACR
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.CONTAINER_REGISTRY_NAME }}
+        username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
+        password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
+    
+    - name: Build and Push container to ACR
+      run: |
+        cd src
+        docker-compose build
+        docker image tag teams:latest ${{ secrets.CONTAINER_REGISTRY_NAME }}/${{ secrets.IMAGE_NAME }}:latest
+        docker image push ${{ secrets.CONTAINER_REGISTRY_NAME }}/${{ secrets.IMAGE_NAME }}:latest
+        
