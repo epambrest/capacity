@@ -33,15 +33,6 @@
             <span asp-validation-for="StoryPointInHours"></span>
         </div>
 
-        <div>
-            @Html.RadioButton("status", PossibleStatuses.CompletedStatus)
-            <span style="color:orange">@Localizer["Сompleted"]</span> <br />
-            @Html.RadioButton("status", PossibleStatuses.ActiveStatus)
-            <span style="color:green">@Localizer["Active"]</span> <br />
-            @Html.RadioButton("status", PossibleStatuses.CreatedStatus, true)
-            <span style="color:blue">@Localizer["Created"]</span>
-        </div>
-
         <div style="display: table">
             <input id="sub" type="submit" class="btn btn-success" value="@Localizer["AddSprint"]" />
             <button style="margin-left:7px" type='button' class="btn btn-danger" onclick="location.href = '@Url.Action("AllSprints", "ManageSprints", new { teamId = Model.Id })'">@Localizer["Close"]</button>

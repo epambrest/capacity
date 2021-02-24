@@ -291,14 +291,8 @@ namespace Teams.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                sprintViewModel.Status = PossibleStatuses.CreatedStatus;
                 var sprints = await _manageSprintsService.GetAllSprintsAsync(sprintViewModel.TeamId, new DisplayOptions());
-                var activeSprint = sprints.FirstOrDefault(i => i.Status == PossibleStatuses.ActiveStatus);
-                
-                if (activeSprint != null && sprintViewModel.Status == PossibleStatuses.ActiveStatus)
-                {
-                    return RedirectToAction("AddSprint", new { teamId = sprintViewModel.TeamId, errorMessage = _localizer["ActiveFieldError"] });
-                }
-
                 var createdSprint = sprints.FirstOrDefault(i => i.Status == PossibleStatuses.CreatedStatus);
 
                 if (createdSprint != null && sprintViewModel.Status == PossibleStatuses.CreatedStatus)
