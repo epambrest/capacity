@@ -47,7 +47,7 @@
         </div>
 
         <div>
-            <div class="btn-group btn-group-toggle">
+            <div class="btn-group btn-group-toggle" style="margin-top:15px; margin-bottom:15px">
                 @if (Model.Status == PossibleStatuses.CreatedStatus)
                 {
                     <label id="statusLabel" class="btn btn-outline-success ">
@@ -91,7 +91,6 @@
             statusLabelClassName = statusLabelClassName.replace("active focus", "");
             event.currentTarget.setAttribute("value", oldStatusValue);
         }
-        console.log(statusLabelClassName);
         statusLabel.setAttribute('class', statusLabelClassName);
     }
 </script>
