@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Teams.Data;
 using Teams.Web.ViewModels.Home;
@@ -45,7 +43,7 @@ namespace Teams.Web.Controllers
             }
             catch(Exception e)
             {
-                _logger.LogError($"Error Db Connection: {e.Message}");
+                _logger.LogError($"Error Db Connection: {e.Message}", e.StackTrace);
                 return false;
             }
         }
