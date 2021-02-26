@@ -45,7 +45,7 @@ namespace Teams.Web.Controllers
             }
             catch(Exception e)
             {
-                _logger.LogError(e.Message, e.StackTrace);
+                _logger.LogError($"Error Db Connection: {e.Message}");
                 return false;
             }
         }
