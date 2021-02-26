@@ -5,19 +5,16 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Teams.Business.Services;
 using Teams.Data.Models;
-using Teams.Web.ViewModels.Home;
 
 namespace Teams.Web.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IDiagnosticService _diagnosticService;
 
-        public HomeController(ILogger<HomeController> logger, IDiagnosticService diagnosticService)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _diagnosticService = diagnosticService;
         }
 
         public IActionResult Index()    
@@ -27,18 +24,6 @@ namespace Teams.Web.Controllers
                 return RedirectToAction("GetMyTeams", "ManageTeams");
             }
             return View();
-        }
-
-        [Authorize]
-        public async Task<IActionResult> Health()
-        {
-            HealthViewModel healthViewModel = new HealthViewModel()
-            {
-                Version = _diagnosticService.GetCurrentVersion(),
-                IsDbConnected = await _diagnosticService.CheckDbConnection(),
-                DataServerTime = _diagnosticService.GetServerDataTime()
-            };
-            return View(healthViewModel);
         }
 
         public IActionResult Privacy()

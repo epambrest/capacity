@@ -49,13 +49,13 @@ namespace Teams.Web
             services.AddTransient<ICurrentUser, CurrentUser>();
             services.AddTransient<IManageTeamsMembersService, ManageTeamsMembersService>();
             services.AddTransient<IAccessCheckService, AccessCheckService>();
-            services.AddTransient<IDiagnosticService, DiagnosticService>();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddControllersWithViews()
                 .AddViewLocalization()
                 .AddDataAnnotationsLocalization(options =>
                     options.DataAnnotationLocalizerProvider = (type, factory) => 
                         factory.Create(typeof(ValidationResource)));
+            services.Configure<AppVersion>(Configuration.GetSection("Version"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
