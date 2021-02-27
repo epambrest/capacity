@@ -171,6 +171,8 @@ namespace Teams.Web.Controllers
                     Completed = t.Completed
                 }
             ));
+            sprintViewModel.TotalStoryPoint = sprint.Tasks.Count > 0 ? sprint.Tasks.Sum(t => t.StoryPoints) : 0;
+            sprintViewModel.AverageStoryPoint = await _manageSprintsService.GetAverageStoryPointAsync(sprint);
 
             if (await _accessCheckService.IsOwnerAsync(sprint.TeamId))
             {

@@ -56,6 +56,15 @@
             <td align="right">
                 @Html.ActionLink("", "AddTask", "ManageTasks", new { teamId = Model.TeamId, sprintId = Model.Id, errorMessage = "" }, new { @class = "fas fa-plus", title = "Add Task", style = "margin: 10px 0px 0px 30px", align = "right" })
             </td>
+
+        }
+        @if (Model.AverageStoryPoint > 0)
+        {
+            <td align="left" style="border-top: hidden; font-weight: bold">@Model.TotalStoryPoint / @Model.AverageStoryPoint @Localizer["Sp"]</td>
+        }
+        else
+        {
+            <td align="left" style="border-top: hidden; font-weight: bold">@Model.TotalStoryPoint @Localizer["Sp"]</td>
         }
     </tr>
 

@@ -162,4 +162,7 @@
   <data name="Сompleted" xml:space="preserve">
     <value>Completed</value>
   </data>
+  <data name="Sp" xml:space="preserve">
+    <value>Sp</value>
+  </data>
 </root>
