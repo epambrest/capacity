@@ -439,7 +439,7 @@ namespace Teams.Web.Controllers
             {
                 foreach (var selectedTaskId in selectedTasksId)
                 {
-                    var currentTask = await _manageTasksService.GetTaskByIdAsync(selectedtaskId);
+                    var currentTask = await _manageTasksService.GetTaskByIdAsync(selectedTaskId);
                     var task = new Data.Models.Task
                     {
                         Id = currentTask.Id,
