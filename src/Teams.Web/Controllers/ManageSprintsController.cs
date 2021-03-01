@@ -16,7 +16,6 @@ using Teams.Web.ViewModels.Sprint;
 using Teams.Web.ViewModels.Task;
 using Teams.Web.ViewModels.Team;
 using Teams.Web.ViewModels.TeamMember;
-using Task = Teams.Data.Models.Task;
 
 namespace Teams.Web.Controllers
 {
@@ -438,7 +437,7 @@ namespace Teams.Web.Controllers
             var currentSprint = await _manageSprintsService.GetSprintAsync(sprintId, true);
             if (await _accessCheckService.IsOwnerAsync(currentSprint.TeamId))
             {
-                foreach (var selectedtaskId in selectedTasksId)
+                foreach (var selectedTaskId in selectedTasksId)
                 {
                     var currentTask = await _manageTasksService.GetTaskByIdAsync(selectedtaskId);
                     var task = new Data.Models.Task
