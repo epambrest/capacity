@@ -138,6 +138,9 @@
   <data name="NotActive" xml:space="preserve">
     <value>Не активный</value>
   </data>
+  <data name="SelectTasks" xml:space="preserve">
+    <value>Выберите задания</value>
+  </data>
   <data name="StoryPointInHours" xml:space="preserve">
     <value>Кол-во часов в СП</value>
   </data>
