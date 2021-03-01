@@ -161,7 +161,7 @@ namespace Teams.Business.Tests
         public async System.Threading.Tasks.Task EditTaskAsync_ManageSpiritsServiceReturns_False()
         {
             //Arrange
-            var task1 = new Task { Id = 1, TeamId = 1, Name = "Ta sk", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+            var task1 = new Task { Id = 1, TeamId = 1, Name = "Ta  sk", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
             var task2 = new Task { Id = 1, TeamId = 1, Name = "Task", MemberId = 1, Link = "vkcom", StoryPoints = 3, SprintId = 3 };
             var task3 = new Task { Id = 1, TeamId = 1, Name = "Task", MemberId = 1, Link = "vk.com", StoryPoints = -3, SprintId = 3 };
 
@@ -178,6 +178,58 @@ namespace Teams.Business.Tests
             Assert.IsFalse(result1);
             Assert.IsFalse(result2);
             Assert.IsFalse(result3);
+        }
+
+        [Test]
+        public async System.Threading.Tasks.Task EditTaskAsync_ManageSpiritsServiceNameCheckReturns_true()
+        {
+            //Arrange
+            var task1 = new Task { Id = 1, TeamId = 1, Name = "Task", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+            var task2 = new Task { Id = 1, TeamId = 1, Name = "Task 1", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+            var task3 = new Task { Id = 1, TeamId = 1, Name = "Task_1", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+            var task4 = new Task { Id = 1, TeamId = 1, Name = "Task-1.", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+
+            _tasksRepository.Setup(x => x.UpdateAsync(It.IsAny<Task>())).ReturnsAsync(true);
+            _tasksRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(task1);
+
+            //Act
+            var result1 = await _manageTasksService.EditTaskAsync(task1); 
+            var result2 = await _manageTasksService.EditTaskAsync(task2); 
+            var result3 = await _manageTasksService.EditTaskAsync(task3);
+            var result4 = await _manageTasksService.EditTaskAsync(task4);
+
+
+            //Assert
+            Assert.IsTrue(result1);
+            Assert.IsTrue(result2);
+            Assert.IsTrue(result3);
+            Assert.IsTrue(result4);
+        }
+
+        [Test]
+        public async System.Threading.Tasks.Task EditTaskAsync_ManageSpiritsServiceNameCheckReturns_false()
+        {
+            //Arrange
+            var task1 = new Task { Id = 1, TeamId = 1, Name = "Ta  sk", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+            var task2 = new Task { Id = 1, TeamId = 1, Name = "Task 1 ", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+            var task3 = new Task { Id = 1, TeamId = 1, Name = "Task@1", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+            var task4 = new Task { Id = 1, TeamId = 1, Name = "Task!1", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+
+            _tasksRepository.Setup(x => x.UpdateAsync(It.IsAny<Task>())).ReturnsAsync(true);
+            _tasksRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(task2);
+
+            //Act
+            var result1 = await _manageTasksService.EditTaskAsync(task1);
+            var result2 = await _manageTasksService.EditTaskAsync(task2);
+            var result3 = await _manageTasksService.EditTaskAsync(task3);
+            var result4 = await _manageTasksService.EditTaskAsync(task4);
+
+
+            //Assert
+            Assert.IsFalse(result1);
+            Assert.IsFalse(result2);
+            Assert.IsFalse(result3);
+            Assert.IsFalse(result4);
         }
 
         [Test]
@@ -214,6 +266,56 @@ namespace Teams.Business.Tests
             Assert.IsFalse(result1);
             Assert.IsFalse(result2);
             Assert.IsFalse(result3);
+        }
+
+        [Test]
+        public async System.Threading.Tasks.Task AddTaskAsync_ManageSpiritsServiceNameCheckReturns_true()
+        {
+            //Arrange
+            var task1 = new Task { Id = 1, TeamId = 1, Name = "Task", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+            var task2 = new Task { Id = 1, TeamId = 1, Name = "Task 1", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+            var task3 = new Task { Id = 1, TeamId = 1, Name = "Task_1", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+            var task4 = new Task { Id = 1, TeamId = 1, Name = "Task-1.", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+
+            _tasksRepository.Setup(x => x.InsertAsync(It.IsAny<Task>())).ReturnsAsync(true);
+
+            //Act
+            var result1 = await _manageTasksService.AddTaskAsync(task1);
+            var result2 = await _manageTasksService.AddTaskAsync(task2);
+            var result3 = await _manageTasksService.AddTaskAsync(task3);
+            var result4 = await _manageTasksService.AddTaskAsync(task4);
+
+
+            //Assert
+            Assert.IsTrue(result1);
+            Assert.IsTrue(result2);
+            Assert.IsTrue(result3);
+            Assert.IsTrue(result4);
+        }
+
+        [Test]
+        public async System.Threading.Tasks.Task AddTaskAsync_ManageSpiritsServiceNameCheckReturns_false()
+        {
+            //Arrange
+            var task1 = new Task { Id = 1, TeamId = 1, Name = "Ta  sk", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+            var task2 = new Task { Id = 1, TeamId = 1, Name = "Task 1 ", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+            var task3 = new Task { Id = 1, TeamId = 1, Name = "Task@1", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+            var task4 = new Task { Id = 1, TeamId = 1, Name = "Task!1", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+
+            _tasksRepository.Setup(x => x.InsertAsync(It.IsAny<Task>())).ReturnsAsync(true);
+
+            //Act
+            var result1 = await _manageTasksService.AddTaskAsync(task1);
+            var result2 = await _manageTasksService.AddTaskAsync(task2);
+            var result3 = await _manageTasksService.AddTaskAsync(task3);
+            var result4 = await _manageTasksService.AddTaskAsync(task4);
+
+
+            //Assert
+            Assert.IsFalse(result1);
+            Assert.IsFalse(result2);
+            Assert.IsFalse(result3);
+            Assert.IsFalse(result4);
         }
     }
 }

@@ -64,10 +64,13 @@ namespace Teams.Business.Tests
         {
             //Arrange
             string teamName = "Legal_Team.";
+            string teamName2 = "Legal Team";
             //Act
             var isValid = await _manageTeamsService.AddTeamAsync(teamName);
+            var result2 = await _manageTeamsService.AddTeamAsync(teamName2);
             //Assert
             Assert.That(isValid, Is.True);
+            Assert.IsTrue(result2);
         }
 
         [Test]
@@ -148,6 +151,7 @@ namespace Teams.Business.Tests
             const string id = "abc-def";
             const int teamId = 4;
             const string teamName = "NewName";
+            const string teamName2 = "New Name_Team-4";
 
             var mock = GetFakeDbTeams().AsQueryable().BuildMock();
             _teamRepository.Setup(x => x.GetAll()).Returns(mock.Object);
@@ -161,9 +165,11 @@ namespace Teams.Business.Tests
 
             //Act
             var result = await _manageTeamsService.EditTeamNameAsync(teamId, teamName);
+            var result2 = await _manageTeamsService.EditTeamNameAsync(teamId, teamName2);
 
             //Assert
             Assert.IsTrue(result);
+            Assert.IsTrue(result2);
         }
 
         [Test]
@@ -174,6 +180,7 @@ namespace Teams.Business.Tests
             const int teamId = 4;
             const string existTeamName = "Team5";
             const string errorTeamName = "ERR##$$OR";
+            const string errorTeamName2 = "Team  Error";
 
             var mock = GetFakeDbTeams().AsQueryable().BuildMock();
             _teamRepository.Setup(x => x.GetAll()).Returns(mock.Object);
@@ -188,10 +195,12 @@ namespace Teams.Business.Tests
             //Act
             var result1 = await _manageTeamsService.EditTeamNameAsync(teamId, existTeamName);         //team with the same name already exists 
             var result2 = await _manageTeamsService.EditTeamNameAsync(teamId, errorTeamName);         //team name contains invalid characters
+            var result3 = await _manageTeamsService.EditTeamNameAsync(teamId, errorTeamName2);        
 
             //Assert
             Assert.IsFalse(result1);
             Assert.IsFalse(result2);
+            Assert.IsFalse(result3);
         }
 
         [Test]
