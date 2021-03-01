@@ -28,9 +28,9 @@ namespace Teams.Web.Controllers
         {
             HealthViewModel healthViewModel = new HealthViewModel()
             {
-                Version = GetVersion(),
+                Version = _config.GetValue<string>("version"),
                 IsDbConnected = await CheckDbConnection(),
-                DataServerTime = GetServerDataTime()
+                DataServerTime = DateTime.Now
             };
             return View(healthViewModel);
         }
@@ -46,16 +46,6 @@ namespace Teams.Web.Controllers
                 _logger.LogError($"Error Db Connection: {e.Message}", e.StackTrace);
                 return false;
             }
-        }
-
-        private string GetVersion()
-        {
-            var result = _config.GetValue<string>("version"); // "Information"
-            return result.ToString();
-        }
-        private DateTime GetServerDataTime()
-        {
-            return DateTime.Now;
         }
     }
 }
