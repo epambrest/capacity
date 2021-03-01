@@ -6,6 +6,6 @@ namespace Teams.Web.ViewModels.Home
     {
         public string Version { get; set; }
         public bool IsDbConnected { get; set; }
-        public DateTime DataServerTime { get; set; }
+        public DateTime ServerDateTime { get; set; }
     }
 }

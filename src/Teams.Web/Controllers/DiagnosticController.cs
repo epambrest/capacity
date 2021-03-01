@@ -30,7 +30,7 @@ namespace Teams.Web.Controllers
             {
                 Version = _config.GetValue<string>("version"),
                 IsDbConnected = await CheckDbConnection(),
-                DataServerTime = DateTime.Now
+                ServerDateTime = DateTime.Now
             };
             return View(healthViewModel);
         }
