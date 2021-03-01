@@ -96,5 +96,20 @@ namespace Teams.Business.Services
 
             return await _sprintRepository.UpdateAsync(sprint);
         }
+        
+        public async Task<double> GetAverageStoryPointAsync(Sprint sprint)
+        {
+            var sprints = await GetAllSprintsAsync(sprint.TeamId, new DisplayOptions());
+            sprints = sprints.Where(t => t.Status == PossibleStatuses.CompletedStatus);
+
+            if (sprints.Count() > 0)
+            {
+                var averageSp = Math.Round((double)sprints.SelectMany(t => t.Tasks).Where(t => t.Completed == true).Sum(t => t.StoryPoints) / sprints.Count(), 1);
+
+                return averageSp;
+            }
+
+            return 0;
+        }
     }
 }

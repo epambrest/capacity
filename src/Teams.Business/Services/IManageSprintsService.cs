@@ -14,5 +14,6 @@ namespace Teams.Business.Services
         Task<bool> RemoveAsync(int sprintId);
         Task<bool> EditSprintAsync(Sprint sprint);
         Task<Sprint> GetSprintAsync(int sprintId, bool includeTaskAndTeamMember);
+        Task<double> GetAverageStoryPointAsync(Sprint sprint);
     }
 }
