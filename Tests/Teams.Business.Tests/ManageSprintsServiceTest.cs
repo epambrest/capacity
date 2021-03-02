@@ -284,50 +284,40 @@ namespace Teams.Business.Tests
             Assert.IsFalse(result3);
         }
 
-        [Test]
-        public async Task EditSprintsAsync_ManageSpiritsServiceNameCheckReturns_False()
+        [TestCase("Spr  int")]
+        [TestCase("Sprint!")]
+        [TestCase("Sprint ")]
+        public async Task EditSprintsAsync_ManageSpiritsServiceNameCheckReturns_False(string SprintName)
         {
             //Arrange
-            var sprint1 = new Sprint { Id = 1, TeamId = 1, Name = "Spr  int", DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.ActiveStatus };
-            var sprint2 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint!", DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.ActiveStatus };
-            var sprint3 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint ", DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.ActiveStatus };
+            var sprint = new Sprint { Id = 1, TeamId = 1, Name = SprintName, DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.ActiveStatus };
 
             _sprintRepository.Setup(x => x.UpdateAsync(It.IsAny<Sprint>())).ReturnsAsync(true);
-            _sprintRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(sprint2);
+            _sprintRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(sprint);
 
             //Act
-            var result1 = await _manageSprintsService.EditSprintAsync(sprint1); 
-            var result2 = await _manageSprintsService.EditSprintAsync(sprint2); 
-            var result3 = await _manageSprintsService.EditSprintAsync(sprint3); 
-
+            var result = await _manageSprintsService.EditSprintAsync(sprint); 
 
             //Assert
-            Assert.IsFalse(result1);
-            Assert.IsFalse(result2);
-            Assert.IsFalse(result3);
+            Assert.IsFalse(result);
         }
 
-        [Test]
-        public async Task EditSprintsAsync_ManageSpiritsServiceNameCheckReturns_True()
+        [TestCase("Sprint")]
+        [TestCase("Sprint 1")]
+        [TestCase("Sprint-2_3")]
+        public async Task EditSprintsAsync_ManageSpiritsServiceNameCheckReturns_True(string SprintName)
         {
             //Arrange
-            var sprint1 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint", DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.ActiveStatus };
-            var sprint2 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint 1", DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.ActiveStatus };
-            var sprint3 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint-2_3", DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.ActiveStatus };
-
+            var sprint = new Sprint { Id = 1, TeamId = 1, Name = SprintName, DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.ActiveStatus };
+            
             _sprintRepository.Setup(x => x.UpdateAsync(It.IsAny<Sprint>())).ReturnsAsync(true);
-            _sprintRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(sprint2);
+            _sprintRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(sprint);
 
             //Act
-            var result1 = await _manageSprintsService.EditSprintAsync(sprint1);
-            var result2 = await _manageSprintsService.EditSprintAsync(sprint2);
-            var result3 = await _manageSprintsService.EditSprintAsync(sprint3);
-
+            var result = await _manageSprintsService.EditSprintAsync(sprint);
 
             //Assert
-            Assert.IsTrue(result1);
-            Assert.IsTrue(result2);
-            Assert.IsTrue(result3);
+            Assert.IsTrue(result);
         }
     }
 }

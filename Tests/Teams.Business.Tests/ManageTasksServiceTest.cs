@@ -180,56 +180,42 @@ namespace Teams.Business.Tests
             Assert.IsFalse(result3);
         }
 
-        [Test]
-        public async System.Threading.Tasks.Task EditTaskAsync_ManageSpiritsServiceNameCheckReturns_true()
+        [TestCase("Task")]
+        [TestCase("Task 1")]
+        [TestCase("Task_1")]
+        [TestCase("Task-1.")]
+        public async System.Threading.Tasks.Task EditTaskAsync_ManageSpiritsServiceNameCheckReturns_true(string TaskName)
         {
             //Arrange
-            var task1 = new Task { Id = 1, TeamId = 1, Name = "Task", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
-            var task2 = new Task { Id = 1, TeamId = 1, Name = "Task 1", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
-            var task3 = new Task { Id = 1, TeamId = 1, Name = "Task_1", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
-            var task4 = new Task { Id = 1, TeamId = 1, Name = "Task-1.", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+            var task = new Task { Id = 1, TeamId = 1, Name = TaskName, MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
 
             _tasksRepository.Setup(x => x.UpdateAsync(It.IsAny<Task>())).ReturnsAsync(true);
-            _tasksRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(task1);
+            _tasksRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(task);
 
             //Act
-            var result1 = await _manageTasksService.EditTaskAsync(task1); 
-            var result2 = await _manageTasksService.EditTaskAsync(task2); 
-            var result3 = await _manageTasksService.EditTaskAsync(task3);
-            var result4 = await _manageTasksService.EditTaskAsync(task4);
-
+            var result= await _manageTasksService.EditTaskAsync(task); 
 
             //Assert
-            Assert.IsTrue(result1);
-            Assert.IsTrue(result2);
-            Assert.IsTrue(result3);
-            Assert.IsTrue(result4);
+            Assert.IsTrue(result);
         }
 
-        [Test]
-        public async System.Threading.Tasks.Task EditTaskAsync_ManageSpiritsServiceNameCheckReturns_false()
+        [TestCase("Ta  sk")]
+        [TestCase("Task 1 ")]
+        [TestCase("Task@1")]
+        [TestCase("Task!1")]
+        public async System.Threading.Tasks.Task EditTaskAsync_ManageSpiritsServiceNameCheckReturns_false(string TaskName)
         {
             //Arrange
-            var task1 = new Task { Id = 1, TeamId = 1, Name = "Ta  sk", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
-            var task2 = new Task { Id = 1, TeamId = 1, Name = "Task 1 ", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
-            var task3 = new Task { Id = 1, TeamId = 1, Name = "Task@1", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
-            var task4 = new Task { Id = 1, TeamId = 1, Name = "Task!1", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+            var task = new Task { Id = 1, TeamId = 1, Name = TaskName, MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
 
             _tasksRepository.Setup(x => x.UpdateAsync(It.IsAny<Task>())).ReturnsAsync(true);
-            _tasksRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(task2);
+            _tasksRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(task);
 
             //Act
-            var result1 = await _manageTasksService.EditTaskAsync(task1);
-            var result2 = await _manageTasksService.EditTaskAsync(task2);
-            var result3 = await _manageTasksService.EditTaskAsync(task3);
-            var result4 = await _manageTasksService.EditTaskAsync(task4);
-
+            var result = await _manageTasksService.EditTaskAsync(task);
 
             //Assert
-            Assert.IsFalse(result1);
-            Assert.IsFalse(result2);
-            Assert.IsFalse(result3);
-            Assert.IsFalse(result4);
+            Assert.IsFalse(result);
         }
 
         [Test]
