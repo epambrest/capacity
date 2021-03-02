@@ -43,6 +43,5 @@ jobs:
           destination_branch: "master"
           pr_title: "Set release version 1.0.${{ github.run_number }}"
           pr_body: "*An automated PR*"
-          pr_reviewer: "halvita,desenzo,sub13,aparkhots,alehkahnovich,Y-floryanovich,SherbaKirill" 
-          pr_assignee: "SergeyMokin"
+          pr_reviewer: "SergeyMokin" 
           github_token: ${{ secrets.SECRET_TOKEN_UPDATE_VERSION }}
