@@ -138,6 +138,9 @@
   <data name="NotActive" xml:space="preserve">
     <value>Не активный</value>
   </data>
+  <data name="PressToSelect" xml:space="preserve">
+    <value>Нажмите здесь, чтобы выбрать</value>
+  </data>
   <data name="SelectTasks" xml:space="preserve">
     <value>Выберите задания</value>
   </data>
