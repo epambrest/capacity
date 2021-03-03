@@ -206,6 +206,9 @@
   <data name="RemoveMember" xml:space="preserve">
     <value>Удалить участника</value>
   </data>
+  <data name="ReturnTeams" xml:space="preserve">
+    <value>Вернуться к команде</value>
+  </data>
   <data name="ReturnToSprint" xml:space="preserve">
     <value>Вернуться к спринтам</value>
   </data>
