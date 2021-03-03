@@ -218,4 +218,16 @@
   <data name="СreatedSprintExist" xml:space="preserve">
     <value>Сreated Sprint already exist. You can create only 1 sprint with such type</value>
   </data>
+  <data name="CompleteSprint" xml:space="preserve">
+    <value>Complete</value>
+  </data>
+  <data name="StartSprint" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="AcceptCompletedStatus" xml:space="preserve">
+    <value>Do you really want to set completed status? Sprint's name: </value>
+  </data>
+  <data name="AcceptSetActiveStatus" xml:space="preserve">
+    <value>Do you really want to set active status? Sprint's name: </value>
+  </data>
 </root>

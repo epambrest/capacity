@@ -28,6 +28,7 @@
         @Html.Hidden("TeamId", @Model.TeamId)
         @Html.Hidden("SprintId", @Model.SprintId)
         @Html.Hidden("TeamName", @Model.TeamName)
+        @Html.Hidden("Status", @Model.Status)
         <div>
             <label for="name">@Localizer["Name"] :</label>
             <input id="name" name="SprintName" class="form-control" value="@Model.SprintName" />
@@ -46,51 +47,9 @@
             <span asp-validation-for="SprintStorePointInHours"></span>
         </div>
 
-        <div>
-            <div class="btn-group btn-group-toggle" style="margin-top:15px; margin-bottom:15px">
-                @if (Model.Status == PossibleStatuses.CreatedStatus)
-                {
-                    <label id="statusLabel" class="btn btn-outline-success ">
-                        <input type="radio" name="status" id="option1" autocomplete="off" onclick="ActiveStatusButton(event)" value=@Model.Status>
-                        @Localizer["Active"]
-                    </label>
-                }
-                else if (Model.Status == PossibleStatuses.ActiveStatus)
-                {
-                    <label id="statusLabel" class="btn btn-outline-warning " >
-                        <input type="radio" class="btn btn-outline-warning " name="status" id="option1" onclick="ActiveStatusButton(event)" value=@Model.Status>
-                        @Localizer["Сompleted"]
-                    </label>
-                }
-            </div>
-        </div>
         <div style="display: table">
             <input id="sub" type="submit" class="btn btn-success" value="@Localizer["EditSprint"]" />
             <button style="margin-left:7px" type='button' class="btn btn-danger" onclick="location.href = '@Url.Action("AllSprints", "ManageSprints", new { teamId = Model.TeamId })'">@Localizer["Close"]</button>
         </div>
-     }
-</div>
-
-<script>
-    var oldStatusValue;
-    function ActiveStatusButton(event) {
-        let statusLabel = document.querySelector('#statusLabel');
-        let statusLabelClassName = statusLabel.className;
-        if (statusLabelClassName.indexOf('active focus') == -1) {
-            oldStatusValue = event.currentTarget.value;
-            statusLabelClassName += "active focus";
-            if (event.currentTarget.value == '0') {
-                event.currentTarget.setAttribute("value", '1');
-            }
-            else if (event.currentTarget.value == '1') {
-                event.currentTarget.setAttribute("value", '2');
-            }
-        }
-        else
-        {
-            statusLabelClassName = statusLabelClassName.replace("active focus", "");
-            event.currentTarget.setAttribute("value", oldStatusValue);
-        }
-        statusLabel.setAttribute('class', statusLabelClassName);
     }
-</script>
+</div>
