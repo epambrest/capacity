@@ -40,14 +40,23 @@
                     else if (item.Status == PossibleStatuses.ActiveStatus)
                         IsActiveSprintWas = true;
                 }
-                @if (Model.IsOwner && IsCreatedSprintWas == false)
+                @if (Model.IsOwner)
                 {
                     <td style="border-top: hidden;" align="right">
                         <form>
                             <input type="hidden" name="teamId" value="@Model.Team.Id" />
-                            <button type='submit' class='btn btn-outline-primary border-0' asp-action="AddSprint">
-                                <i class="fas fa-plus"></i>
-                            </button>
+                            @if (IsCreatedSprintWas == false)
+                            {
+                                <button type='submit' class='btn btn-outline-primary border-0' asp-action="AddSprint">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            }
+                            else
+                            {
+                                <button type='submit' class='btn btn-outline-secondary border-0' data-toggle="tooltip" data-placement="top" title="@Localizer["YouCantAddSprint"]" disabled>
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            }
                         </form>
                     </td>
                 }
@@ -89,13 +98,22 @@
                                 <i class='far fa-trash-alt'></i>
                             </button>
                         </td>
-                        @if (item.Status == PossibleStatuses.CreatedStatus && IsActiveSprintWas == false)
+                        @if (item.Status == PossibleStatuses.CreatedStatus)
                         {
                             <td align="center" data-type="@item.Id">
-                                <button id="setActiveteStatus" type='button' class='btn btn-outline-success border-0' data-toggle="modal" data-target="#myModal"
-                                        data-content="@item.Name" data-whatever="@item.Id">
-                                    @Localizer["StartSprint"]
-                                </button>
+                                @if (IsActiveSprintWas == false)
+                                {
+                                    <button id="setActiveteStatus" type='button' class='btn btn-outline-success border-0' data-toggle="modal" data-target="#myModal"
+                                            data-content="@item.Name" data-whatever="@item.Id">
+                                        @Localizer["StartSprint"]
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-placement="right" title="@Localizer["YouCantSetActive"]" disabled>
+                                        @Localizer["StartSprint"]
+                                    </button>
+                                }
                             </td>
                         }
                         else if (item.Status == PossibleStatuses.ActiveStatus)

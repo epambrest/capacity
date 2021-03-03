@@ -230,6 +230,12 @@
   <data name="WorkingDays" xml:space="preserve">
     <value>Кол-во рабочих дней</value>
   </data>
+  <data name="YouCantAddSprint" xml:space="preserve">
+    <value>Вы не можете добавить спринт. Созданный спринт уже существует.</value>
+  </data>
+  <data name="YouCantSetActive" xml:space="preserve">
+    <value>Вы не можете сделать спринт активным. Активный спринт уже существует.</value>
+  </data>
   <data name="СreatedSprintExist" xml:space="preserve">
     <value>В комманде может быть только один спринт с типом "Создан"</value>
   </data>

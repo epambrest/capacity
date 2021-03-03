@@ -67,8 +67,7 @@ namespace Teams.Web.Controllers
             {
                 sprintViewModel.IsOwner = false;
             }
-
-            sprints.ForEach(t => sprintViewModel.Sprints.Add(new SprintViewModel()
+            sprints.OrderBy(s => s.Status).ToList().ForEach(t => sprintViewModel.Sprints.Add(new SprintViewModel()
             {
                 Id = t.Id,
                 DaysInSprint = t.DaysInSprint,
@@ -78,6 +77,13 @@ namespace Teams.Web.Controllers
                 TeamId = t.TeamId
             }
             ));
+
+            if (sprintViewModel.Sprints[1].Status == PossibleStatuses.ActiveStatus)
+            {
+                var swapElem = sprintViewModel.Sprints[0];
+                sprintViewModel.Sprints[0] = sprintViewModel.Sprints[1];
+                sprintViewModel.Sprints[1] = swapElem;
+            }
 
             var team = await _manageSprintsService.GetTeam(teamId);
 
