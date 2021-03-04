@@ -123,7 +123,7 @@ namespace Teams.Business.Tests
         public async Task AddSprintsAsync_ManageSpiritsServiceReturns_False()
         {
             //Arrange
-            var sprint1 = new Sprint { Id = 1, TeamId = 1, Name = "Spr int1", DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.CompletedStatus };
+            var sprint1 = new Sprint { Id = 1, TeamId = 1, Name = "Spr  int1", DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.CompletedStatus };
             var sprint2 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint2", DaysInSprint = -14, StoryPointInHours = 4, Status = PossibleStatuses.CompletedStatus };
             var sprint3 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint3", DaysInSprint = 14, StoryPointInHours = -4, Status = PossibleStatuses.ActiveStatus };
 
@@ -140,6 +140,50 @@ namespace Teams.Business.Tests
             Assert.IsFalse(result3);
         }
 
+        [Test]
+        public async Task AddSprintsAsync_ManageSpiritsServiceNameCheckReturns_False()
+        {
+            //Arrange
+            var sprint1 = new Sprint { Id = 1, TeamId = 1, Name = "Spr  int1", DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.CompletedStatus };
+            var sprint2 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint#2", DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.CompletedStatus };
+            var sprint3 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint3 ", DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.ActiveStatus };
+
+            _sprintRepository.Setup(x => x.InsertAsync(It.IsAny<Sprint>())).ReturnsAsync(true);
+
+            //Act
+            var result1 = await _manageSprintsService.AddSprintAsync(sprint1); 
+            var result2 = await _manageSprintsService.AddSprintAsync(sprint2); 
+            var result3 = await _manageSprintsService.AddSprintAsync(sprint3); 
+
+            //Assert
+            Assert.IsFalse(result1);
+            Assert.IsFalse(result2);
+            Assert.IsFalse(result3);
+        }
+
+        [Test]
+        public async Task AddSprintsAsync_ManageSpiritsServiceNameCheckReturns_True()
+        {
+            //Arrange
+            var sprint1 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint1", DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.CompletedStatus };
+            var sprint2 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint 2", DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.CompletedStatus };
+            var sprint3 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint-3", DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.ActiveStatus };
+            var sprint4 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint_4", DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.ActiveStatus };
+
+            _sprintRepository.Setup(x => x.InsertAsync(It.IsAny<Sprint>())).ReturnsAsync(true);
+
+            //Act
+            var result1 = await _manageSprintsService.AddSprintAsync(sprint1);
+            var result2 = await _manageSprintsService.AddSprintAsync(sprint2);
+            var result3 = await _manageSprintsService.AddSprintAsync(sprint3);
+            var result4 = await _manageSprintsService.AddSprintAsync(sprint4);
+
+            //Assert
+            Assert.IsTrue(result1);
+            Assert.IsTrue(result2);
+            Assert.IsTrue(result3);
+            Assert.IsTrue(result4);
+        }
 
         [Test]
         public async Task RemoveAsync_ManageSprintsServiceReturnsTrue_ReturnsTrue()
@@ -216,11 +260,12 @@ namespace Teams.Business.Tests
             Assert.IsFalse(result1);
             Assert.IsFalse(result2);
         }
-
+        
+        [Test]
         public async Task EditSprintsAsync_ManageSpiritsServiceReturns_False()
         {
             //Arrange
-            var sprint1 = new Sprint { Id = 1, TeamId = 1, Name = "Spr int", DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.ActiveStatus };
+            var sprint1 = new Sprint { Id = 1, TeamId = 1, Name = "Spr  int", DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.ActiveStatus };
             var sprint2 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint", DaysInSprint = -14, StoryPointInHours = 4, Status = PossibleStatuses.ActiveStatus };
             var sprint3 = new Sprint { Id = 1, TeamId = 1, Name = "Sprint", DaysInSprint = 14, StoryPointInHours = -4, Status = PossibleStatuses.ActiveStatus };
 
@@ -237,6 +282,42 @@ namespace Teams.Business.Tests
             Assert.IsFalse(result1);
             Assert.IsFalse(result2);
             Assert.IsFalse(result3);
+        }
+
+        [TestCase("Spr  int")]
+        [TestCase("Sprint!")]
+        [TestCase("Sprint ")]
+        public async Task EditSprintsAsync_ManageSpiritsServiceNameCheckReturns_False(string SprintName)
+        {
+            //Arrange
+            var sprint = new Sprint { Id = 1, TeamId = 1, Name = SprintName, DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.ActiveStatus };
+
+            _sprintRepository.Setup(x => x.UpdateAsync(It.IsAny<Sprint>())).ReturnsAsync(true);
+            _sprintRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(sprint);
+
+            //Act
+            var result = await _manageSprintsService.EditSprintAsync(sprint); 
+
+            //Assert
+            Assert.IsFalse(result);
+        }
+
+        [TestCase("Sprint")]
+        [TestCase("Sprint 1")]
+        [TestCase("Sprint-2_3")]
+        public async Task EditSprintsAsync_ManageSpiritsServiceNameCheckReturns_True(string SprintName)
+        {
+            //Arrange
+            var sprint = new Sprint { Id = 1, TeamId = 1, Name = SprintName, DaysInSprint = 14, StoryPointInHours = 4, Status = PossibleStatuses.ActiveStatus };
+            
+            _sprintRepository.Setup(x => x.UpdateAsync(It.IsAny<Sprint>())).ReturnsAsync(true);
+            _sprintRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(sprint);
+
+            //Act
+            var result = await _manageSprintsService.EditSprintAsync(sprint);
+
+            //Assert
+            Assert.IsTrue(result);
         }
     }
 }
