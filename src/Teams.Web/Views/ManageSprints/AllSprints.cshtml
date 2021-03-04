@@ -103,14 +103,14 @@
                             <td align="center" data-type="@item.Id">
                                 @if (IsActiveSprintWas == false)
                                 {
-                                    <button id="setActiveteStatus" type='button' class='btn btn-outline-success' data-toggle="modal" data-target="#myModal"
+                                    <button id="setActiveteStatus" type='button' class='btn btn-outline-success border-0' data-toggle="modal" data-target="#myModal"
                                             data-content="@item.Name" data-whatever="@item.Id">
                                         @Localizer["StartSprint"]
                                     </button>
                                 }
                                 else
                                 {
-                                    <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-placement="right" title="@Localizer["YouCantSetActive"]" disabled>
+                                    <button type="button" class="btn btn-outline-secondary border-0" data-toggle="tooltip" data-placement="right" title="@Localizer["YouCantSetActive"]" disabled>
                                         @Localizer["StartSprint"]
                                     </button>
                                 }
@@ -119,7 +119,7 @@
                         else if (item.Status == PossibleStatuses.ActiveStatus)
                         {
                             <td align="center" data-type="@item.Id">
-                                <button id="setCompleteStatus" type='button' class='btn btn-outline-warning' data-toggle="modal" data-target="#myModal"
+                                <button id="setCompleteStatus" type='button' class='btn btn-outline-warning border-0' data-toggle="modal" data-target="#myModal"
                                         data-content="@item.Name" data-whatever="@item.Id">
                                     @Localizer["CompleteSprint"]
                                 </button>
