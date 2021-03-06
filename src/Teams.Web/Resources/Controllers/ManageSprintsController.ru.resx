@@ -121,6 +121,9 @@
     <value>Уже есть один активный спринт</value>
   </data>
   <data name="CantChangeStatus" xml:space="preserve">
-    <value>Status can't be changed</value>
+    <value>Статус не может быть изменён!</value>
+  </data>
+  <data name="ErrorWhileEdit" xml:space="preserve">
+    <value>Ошибка при изменении спринта</value>
   </data>
 </root>
