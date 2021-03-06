@@ -157,23 +157,13 @@ namespace Teams.Web.Controllers
             {
                 DaysInSprint = sprint.DaysInSprint,
                 Id = sprint.Id,
-                Tasks = new List<TaskViewModel>(),
+                Tasks = CreateTaskViewModels(sprint.Tasks),
                 Status = sprint.Status,
                 Name = sprint.Name,
                 StoryPointInHours = sprint.StoryPointInHours,
                 TeamId = sprint.TeamId
             };
 
-            sprint.Tasks.ToList().ForEach(t => sprintViewModel.Tasks.Add(new TaskViewModel()
-            {
-                TeamMember = t.MemberId != null ? new TeamMemberViewModel() { Member = t.TeamMember.Member, MemberId = t.MemberId.ToString() } : null,
-                Name = t.Name,
-                StoryPoints = t.StoryPoints,
-                Id = t.Id,
-                Link = t.Link,
-                Completed = t.Completed
-            }
-            ));
             sprintViewModel.TotalStoryPoint = sprint.Tasks.Count > 0 ? sprint.Tasks.Sum(t => t.StoryPoints) : 0;
             sprintViewModel.AverageStoryPoint = await _manageSprintsService.GetAverageStoryPointAsync(sprint);
 
@@ -313,7 +303,7 @@ namespace Teams.Web.Controllers
         private async Task<List<SelectListItem>> SelectTasks(int teamId)
         {
             List<SelectListItem> items = new List<SelectListItem>();
-            var tasks = (await _manageTasksService.GetAllTasksForTeamAsync(teamId, new DisplayOptions())).Where(task => task.SprintId == null);
+            var tasks = (await _manageTasksService.GetAllTasksForTeamAsync(teamId, new DisplayOptions())).Where(task => task.SprintId == null && task.Completed == false);
             foreach (var task in tasks)
             {
                 items.Add(new SelectListItem(task.Name, task.Id.ToString()));
@@ -365,15 +355,10 @@ namespace Teams.Web.Controllers
 
                 var result = await AddSprintAsync(newSprint);
 
-                if (result)
+
+                if (result && sprintViewModel.SelectTasksIds != null &&
+                    await UpdateTasks(sprintViewModel.SelectTasksIds, newSprint.Id))
                 {
-                    if (sprintViewModel.SelectTasksIds != null)
-                    {
-                        if (!await UpdateTasks(sprintViewModel.SelectTasksIds, newSprint.Id))
-                        {
-                            return RedirectToAction("NotOwnerError", new { teamId = sprintViewModel.TeamId });
-                        }
-                    }
                     return RedirectToAction("AllSprints", new { teamId = sprintViewModel.TeamId });
                 }
                 else
@@ -411,6 +396,7 @@ namespace Teams.Web.Controllers
             ViewData["Sprint"] = _localizer["SprintNull"];
             return View();
         }
+
         [Authorize, NonAction]
         private async Task<bool> AddSprintAsync(Sprint sprint)
         {
@@ -435,7 +421,8 @@ namespace Teams.Web.Controllers
         private async Task<bool> UpdateTasks(int[] selectedTasksId, int sprintId)
         {
             var currentSprint = await _manageSprintsService.GetSprintAsync(sprintId, true);
-            if (await _accessCheckService.IsOwnerAsync(currentSprint.TeamId))
+            var isOwner = await _accessCheckService.IsOwnerAsync(currentSprint.TeamId);
+            if (isOwner)
             {
                 foreach (var selectedTaskId in selectedTasksId)
                 {
@@ -450,7 +437,7 @@ namespace Teams.Web.Controllers
                         SprintId = sprintId,
                         MemberId = currentTask.MemberId
                     };
-                        await _manageTasksService.EditTaskAsync(task);
+                    await _manageTasksService.EditTaskAsync(task);
                 }
                 return true;
             }
@@ -476,6 +463,23 @@ namespace Teams.Web.Controllers
         public IActionResult ErrorRemove()
         {
             return View();
+        }
+
+        [Authorize, NonAction]
+        private List<TaskViewModel> CreateTaskViewModels(ICollection<Data.Models.Task> tasks)
+        {
+            var tasksList = new List<TaskViewModel>();
+            tasks.ToList().ForEach(t => tasksList.Add(new TaskViewModel()
+            {
+                TeamMember = t.MemberId != null ? new TeamMemberViewModel() { Member = t.TeamMember.Member, MemberId = t.MemberId.ToString() } : null,
+                Name = t.Name,
+                StoryPoints = t.StoryPoints,
+                Id = t.Id,
+                Link = t.Link,
+                Completed = t.Completed
+            }
+            ));
+            return tasksList;
         }
     }
 }
