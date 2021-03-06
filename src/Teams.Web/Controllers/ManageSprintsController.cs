@@ -286,7 +286,7 @@ namespace Teams.Web.Controllers
             var sprintViewModel = new SprintViewModel() { Id = teamId, Name = team.TeamName, Tasks = new List<TaskViewModel>() };
             ViewBag.ErrorMessage = errorMessage;
 
-            var tasks = (await _manageTasksService.GetAllTasksForTeamAsync(teamId, new DisplayOptions())).Where(task => task.SprintId == null);
+            var tasks = (await _manageTasksService.GetAllTasksForTeamAsync(teamId, new DisplayOptions())).Where(task => task.SprintId == null && task.Completed == false);
             tasks.ToList().ForEach(t => sprintViewModel.Tasks.Add(new TaskViewModel()
             {
                 Name = t.Name,
