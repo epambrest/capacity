@@ -126,7 +126,6 @@
     grid.onclick = function (e) {
         if (e.target.tagName != 'TD') return;
         if (e.target.classList.contains("colorBlock")) return;
-        console.log(e.target.className);
         let th = e.target;
         var sprintId = th.dataset.type;
         $.ajax({
