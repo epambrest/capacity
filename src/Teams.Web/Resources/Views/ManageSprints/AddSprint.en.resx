@@ -141,6 +141,12 @@
   <data name="NotActive" xml:space="preserve">
     <value>Not Active</value>
   </data>
+  <data name="PressToSelect" xml:space="preserve">
+    <value>Click here to select</value>
+  </data>
+  <data name="SelectTasks" xml:space="preserve">
+    <value>Select tasks</value>
+  </data>
   <data name="StoryPointInHours" xml:space="preserve">
     <value>Store Point in Hours</value>
   </data>
