@@ -117,52 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Cancel" xml:space="preserve">
-    <value>Отмена</value>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Текущая версия приложения</value>
   </data>
-  <data name="Completed" xml:space="preserve">
-    <value>Завершённый</value>
+  <data name="DataServerTime" xml:space="preserve">
+    <value>Текущее время сервера</value>
   </data>
-  <data name="Created" xml:space="preserve">
-    <value>Созданный</value>
+  <data name="FalseDbCondition" xml:space="preserve">
+    <value>Не подключена</value>
   </data>
-  <data name="Complete" xml:space="preserve">
-    <value>Завершить</value>
+  <data name="Health" xml:space="preserve">
+    <value>Состояние сервера</value>
   </data>
-  <data name="DaysinSprint" xml:space="preserve">
-    <value>Количество дней</value>
+  <data name="StatusDb" xml:space="preserve">
+    <value>Статус подключения к БД</value>
   </data>
-  <data name="from" xml:space="preserve">
-    <value> из </value>
-  </data>
-  <data name="Link" xml:space="preserve">
-    <value>Ссылка</value>
-  </data>
-  <data name="NameofSprint" xml:space="preserve">
-    <value>Название спринта</value>
-  </data>
-  <data name="NameofTask" xml:space="preserve">
-    <value>Название таска</value>
-  </data>
-  <data name="Remove" xml:space="preserve">
-    <value>Вы уверены, что хотите удалить </value>
-  </data>
-  <data name="ResultCompletedSprint" xml:space="preserve">
-    <value>Результат</value>
-  </data>
-  <data name="Status" xml:space="preserve">
-    <value>Статус</value>
-  </data>
-  <data name="StoryPoint" xml:space="preserve">
-    <value>Количество СП</value>
-  </data>
-  <data name="StoryPointinHours" xml:space="preserve">
-    <value>Количество СП в часах</value>
-  </data>
-  <data name="User" xml:space="preserve">
-    <value>Пользователь</value>
-  </data>
-  <data name="Sp" xml:space="preserve">
-    <value>СП</value>
+  <data name="TrueDbCondition" xml:space="preserve">
+    <value>Подключена</value>
   </data>
 </root>

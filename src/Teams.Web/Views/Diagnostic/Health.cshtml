@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model Teams.Web.ViewModels.Home.HealthViewModel
+@{
+    ViewData["Title"] = @Localizer["Health"];
+}
+
+<div class="text-center">
+    <h2 class="display-4"> @Localizer["Health"]</h2>
+</div>
+
+<table class="table" align="center" style="width: 40%; border: 2px solid black">
+    <tr align="center">
+        <td align="left" style="font-weight: bold">@Localizer["CurrentVersion"]:</td>
+        @if (Model.Version.Length >= 25)
+        {
+            <td align="left" class="text-danger">@Model.Version.Substring(0, 25)...</td>
+        }
+        else
+        {
+            <td align="left" class="text-primary">@Model.Version</td>
+        }
+    </tr>
+    <tr>
+        <td align="left" style="font-weight: bold">@Localizer["StatusDb"]:</td>
+        @if (Model.IsDbConnected)
+        {
+            <td align="left" class="text-success">@Localizer["TrueDbCondition"]</td>
+        }
+        else
+        {
+            <td align="left" class="text-danger">@Localizer["FalseDbCondition"]</td>
+        }
+    </tr>
+    <tr align="center">
+        <td align="left" style="font-weight: bold">@Localizer["DataServerTime"]:</td>
+        <td align="left">@Model.ServerDateTime.ToString()</td>
+    </tr>
+</table>

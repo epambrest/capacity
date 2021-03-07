@@ -6,6 +6,8 @@
 }
 <script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
 
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 <div align="center">
     <h1 size="4" align="left">@ViewBag.TeamName | @Localizer["AddSprint"]</h1>
 </div>
@@ -20,18 +22,24 @@
             <input id="name" name="Name" class="form-control" />
             <span asp-validation-for="Name"></span>
         </div>
-
         <div>
             <label for="days">@Localizer["DaysInSprint"] :</label>
             <input id="days" name="DaysInSprint" class="form-control" />
             <span asp-validation-for="DaysInSprint"></span>
         </div>
-
         <div>
             <label for="points">@Localizer["StoryPointInHours"]</label>
             <input id="points" name="StoryPointInHours" class="form-control" />
             <span asp-validation-for="StoryPointInHours"></span>
         </div>
+
+        if (Model.SelectTasks.Count != 0)
+        {
+            <label id="selecttasks" task="@Localizer["PressToSelect"]" for="days">@Localizer["SelectTasks"] :</label>
+            <div class="form-group">
+                @Html.ListBoxFor(m => m.SelectTasksIds, Model.SelectTasks, new { @class = "mul-select-tasks w-50 colorful-select dropdown-primary md-form", multiple = "true" })
+            </div>
+        }
 
         <div style="display: table">
             <input id="sub" type="submit" class="btn btn-success" value="@Localizer["AddSprint"]" />
@@ -39,3 +47,17 @@
         </div>
     }
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var label = $('#selecttasks');
+        var selecttask = label.attr('task');
+        $(".mul-select-tasks").select2({
+            tags: true,
+            placeholder: selecttask,
+            tokenSeparators: ['/', ',', ';', " "]
+        });
+    })
+</script>

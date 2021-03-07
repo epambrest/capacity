@@ -51,7 +51,7 @@ namespace Teams.Business.Services
             else nameCheck = _taskRepository.GetAll()
                 .Where(x => x.TeamId == task.TeamId)
                 .Any(x => x.Name == task.Name);
-            if (nameCheck || task.StoryPoints <= 0 || !Regex.IsMatch(task.Link, (@"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$")) || !Regex.IsMatch(task.Name, ("^[a-zA-Z0-9-_.]+$")))
+            if (nameCheck || task.StoryPoints <= 0 || !Regex.IsMatch(task.Link, (@"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$")) || !Regex.IsMatch(task.Name, ("^[a-zA-Z0-9-_.]+( [a-zA-Z0-9-_.]+)*$")))
             {
                 return false;
             }
@@ -78,7 +78,7 @@ namespace Teams.Business.Services
                 .AnyAsync(t => t.Name == task.Name || t.Link == task.Link)
                 || task.StoryPoints <= 0
                 || !Regex.IsMatch(task.Link, (@"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"))
-                || !Regex.IsMatch(task.Name, ("^[a-zA-Z0-9-_.]+$"))
+                || !Regex.IsMatch(task.Name, ("^[a-zA-Z0-9-_.]+( [a-zA-Z0-9-_.]+)*$"))
                 )
             {
                 return false;

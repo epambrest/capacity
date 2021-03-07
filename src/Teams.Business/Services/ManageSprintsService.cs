@@ -62,7 +62,7 @@ namespace Teams.Business.Services
             if (_sprintRepository.GetAll()
                 .Where(x=>x.TeamId == sprint.TeamId)
                 .Any(x=>x.Name == sprint.Name) 
-                || sprint.DaysInSprint<=0 || sprint.StoryPointInHours <= 0 || !Regex.IsMatch(sprint.Name, ("^[a-zA-Z0-9-_.]+$")))
+                || sprint.DaysInSprint<=0 || sprint.StoryPointInHours <= 0 || !Regex.IsMatch(sprint.Name, ("^[a-zA-Z0-9-_.]+( [a-zA-Z0-9-_.]+)*$")))
             {
                 return false;
             }
@@ -89,12 +89,27 @@ namespace Teams.Business.Services
 
             if (oldSprint == null || 
                 sprint.DaysInSprint <= 0 || sprint.StoryPointInHours <= 0 || 
-                !Regex.IsMatch(sprint.Name, ("^[a-zA-Z0-9-_.]+$")))
+                !Regex.IsMatch(sprint.Name, ("^[a-zA-Z0-9-_.]+( [a-zA-Z0-9-_.]+)*$")))
             {
                 return false;
             }
 
             return await _sprintRepository.UpdateAsync(sprint);
+        }
+        
+        public async Task<double> GetAverageStoryPointAsync(Sprint sprint)
+        {
+            var sprints = await GetAllSprintsAsync(sprint.TeamId, new DisplayOptions());
+            sprints = sprints.Where(t => t.Status == PossibleStatuses.CompletedStatus);
+
+            if (sprints.Count() > 0)
+            {
+                var averageSp = Math.Round((double)sprints.SelectMany(t => t.Tasks).Where(t => t.Completed == true).Sum(t => t.StoryPoints) / sprints.Count(), 1);
+
+                return averageSp;
+            }
+
+            return 0;
         }
     }
 }
