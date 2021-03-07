@@ -6,6 +6,8 @@
 }
 <script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
 
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 <div align="center">
     <h1 size="4" align="left">@ViewBag.TeamName | @Localizer["AddSprint"]</h1>
 </div>
@@ -13,38 +15,59 @@
 <div>
     @using (Html.BeginForm("AddSprint", "ManageSprints", FormMethod.Post))
     {
-        <div><p align="center" style="color:red">@ViewBag.ErrorMessage</p></div>
-        @Html.Hidden("teamId", @ViewBag.TeamId as string)
-        <div>
-            <label for="name">@Localizer["Name"] :</label>
-            <input id="name" name="Name" class="form-control" />
-            <span asp-validation-for="Name"></span>
-        </div>
+    <div><p align="center" style="color:red">@ViewBag.ErrorMessage</p></div>
+    @Html.Hidden("teamId", @ViewBag.TeamId as string)
+    <div>
+        <label for="name">@Localizer["Name"] :</label>
+        <input id="name" name="Name" class="form-control" />
+        <span asp-validation-for="Name"></span>
+    </div>
+    <div>
+        <label for="days">@Localizer["DaysInSprint"] :</label>
+        <input id="days" name="DaysInSprint" class="form-control" />
+        <span asp-validation-for="DaysInSprint"></span>
+    </div>
+    <div>
+        <label for="points">@Localizer["StoryPointInHours"]</label>
+        <input id="points" name="StoryPointInHours" class="form-control" />
+        <span asp-validation-for="StoryPointInHours"></span>
+    </div>
+    <div>
+        @Html.RadioButton("status", PossibleStatuses.CompletedStatus)
+        <span style="color:orange">@Localizer["Сompleted"]</span> <br />
+        @Html.RadioButton("status", PossibleStatuses.ActiveStatus)
+        <span style="color:green">@Localizer["Active"]</span> <br />
+        @Html.RadioButton("status", PossibleStatuses.CreatedStatus, true)
+        <span style="color:blue">@Localizer["Created"]</span>
+    </div>
 
-        <div>
-            <label for="days">@Localizer["DaysInSprint"] :</label>
-            <input id="days" name="DaysInSprint" class="form-control" />
-            <span asp-validation-for="DaysInSprint"></span>
-        </div>
 
-        <div>
-            <label for="points">@Localizer["StoryPointInHours"]</label>
-            <input id="points" name="StoryPointInHours" class="form-control" />
-            <span asp-validation-for="StoryPointInHours"></span>
-        </div>
-
-        <div>
-            @Html.RadioButton("status", PossibleStatuses.CompletedStatus)
-            <span style="color:orange">@Localizer["Сompleted"]</span> <br />
-            @Html.RadioButton("status", PossibleStatuses.ActiveStatus)
-            <span style="color:green">@Localizer["Active"]</span> <br />
-            @Html.RadioButton("status", PossibleStatuses.CreatedStatus, true)
-            <span style="color:blue">@Localizer["Created"]</span>
-        </div>
-
-        <div style="display: table">
-            <input id="sub" type="submit" class="btn btn-success" value="@Localizer["AddSprint"]" />
-            <button style="margin-left:7px" type='button' class="btn btn-danger" onclick="location.href = '@Url.Action("AllSprints", "ManageSprints", new { teamId = Model.Id })'">@Localizer["Close"]</button>
+    if (Model.SelectTasks.Count != 0)
+        {
+         <label id="selecttasks" task="@Localizer["PressToSelect"]" for="days">@Localizer["SelectTasks"] :</label>
+         <div class="form-group">
+             @Html.ListBoxFor(m => m.SelectTasksIds, Model.SelectTasks, new { @class="mul-select-tasks w-50 colorful-select dropdown-primary md-form", multiple="true"})
         </div>
     }
+
+    <div style="display: table">
+        <input id="sub" type="submit" class="btn btn-success" value="@Localizer["AddSprint"]" />
+        <button style="masrgin-left:7px" type='button' class="btn btn-danger" onclick="location.href = '@Url.Action("AllSprints", "ManageSprints", new { teamId = Model.Id })'">@Localizer["Close"]</button>
+    </div>
+    }
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+        var label = $('#selecttasks');
+        var selecttask = label.attr('task');
+    $(".mul-select-tasks").select2({
+    tags: true,
+     placeholder: selecttask,
+    tokenSeparators: ['/',',',';'," "]
+    });
+    })
+</script>
