@@ -23,7 +23,7 @@ namespace Teams.Business.Services
 
         public async Task<bool> AddTeamAsync(string teamName)
         {
-            if (await _teamRepository.GetAll().AnyAsync(t => t.TeamName.ToUpper() == teamName.ToUpper()) || !Regex.IsMatch(teamName, ("^[a-zA-Z0-9-_.]+$")))
+            if (await _teamRepository.GetAll().AnyAsync(t => t.TeamName.ToUpper() == teamName.ToUpper()) || !Regex.IsMatch(teamName, ("^[a-zA-Z0-9-_.]+( [a-zA-Z0-9-_.]+)*$")))
             {
                 return false;
             }
@@ -40,7 +40,7 @@ namespace Teams.Business.Services
         {
             var team = await _teamRepository.GetByIdAsync(teamId);
 
-            if (team != null && team.TeamOwner == _currentUser.Current.Id() && !_teamRepository.GetAll().Any(x => x.TeamName.ToUpper() == teamName.ToUpper()) && Regex.IsMatch(teamName, ("^[a-zA-Z0-9-_.]+$")))
+            if (team != null && team.TeamOwner == _currentUser.Current.Id() && !_teamRepository.GetAll().Any(x => x.TeamName.ToUpper() == teamName.ToUpper()) && Regex.IsMatch(teamName, ("^[a-zA-Z0-9-_.]+( [a-zA-Z0-9-_.]+)*$")))
             {
                 return await _teamRepository.UpdateAsync(new Team { Id = teamId, TeamOwner = _currentUser.Current.Id(), TeamName = teamName });
             }
