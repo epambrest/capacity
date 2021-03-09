@@ -15,7 +15,7 @@
 </style>
 
 <div style="margin: 10px 0px 0px 30px" align="left">
-    <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to your teams", "GetMyTeams", "ManageTeams")</a></h>
+    <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink($" {Localizer["ReturnTeams"].Value}", "GetMyTeams", "ManageTeams")</a></h>
 </div>
 
 <h1 class="text-center font-weight-normal mt-5 mb-3">@Model.Team.TeamName</h1>
@@ -29,16 +29,36 @@
                 <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["DaysInSprint"]</td>
                 <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPointInHours"]</td>
                 <td align="left" style="border-top: hidden; font-weight: bold"></td>
+                @{  
+                    bool IsActiveSprintWas = false;
+                    bool IsCreatedSprintWas = false;
+                }
+                @foreach (var item in Model.Sprints)
+                {
+                    if (item.Status == PossibleStatuses.CreatedStatus)
+                        IsCreatedSprintWas = true;
+                    else if (item.Status == PossibleStatuses.ActiveStatus)
+                        IsActiveSprintWas = true;
+                }
                 @if (Model.IsOwner)
                 {
-                <td style="border-top: hidden;" align="right">
-                    <form>
-                        <input type="hidden" name="teamId" value="@Model.Team.Id"/>
-                        <button type='submit' class='btn btn-outline-primary border-0' asp-action="AddSprint">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </form>
-                </td>
+                    <td style="border-top: hidden;" align="right">
+                        <form>
+                            <input type="hidden" name="teamId" value="@Model.Team.Id" />
+                            @if (IsCreatedSprintWas == false)
+                            {
+                                <button type='submit' class='btn btn-outline-primary border-0' asp-action="AddSprint">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            }
+                            else
+                            {
+                                <button type='submit' class='btn btn-outline-secondary border-0' data-toggle="tooltip" data-placement="top" title="@Localizer["YouCantAddSprint"]" disabled>
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            }
+                        </form>
+                    </td>
                 }
             </tr>
         </thead>
@@ -46,40 +66,67 @@
         @foreach (var item in Model.Sprints)
         {
             <tbody>
-
-            <tr align="center">
-                @if (item.Status == PossibleStatuses.ActiveStatus)
-                {
-                    <td class="colorBlock" align="left" width="1%" bgcolor="green"></td>
-                }
-                else if (item.Status == PossibleStatuses.CompletedStatus)
-                {
-                    <td class="colorBlock" align="left" width="1%" bgcolor="yellow"></td>
-                }
-                else if (item.Status == PossibleStatuses.CreatedStatus)
-                {
-                    <td class="colorBlock" align="left" width="1%" bgcolor="blue"></td>
-                }
-                <td align="left" data-type="@item.Id">@Html.ActionLink(item.Name, "GetSprintById", new {sprintId = item.Id})</td>
-                <td align="left" data-type="@item.Id">@item.DaysInSprint</td>
-                <td align="left" data-type="@item.Id">@item.StoryPointInHours</td>
-                @if (Model.IsOwner)
-                {
-                    <td align="right" data-type="@item.Id">
-                        <form>
-                            <input type="hidden" name="sprintId" value="@item.Id" />
-                            <button type='submit' class='btn btn-outline-primary border-0' asp-action="EditSprint">
-                                <i class="fas fa-pen"></i>
+                <tr align="center">
+                    @if (item.Status == PossibleStatuses.ActiveStatus)
+                    {
+                        <td class="colorBlock" align="left" width="1%" bgcolor="green"></td>
+                    }
+                    else if (item.Status == PossibleStatuses.CompletedStatus)
+                    {
+                        <td class="colorBlock" align="left" width="1%" bgcolor="yellow"></td>
+                    }
+                    else if (item.Status == PossibleStatuses.CreatedStatus)
+                    {
+                        <td class="colorBlock" align="left" width="1%" bgcolor="blue"></td>
+                    }
+                    <td align="left" data-type="@item.Id">@Html.ActionLink(item.Name, "GetSprintById", new { sprintId = item.Id })</td>
+                    <td align="left" data-type="@item.Id">@item.DaysInSprint</td>
+                    <td align="left" data-type="@item.Id">@item.StoryPointInHours</td>
+                    @if (Model.IsOwner)
+                    {
+                        <td align="right" data-type="@item.Id">
+                            <form>
+                                <input type="hidden" name="sprintId" value="@item.Id" />
+                                <button type='submit' class='btn btn-outline-primary border-0' asp-action="EditSprint">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                            </form>
+                        </td>
+                        <td align="right" data-type="@item.Id">
+                            <button id="deleteButton" type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#myModal"
+                                    data-content="@item.Name" data-whatever="@item.Id">
+                                <i class='far fa-trash-alt'></i>
                             </button>
-                        </form>
-                    </td>
-                    <td align="right" data-type="@item.Id">
-                        <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#myModal"
-                                data-content="@item.Name" data-whatever="@item.Id">
-                            <i class='far fa-trash-alt'></i>
-                        </button>
-                    </td>
-                }
+                        </td>
+                        @if (item.Status == PossibleStatuses.CreatedStatus)
+                        {
+                            <td align="center" data-type="@item.Id">
+                                @if (IsActiveSprintWas == false)
+                                {
+                                    <button id="setActiveteStatus" type='button' class='btn btn-outline-success border-0' data-toggle="modal" data-target="#myModal"
+                                            data-content="@item.Name" data-whatever="@item.Id">
+                                        @Localizer["StartSprint"]
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-outline-secondary border-0" data-toggle="tooltip" data-placement="right" title="@Localizer["YouCantSetActive"]" disabled>
+                                        @Localizer["StartSprint"]
+                                    </button>
+                                }
+                            </td>
+                        }
+                        else if (item.Status == PossibleStatuses.ActiveStatus)
+                        {
+                            <td align="center" data-type="@item.Id">
+                                <button id="setCompleteStatus" type='button' class='btn btn-outline-warning border-0' data-toggle="modal" data-target="#myModal"
+                                        data-content="@item.Name" data-whatever="@item.Id">
+                                    @Localizer["CompleteSprint"]
+                                </button>
+                            </td>
+                            IsActiveSprintWas = true;
+                        }
+                    }
                 </tr>
             </tbody>
         }
@@ -95,18 +142,16 @@
 <form>
     <div class="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog modal-dialog-centered">
-
             <div class="modal-content">
-                <div class="modal-body">
+                <div id="modalDialogBlock" class="modal-body">
                     <p align="center" id="sprint"></p>
                     <input type="hidden" id="sprintId" name="sprintId" value="" />
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-secondary" asp-action="Remove">OK</button>
+                    <button type="submit" id="submitModalButton" class="btn btn-outline-secondary" asp-action="Remove">OK</button>
                     <button type="button" class="btn btn-outline-danger" data-dismiss="modal">@Localizer["Cancel"]</button>
                 </div>
             </div>
-
         </div>
     </div>
 </form>
@@ -115,11 +160,40 @@
     $(document).ready(function () {
         $("#myModal").on("show.bs.modal", function (event) {
             var button = $(event.relatedTarget)
+            let elemId = event.relatedTarget.id;
             var sprint = button.data('content')
             var sprintId = button.data('whatever')
-            var removeModal = $("#myModal");
-            removeModal.find("#sprintId").val(sprintId);
-            document.getElementById('sprint').innerHTML = "@Localizer["Remove"]" + "<strong>" + sprint + "</strong>" + "?";
+            var modal = $("#myModal");
+            modal.find("#sprintId").val(sprintId);
+            let submitModalButton = document.querySelector("#submitModalButton");
+            let inputStatus = document.querySelector('[name = "status"]');
+            if (elemId == "deleteButton") {
+                if (inputStatus != null)
+                    inputStatus.parentNode.removeChild(inputStatus);
+                document.getElementById('sprint').innerHTML = "@Localizer["Remove"]" + "<strong>" + sprint + "</strong>" + "?";
+                submitModalButton.setAttribute('formaction', '/ManageSprints/Remove');
+                return;
+            }
+            else if (elemId == "setActiveteStatus" || elemId == "setCompleteStatus") {
+                submitModalButton.setAttribute('formaction', '/ManageSprints/ChangeStatusSprint');
+                if (inputStatus == null) {
+                    console.log(inputStatus);
+                    let modalDialogBlock = document.querySelector("#modalDialogBlock");
+                    inputStatus = document.createElement('input');
+                    inputStatus.setAttribute('type', 'hidden');
+                    inputStatus.setAttribute('name', 'status');
+                    modalDialogBlock.appendChild(inputStatus);
+                }
+                if (elemId == "setActiveteStatus") {
+                    document.getElementById('sprint').innerHTML = "@Localizer["AcceptSetActiveStatus"]" + "<strong>" + sprint + "</strong>";
+                    inputStatus.setAttribute('value', '1');
+                    console.log(inputStatus);
+                }
+                else if (elemId == "setCompleteStatus") {
+                    document.getElementById('sprint').innerHTML = "@Localizer["AcceptCompletedStatus"]" + "<strong>" + sprint + "</strong>";
+                    inputStatus.setAttribute('value', '2');
+                }
+            }
         });
     });
 
@@ -142,5 +216,6 @@
                 }
             });
     };
+
 </script>
 
