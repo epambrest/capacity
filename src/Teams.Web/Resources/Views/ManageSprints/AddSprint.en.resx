@@ -126,9 +126,6 @@
   <data name="Close" xml:space="preserve">
     <value>Close</value>
   </data>
-  <data name="Completed" xml:space="preserve">
-    <value>Completed</value>
-  </data>
   <data name="Created" xml:space="preserve">
     <value>Created</value>
   </data>
@@ -149,5 +146,8 @@
   </data>
   <data name="StoryPointInHours" xml:space="preserve">
     <value>Store Point in Hours</value>
+  </data>
+  <data name="Сompleted" xml:space="preserve">
+    <value>Completed</value>
   </data>
 </root>

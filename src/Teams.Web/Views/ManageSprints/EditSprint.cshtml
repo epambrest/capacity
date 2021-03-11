@@ -7,7 +7,18 @@
 <script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
 
 <div align="center">
-    <h1 size="4" align="left">@Model.TeamName | @Localizer["EditSprint"]</h1>
+    @if (Model.Status == PossibleStatuses.CreatedStatus)
+    {
+        <h1 size="4" class="text-primary" align="left">@Model.TeamName | @Localizer["EditSprint"]</h1>
+    }
+    else if (Model.Status == PossibleStatuses.ActiveStatus)
+    {
+        <h1 size="4" class="text-success" align="left">@Model.TeamName | @Localizer["EditSprint"]</h1>
+    }
+    else if (Model.Status == PossibleStatuses.CompletedStatus)
+    {
+        <h1 size="4" class="text-warning" align="left">@Model.TeamName | @Localizer["EditSprint"]</h1>
+    }
 </div>
 
 <div>
@@ -17,6 +28,7 @@
         @Html.Hidden("TeamId", @Model.TeamId)
         @Html.Hidden("SprintId", @Model.SprintId)
         @Html.Hidden("TeamName", @Model.TeamName)
+        @Html.Hidden("Status", @Model.Status)
         <div>
             <label for="name">@Localizer["Name"] :</label>
             <input id="name" name="SprintName" class="form-control" value="@Model.SprintName" />
@@ -35,24 +47,6 @@
             <span asp-validation-for="SprintStorePointInHours"></span>
         </div>
 
-        <div>
-            @{
-                List<bool> activeButtonKeys = new List<bool>() { false, false, false };
-
-                switch(Model.Status)
-                {
-                    case PossibleStatuses.CompletedStatus: activeButtonKeys[PossibleStatuses.CompletedStatus] = true; break;
-                    case PossibleStatuses.CreatedStatus: activeButtonKeys[PossibleStatuses.CreatedStatus] = true; break;
-                    case PossibleStatuses.ActiveStatus: activeButtonKeys[PossibleStatuses.ActiveStatus] = true; break;                  
-                }
-            }
-            @Html.RadioButton("status", PossibleStatuses.CompletedStatus, activeButtonKeys[PossibleStatuses.CompletedStatus])
-            <span style="color:orange">@Localizer["Сompleted"]</span> <br />
-            @Html.RadioButton("status", PossibleStatuses.ActiveStatus, activeButtonKeys[PossibleStatuses.ActiveStatus])
-            <span style="color:green">@Localizer["Active"]</span> <br />
-            @Html.RadioButton("status", PossibleStatuses.CreatedStatus, activeButtonKeys[PossibleStatuses.CreatedStatus])
-            <span style="color:blue">@Localizer["Created"]</span>
-        </div>
         <div style="display: table">
             <input id="sub" type="submit" class="btn btn-success" value="@Localizer["EditSprint"]" />
             <button style="margin-left:7px" type='button' class="btn btn-danger" onclick="location.href = '@Url.Action("AllSprints", "ManageSprints", new { teamId = Model.TeamId })'">@Localizer["Close"]</button>
