@@ -81,7 +81,7 @@ namespace Teams.Web.Controllers
             }
             ));
 
-            if (sprintViewModel.Sprints[1].Status == PossibleStatuses.ActiveStatus)
+            if (sprintViewModel.Sprints.Count > 1 && sprintViewModel.Sprints[1].Status == PossibleStatuses.ActiveStatus)
             {
                 var swapElem = sprintViewModel.Sprints[0];
                 sprintViewModel.Sprints[0] = sprintViewModel.Sprints[1];
