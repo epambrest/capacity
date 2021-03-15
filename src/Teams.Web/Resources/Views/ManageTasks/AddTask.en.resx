@@ -123,6 +123,9 @@
   <data name="Close" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="LinkValidation" xml:space="preserve">
+    <value>Skip task link validation</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
@@ -133,7 +136,7 @@
     <value>Story Points</value>
   </data>
   <data name="TaskLink" xml:space="preserve">
-    <value>Task Link</value>
+    <value>Task Link(github.com or bitbucket.org)</value>
   </data>
   <data name="User" xml:space="preserve">
     <value>User</value>

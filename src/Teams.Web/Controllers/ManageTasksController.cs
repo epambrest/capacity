@@ -171,6 +171,14 @@ namespace Teams.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (taskViewModel.LinkValidation == null && !Regex.IsMatch(taskViewModel.TaskLink, @"^(?:http(s):\/\/)(github\.com\/)|(bitbucket\.org\/)[\w\d\S]+(\/[\w\d\S]+)*$"))
+                {
+                    return RedirectToAction("EditTask", new { teamId = taskViewModel.TeamId, taskId = taskViewModel.TaskId, errorMessage = _localizer["LinkFieldError"] });
+                }
+                else if (taskViewModel.LinkValidation != null && !Regex.IsMatch(taskViewModel.TaskLink, @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"))
+                {
+                    return RedirectToAction("EditTask", new { teamId = taskViewModel.TeamId, taskId = taskViewModel.TaskId, errorMessage = _localizer["LinkFieldError"] });
+                }
                 var task = new Data.Models.Task
                 {
                     Id = taskViewModel.TaskId,
@@ -391,6 +399,14 @@ namespace Teams.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (taskFormViewModel.LinkValidation == null && !Regex.IsMatch(taskFormViewModel.TaskLink, @"^(?:http(s):\/\/)(github\.com\/)|(bitbucket\.org\/)[\w\d\S]+(\/[\w\d\S]+)*$"))
+                {
+                    return RedirectToAction("AddTask", new { teamId = taskFormViewModel.TeamId, sprintId = taskFormViewModel.TaskSprintId , errorMessage = _localizer["LinkFieldError"] });
+                }
+                else if (taskFormViewModel.LinkValidation != null && !Regex.IsMatch(taskFormViewModel.TaskLink, @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"))
+                {
+                    return RedirectToAction("AddTask", new { teamId = taskFormViewModel.TeamId, sprintId = taskFormViewModel.TaskSprintId, errorMessage = _localizer["LinkFieldError"] });
+                }
                 var task = new Data.Models.Task
                 {
                     Id = taskFormViewModel.TaskId,
@@ -477,6 +493,15 @@ namespace Teams.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+
+                if (taskFormViewModel.LinkValidation == null && !Regex.IsMatch(taskFormViewModel.TaskLink, @"^(?:http(s):\/\/)(github\.com\/)|(bitbucket\.org\/)[\w\d\S]+(\/[\w\d\S]+)*$"))
+                {
+                    return RedirectToAction("AddTaskIntoTeam", new { teamId = taskFormViewModel.TeamId, errorMessage = _localizer["LinkFieldError"] });
+                }
+                else if(taskFormViewModel.LinkValidation != null && !Regex.IsMatch(taskFormViewModel.TaskLink, @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"))
+                {
+                    return RedirectToAction("AddTaskIntoTeam", new { teamId = taskFormViewModel.TeamId, errorMessage = _localizer["LinkFieldError"] });
+                }
                 var task = new Data.Models.Task
                 {
                     Id = taskFormViewModel.TaskId,
@@ -487,6 +512,8 @@ namespace Teams.Web.Controllers
                     SprintId = taskFormViewModel.TaskSprintId,
                     MemberId = taskFormViewModel.TaskMemberId
                 };
+
+
 
                 var isOwner = await _accessCheckService.IsOwnerAsync(task.TeamId);
 
