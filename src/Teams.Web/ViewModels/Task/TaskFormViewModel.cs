@@ -16,8 +16,8 @@ namespace Teams.Web.ViewModels.Task
         [Required]
         public int TaskSprintId { get; set; }
         [Required]
-        [RegularExpression(@"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$")]
         public string TaskLink { get; set; }
+        public string LinkValidation { get; set; }
         public string TeamName { get; set; }
         [Required]
         public string TaskName { get; set; }
