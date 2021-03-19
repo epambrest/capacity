@@ -1,9 +1,11 @@
 ﻿@page
 @model EmailModel
 @{
-    ViewData["Title"] = "Manage Email";
+    ViewData["Title"] = @Localizer["Title"];
     ViewData["ActivePage"] = ManageNavPages.Email;
 }
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 <h4>@ViewData["Title"]</h4>
 <partial name="_StatusMessage" model="Model.StatusMessage" />
@@ -22,13 +24,13 @@
                         </div>
                     </div>
                 }
-                 else
+                else
                 {
                     <input asp-for="Email" class="form-control" disabled />
                 }
             </div>
             <div class="form-group">
-                <label asp-for="Input.NewEmail"></label>
+                <label asp-for="Input.NewEmail">@Localizer["New Email"]</label>
                 <input asp-for="Input.NewEmail" class="form-control" />
                 <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
             </div>
