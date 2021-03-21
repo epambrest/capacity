@@ -118,7 +118,7 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> CompleteTaskInSprint(int taskId, bool isCompleted)
+        public async Task<IActionResult> CompleteTaskInSprint(int taskId, bool isCompleted, string redirectPath = "GetSprintById")
         {
             var task = await _manageTasksService.GetTaskByIdAsync(taskId);
             var sprint = await _manageSprintsService.GetSprintAsync(task.SprintId.GetValueOrDefault(), false);
@@ -140,7 +140,10 @@ namespace Teams.Web.Controllers
 
             if (result)
             {
-                return RedirectToAction("GetSprintById", new { sprintId = task.SprintId });
+                if(redirectPath == "GetSprintById")
+                    return RedirectToAction(redirectPath, new { sprintId = task.SprintId });
+                else
+                    return RedirectToAction(redirectPath, "ManageTasks", new { teamId = task.TeamId, options = new DisplayOptions { } });
             }
             else
             {
