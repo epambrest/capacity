@@ -4,7 +4,7 @@
 
 <script>
 
-        $(document).ready(function () {
+    $(document).ready(function () {
         $("#workingDaysModal").on("show.bs.modal", function (event) {
             var button = $(event.relatedTarget)
             var Member = button.data('content')
@@ -15,37 +15,38 @@
         });
     });
 
-    Submit.onclick = function () {
-        
-        var DaysInSprint = document.getElementById("DaysInSprint").value;
-        var workingDaysId = document.getElementById('workingDaysId').value;
-        var workingDays = document.getElementById('workingDays').value;
-        if (!(isNaN(workingDays) || workingDays < 0 || workingDays > DaysInSprint)) {
-            $('#element').toast('show');
-        }       
-        else {
+   $(document).ready(function () {
+        $("#submitEdit").click(function () {
+            var DaysInSprint = document.getElementById("DaysInSprint").value;
+            var workingDaysId = document.getElementById('workingDaysId').value;
+            var workingDays = document.getElementById('workingDays').value;
 
-            $.ajax({
-                type: "Get",
-                url: '@Url.Action("EditWorkingDays", "ManageMemberWorkingDays")/',
-                data: { workingDaysId: workingDaysId, workingDays: workingDays },
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (data) {
-                    if (data) {
-                        var id = workingDaysId.valueOf();
-                        document.getElementById(id).innerHTML = workingDays;
-                        $('#success').toast('show');
+            if (!(isNaN(workingDays) || workingDays < 0 || workingDays > DaysInSprint)) {
+                $('#element').toast('show');
+            }
+            else {
+                $.ajax({
+                    type: "Get",
+                    url: '@Url.Action("EditWorkingDays", "ManageMemberWorkingDays")/',
+                    data: { workingDaysId: workingDaysId, workingDays: workingDays },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data) {
+                            var id = workingDaysId.valueOf();
+                            document.getElementById(id).innerHTML = workingDays;
+                            $('#success').toast('show');
+                        }
+                        else    {
+                            $('#element').toast('show');
+                        }
                     }
-                    else {
-                        $('#element').toast('show');
-                    }
-                }
-            });
-        }
-    };
+                });
+            }
+        });
+    });
 
-        $(document).ready(function () {
+    $(document).ready(function () {
         $("#workingDaysModalAdd").on("show.bs.modal", function (event) {
             var button = $(event.relatedTarget)
             var memberId = button.data('content')
@@ -59,36 +60,40 @@
         });
     });
 
-    function AddDays() {
-        var DaysInSprint = document.getElementById("DaysInSprint").value;
-        var sprintId = document.getElementById('sprintId').value;
-        var memberId = document.getElementById('memberId').value;
-        var workingDays = document.getElementById('AddWorkingDays').value;
-        var Member = document.getElementById('MemberAdd').value;
-        if (!(isNaN(workingDays) || workingDays < 0 || workingDays > DaysInSprint)) {
-            $('#element').toast('show');
-        }
-        else {
-            $.ajax({
-                type: "Get",
-                url: '@Url.Action("AddWorkingDays", "ManageMemberWorkingDays")/',
-                data: { sprintId: sprintId, memberId: memberId, workingDays: workingDays },
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (data) {
-                    if (data >= 0) {
-                        var id = memberId.valueOf();
-                        document.getElementById(id).innerHTML = workingDays;
-                        document.getElementById('Add').innerHTML = "<i class=\"fas fa-pen\" data-toggle=\"modal\" data-target=\"#workingDaysModal\" data-content=\"" + Member + "\" data-whatever=\"" + data + "\"></i>";
-                        $('#success').toast('show');
+    $(document).ready(function () {
+        $("#submitAdd").click(function () {
+            var DaysInSprint = document.getElementById("DaysInSprint").value;
+            var sprintId = document.getElementById('sprintId').value;
+            var memberId = document.getElementById('memberId').value;
+            var workingDays = document.getElementById('AddWorkingDays').value;
+            var Member = document.getElementById('MemberAdd').value;
+            if (!(isNaN(workingDays) || workingDays < 0 || workingDays > DaysInSprint)) {
+                $('#element').toast('show');
+            }
+            else {
+                $.ajax({
+                    type: "Get",
+                    url: '@Url.Action("AddWorkingDays", "ManageMemberWorkingDays")/',
+                    data: { sprintId: sprintId, memberId: memberId, workingDays: workingDays },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data >= 0) {
+                            var id = memberId.valueOf();
+                            document.getElementById(id).innerHTML = workingDays;
+                            var modalButton = document.getElementById('Add');
+                            modalButton.setAttribute("data-content", Member);
+                            modalButton.setAttribute("data-whatever", data);
+                            $('#success').toast('show');
+                        }
+                        else {
+                            $('#element').toast('show');
+                        }
                     }
-                    else {
-                        $('#element').toast('show');
-                    }
-                }
-            });
-        }
-    }
+                });
+            }
+        });
+    });
 
 </script>
 
@@ -101,7 +106,6 @@
             <th align="left" style="font-weight: bold">@Localizer["WorkingDays"]</th>
             <th align="right"></th>
         </tr>
-
 
         <tr align="center">
             <td align="left" width="1%"><i title="@Localizer["Owner"]" class="fas fa-crown"></i></td>
@@ -133,18 +137,21 @@
                     @if (Model.memberWorkingDays.FirstOrDefault(i => i.MemberId == item.Id) == null)
                     {
                         <td align="center" id="@item.Id"></td>
-                        <td align="right"><button type='button' class='btn btn-outline-primary border-0' id="Add">
-                            <i class="fas fa-plus" data-toggle="modal" data-target="#workingDaysModalAdd" data-description="@item.Member.Email"
-                               data-whatever="@Model.sprintId" data-container="@Model.DaysInSprint" data-content="@item.Id"></i></button></td>
+                        <td align="right">
+                            <button type='button' class='btn btn-outline-primary border-0' id="Add" data-toggle="modal" data-target="#workingDaysModalAdd" 
+                                    data-description="@item.Member.Email" data-whatever="@Model.sprintId" data-container="@Model.DaysInSprint" data-content="@item.Id">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </td>
                     }
                     else
                     {
                         <td align="center" id="@Model.memberWorkingDays.FirstOrDefault(i => i.MemberId == item.Id).Id">
                                                      @Model.memberWorkingDays.FirstOrDefault(i => i.MemberId == item.Id).WorkingDays</td>
                         <td align="right">
-                            <button type='button' class='btn btn-outline-primary border-0'>
-                                <i class="fas fa-pen" data-toggle="modal" data-target="#workingDaysModal"
-                                   data-content="@item.Member.Email" data-whatever="@Model.memberWorkingDays.FirstOrDefault(i => i.MemberId == item.Id).Id"></i>
+                            <button type='button' class='btn btn-outline-primary border-0' data-toggle="modal" data-target="#workingDaysModal"
+                                    data-content="@item.Member.Email" data-whatever="@Model.memberWorkingDays.FirstOrDefault(i => i.MemberId == item.Id).Id">
+                                <i class="fas fa-pen"></i>
                             </button>
                         </td>
                     }
@@ -157,7 +164,6 @@
 <form>
     <div class="modal fade" id="workingDaysModal" role="dialog">
         <div class="modal-dialog modal-dialog-centered">
-
             <div class="modal-content">
                 <div align="center" class="modal-body">
                     <p align="center" id="Member"></p>
@@ -166,17 +172,16 @@
                     <input type="number" min="0" max="@Model.DaysInSprint" id="workingDays" name="workingDays" value="" />
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-secondary" id="Submit" data-dismiss="modal">OK</button>
+                    <button id="submitEdit" type="submit" class="btn btn-outline-secondary" data-dismiss="modal">OK</button>
                     <button type="button" class="btn btn-outline-danger" data-dismiss="modal">@Localizer["Cancel"]</button>
                 </div>
             </div>
-
         </div>
     </div>
 </form>
 
 <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
-    <div id="element" class="toast" role="alert" style="position: absolute; top: 0; right: 0;">
+    <div id="element" class="toast" role="alert" style="position: absolute; top: 0; right: 0;" data-delay="5000">
         <div class="toast-header" style="background-color:lightcoral">
             <strong class="mr-auto">@Localizer["Error"]</strong>
             <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
@@ -201,7 +206,7 @@
                     <input type="number" min="0" id="AddWorkingDays" name="workingDays" value="" max="@Model.DaysInSprint" />
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-secondary" onclick="AddDays()" data-dismiss="modal">OK</button>
+                    <button id="submitAdd" type="submit" class="btn btn-outline-secondary" data-dismiss="modal">OK</button>
                     <button type="button" class="btn btn-outline-danger" data-dismiss="modal">@Localizer["Cancel"]</button>
                 </div>
             </div>
@@ -210,7 +215,7 @@
 </form>
 
 <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center" style="min-height: 200px;">
-    <div id="success" class="toast" role="alert" style="position: absolute; top: 0; right: 0;">
+    <div id="success" class="toast" role="alert" style="position: absolute; top: 0; right: 0;" data-delay="5000">
         <div class="toast-header" style="background-color:mediumspringgreen">
             <strong class="mr-auto">@Localizer["Success"]</strong>
             <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">

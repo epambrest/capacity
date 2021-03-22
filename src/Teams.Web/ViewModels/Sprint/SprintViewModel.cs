@@ -11,7 +11,7 @@ namespace Teams.Web.ViewModels.Sprint
         public int TeamId { get; set; }
         [Required]
         public string Name { get; set; }
-        [Range(1, 14)]
+        [Range(1, 30)]
         public int DaysInSprint { get; set; }
         [Range(1, 56)]
         public int StoryPointInHours { get; set; }

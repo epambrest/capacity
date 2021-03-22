@@ -117,34 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddTask" xml:space="preserve">
-    <value>AddTask</value>
-  </data>
-  <data name="Close" xml:space="preserve">
-    <value>Close</value>
-  </data>
-  <data name="LinkValidation" xml:space="preserve">
-    <value>Skip task link validation</value>
-  </data>
-  <data name="Name" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="SelectSprint" xml:space="preserve">
-    <value>SelectSprint</value>
-  </data>
-  <data name="SelectUser" xml:space="preserve">
-    <value>Select User</value>
-  </data>
-  <data name="Sprint" xml:space="preserve">
-    <value>Sprint</value>
-  </data>
-  <data name="StoryPoints" xml:space="preserve">
-    <value>Story Points</value>
-  </data>
-  <data name="TaskLink" xml:space="preserve">
-    <value>Task Link(github.com or bitbucket.org)</value>
-  </data>
-  <data name="User" xml:space="preserve">
-    <value>User</value>
+  <data name="Privacy" xml:space="preserve">
+    <value>Privacy</value>
   </data>
 </root>

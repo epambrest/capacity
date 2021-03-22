@@ -117,34 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddTask" xml:space="preserve">
-    <value>AddTask</value>
+  <data name="Attention message" xml:space="preserve">
+    <value>Deleting this data will permanently remove your account, and this cannot be recovered.</value>
   </data>
-  <data name="Close" xml:space="preserve">
-    <value>Close</value>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
   </data>
-  <data name="LinkValidation" xml:space="preserve">
-    <value>Skip task link validation</value>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
   </data>
-  <data name="Name" xml:space="preserve">
-    <value>Name</value>
+  <data name="Main information" xml:space="preserve">
+    <value>Your account contains personal data that you have given us. This page allows you to download or delete that data.</value>
   </data>
-  <data name="SelectSprint" xml:space="preserve">
-    <value>SelectSprint</value>
-  </data>
-  <data name="SelectUser" xml:space="preserve">
-    <value>Select User</value>
-  </data>
-  <data name="Sprint" xml:space="preserve">
-    <value>Sprint</value>
-  </data>
-  <data name="StoryPoints" xml:space="preserve">
-    <value>Story Points</value>
-  </data>
-  <data name="TaskLink" xml:space="preserve">
-    <value>Task Link(github.com or bitbucket.org)</value>
-  </data>
-  <data name="User" xml:space="preserve">
-    <value>User</value>
+  <data name="Title" xml:space="preserve">
+    <value>Personal data</value>
   </data>
 </root>
