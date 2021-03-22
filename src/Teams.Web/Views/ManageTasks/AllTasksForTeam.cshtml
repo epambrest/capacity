@@ -47,7 +47,7 @@
 
 @{
     var BackLogtasks = Model.Tasks.FindAll(t => t.SprintId == null && t.Completed == false);
-    if (CompletedSprintTasks != null)
+    if (CompletedSprintTasks != null && CompletedSprintTasks.Count > 0)
         BackLogtasks.AddRange(CompletedSprintTasks);
     if (BackLogtasks.Count > 0)
         await GetCard(0, "", "Backlog", BackLogtasks);
@@ -198,7 +198,25 @@
         });
     });
 
-    AddHandlers();
+    $(document).ready(function () {
+        SetUpMenu();
+        AddHandlers();
+    });
+
+    function SetUpMenu() {
+        let backlogLink = document.querySelector("#backlogLink");
+        SetActiveNavLink(backlogLink);
+        let allSprintsLink = document.querySelector("#allSprintsLink");
+        allSprintsLink.setAttribute("href", "/ManageSprints/AllSprints?teamId=@Model.TeamId");
+    }
+
+    function SetActiveNavLink(linkElem) {
+        let underLine = document.createElement("u");
+        underLine.setAttribute("class", "text-primary");
+        let linkElemParent = linkElem.parentElement;
+        linkElemParent.appendChild(underLine);
+        underLine.appendChild(linkElem);
+    }
 
     function AddHandlers() {
         let circleButtons = document.querySelectorAll(".сircle-button");
@@ -215,7 +233,6 @@
         cardTitleMember.textContent = event.currentTarget.id;
         cardMember.removeAttribute("hidden");
     }
-
 
     function MoveMemberCardToCursor() {
         $(document).ready(function () {

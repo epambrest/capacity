@@ -177,7 +177,13 @@ namespace Teams.Web.Controllers
             var task = await _manageTasksService.GetTaskByIdAsync(taskId);
             var team = await _manageSprintsService.GetTeam(task.TeamId);
             var teamMembers = await GetAllTeamMembersAsync(task.TeamId);
-            var taskMemberName = teamMembers.FirstOrDefault(t => t.Id == task.MemberId).Member.Email;
+            var teamMember = teamMembers.FirstOrDefault(t => t.Id == task.MemberId);
+            string taskMemberName;
+            
+            if (teamMember != null)
+                taskMemberName = teamMember.Member.Email;
+            else
+                taskMemberName = "";
 
             TaskFormViewModel model = new TaskFormViewModel
             {
@@ -327,7 +333,6 @@ namespace Teams.Web.Controllers
             int quantityСompletedTasks = allMemberTasks.Count(t => t.Completed == true);
             int quantityUnСompletedTasks = allMemberTasks.Count(t => t.Completed == false);
 
-
             allMemberTasks.ForEach(t => totalStoryPoints += t.StoryPoints);
 
             var allWorkingDaysForSprint = await _manageMemberWorkingDaysService.GetAllWorkingDaysForSprintAsync(sprintId);
@@ -341,7 +346,6 @@ namespace Teams.Web.Controllers
 
             var teamMemberTotalSp = spCompletedTasks + spUnCompletedTasks;
             var storyPointsInDay = Convert.ToDouble(teamMemberTotalSp) / Convert.ToDouble(memberWorkingDays.WorkingDays);
-
 
             var resultsTasksForMemberViewModel = new ResultsTasksForMemberViewModel()
             {
