@@ -88,7 +88,8 @@
                                 <td style="border-top: hidden;" align="right">
                                     <form>
                                         <input type="hidden" name="teamId" value="@Model.TeamId" />
-                                        <button type='submit' class='btn btn-outline-primary border-0' asp-controller="ManageTasks" asp-action="AddTaskIntoTeam">
+                                        <input type="hidden" name="sprintId" value="@sprintId" />
+                                        <button type='submit' class='btn btn-outline-primary border-0' asp-controller="ManageTasks" asp-action="AddTask">
                                             <i class="fas fa-plus"></i>
                                         </button>
                                     </form>

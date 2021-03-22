@@ -427,7 +427,7 @@ namespace Teams.Web.Controllers
                 ErrorMessage = errorMessage,
                 TeamMembers = new List<TeamMemberViewModel>()
             };
-            teamMembers.ForEach(t=>model.TeamMembers.Add(new TeamMemberViewModel()
+            teamMembers.ForEach(t => model.TeamMembers.Add(new TeamMemberViewModel()
             {
                 Member = t.Member,
                 Id = t.Id
