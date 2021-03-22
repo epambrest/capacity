@@ -44,11 +44,12 @@
     @Html.ValidationMessageFor(model => model.TaskName)
 </div>
 
-        <div>
-            <label for="days">@Localizer["TaskLink"] :</label>
-            <input id="days" name="TaskLink" class="form-control" value="" />
-            @Html.ValidationMessageFor(model => model.TaskLink)
-        </div>
+<div>
+    <label for="days">@Localizer["TaskLink"] :</label>
+    <input id="days" name="TaskLink" class="form-control" value="" />
+    <input type="checkbox" id="linkValidation" name="LinkValidation" value="any">
+    <label for="linkValidation">@Localizer["LinkValidation"]</label><br>
+</div>
 
         <div>
             <label for="points">@Localizer["StoryPoints"] :</label>

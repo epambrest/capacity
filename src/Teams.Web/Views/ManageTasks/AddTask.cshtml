@@ -41,7 +41,8 @@
         <div>
             <label for="days">@Localizer["TaskLink"] :</label>
             <input id="days" name="TaskLink" class="form-control" value="" />
-            @Html.ValidationMessageFor(model => model.TaskLink)
+            <input type="checkbox" id="linkValidation" name="LinkValidation" value="any">
+            <label for="linkValidation">@Localizer["LinkValidation"] </label><br>
         </div>
 
         <div>

@@ -218,4 +218,25 @@
   <data name="СreatedSprintExist" xml:space="preserve">
     <value>Сreated Sprint already exist. You can create only 1 sprint with such type</value>
   </data>
+  <data name="CompleteSprint" xml:space="preserve">
+    <value>Complete</value>
+  </data>
+  <data name="StartSprint" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="AcceptCompletedStatus" xml:space="preserve">
+    <value>Do you really want to set completed status? Sprint's name: </value>
+  </data>
+  <data name="AcceptSetActiveStatus" xml:space="preserve">
+    <value>Do you really want to set active status? Sprint's name: </value>
+  </data>
+  <data name="ReturnTeams" xml:space="preserve">
+    <value>Return to your teams</value>
+  </data>
+  <data name="YouCantAddSprint" xml:space="preserve">
+    <value>You can't add new sprint. Created sprint already exist</value>
+  </data>
+  <data name="YouCantSetActive" xml:space="preserve">
+    <value>You can't set active status. Active sprint already exist</value>
+  </data>
 </root>

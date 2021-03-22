@@ -55,6 +55,7 @@ namespace Teams.Web
                 .AddDataAnnotationsLocalization(options =>
                     options.DataAnnotationLocalizerProvider = (type, factory) => 
                         factory.Create(typeof(ValidationResource)));
+            services.Configure<AppVersion>(Configuration.GetSection("Version"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

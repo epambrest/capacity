@@ -42,6 +42,9 @@
             <label for="days">@Localizer["TaskLink"] :</label>
             <input id="days" name="taskLink" class="form-control" value="@Model.TaskLink" />
             <span asp-validation-for="TaskLink"></span>
+            <input type="checkbox" id="linkValidation" name="LinkValidation" value="any">
+            <label for="linkValidation">@Localizer["LinkValidation"] </label><br>
+            <span asp-validation-for="LinkValidation"></span>
         </div>
 
         <div>

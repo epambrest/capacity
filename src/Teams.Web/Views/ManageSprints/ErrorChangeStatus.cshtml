@@ -1,0 +1,11 @@
+﻿@model Teams.Web.ViewModels.Sprint.ErrorChangeStatusViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewBag.Title = Localizer["Error"];
+}
+
+<div class="text-center">
+    <h1 class="display-4">@Localizer["Error"]</h1>
+    <p>"@Localizer["WhileChangingSprint"]:@Model.ErrorMessage.@Localizer["SprintName"]:@Model.SprintName"</p>
+</div>

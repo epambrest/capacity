@@ -123,6 +123,9 @@
   <data name="Close" xml:space="preserve">
     <value>Закрыть</value>
   </data>
+  <data name="LinkValidation" xml:space="preserve">
+    <value>Использовать любую ссылку</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Название</value>
   </data>
@@ -133,7 +136,7 @@
     <value>Кол-во СП</value>
   </data>
   <data name="TaskLink" xml:space="preserve">
-    <value>Ссылка на Таск</value>
+    <value>Ссылка на Таск(github.com или bitbucket.org)</value>
   </data>
   <data name="User" xml:space="preserve">
     <value>Пользователь</value>
