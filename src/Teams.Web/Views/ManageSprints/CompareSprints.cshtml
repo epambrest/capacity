@@ -15,10 +15,11 @@
 </style>
 
 <div style="margin: 10px 0px 0px 30px" align="left">
-    <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to sprints", "AllSprints", "ManageSprints", new { teamId = Model.Sprints[0].TeamId })</a></h>
+    <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink($" {Localizer["ReturnToSprints"].Value}", "AllSprints", "ManageSprints", new { teamId = Model.Sprints[0].TeamId })</a></h>
+
 </div>
 
-<h1 class="text-center font-weight-normal mt-5 mb-3">Сomparison</h1>
+<h1 class="text-center font-weight-normal mt-5 mb-3">@Localizer["Сomparison"]</h1>
 
 <div sstyle="display: inline-block">
     <table align="center" style="width:50%" class="table" id="grid">

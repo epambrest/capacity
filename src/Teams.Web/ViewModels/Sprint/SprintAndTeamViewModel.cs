@@ -12,5 +12,9 @@ namespace Teams.Web.ViewModels.Sprint
         public int sprintId { get; set; }
         public int DaysInSprint { get; set; }
         public bool IsOwner { get; set; }
+        public int SumAllStoryPoints { get; set; }
+        public int SumStoryPointsOfCompletedTasks { get; set; }
+        public int SumAllTasks { get; set; }
+        public int SumCompletedTasks { get; set; }
     }
 }

@@ -117,141 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Active" xml:space="preserve">
-    <value>Active</value>
-  </data>
-  <data name="ActiveFieldError" xml:space="preserve">
-    <value>Only one sprint in team can be active</value>
-  </data>
-  <data name="AddMember" xml:space="preserve">
-    <value>Add Member</value>
-  </data>
-  <data name="AddSprint" xml:space="preserve">
-    <value>Add Sprint</value>
-  </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
-  <data name="CantChangeStatus" xml:space="preserve">
-    <value>Statuses can be updated only from Created to Active and from Active to Completed. Possible: 1 completed, 1 active, and many completed statuses</value>
-  </data>
-  <data name="Close" xml:space="preserve">
-    <value>Close</value>
-  </data>
-  <data name="Completed" xml:space="preserve">
-    <value>Completed</value>
-  </data>
-  <data name="Created" xml:space="preserve">
-    <value>Created</value>
-  </data>
-  <data name="DaysFieldError" xml:space="preserve">
-    <value>Days field can not be empty or less than 0!</value>
-  </data>
   <data name="DaysInSprint" xml:space="preserve">
-    <value>Days in Sprint</value>
-  </data>
-  <data name="EditSprint" xml:space="preserve">
-    <value>Edit Sprint</value>
-  </data>
-  <data name="Error" xml:space="preserve">
-    <value>Ooops... Something went wrong!</value>
-  </data>
-  <data name="HasntAnyChange" xml:space="preserve">
-    <value>You hasn't change your Sprint</value>
-  </data>
-  <data name="Member" xml:space="preserve">
-    <value>Member</value>
-  </data>
-  <data name="MemberEmail" xml:space="preserve">
-    <value>Member Email</value>
-  </data>
-  <data name="Name" xml:space="preserve">
-    <value>Name</value>
-    <comment>add sprint page</comment>
-  </data>
-  <data name="NameFieldError" xml:space="preserve">
-    <value>Name field can not be empty!</value>
+    <value>Days in sprint</value>
   </data>
   <data name="NameOfSprint" xml:space="preserve">
-    <value>Name of Sprint</value>
-    <comment>all sprints page</comment>
+    <value>Name of sprint</value>
   </data>
-  <data name="NotActive" xml:space="preserve">
-    <value>Not Active</value>
-  </data>
-  <data name="NotAssigned" xml:space="preserve">
-    <value>Not assigned to user</value>
-  </data>
-  <data name="NotOwner" xml:space="preserve">
-    <value>You are not the owner</value>
-  </data>
-  <data name="Owner" xml:space="preserve">
-    <value>Owner</value>
-  </data>
-  <data name="PointsFieldError" xml:space="preserve">
-    <value>Points field can not be empty or less than 0!</value>
-  </data>
-  <data name="Remove" xml:space="preserve">
-    <value>Are you sure you want to remove</value>
-  </data>
-  <data name="RemoveMember" xml:space="preserve">
-    <value>Remove Member</value>
-  </data>
-  <data name="ReturnToSprint" xml:space="preserve">
+  <data name="ReturnToSprints" xml:space="preserve">
     <value>Return to sprints</value>
   </data>
-  <data name="SprintWithSameName" xml:space="preserve">
-    <value>Sprint with this name already exist</value>
-  </data>
-  <data name="Status" xml:space="preserve">
-    <value>Status</value>
-  </data>
-  <data name="SprintNotActive" xml:space="preserve">
-    <value>Sprint not active</value>
-  </data>
   <data name="StoryPointInHours" xml:space="preserve">
-    <value>Story Point in Hours</value>
-  </data>
-  <data name="WorkingDays" xml:space="preserve">
-    <value>Member Working Days</value>
-  </data>
-  <data name="СreatedSprintExist" xml:space="preserve">
-    <value>Сreated Sprint already exist. You can create only 1 sprint with such type</value>
-  </data>
-  <data name="CompleteSprint" xml:space="preserve">
-    <value>Complete</value>
-  </data>
-  <data name="StartSprint" xml:space="preserve">
-    <value>Start</value>
-  </data>
-  <data name="AcceptCompletedStatus" xml:space="preserve">
-    <value>Do you really want to set completed status? Sprint's name: </value>
-  </data>
-  <data name="AcceptSetActiveStatus" xml:space="preserve">
-    <value>Do you really want to set active status? Sprint's name: </value>
-  </data>
-  <data name="ReturnTeams" xml:space="preserve">
-    <value>Return to your teams</value>
-  </data>
-  <data name="YouCantAddSprint" xml:space="preserve">
-    <value>You can't add new sprint. Created sprint already exist</value>
-  </data>
-  <data name="YouCantSetActive" xml:space="preserve">
-    <value>You can't set active status. Active sprint already exist</value>
-  </data>
-  <data name="AllStoryPoints" xml:space="preserve">
-    <value>All Story Points</value>
-  </data>
-  <data name="AllTasks" xml:space="preserve">
-    <value>All Tasks</value>
-  </data>
-  <data name="CompletedTasks" xml:space="preserve">
-    <value>Completed Tasks</value>
-  </data>
-  <data name="StoryPointsOfCompletedTasks" xml:space="preserve">
-    <value>Story Points of Completed Tasks</value>
-  </data>
-  <data name="CompareSprints" xml:space="preserve">
-    <value>Compare</value>
+    <value>Story Points</value>
   </data>
 </root>

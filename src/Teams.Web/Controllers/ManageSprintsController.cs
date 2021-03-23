@@ -57,9 +57,33 @@ namespace Teams.Web.Controllers
 
             List<TeamMember> teamMembers = await GetAllTeamMembersAsync(teamId, new DisplayOptions { });
 
+            var tasks = await _manageTasksService.GetAllTasksForTeamAsync(teamId, options);
+            var completedTasks = tasks.Where(t => t.Completed == true);
+
+            int SumAllSP = 0;
+            int SumSpCompletedTasks = 0;
+            int SumAllTasks = tasks.Count();
+            int SumCompletedTasks = completedTasks.Count();
+
+
+            foreach (var task in completedTasks)
+            {
+                SumSpCompletedTasks += task.StoryPoints;
+            }
+
+            foreach (var sprint in sprints)
+            {
+                SumAllSP += sprint.StoryPointInHours;
+            }
+
             var sprintViewModel = new SprintAndTeamViewModel
             {
-                Sprints = new List<SprintViewModel>()
+                Sprints = new List<SprintViewModel>(),
+                SumAllStoryPoints = SumAllSP,
+                SumCompletedTasks = SumCompletedTasks,
+                SumAllTasks = SumAllTasks,
+                SumStoryPointsOfCompletedTasks = SumSpCompletedTasks
+
             };
 
             if (await _accessCheckService.IsOwnerAsync(teamId))
@@ -515,6 +539,33 @@ namespace Teams.Web.Controllers
         public IActionResult ErrorRemove()
         {
             return View();
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> CompareSprintsAsync(List<int> sprintsId)
+        {
+            List<Sprint> sprints = new List<Sprint>();
+
+            foreach (var sprintId in sprintsId)
+            {
+                sprints.Add(await _manageSprintsService.GetSprintAsync(sprintId, true));
+            }
+            var sprintViewModel = new SprintAndTeamViewModel
+            {
+                Sprints = new List<SprintViewModel>()
+            };
+            sprints.ForEach(t => sprintViewModel.Sprints.Add(new SprintViewModel()
+            {
+                Id = t.Id,
+                DaysInSprint = t.DaysInSprint,
+                Status = t.Status,
+                Name = t.Name,
+                StoryPointInHours = t.StoryPointInHours,
+                TeamId = t.TeamId
+            }
+            ));
+            return View(sprintViewModel);
         }
 
         [Authorize, NonAction]

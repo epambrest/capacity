@@ -135,6 +135,12 @@
   <data name="AddSprint" xml:space="preserve">
     <value>Добавить спринт</value>
   </data>
+  <data name="AllStoryPoints" xml:space="preserve">
+    <value>Всего СП</value>
+  </data>
+  <data name="AllTasks" xml:space="preserve">
+    <value>Всего заданий</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Отмена</value>
   </data>
@@ -144,8 +150,14 @@
   <data name="Close" xml:space="preserve">
     <value>Закрыть</value>
   </data>
+  <data name="CompareSprints" xml:space="preserve">
+    <value>Сравнить</value>
+  </data>
   <data name="Completed" xml:space="preserve">
     <value>Завершённый</value>
+  </data>
+  <data name="CompletedTasks" xml:space="preserve">
+    <value>Завершенные задания</value>
   </data>
   <data name="CompleteSprint" xml:space="preserve">
     <value>Закончить</value>
@@ -226,6 +238,9 @@
   </data>
   <data name="StoryPointInHours" xml:space="preserve">
     <value>Кол-во часов в СП</value>
+  </data>
+  <data name="StoryPointsOfCompletedTasks" xml:space="preserve">
+    <value>Кол-во СП завершенных заданий</value>
   </data>
   <data name="WorkingDays" xml:space="preserve">
     <value>Кол-во рабочих дней</value>
