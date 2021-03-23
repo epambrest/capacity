@@ -7,8 +7,8 @@ namespace Teams.Web.ViewModels.Task
         public int Id { get; set; }
         public int TeamId { get; set; }
         public string Name { get; set; }
-        public int SprintId { get; set; }
-        public int MemberId { get; set; }
+        public int? SprintId { get; set; }
+        public int? MemberId { get; set; }
         public string Link { get; set; }
         public string LinkValidation { get; set; }
         public int StoryPoints { get; set; }

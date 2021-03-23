@@ -117,20 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Action" xml:space="preserve">
-    <value>Action</value>
-  </data>
   <data name="ActiveSprint" xml:space="preserve">
     <value>Active</value>
   </data>
   <data name="AllSprints" xml:space="preserve">
     <value>All Sprints</value>
-  </data>
-  <data name="AllTasksForTeam" xml:space="preserve">
-    <value>All Tasks For Team</value>
-  </data>
-  <data name="AlreadyComplete" xml:space="preserve">
-    <value>Completed</value>
   </data>
   <data name="Backlog" xml:space="preserve">
     <value>Backlog</value>
@@ -141,40 +132,10 @@
   <data name="Charts" xml:space="preserve">
     <value>Charts</value>
   </data>
-  <data name="Complete" xml:space="preserve">
-    <value>Complete</value>
-  </data>
-  <data name="CreatedSprint" xml:space="preserve">
-    <value>Сreated</value>
-  </data>
-  <data name="from" xml:space="preserve">
-    <value> from </value>
-  </data>
-  <data name="IsntAttached" xml:space="preserve">
-    <value>Isn't attached</value>
-  </data>
-  <data name="Link" xml:space="preserve">
-    <value>Link</value>
-  </data>
-  <data name="Member" xml:space="preserve">
-    <value>Member</value>
-  </data>
-  <data name="NameofTask" xml:space="preserve">
-    <value>Name of Task</value>
-  </data>
-  <data name="Remove" xml:space="preserve">
-    <value>Are you sure you want to remove </value>
-  </data>
   <data name="SprintConfiguration" xml:space="preserve">
     <value>Sprint configuration</value>
   </data>
-  <data name="StoryPoint" xml:space="preserve">
-    <value>Story Point</value>
-  </data>
   <data name="TaskHistory" xml:space="preserve">
     <value>Tasks history</value>
-  </data>
-  <data name="User" xml:space="preserve">
-    <value>User</value>
   </data>
 </root>

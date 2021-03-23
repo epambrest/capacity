@@ -117,17 +117,50 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Action" xml:space="preserve">
+    <value>Действие</value>
+  </data>
+  <data name="ActiveSprint" xml:space="preserve">
+    <value>Активный</value>
+  </data>
+  <data name="AllSprints" xml:space="preserve">
+    <value>Все спринты</value>
+  </data>
   <data name="AllTasksForTeam" xml:space="preserve">
     <value>Все таски для команды</value>
+  </data>
+  <data name="AlreadyComplete" xml:space="preserve">
+    <value>Уже завершена</value>
+  </data>
+  <data name="Backlog" xml:space="preserve">
+    <value>Бэклог</value>
+  </data>
+  <data name="BackToTeams" xml:space="preserve">
+    <value>Вернуться в команды</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Отмена</value>
   </data>
+  <data name="Charts" xml:space="preserve">
+    <value>Чарты</value>
+  </data>
+  <data name="Complete" xml:space="preserve">
+    <value>Завершить</value>
+  </data>
+  <data name="CreatedSprint" xml:space="preserve">
+    <value>Созданный</value>
+  </data>
   <data name="from" xml:space="preserve">
     <value> из </value>
   </data>
+  <data name="IsntAttached" xml:space="preserve">
+    <value>Не прикреплён</value>
+  </data>
   <data name="Link" xml:space="preserve">
     <value>Ссылка</value>
+  </data>
+  <data name="Member" xml:space="preserve">
+    <value>Исполнитель</value>
   </data>
   <data name="NameofTask" xml:space="preserve">
     <value>Название таска</value>
@@ -135,8 +168,14 @@
   <data name="Remove" xml:space="preserve">
     <value>Вы уверены, что хотите удалить </value>
   </data>
+  <data name="SprintConfiguration" xml:space="preserve">
+    <value>Конфигурация спринта</value>
+  </data>
   <data name="StoryPoint" xml:space="preserve">
     <value>Количество СП</value>
+  </data>
+  <data name="TaskHistory" xml:space="preserve">
+    <value>История тасок</value>
   </data>
   <data name="User" xml:space="preserve">
     <value>Пользователь</value>

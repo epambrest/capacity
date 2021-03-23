@@ -138,7 +138,6 @@
     <partial name="~/Views/ManageMemberWorkingDays/_WorkingDaysPartial.cshtml" model="Model">
 </form>
 
-
 <form>
     <div class="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog modal-dialog-centered">
@@ -175,7 +174,7 @@
                 return;
             }
             else if (elemId == "setActiveteStatus" || elemId == "setCompleteStatus") {
-                submitModalButton.setAttribute('formaction', '/ManageSprints/ChangeStatusSprint');
+                submitModalButton.setAttribute('formaction', 'ChangeStatusSprint');
                 if (inputStatus == null) {
                     console.log(inputStatus);
                     let modalDialogBlock = document.querySelector("#modalDialogBlock");

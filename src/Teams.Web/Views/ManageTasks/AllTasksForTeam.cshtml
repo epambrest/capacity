@@ -1,85 +1,172 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Teams.Web.ViewModels.Task
 @inject IViewLocalizer Localizer
 @model Teams.Web.ViewModels.Task.AllTasksForTeamViewModel
 
 @{
+    Layout = "~/Views/ManageTasks/Shared/_NewLayout.cshtml";
     ViewData["Title"] = @Localizer["AllTasksForTeam"];
 }
 
-
 <script src="https://kit.fontawesome.com/8519ed4a13.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="~/css/ManageTasks/AllTasksForTeam.css" />
 
-<div style="margin: 10px 0px 0px 30px" align="left">
-    <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink("  Return to your teams", "GetMyTeams", "ManageTeams")</a></h>
+<h1 class="text-center font-weight-normal mt-2 mb-2">@Model.TeamName</h1>
+
+<div class="row">
+    @foreach (var member in Model.Members)
+    {
+        string shortEmail = member.Member.Email.Substring(0, 2).ToUpper();
+        <button class="сircle-button" style="margin-left:15px;" id=@member.Member.Email>
+            @shortEmail
+        </button>
+    }
 </div>
 
-<h1 class="text-center font-weight-normal mt-5 mb-3">@Model.TeamName</h1>
+@{ List<TaskViewModel> CompletedSprintTasks = new List<TaskViewModel>(); }
 
-<table class="table">
-
-    <tr align="center">
-        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["NameofTask"]</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["User"]</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPoint"]</td>
-        <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Link"]</td>
-        <td align="left" style="border-top: hidden; font-weight: bold"></td>
-        @if (Model.IsOwner)
-        {
-            <td style="border-top: hidden;" align="right">
-                <form>
-                    <input type="hidden" name="teamId" value="@Model.TeamId"/>
-                    <button type='submit' class='btn btn-outline-primary border-0' asp-controller="ManageTasks" asp-action="AddTaskIntoTeam">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </form>
-                @*@Html.ActionLink("", "AddTaskIntoTeam", "ManageTasks", new { teamId = Model.TeamId, errorMessage = "" }, new { @class = "fas fa-plus", title = "Add Task", style = "margin: 10px 0px 0px 30px", align = "right" })*@
-            </td>
-        }
-    </tr>
-
-    @foreach (var item in Model.Tasks)
+@foreach (var sprint in Model.Sprints)
+{
+    if (sprint.Status == PossibleStatuses.ActiveStatus)
     {
-        <tr align="center">
-            <td align="left">@item.Name</td>
-            @if (item.TeamMember != null)
-            {
-                <td align="left">@item.TeamMember.Member.Email</td>
-            }
-            else
-            {
-                 <td align="left"></td>
-            }
-            <td align="left">@item.StoryPoints</td>
-            @if (!item.Link.Contains("https://"))
-            {
-                <td align="left"><a href="https://@item.Link">@Localizer["Link"]</a></td>
-            }
-            else
-            {
-                <td align="left"><a href="@item.Link">@Localizer["Link"]</a></td>
-            }
-
-            @if (Model.IsOwner)
-            {
-                <td align="right">
-                    <form>
-                        <input type="hidden" name="taskId" value="@item.Id"/>
-                        <button type='submit' class='btn btn-outline-primary border-0' asp-action="EditTask">
-                            <i class="fas fa-pen"></i>
-                        </button>
-                    </form>
-                @*@Html.ActionLink("", "EditTask", new { teamId = Model.TeamId, taskId = item.Id, errorMessage = "" }, new { @class = "fas fa-pen", title = "Edit Task", style = "margin: 10px 0px 0px 30px", align = "right" })*@
-                </td>
-                <td align="right">
-                    <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromTeam"
-                            data-taskname="@item.Name" data-taskid="@item.Id" data-teamname="@Model.TeamName">
-                        <i class='far fa-trash-alt'></i>
-                    </button>
-                </td>
-            }
-        </tr>
+        var ActiveSprintTasks = Model.Tasks.FindAll(t => t.SprintId == sprint.Id);
+        if (ActiveSprintTasks.Count > 0)
+            await GetCard(sprint.Id, sprint.Name, "ActiveSprint", ActiveSprintTasks);
     }
-</table>
+    else if (sprint.Status == PossibleStatuses.CreatedStatus)
+    {
+        var CreatedSprintTasks = Model.Tasks.FindAll(t => t.SprintId == sprint.Id && t.Completed == false);
+        if (CreatedSprintTasks.Count > 0)
+            await GetCard(sprint.Id, sprint.Name, "CreatedSprint", CreatedSprintTasks);
+    }
+    else if (sprint.Status == PossibleStatuses.CompletedStatus)
+    {
+        CompletedSprintTasks.AddRange(Model.Tasks.FindAll(t => t.SprintId == sprint.Id && t.Completed == false));
+    }
+}
+
+@{
+    var BackLogtasks = Model.Tasks.FindAll(t => t.SprintId == null && t.Completed == false);
+    if (CompletedSprintTasks != null && CompletedSprintTasks.Count > 0)
+        BackLogtasks.AddRange(CompletedSprintTasks);
+    if (BackLogtasks.Count > 0)
+        await GetCard(0, "", "Backlog", BackLogtasks);
+}
+
+@functions
+{
+    async System.Threading.Tasks.Task GetCard(int sprintId, string sprintName, string type, List<TaskViewModel> tasks)
+    {
+        <div class="card" style="margin-top:15px;margin-bottom:15px;">
+            @if (type == "Backlog")
+            {
+                <div class="card-header bg-light">
+                    @Localizer[type]
+                </div>
+            }
+            else
+            {
+                <div class="card-header bg-light">
+                    @Html.ActionLink(sprintName, "EditSprint", "ManageSprints", new { sprintId = sprintId }) - @Localizer[type]
+                </div>
+            }
+            <div class="card-body">
+                <div class='table-scrollable'>
+                    <table class="table">
+                        <tr align="center">
+                            <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["NameofTask"]</td>
+                            <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPoint"]</td>
+                            <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Link"]</td>
+                            <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Member"]</td>
+                            @if (type == "ActiveSprint")
+                            {
+                                <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Action"]</td>
+                            }
+                            <td align="left" style="border-top: hidden; font-weight: bold"></td>
+                            @if (Model.IsOwner)
+                            {
+                                <td style="border-top: hidden;" align="right">
+                                    <form>
+                                        <input type="hidden" name="teamId" value="@Model.TeamId" />
+                                        <input type="hidden" name="sprintId" value="@sprintId" />
+                                        <button type='submit' class='btn btn-outline-primary border-0' asp-controller="ManageTasks" asp-action="AddTask">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            }
+                        </tr>
+                        @foreach (var item in tasks)
+                        {
+                            <tr align="center">
+                                <td align="left">@item.Name</td>
+                                <td align="left">@item.StoryPoints</td>
+                                @if (!item.Link.Contains("https://"))
+                                {
+                                    <td align="left"><a href="https://@item.Link">@Localizer["Link"]</a></td>
+                                }
+                                else
+                                {
+                                    <td align="left"><a href="@item.Link">@Localizer["Link"]</a></td>
+                                }
+
+                                @if (Model.IsOwner)
+                                {
+                                    if (item.MemberId != null)
+                                    {
+                                        <td align="left">
+                                            @{ string shortEmail = item.TeamMember.Member.Email.Substring(0, 2).ToUpper(); }
+                                            <button class="сircle-button" id=@item.TeamMember.Member.Email>
+                                                @shortEmail
+                                            </button>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td align="left">@Localizer["IsntAttached"]</td>
+                                    }
+                                    if (type == "ActiveSprint")
+                                    {
+                                        if (item.Completed == false)
+                                        {
+                                            <td align="left">
+                                                @Html.ActionLink(Localizer["Complete"].Value, "CompleteTaskInSprint",
+                                                             "ManageSprints", new
+                                                                  {
+                                                                      taskId = item.Id,
+                                                                                    isCompleted = true,
+                                                                                    redirectPath = "AllTasksForTeam"
+                                                                  })
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td align="left">@Localizer["AlreadyComplete"]</td>
+                                        }
+                                    }
+                                    <td align="right">
+                                        <form>
+                                            <input type="hidden" name="taskId" value="@item.Id" />
+                                            <button type='submit' class='btn btn-outline-primary border-0' asp-action="EditTask">
+                                                <i class="fas fa-pen"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                    <td align="right">
+                                        <button type='button' class='btn btn-outline-danger border-0' data-toggle="modal" data-target="#removeTaskFromTeam"
+                                                data-taskname="@item.Name" data-taskid="@item.Id" data-teamname="@Model.TeamName">
+                                            <i class='far fa-trash-alt'></i>
+                                        </button>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+}
 
 <form>
     <div class="modal fade" id="removeTaskFromTeam" role="dialog">
@@ -100,15 +187,65 @@
 
 <script>
     $(document).ready(function () {
-        $("#removeTaskFromTeam").on("show.bs.modal", function (event) {
-            var button = $(event.relatedTarget);
-            var taskId = button.data('taskid')
-            var taskName = button.data('taskname');
-            var teamName = button.data('teamname');
-            var removeTask = $("#removeTaskFromTeam");
-            removeTask.find("#taskId").val(taskId);
-            document.getElementById('task').innerHTML =
-                "@Localizer["Remove"]" + "<strong>" + taskName + "</strong>" + "@Localizer["from"]" + "<strong>" + teamName + "</strong>" + " ?";
+    $("#removeTaskFromTeam").on("show.bs.modal", function (event) {
+        let button = $(event.relatedTarget);
+        let taskId = button.data('taskid')
+        let taskName = button.data('taskname');
+        let teamName = button.data('teamname');
+        let removeTask = $("#removeTaskFromTeam");
+        removeTask.find("#taskId").val(taskId);
+        document.getElementById('task').innerHTML =
+            "@Localizer["Remove"]" + "<strong>" + taskName + "</strong>" + "@Localizer["from"]" + "<strong>" + teamName + "</strong>" + " ?";
         });
     });
+
+    $(document).ready(function () {
+        SetUpMenu();
+        AddHandlers();
+    });
+
+    function SetUpMenu() {
+        let backlogLink = document.querySelector("#backlogLink");
+        SetActiveNavLink(backlogLink);
+        let allSprintsLink = document.querySelector("#allSprintsLink");
+        allSprintsLink.setAttribute("href", "/ManageSprints/AllSprints?teamId=@Model.TeamId");
+    }
+
+    function SetActiveNavLink(linkElem) {
+        let underLine = document.createElement("u");
+        underLine.setAttribute("class", "text-primary");
+        let linkElemParent = linkElem.parentElement;
+        linkElemParent.appendChild(underLine);
+        underLine.appendChild(linkElem);
+    }
+
+    function AddHandlers() {
+        let circleButtons = document.querySelectorAll(".сircle-button");
+        for (let button of circleButtons) {
+            button.addEventListener("mouseover", ShowMemberInformation);
+            button.addEventListener("mouseout", CloseMemberInformation);
+        }
+        MoveMemberCardToCursor();
+    }
+
+    function ShowMemberInformation(event) {
+        let cardMember = document.querySelector('#cardMember');
+        let cardTitleMember = document.querySelector("#cardTitleMember");
+        cardTitleMember.textContent = event.currentTarget.id;
+        cardMember.removeAttribute("hidden");
+    }
+
+    function MoveMemberCardToCursor() {
+        $(document).ready(function () {
+            let movCard = $('#cardMember');
+            $(document).mousemove(function (e) {
+                movCard.css({ 'top': e.pageY, 'left': e.pageX});
+            });
+        });
+    }
+
+    function CloseMemberInformation() {
+        let cardMember = document.querySelector("#cardMember");
+        cardMember.setAttribute("hidden","");
+    }
 </script>
