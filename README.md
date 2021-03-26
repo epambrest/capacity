@@ -1,7 +1,7 @@
 # **[Apllication Web-site](https://capacity2020.azurewebsites.net "")**
 # Capacity technical documentation. 
 ## Common description 
-This web application can be used for organize flexible your working time in different areas. This application is being developed with Scrum principles. In the common you can create and manage teams, sprints, tasks and team members.
+This web application can be used for organize flexible your working time in different areas with Scrum principles. In the common you can create and manage teams, sprints, tasks and team members.
 ## Starting the project
 We are recommend next developer tools for running and develop project: 
 * **[IDE Visual Studio 2019 Community](https://visualstudio.microsoft.com/ru/vs/community/ "")** 
@@ -14,8 +14,8 @@ We are recommend next developer tools for running and develop project:
 2. Download and install MS-SQL Server Express. **[Guide](https://www.sqlshack.com/how-to-install-sql-server-express-edition/ "")**
 3. Download and install Git Bash for windows with default installation settings. 
 4. Open Git Bash and set-up your name and e-mail by using next commands: 
-	  - **git config --global user.name "your full name"**
-	  - **git config --global user.email "your email"**  
+ - **git config --global user.name "your full name"**
+ - **git config --global user.email "your email"**  
 **[Please follow to link for more information](https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup "")**
 5. Open console of git push and select path where will be project by using command: **cd "your full path"**
 6. Clone this repository by using command: **git clone “https url”**
@@ -26,23 +26,23 @@ We are recommend next developer tools for running and develop project:
 ### «!» If you have some problems with project, please write to someone from team. 
 ## Common Information about project
 ### Our project uses next stack of technologies (List can be changed in the future): 
-*	C# 
-*	Asp Net Core MVC
-*	JavaScript
-*	Jquery
-*	Entity Framework Core
-*	Bootstrap
-*	HTML
-*	CSS
-*	SQL
-*	Docker
+* C# 
+* Asp Net Core MVC
+* JavaScript
+* Jquery
+* Entity Framework Core
+* Bootstrap
+* HTML
+* CSS
+* SQL
+* Docker
 ### In the common this project consists of four next parts:
-1. Teams.Business  part contains all bussines application logic. We use services and Dependency Injection for flexiable and right organization of program. Almost all our data and process functions are managed with services.
-2. Teams.Data  part contains all project models, migrations, repositories and application context. Models describe all the program entities. Migrations are needed for update database condition. Repository allow to manage application database. Application context links all entities with each other
-3. Teams.Security part checks authorization access for current user.
-4. Teams.Web  part contains all program contollers, views, modelVIews, localization files. Controllers link the business logic and the visual part of the application (Views). Localization files are used for translate text information in project’s views.
-5. Teams.Business.Tests this part contains all unit tests for services. They test most of methods which are in services. We have understandable tests name and that is why you can understand what part of program is tested.
-6. Temas.Data.Tests  this part contains all unit tests for repositories. In the common all repositories are tested for them stability work with SQL database.  
+1. **Teams.Business**  part contains all bussines application logic. We use services and Dependency Injection for flexiable and right organization of program. Almost all our data and process functions are managed with services.
+2. **Teams.Data**  part contains all project models, migrations, repositories and application context. Models describe all the program entities. Migrations are needed for update database condition. Repository allow to manage application database. Application context links all entities with each other
+3. **Teams.Security** part checks authorization access for current user.
+4. **Teams.Web**  part contains all program contollers, views, modelVIews, localization files. Controllers link the business logic and the visual part of the application (Views). Localization files are used for translate text information in project’s views.
+5. **Teams.Business** tests this part contains all unit tests for services. They test most of methods which are in services. We have understandable tests name and that is why you can understand what part of program is tested.
+6. **Teams.Data.Tests**  this part contains all unit tests for repositories. In the common all repositories are tested for them stability work with SQL database.  
 ### Running unit-tests
 You can run those tests in Visual Studio tests explorer. if you press **"CTRL + E"**, T tests explorer will be opened on the left part of the screen after this press **"CTRL + R, V"** (this will run all tests in project, if you need run one tests or part you can use panel with buttons in tests explorer).
 ### Github actions:
