@@ -33,7 +33,7 @@
             <span asp-validation-for="StoryPointInHours"></span>
         </div>
 
-        if (Model.SelectTasks.Count != 0)
+        if (Model.SelectTasks != null && Model.SelectTasks.Count != 0)
         {
             <label id="selecttasks" task="@Localizer["PressToSelect"]" for="days">@Localizer["SelectTasks"] :</label>
             <div class="form-group">
