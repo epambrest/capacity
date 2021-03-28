@@ -18,6 +18,7 @@ namespace Teams.Data.Models
         public virtual Team Team { get; set; }
         [Required(ErrorMessage = "Name required")]
         [Column("Name")]
+        [StringLength(255, ErrorMessage = "Name length must be less than 255")]
         public string Name { get; set; }
         [Required(ErrorMessage = "Days count required")]
         [Range(1, 99999, ErrorMessage = "Please enter a value greater than 0")]

@@ -5,6 +5,7 @@ namespace Teams.Web.ViewModels.Sprint
     public class EditSprintViewModel
     {
         [Required]
+        [StringLength(255)]
         public string SprintName { get; set; }
         public int SprintId { get; set; }
         [Range(1, 14)]

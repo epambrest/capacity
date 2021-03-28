@@ -10,6 +10,7 @@ namespace Teams.Web.ViewModels.Sprint
         public int Id { get; set; }
         public int TeamId { get; set; }
         [Required]
+        [StringLength(255)]
         public string Name { get; set; }
         [Range(1, 30)]
         public int DaysInSprint { get; set; }

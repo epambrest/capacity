@@ -33,7 +33,7 @@
             {
                 <td align="left" width="1%"><i title="Member" class="fas fa-user"></i></td>
             }
-            <td align="left"><a>@Html.ActionLink(item.TeamName, "TeamMembers", "ManageTeamMembers", new { teamId = item.Id })</a></td>
+            <td align="left" style="word-break: break-all"><a>@Html.ActionLink(item.TeamName, "TeamMembers", "ManageTeamMembers", new { teamId = item.Id })</a></td>
             <td align="right" onclick="location.href = '@Url.Action("AllSprints", "ManageSprints", new { teamId= item.Id })'"><button type='button' class='btn btn-outline-secondary border-0'>@Localizer["Sprints"]</button></td>
             <td align="right" onclick="location.href = '@Url.Action("AllTasksForTeam", "ManageTasks", new { teamId = item.Id })'"><button type='button' class='btn btn-outline-secondary border-0'>@Localizer["Tasks"]</button></td>
             @if (item.Owner.Email == User.Identity.Name)
@@ -68,7 +68,7 @@
 
             <div class="modal-content">
                 <div class="modal-body text-center">
-                    <p id="team"></p>
+                    <p id="team" style="word-break: break-all"></p>
                     <input type="hidden" class="form-control" id="teamId" name="teamId" value="" />
                 </div>
                 <div class="modal-footer">
