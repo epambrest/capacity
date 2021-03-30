@@ -18,14 +18,14 @@
     <h><i class="fas fa-arrow-left"></i><a color="black">@Html.ActionLink($" {Localizer["ReturnTeams"].Value}", "GetMyTeams", "ManageTeams")</a></h>
 </div>
 
-<h1 class="text-center font-weight-normal mt-5 mb-3">@Model.Team.TeamName</h1>
+<h1 class="text-center font-weight-normal mt-5 mb-3" style="word-break: break-all">@Model.Team.TeamName</h1>
 
-<div sstyle="display: inline-block">
-    <table align="left" style="width:50%" class="table" id="grid">
+<div>
+    <table align="left" style="width: 50%; table-layout: fixed;" class="table" id="grid">
         <thead>
             <tr align="center">
                 <td align="left" style="border-top: hidden" width="1%"></td>
-                <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["NameOfSprint"]</td>
+                <td align="left" style="border-top: hidden; font-weight: bold" width="140">@Localizer["NameOfSprint"]</td>
                 <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["DaysInSprint"]</td>
                 <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPointInHours"]</td>
                 <td align="left" style="border-top: hidden; font-weight: bold"></td>
@@ -79,9 +79,9 @@
                     {
                         <td class="colorBlock" align="left" width="1%" bgcolor="blue"></td>
                     }
-                    <td align="left" data-type="@item.Id">@Html.ActionLink(item.Name, "GetSprintById", new { sprintId = item.Id })</td>
-                    <td align="left" data-type="@item.Id">@item.DaysInSprint</td>
-                    <td align="left" data-type="@item.Id">@item.StoryPointInHours</td>
+                    <td align="left" data-type="@item.Id" width="140" style="word-break: break-all">@Html.ActionLink(item.Name, "GetSprintById", new { sprintId = item.Id })</td>
+                    <td align="left" data-type="@item.Id" >@item.DaysInSprint</td>
+                    <td align="left" data-type="@item.Id" >@item.StoryPointInHours</td>
                     @if (Model.IsOwner)
                     {
                         <td align="right" data-type="@item.Id">
@@ -143,7 +143,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div id="modalDialogBlock" class="modal-body">
-                    <p align="center" id="sprint"></p>
+                    <p align="center" id="sprint" style="word-break: break-all"></p>
                     <input type="hidden" id="sprintId" name="sprintId" value="" />
                 </div>
                 <div class="modal-footer">
