@@ -93,14 +93,14 @@ else
                             <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["NameofTask"]</td>
                             <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPoint"]</td>
                             <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Link"]</td>
-                            <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Member"]</td>
-                            @if (type == "ActiveSprint")
-                            {
-                                <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Action"]</td>
-                            }
-                            <td align="left" style="border-top: hidden; font-weight: bold"></td>
                             @if (Model.IsOwner)
                             {
+                                <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Member"]</td>
+                                @if (type == "ActiveSprint")
+                                {
+                                    <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Action"]</td>
+                                }
+                                <td align="left" style="border-top: hidden; font-weight: bold"></td>
                                 <td style="border-top: hidden;" align="right">
                                     <form>
                                         <input type="hidden" name="teamId" value="@Model.TeamId" />
