@@ -177,6 +177,9 @@
   <data name="TaskHistory" xml:space="preserve">
     <value>История тасок</value>
   </data>
+  <data name="ThereArentSprints" xml:space="preserve">
+    <value>В комманде нету спринтов</value>
+  </data>
   <data name="User" xml:space="preserve">
     <value>Пользователь</value>
   </data>

@@ -23,13 +23,13 @@ namespace Teams.Web.Controllers
 
         private readonly IManageTeamsService _manageTeamsService;
 
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
 
         private readonly IAccessCheckService _accessCheckService;
 
         private readonly IStringLocalizer<ManageTeamMembersController> _localizer;
 
-        public ManageTeamMembersController(IManageTeamsMembersService manageTeamsMembersService, IManageTeamsService manageTeamsService, IAccessCheckService accessCheckService, UserManager<IdentityUser> userManager, IStringLocalizer<ManageTeamMembersController> localizer)
+        public ManageTeamMembersController(IManageTeamsMembersService manageTeamsMembersService, IManageTeamsService manageTeamsService, IAccessCheckService accessCheckService, UserManager<User> userManager, IStringLocalizer<ManageTeamMembersController> localizer)
         {
             _manageTeamsMembersService = manageTeamsMembersService;
 

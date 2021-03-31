@@ -16,41 +16,57 @@
 <div class="row">
     @foreach (var member in Model.Members)
     {
-        string shortEmail = member.Member.Email.Substring(0, 2).ToUpper();
-        <button class="сircle-button" style="margin-left:15px;" id=@member.Member.Email>
-            @shortEmail
-        </button>
+        if (!String.IsNullOrEmpty(member.Member.FirstName) && !String.IsNullOrEmpty(member.Member.LastName))
+        {
+            string firstName = member.Member.FirstName;
+            string lastName = member.Member.LastName;
+            string shortName = firstName.Substring(0, 1).ToUpper() + lastName.Substring(0, 1).ToUpper();
+            <button class="сircle-button" style="margin-left:15px;" id=@member.Member.Email FirstName=@firstName LastName=@lastName>
+                @shortName
+            </button>
+        }
+        else
+        {
+            string shortEmail = member.Member.Email.Substring(0, 2).ToUpper();
+            <button class="сircle-button" style="margin-left:15px;" id=@member.Member.Email>
+                @shortEmail
+            </button>
+        }
     }
 </div>
 
-@{ List<TaskViewModel> CompletedSprintTasks = new List<TaskViewModel>(); }
-
-@foreach (var sprint in Model.Sprints)
+@if (Model.Sprints.Count != 0)
 {
-    if (sprint.Status == PossibleStatuses.ActiveStatus)
+    List<TaskViewModel> CompletedSprintTasks = new List<TaskViewModel>();
+    foreach (var sprint in Model.Sprints)
     {
-        var ActiveSprintTasks = Model.Tasks.FindAll(t => t.SprintId == sprint.Id);
-        if (ActiveSprintTasks.Count > 0)
-            await GetCard(sprint.Id, sprint.Name, "ActiveSprint", ActiveSprintTasks);
+        if (sprint.Status == PossibleStatuses.ActiveStatus)
+        {
+            var ActiveSprintTasks = Model.Tasks.FindAll(t => t.SprintId == sprint.Id);
+            if (ActiveSprintTasks.Count > 0)
+                await GetCard(sprint.Id, sprint.Name, "ActiveSprint", ActiveSprintTasks);
+        }
+        else if (sprint.Status == PossibleStatuses.CreatedStatus)
+        {
+            var CreatedSprintTasks = Model.Tasks.FindAll(t => t.SprintId == sprint.Id && t.Completed == false);
+            if (CreatedSprintTasks.Count > 0)
+                await GetCard(sprint.Id, sprint.Name, "CreatedSprint", CreatedSprintTasks);
+        }
+        else if (sprint.Status == PossibleStatuses.CompletedStatus)
+        {
+            CompletedSprintTasks.AddRange(Model.Tasks.FindAll(t => t.SprintId == sprint.Id && t.Completed == false));
+        }
     }
-    else if (sprint.Status == PossibleStatuses.CreatedStatus)
-    {
-        var CreatedSprintTasks = Model.Tasks.FindAll(t => t.SprintId == sprint.Id && t.Completed == false);
-        if (CreatedSprintTasks.Count > 0)
-            await GetCard(sprint.Id, sprint.Name, "CreatedSprint", CreatedSprintTasks);
-    }
-    else if (sprint.Status == PossibleStatuses.CompletedStatus)
-    {
-        CompletedSprintTasks.AddRange(Model.Tasks.FindAll(t => t.SprintId == sprint.Id && t.Completed == false));
-    }
-}
 
-@{
     var BackLogtasks = Model.Tasks.FindAll(t => t.SprintId == null && t.Completed == false);
     if (CompletedSprintTasks != null && CompletedSprintTasks.Count > 0)
         BackLogtasks.AddRange(CompletedSprintTasks);
     if (BackLogtasks.Count > 0)
         await GetCard(0, "", "Backlog", BackLogtasks);
+}
+else
+{
+    <h2 class="text-center font-weight-normal mt-2 mb-2">@Localizer["ThereArentSprints"]</h2>
 }
 
 @functions
@@ -115,10 +131,22 @@
                                     if (item.MemberId != null)
                                     {
                                         <td align="left">
-                                            @{ string shortEmail = item.TeamMember.Member.Email.Substring(0, 2).ToUpper(); }
-                                            <button class="сircle-button" id=@item.TeamMember.Member.Email>
-                                                @shortEmail
-                                            </button>
+                                            @if (!String.IsNullOrEmpty(item.TeamMember.Member.FirstName) && !String.IsNullOrEmpty(item.TeamMember.Member.LastName))
+                                            {
+                                                string firstName = item.TeamMember.Member.FirstName;
+                                                string lastName = item.TeamMember.Member.LastName;
+                                                string shortName = firstName.Substring(0, 1).ToUpper() + lastName.Substring(0, 1).ToUpper();
+                                                <button class="сircle-button" style="margin-left:15px;" id=@item.TeamMember.Member.Email FirstName=@firstName LastName=@lastName>
+                                                    @shortName
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                string shortEmail = item.TeamMember.Member.Email.Substring(0, 2).ToUpper();
+                                                <button class="сircle-button" style="margin-left:15px;" id=@item.TeamMember.Member.Email>
+                                                    @shortEmail
+                                                </button>
+                                            }
                                         </td>
                                     }
                                     else
@@ -131,11 +159,11 @@
                                         {
                                             <td align="left">
                                                 @Html.ActionLink(Localizer["Complete"].Value, "CompleteTaskInSprint",
-                                                             "ManageSprints", new
-                                                                  {
-                                                                      taskId = item.Id,
-                                                                                    isCompleted = true,
-                                                                                    redirectPath = "AllTasksForTeam"
+                                                                 "ManageSprints", new
+                                                                 {
+                                                                    taskId = item.Id,
+                                                                    isCompleted = true,
+                                                                    redirectPath = "AllTasksForTeam"
                                                                   })
                                             </td>
                                         }
@@ -231,7 +259,16 @@
     function ShowMemberInformation(event) {
         let cardMember = document.querySelector('#cardMember');
         let cardTitleMember = document.querySelector("#cardTitleMember");
-        cardTitleMember.textContent = event.currentTarget.id;
+        let firstName = event.currentTarget.getAttribute("FirstName");
+        let lastName = event.currentTarget.getAttribute("LastName");
+        let textContentCard;
+        if (firstName && lastName) {
+            textContentCard = `${firstName} ${lastName}: ${event.currentTarget.id}`;
+        }
+        else {
+            textContentCard = `${event.currentTarget.id}`
+        }
+        cardTitleMember.textContent = textContentCard;
         cardMember.removeAttribute("hidden");
     }
 
