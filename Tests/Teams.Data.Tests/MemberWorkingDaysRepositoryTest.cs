@@ -1,10 +1,7 @@
-﻿using NUnit.Framework;
-using Microsoft.EntityFrameworkCore;
-using Moq;
+﻿using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Teams.Data;
 using Teams.Data.Models;
 using Teams.Data.Repository;
 

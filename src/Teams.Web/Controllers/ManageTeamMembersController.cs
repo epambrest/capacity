@@ -2,16 +2,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Localization;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Teams.Business.Services;
 using Teams.Data.Models;
-using Teams.Security;
 using Teams.Web.ViewModels.Team;
 using Teams.Web.ViewModels.TeamMember;
 

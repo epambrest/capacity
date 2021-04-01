@@ -3,7 +3,6 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Teams.Data;
 using Teams.Data.Models;
 using Teams.Data.Repository;
 

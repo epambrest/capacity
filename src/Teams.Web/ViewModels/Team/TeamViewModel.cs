@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
 using Teams.Data.Models;
 using Teams.Web.ViewModels.TeamMember;
 

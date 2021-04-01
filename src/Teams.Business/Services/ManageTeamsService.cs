@@ -1,12 +1,12 @@
-using System.Collections.Generic;
-using System.Linq;
-using Teams.Data;
-using Teams.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Teams.Data;
 using Teams.Data.Models;
+using Teams.Security;
 
 namespace Teams.Business.Services
 {

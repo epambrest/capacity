@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using MockQueryable.Moq;
+﻿using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Teams.Business.Services;
 using Teams.Data;
 using Teams.Data.Models;

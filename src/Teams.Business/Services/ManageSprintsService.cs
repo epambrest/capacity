@@ -2,10 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Teams.Business.Services;
 using Teams.Data;
 using Teams.Data.Models;
 using Teams.Security;

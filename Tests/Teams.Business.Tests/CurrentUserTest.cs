@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Moq;
+using NUnit.Framework;
+using System.Security.Authentication;
 using System.Security.Claims;
 using Teams.Security;
-using System.Security.Authentication;
-using NUnit.Framework;
 
 namespace Teams.Business.Tests
 {

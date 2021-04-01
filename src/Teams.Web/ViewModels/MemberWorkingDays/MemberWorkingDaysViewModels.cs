@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Teams.Web.ViewModels.MemberWorkingDays
+﻿namespace Teams.Web.ViewModels.MemberWorkingDays
 {
     public class MemberWorkingDaysViewModels
     {       
