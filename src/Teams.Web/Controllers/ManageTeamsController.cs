@@ -1,18 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Linq;
-using Teams.Business.Services;
-using Teams.Data;
-using Teams.Data.Models;
-using Teams.Security;
-using Teams.Web.ViewModels;
-using Teams.Web.ViewModels.Team;
 using Microsoft.Extensions.Localization;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using Teams.Business.Services;
+using Teams.Data.Models;
+using Teams.Web.ViewModels.Team;
 
 namespace Teams.Web.Controllers
 {

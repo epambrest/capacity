@@ -1,17 +1,16 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using Teams.Business.Services;
-using Teams.Security;
 using Teams.Data;
 using Teams.Data.Models;
 using Teams.Data.Repository;
+using Teams.Security;
 using Teams.Web.Resources.ViewModels;
 
 namespace Teams.Web

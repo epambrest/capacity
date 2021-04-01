@@ -1,14 +1,11 @@
-using Teams.Data;
-using Teams.Security;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 /*using Microsoft.AspNetCore.Mvc;*/
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity;
-using Teams.Business.Services;
+using System.Linq;
+using System.Threading.Tasks;
+using Teams.Data;
 using Teams.Data.Models;
+using Teams.Security;
 
 namespace Teams.Business.Services
 {

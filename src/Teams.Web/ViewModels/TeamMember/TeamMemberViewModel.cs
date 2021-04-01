@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Teams.Data.Models;
+﻿using Teams.Data.Models;
 
 namespace Teams.Web.ViewModels.TeamMember
 {

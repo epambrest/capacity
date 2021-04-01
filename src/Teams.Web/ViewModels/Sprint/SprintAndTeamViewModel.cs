@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Teams.Web.ViewModels.Team;
 using Teams.Web.ViewModels.MemberWorkingDays;
+using Teams.Web.ViewModels.Team;
 
 namespace Teams.Web.ViewModels.Sprint
 {

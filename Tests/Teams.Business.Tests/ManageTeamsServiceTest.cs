@@ -1,17 +1,13 @@
-using Moq;
-using Teams.Security;
-using Microsoft.AspNetCore.Http;
 using MockQueryable.Moq;
+using Moq;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Teams.Data;
-using Microsoft.EntityFrameworkCore;
-using System;
 using Teams.Business.Services;
+using Teams.Data;
 using Teams.Data.Models;
+using Teams.Security;
 
 namespace Teams.Business.Tests
 {
