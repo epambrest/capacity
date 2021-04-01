@@ -63,3 +63,4 @@ You can run those tests in Visual Studio tests explorer. if you press **"CTRL + 
 11. Go to **[Projects](https://github.com/epambrest/capacity/projects "")** and drag and drop your task from **“In progress”** to **“Done”**.
 12. If you notice some a bug or you have a new offer for the project, you can create new issue and describe them. Please, write your thoughts as detailed as you can. You can attach screenshots and videos. Don’t forget to set the right number for the issue.
 13. The number of tasks InProgress per person cannot be more than 2.
+14. Priority of tasks from top to bottom.
