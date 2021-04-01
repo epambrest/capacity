@@ -58,7 +58,7 @@ You can run those tests in Visual Studio tests explorer. if you press **"CTRL + 
 6. After your task has been done, you have to push your branch to repository.
 7. Go to **[repository](https://github.com/epambrest/capacity "")** in your browser and press **“compare & pull request” button**. If your branch doesn’t have problems with tests, you can go to the next step.
 8. Describe your changes as detailed as you can in the English language. We recommend attaching screenshots and videos if possible.
-9. Send the link to your pull request to our skype chat and wait until at least three team members approve your pull request. After that you can merge your branch with the master.
+9. Send the link to your pull request to our skype chat and wait unti team members approve your pull request. After that you can merge your branch with the master.
 10. Automated pull request appears after merging, you and three other team member have to approve it for upping current version.
 11. Go to **[Projects](https://github.com/epambrest/capacity/projects "")** and drag and drop your task from **“In progress”** to **“Done”**.
 12. If you notice some a bug or you have a new offer for the project, you can create new issue and describe them. Please, write your thoughts as detailed as you can. You can attach screenshots and videos. Don’t forget to set the right number for the issue.
