@@ -13,6 +13,6 @@ namespace Teams.Data.Models
 
         [ForeignKey(nameof(Member)), Required]
         public string MemberId { get; set; }
-        public virtual IdentityUser Member { get; set; }
+        public virtual User Member { get; set; }
     }
 }
