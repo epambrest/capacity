@@ -2,7 +2,7 @@
 
 namespace Teams.Business.Models
 {
-    public class User : IdentityUser
+    public class UserBusiness : IdentityUser
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
