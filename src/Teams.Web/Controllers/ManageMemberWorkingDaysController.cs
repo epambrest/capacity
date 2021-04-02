@@ -43,12 +43,12 @@ namespace Teams.Web.Controllers
             var model = new SprintAndTeamViewModel
             {
                 Sprints = new List<SprintViewModel>(),
-                memberWorkingDays = new List<MemberWorkingDaysViewModels>()
+                memberWorkingDays = new List<MemberWorkingDaysViewModel>()
             };
             model.sprintId = sprintId;
             model.Team = new TeamViewModel() { Id = team.Id, Owner = team.Owner, TeamName = team.TeamName, TeamMembers = new List<TeamMemberViewModel>() };
             teamMembers.ForEach(t => model.Team.TeamMembers.Add(new TeamMemberViewModel() { Id = t.Id, Member = t.Member, MemberId = t.MemberId }));
-            workingDays.ToList().ForEach(t => model.memberWorkingDays.Add(new MemberWorkingDaysViewModels() { Id = t.Id, SprintId = sprintId, MemberId = t.MemberId, WorkingDays = t.WorkingDays }));
+            workingDays.ToList().ForEach(t => model.memberWorkingDays.Add(new MemberWorkingDaysViewModel() { Id = t.Id, SprintId = sprintId, MemberId = t.MemberId, WorkingDays = t.WorkingDays }));
             return PartialView("_WorkingDaysPartial", model);
         }
 

@@ -1,6 +1,6 @@
 ﻿namespace Teams.Web.ViewModels.MemberWorkingDays
 {
-    public class MemberWorkingDaysViewModels
+    public class MemberWorkingDaysViewModel
     {       
         public int Id { get; set; }
         public int MemberId { get; set; }

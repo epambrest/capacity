@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace Teams.Business.Models
+﻿namespace Teams.Business.Models
 {
-    public class UserBusiness : IdentityUser
+    public class UserBusiness
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string Id { get; set; }
+        public string UserName { get; set; }
     }
 }

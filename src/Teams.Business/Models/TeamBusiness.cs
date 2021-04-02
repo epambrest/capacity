@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-
 namespace Teams.Business.Models
 {
     public class TeamBusiness

@@ -30,7 +30,7 @@ namespace Teams.Business.Services
             return await _teamRepository.InsertAsync(new Team { TeamOwner = _currentUser.Current.Id(), TeamName = teamName });
         }
 
-        public async Task<IEnumerable<Team>> GetMyTeamsAsync() =>await _teamRepository.GetAll().Include(m => m.TeamMembers).Include(t => t.Owner)
+        public async Task<IEnumerable<Team>> GetMyTeamsAsync() => await _teamRepository.GetAll().Include(m => m.TeamMembers).Include(t => t.Owner)
                 .Where(x => x.TeamOwner == _currentUser.Current.Id() || x.TeamMembers.Any(p => p.MemberId == _currentUser.Current.Id()))
                 .OrderByDescending(y => y.TeamOwner == _currentUser.Current.Id()).ToListAsync();
 
