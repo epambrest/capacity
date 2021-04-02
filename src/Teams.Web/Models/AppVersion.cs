@@ -1,4 +1,4 @@
-﻿namespace Teams.Web.POCO
+﻿namespace Teams.Web.Models
 {
     public class AppVersion
     {

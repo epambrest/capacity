@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Teams.Data.Models;
 
-namespace Teams.Web.Annotations
+namespace Teams.Web.Utilities.Attributes
 {
     class WorkingDaysAttribute : ValidationAttribute
     {
