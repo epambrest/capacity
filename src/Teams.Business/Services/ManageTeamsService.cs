@@ -13,7 +13,7 @@ namespace Teams.Business.Services
     public class ManageTeamsService : IManageTeamsService
     {
         private readonly ICurrentUser _currentUser;
-        private readonly IRepository<Team,int> _teamRepository;
+        private readonly IRepository<Team, int> _teamRepository;
 
         public ManageTeamsService(ICurrentUser currentUser, IRepository<Team, int> teamRepository)
         {

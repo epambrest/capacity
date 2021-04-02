@@ -11,6 +11,7 @@ using Teams.Data;
 using Teams.Data.Models;
 using Teams.Data.Repository;
 using Teams.Security;
+using Teams.Web.POCO;
 using Teams.Web.Resources.ViewModels;
 
 namespace Teams.Web

@@ -1,9 +1,8 @@
-﻿/*using Microsoft.AspNetCore.Mvc.RazorPages;*/
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Teams.Data.Models
+namespace Teams.Data.Annotations
 {
     public class DisplayOptions
     {

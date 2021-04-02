@@ -1,5 +1,4 @@
-﻿/*using Microsoft.AspNetCore.SignalR;*/
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 
 namespace Teams.Data

@@ -1,5 +1,4 @@
-﻿
-namespace Teams.Data.Models
+﻿namespace Teams.Data.Models
 {
     public class PossibleStatuses
     {
