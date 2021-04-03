@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Teams.Data.Models;
 
-
 namespace Teams.Data.Repository
 {
     public class MemberWorkingDaysRepository : IRepository<MemberWorkingDays, int>

@@ -7,7 +7,7 @@ namespace Teams.Data.Models
     {
         [MaxLength(35)]
         public string FirstName { get; set; }
-        
+
         [MaxLength(35)]
         public string LastName { get; set; }
     }

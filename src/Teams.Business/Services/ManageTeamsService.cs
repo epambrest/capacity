@@ -13,7 +13,7 @@ namespace Teams.Business.Services
     public class ManageTeamsService : IManageTeamsService
     {
         private readonly ICurrentUser _currentUser;
-        private readonly IRepository<Team,int> _teamRepository;
+        private readonly IRepository<Team, int> _teamRepository;
 
         public ManageTeamsService(ICurrentUser currentUser, IRepository<Team, int> teamRepository)
         {
@@ -30,7 +30,7 @@ namespace Teams.Business.Services
             return await _teamRepository.InsertAsync(new Team { TeamOwner = _currentUser.Current.Id(), TeamName = teamName });
         }
 
-        public async Task<IEnumerable<Team>> GetMyTeamsAsync() =>await _teamRepository.GetAll().Include(m => m.TeamMembers).Include(t => t.Owner)
+        public async Task<IEnumerable<Team>> GetMyTeamsAsync() => await _teamRepository.GetAll().Include(m => m.TeamMembers).Include(t => t.Owner)
                 .Where(x => x.TeamOwner == _currentUser.Current.Id() || x.TeamMembers.Any(p => p.MemberId == _currentUser.Current.Id()))
                 .OrderByDescending(y => y.TeamOwner == _currentUser.Current.Id()).ToListAsync();
 

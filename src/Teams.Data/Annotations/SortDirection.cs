@@ -1,4 +1,4 @@
-﻿namespace Teams.Data.Models
+﻿namespace Teams.Data.Annotations
 {
     public enum SortDirection
     {

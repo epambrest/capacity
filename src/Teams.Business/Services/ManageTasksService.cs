@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Teams.Data;
-using Teams.Data.Models;
+using Teams.Data.Annotations;
 using Teams.Security;
 
 namespace Teams.Business.Services

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using Teams.Data.Models;
+using Teams.Web.ViewModels.Shared;
 
 namespace Teams.Web.Controllers
 {

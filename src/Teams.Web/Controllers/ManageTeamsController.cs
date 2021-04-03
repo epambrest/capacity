@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Teams.Business.Services;
 using Teams.Data.Models;
+using Teams.Web.ViewModels.Shared;
 using Teams.Web.ViewModels.Team;
 
 namespace Teams.Web.Controllers

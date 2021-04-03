@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Teams.Data;
+using Teams.Data.Annotations;
 using Teams.Data.Models;
 using Teams.Security;
 
@@ -49,7 +50,7 @@ namespace Teams.Business.Services
                 return await _sprintRepository.GetAll().Where(t => t.Id == sprintId)
                     .Include(t => t.Tasks)
                     .ThenInclude(x => x.TeamMember.Member)
-                    .Include(x=>x.Team)
+                    .Include(x => x.Team)
                     .FirstOrDefaultAsync(t => t.Id == sprintId);
             }
             return await _sprintRepository.GetByIdAsync(sprintId);
@@ -58,8 +59,8 @@ namespace Teams.Business.Services
         public async Task<bool> AddSprintAsync(Sprint sprint)
         {
             if (_sprintRepository.GetAll()
-                .Where(x=>x.TeamId == sprint.TeamId)
-                .Any(x=>x.Name == sprint.Name) 
+                .Where(x => x.TeamId == sprint.TeamId)
+                .Any(x => x.Name == sprint.Name) 
                 || sprint.DaysInSprint<=0 || sprint.StoryPointInHours <= 0 || !Regex.IsMatch(sprint.Name, ("^[a-zA-Z0-9-_.]+( [a-zA-Z0-9-_.]+)*$")))
             {
                 return false;
@@ -103,10 +104,8 @@ namespace Teams.Business.Services
             if (sprints.Count() > 0)
             {
                 var averageSp = Math.Round((double)sprints.SelectMany(t => t.Tasks).Where(t => t.Completed == true).Sum(t => t.StoryPoints) / sprints.Count(), 1);
-
                 return averageSp;
             }
-
             return 0;
         }
     }

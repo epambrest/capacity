@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Teams.Data;
+using Teams.Data.Annotations;
 using Teams.Data.Models;
 using Teams.Security;
 
@@ -34,11 +35,6 @@ namespace Teams.Business.Services
                 return await _teamMemberRepository.DeleteAsync(member);
             }
             return false;
-        }
-
-        private TeamMember MemberInTeam(Team team, string memberId)
-        {
-            return team.TeamMembers.SingleOrDefault(t => t.MemberId == memberId);
         }
 
         public async Task<bool> AddAsync(int teamId, string memberId)
