@@ -3,19 +3,19 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Teams.Business.Annotations;
+using Teams.Business.Models;
+using Teams.Business.Repository;
 using Teams.Business.Services;
-using Teams.Data;
-using Teams.Data.Annotations;
-using Teams.Data.Models;
 using Teams.Security;
-using Task = Teams.Data.Models.Task;
 
 namespace Teams.Business.Tests
 {
     [TestFixture]
     class ManageTasksServiceTest
     {
-        private Mock<IRepository<Task, int>> _tasksRepository;
+        private Mock<IRepository<TaskBusiness, int>> _tasksRepository;
         private ManageTasksService _manageTasksService;
         private Mock<ICurrentUser> _currentUser;
 
@@ -23,48 +23,48 @@ namespace Teams.Business.Tests
         public void Setup()
         {
             _currentUser = new Mock<ICurrentUser>();
-            _tasksRepository = new Mock<IRepository<Task, int>>();
+            _tasksRepository = new Mock<IRepository<TaskBusiness, int>>();
             _manageTasksService = new ManageTasksService(_tasksRepository.Object, _currentUser.Object);
             var mock = getFakeDbTasks().AsQueryable().BuildMock();
-            _tasksRepository.Setup(x => x.GetAll()).Returns(mock.Object);
-            _tasksRepository.Setup(t => t.DeleteAsync(It.IsAny<Task>())).ReturnsAsync(true);
+            _tasksRepository.Setup(x => x.GetAllAsync()).Returns(Task.FromResult(getFakeDbTasks()));
+            _tasksRepository.Setup(t => t.DeleteAsync(It.IsAny<TaskBusiness>())).ReturnsAsync(true);
         }
 
         [Test]
-        public async System.Threading.Tasks.Task GetAllTasksInTeamAsync_RepositoryContainsTwoTasksForSelectedTeam_ReturnsTwoTasks()
+        public async Task GetAllTasksInTeamAsync_RepositoryContainsTwoTasksForSelectedTeam_ReturnsTwoTasks()
         {
             //Arrange
             const int teamId = 1;
 
             //Act
-            var result = new List<Task>(await _manageTasksService.GetAllTasksForTeamAsync(teamId, new DisplayOptions { }));
+            var result = new List<TaskBusiness>(await _manageTasksService.GetAllTasksForTeamAsync(teamId, new DisplayOptions { }));
 
             //Assert
             Assert.AreEqual(2, result.Count());
         }
 
         [Test]
-        public async System.Threading.Tasks.Task GetAllTasksInTeamAsync_RepositoryContainsZeroTasksForSelectedTeam_ReturnsNull()
+        public async Task GetAllTasksInTeamAsync_RepositoryContainsZeroTasksForSelectedTeam_ReturnsNull()
         {
             //Arrange
             const int teamId = 2;
 
             //Act
-            var result = new List<Task>(await _manageTasksService.GetAllTasksForTeamAsync(teamId, new DisplayOptions { }));
+            var result = new List<TaskBusiness>(await _manageTasksService.GetAllTasksForTeamAsync(teamId, new DisplayOptions { }));
 
             //Assert
             Assert.IsEmpty(result);
         }
 
         [Test]
-        public async System.Threading.Tasks.Task GetTaskByIdAsync_ManageTasksServiceReturnsTaskWithId1_ReturnTaskWithId1()
+        public async Task GetTaskByIdAsync_ManageTasksServiceReturnsTaskWithId1_ReturnTaskWithId1()
         {
             // Arrange
             const int taskId = 1;
 
-            var task = new List<Data.Models.Task>()
+            var task = new List<TaskBusiness>()
             {
-                new Data.Models.Task
+                new TaskBusiness
                 {
                     Id = 1,
                     Link = "google.com",
@@ -81,7 +81,7 @@ namespace Teams.Business.Tests
 
             var mock = task.AsQueryable().BuildMock();
 
-            _tasksRepository.Setup(x => x.GetAll()).Returns(mock.Object);
+            _tasksRepository.Setup(x => x.GetAllAsync()).Returns(Task.FromResult(getFakeDbTasks()));
 
             // Act
             var result = await _manageTasksService.GetTaskByIdAsync(taskId);
@@ -91,7 +91,7 @@ namespace Teams.Business.Tests
         }
 
         [Test]
-        public async System.Threading.Tasks.Task RemoveAsync_ManageTasksServiceReturnsTrue_ReturnsTrue()
+        public async Task RemoveAsync_ManageTasksServiceReturnsTrue_ReturnsTrue()
         {
             //Arrange
             const string ownerId = "1";
@@ -109,7 +109,7 @@ namespace Teams.Business.Tests
         }
 
         [Test]
-        public async System.Threading.Tasks.Task RemoveAsync_ManageTasksServiceReturnsFalse_ReturnsFalse()
+        public async Task RemoveAsync_ManageTasksServiceReturnsFalse_ReturnsFalse()
         {
             //Arrange
             const string ownerId = "2";
@@ -126,26 +126,62 @@ namespace Teams.Business.Tests
             Assert.IsFalse(result);
         }
 
-        private List<Task> getFakeDbTasks()
+        private IEnumerable<TaskBusiness> getFakeDbTasks()
         {
-            var tasks = new List<Task>()
+            var tasks = new List<TaskBusiness>()
             {
-                new Task{Id = 1,SprintId = 1,TeamId = 1,Team = new Team{TeamOwner = "1"}},
-                new Task{Id = 2,SprintId = 1,TeamId = 1,Team = new Team{TeamOwner = "2"}},
-                new Task{Id = 3,SprintId = 3,TeamId = 3,Team = new Team{TeamOwner = "3"}},
-                new Task{Id = 4,SprintId = 3,TeamId = 3,Team = new Team{TeamOwner = "4"}},
+                new TaskBusiness 
+                {
+                    Id = 1, 
+                    SprintId = 1, 
+                    TeamId = 1, 
+                    Team = new TeamBusiness {TeamOwner = "1"}
+                },
+
+                new TaskBusiness 
+                {
+                    Id = 2, 
+                    SprintId = 1, 
+                    TeamId = 1, 
+                    Team = new TeamBusiness {TeamOwner = "2"}
+                },
+
+                new TaskBusiness 
+                {
+                    Id = 3, 
+                    SprintId = 3, 
+                    TeamId = 3,
+                    Team = new TeamBusiness {TeamOwner = "3"}
+                },
+
+                new TaskBusiness
+                {
+                    Id = 4,
+                    SprintId = 3,
+                    TeamId = 3,
+                    Team = new TeamBusiness {TeamOwner = "4"}
+                },
             };
             return tasks;
         }
 
 
         [Test]
-        public async System.Threading.Tasks.Task EditTaskAsync_ManageTaskServiceReturns_True()
+        public async Task EditTaskAsync_ManageTaskServiceReturns_True()
         {
             //Arrange
-            var task = new Task { Id = 1, TeamId = 1, Name = "Task", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId =3 };
+            var task = new TaskBusiness 
+            { 
+                Id = 1, 
+                TeamId = 1, 
+                Name = "Task",
+                MemberId = 1, 
+                Link = "vk.com", 
+                StoryPoints = 3, 
+                SprintId =3 
+            };
 
-            _tasksRepository.Setup(x => x.UpdateAsync(It.IsAny<Task>())).ReturnsAsync(true);
+            _tasksRepository.Setup(x => x.UpdateAsync(It.IsAny<TaskBusiness>())).ReturnsAsync(true);
             _tasksRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(task);
 
             //Act
@@ -156,14 +192,43 @@ namespace Teams.Business.Tests
         }
 
         [Test]
-        public async System.Threading.Tasks.Task EditTaskAsync_ManageSpiritsServiceReturns_False()
+        public async Task EditTaskAsync_ManageSpiritsServiceReturns_False()
         {
             //Arrange
-            var task1 = new Task { Id = 1, TeamId = 1, Name = "Ta  sk", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
-            var task2 = new Task { Id = 1, TeamId = 1, Name = "Task", MemberId = 1, Link = "vkcom", StoryPoints = 3, SprintId = 3 };
-            var task3 = new Task { Id = 1, TeamId = 1, Name = "Task", MemberId = 1, Link = "vk.com", StoryPoints = -3, SprintId = 3 };
+            var task1 = new TaskBusiness 
+            { 
+                Id = 1, 
+                TeamId = 1,
+                Name = "Ta  sk",
+                MemberId = 1,
+                Link = "vk.com", 
+                StoryPoints = 3,
+                SprintId = 3 
+            };
 
-            _tasksRepository.Setup(x => x.UpdateAsync(It.IsAny<Task>())).ReturnsAsync(true);
+            var task2 = new TaskBusiness 
+            { 
+                Id = 1, 
+                TeamId = 1, 
+                Name = "Task", 
+                MemberId = 1,
+                Link = "vkcom", 
+                StoryPoints = 3,
+                SprintId = 3 
+            };
+
+            var task3 = new TaskBusiness 
+            {
+                Id = 1, 
+                TeamId = 1, 
+                Name = "Task", 
+                MemberId = 1,
+                Link = "vk.com",
+                StoryPoints = -3,
+                SprintId = 3 
+            };
+
+            _tasksRepository.Setup(x => x.UpdateAsync(It.IsAny<TaskBusiness>())).ReturnsAsync(true);
             _tasksRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(task2);
 
             //Act
@@ -182,12 +247,21 @@ namespace Teams.Business.Tests
         [TestCase("Task 1")]
         [TestCase("Task_1")]
         [TestCase("Task-1.")]
-        public async System.Threading.Tasks.Task EditTaskAsync_ManageSpiritsServiceNameCheckReturns_true(string TaskName)
+        public async Task EditTaskAsync_ManageSpiritsServiceNameCheckReturns_true(string TaskName)
         {
             //Arrange
-            var task = new Task { Id = 1, TeamId = 1, Name = TaskName, MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+            var task = new TaskBusiness 
+            { 
+                Id = 1, 
+                TeamId = 1,
+                Name = TaskName, 
+                MemberId = 1, 
+                Link = "vk.com", 
+                StoryPoints = 3, 
+                SprintId = 3
+            };
 
-            _tasksRepository.Setup(x => x.UpdateAsync(It.IsAny<Task>())).ReturnsAsync(true);
+            _tasksRepository.Setup(x => x.UpdateAsync(It.IsAny<TaskBusiness>())).ReturnsAsync(true);
             _tasksRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(task);
 
             //Act
@@ -201,12 +275,21 @@ namespace Teams.Business.Tests
         [TestCase("Task 1 ")]
         [TestCase("Task@1")]
         [TestCase("Task!1")]
-        public async System.Threading.Tasks.Task EditTaskAsync_ManageSpiritsServiceNameCheckReturns_false(string TaskName)
+        public async Task EditTaskAsync_ManageSpiritsServiceNameCheckReturns_false(string TaskName)
         {
             //Arrange
-            var task = new Task { Id = 1, TeamId = 1, Name = TaskName, MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+            var task = new TaskBusiness
+            { 
+                Id = 1,
+                TeamId = 1,
+                Name = TaskName, 
+                MemberId = 1, 
+                Link = "vk.com", 
+                StoryPoints = 3, 
+                SprintId = 3 
+            };
 
-            _tasksRepository.Setup(x => x.UpdateAsync(It.IsAny<Task>())).ReturnsAsync(true);
+            _tasksRepository.Setup(x => x.UpdateAsync(It.IsAny<TaskBusiness>())).ReturnsAsync(true);
             _tasksRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(task);
 
             //Act
@@ -217,12 +300,19 @@ namespace Teams.Business.Tests
         }
 
         [Test]
-        public async System.Threading.Tasks.Task AddTaskAsync_ManageTaskServiceReturns_True()
+        public async Task AddTaskAsync_ManageTaskServiceReturns_True()
         {
             //Arrange
-            var task = new Task { Id = 1, TeamId = 1, Name = "Task1",Link = "https://github.com/",StoryPoints = 1};
+            var task = new TaskBusiness 
+            { 
+                Id = 1,
+                TeamId = 1,
+                Name = "Task1",
+                Link = "https://github.com/",
+                StoryPoints = 1
+            };
 
-            _tasksRepository.Setup(x => x.InsertAsync(It.IsAny<Task>())).ReturnsAsync(true);
+            _tasksRepository.Setup(x => x.InsertAsync(It.IsAny<TaskBusiness>())).ReturnsAsync(true);
 
             //Act
             var result = await _manageTasksService.AddTaskAsync(task);
@@ -232,14 +322,37 @@ namespace Teams.Business.Tests
         }
 
         [Test]
-        public async System.Threading.Tasks.Task AddTasksAsync_ManageTasksServiceReturns_False()
+        public async Task AddTasksAsync_ManageTasksServiceReturns_False()
         {
             //Arrange
-            var task1 = new Task { Id = 1, TeamId = 1, Name = "Task 1@@ ", Link = "https://github.com/", StoryPoints = 1 };
-            var task2 = new Task { Id = 2, TeamId = 2, Name = "Task2", Link = "https://github.com/", StoryPoints = -5 };
-            var task3 = new Task { Id = 3, TeamId = 3, Name = "Task3", Link = "https:/ qq/github.com/", StoryPoints = 3 };
+            var task1 = new TaskBusiness
+            {
+                Id = 1, 
+                TeamId = 1,
+                Name = "Task 1@@ ",
+                Link = "https://github.com/", 
+                StoryPoints = 1 
+            };
 
-            _tasksRepository.Setup(x => x.InsertAsync(It.IsAny<Task>())).ReturnsAsync(true);
+            var task2 = new TaskBusiness 
+            { 
+                Id = 2, 
+                TeamId = 2,
+                Name = "Task2", 
+                Link = "https://github.com/",
+                StoryPoints = -5 
+            };
+
+            var task3 = new TaskBusiness 
+            { 
+                Id = 3,
+                TeamId = 3, 
+                Name = "Task3",
+                Link = "https:/ qq/github.com/", 
+                StoryPoints = 3 
+            };
+
+            _tasksRepository.Setup(x => x.InsertAsync(It.IsAny<TaskBusiness>())).ReturnsAsync(true);
 
             //Act
             var result1 = await _manageTasksService.AddTaskAsync(task1); //Incorrect name
@@ -253,15 +366,54 @@ namespace Teams.Business.Tests
         }
 
         [Test]
-        public async System.Threading.Tasks.Task AddTaskAsync_ManageSpiritsServiceNameCheckReturns_true()
+        public async Task AddTaskAsync_ManageSpiritsServiceNameCheckReturns_true()
         {
             //Arrange
-            var task1 = new Task { Id = 1, TeamId = 1, Name = "Task", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
-            var task2 = new Task { Id = 1, TeamId = 1, Name = "Task 1", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
-            var task3 = new Task { Id = 1, TeamId = 1, Name = "Task_1", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
-            var task4 = new Task { Id = 1, TeamId = 1, Name = "Task-1.", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+            var task1 = new TaskBusiness 
+            {
+                Id = 1, 
+                TeamId = 1,
+                Name = "Task",
+                MemberId = 1, 
+                Link = "vk.com",
+                StoryPoints = 3,
+                SprintId = 3 
+            };
 
-            _tasksRepository.Setup(x => x.InsertAsync(It.IsAny<Task>())).ReturnsAsync(true);
+            var task2 = new TaskBusiness 
+            { 
+                Id = 1, 
+                TeamId = 1,
+                Name = "Task 1", 
+                MemberId = 1, 
+                Link = "vk.com",
+                StoryPoints = 3,
+                SprintId = 3 
+            };
+
+            var task3 = new TaskBusiness 
+            { 
+                Id = 1, 
+                TeamId = 1,
+                Name = "Task_1",
+                MemberId = 1,
+                Link = "vk.com",
+                StoryPoints = 3, 
+                SprintId = 3 
+            };
+
+            var task4 = new TaskBusiness 
+            {
+                Id = 1, 
+                TeamId = 1,
+                Name = "Task-1.", 
+                MemberId = 1,
+                Link = "vk.com", 
+                StoryPoints = 3, 
+                SprintId = 3 
+            };
+
+            _tasksRepository.Setup(x => x.InsertAsync(It.IsAny<TaskBusiness>())).ReturnsAsync(true);
 
             //Act
             var result1 = await _manageTasksService.AddTaskAsync(task1);
@@ -278,15 +430,54 @@ namespace Teams.Business.Tests
         }
 
         [Test]
-        public async System.Threading.Tasks.Task AddTaskAsync_ManageSpiritsServiceNameCheckReturns_false()
+        public async Task AddTaskAsync_ManageSpiritsServiceNameCheckReturns_false()
         {
             //Arrange
-            var task1 = new Task { Id = 1, TeamId = 1, Name = "Ta  sk", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
-            var task2 = new Task { Id = 1, TeamId = 1, Name = "Task 1 ", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
-            var task3 = new Task { Id = 1, TeamId = 1, Name = "Task@1", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
-            var task4 = new Task { Id = 1, TeamId = 1, Name = "Task!1", MemberId = 1, Link = "vk.com", StoryPoints = 3, SprintId = 3 };
+            var task1 = new TaskBusiness 
+            { 
+                Id = 1,
+                TeamId = 1, 
+                Name = "Ta  sk",
+                MemberId = 1,
+                Link = "vk.com", 
+                StoryPoints = 3, 
+                SprintId = 3
+            };
 
-            _tasksRepository.Setup(x => x.InsertAsync(It.IsAny<Task>())).ReturnsAsync(true);
+            var task2 = new TaskBusiness 
+            {
+                Id = 1, 
+                TeamId = 1,
+                Name = "Task 1 ",
+                MemberId = 1, 
+                Link = "vk.com", 
+                StoryPoints = 3,
+                SprintId = 3
+            };
+
+            var task3 = new TaskBusiness 
+            { 
+                Id = 1,
+                TeamId = 1,
+                Name = "Task@1", 
+                MemberId = 1, 
+                Link = "vk.com", 
+                StoryPoints = 3,
+                SprintId = 3
+            };
+
+            var task4 = new TaskBusiness 
+            { 
+                Id = 1,
+                TeamId = 1,
+                Name = "Task!1",
+                MemberId = 1,
+                Link = "vk.com", 
+                StoryPoints = 3, 
+                SprintId = 3 
+            };
+
+            _tasksRepository.Setup(x => x.InsertAsync(It.IsAny<TaskBusiness>())).ReturnsAsync(true);
 
             //Act
             var result1 = await _manageTasksService.AddTaskAsync(task1);

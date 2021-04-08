@@ -1,8 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Teams.Business.Models;
+using Teams.Business.Repository;
+using Teams.Data.Mappings;
 using Teams.Data.Models;
 using Teams.Data.Repository;
 
@@ -14,7 +18,8 @@ namespace Teams.Data.Tests
         class TeamRepositoryTest
         {
             private ApplicationDbContext context;
-            private IRepository<TeamMember, int> teamMemberRepository;
+            private IRepository<TeamMemberBusiness, int> teamMemberRepository;
+            private IMapper _mapper;
 
             [SetUp]
             public void Setup()
@@ -22,6 +27,18 @@ namespace Teams.Data.Tests
                 var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: "TeamMemberListDatabase")
                 .Options;
+
+                var mappingConfig = new MapperConfiguration(mc =>
+                {
+                    mc.AddProfile(new MemberWorkingDaysProfile());
+                    mc.AddProfile(new SprintProfile());
+                    mc.AddProfile(new TaskProfile());
+                    mc.AddProfile(new TeamProfile());
+                    mc.AddProfile(new UserProfile());
+                    mc.AddProfile(new TeamMemberProfile());
+                });
+                IMapper mapper = mappingConfig.CreateMapper();
+                _mapper = mapper;
 
                 context = new ApplicationDbContext(options);
 
@@ -36,6 +53,8 @@ namespace Teams.Data.Tests
                     {
                         Id = i,
                         MemberId = i.ToString(),
+                        Member = new User(),
+                        TeamId = i
                     });
                 }
                 return lst.AsQueryable();
@@ -43,15 +62,15 @@ namespace Teams.Data.Tests
 
             #region GetAll
             [Test]
-            public void GetAll_TeamRepositoryReturnsListCount100_ListCount100()
+            public async System.Threading.Tasks.Task GetAll_TeamRepositoryReturnsListCount100_ListCount100()
             {
                 //Arrange
                 context.TeamMembers.AddRange(GenerateData(100));
                 context.SaveChanges();
-                teamMemberRepository = new TeamMemberRepository(context);
+                teamMemberRepository = new TeamMemberRepository(context, _mapper);
 
                 //Act
-                var teamMembers = teamMemberRepository.GetAll();
+                var teamMembers = await teamMemberRepository.GetAllAsync();
 
                 //Assert
                 Assert.AreEqual(context.TeamMembers.Count(), teamMembers.Count());
@@ -59,13 +78,13 @@ namespace Teams.Data.Tests
             }
 
             [Test]
-            public void GetAll_TeamRepositoryReturnsEmptyList_ReturnsEmpty()
+            public async System.Threading.Tasks.Task GetAll_TeamRepositoryReturnsEmptyList_ReturnsEmpty()
             {
                 //Arrange
-                teamMemberRepository = new TeamMemberRepository(context);
+                teamMemberRepository = new TeamMemberRepository(context, _mapper);
 
                 //Act
-                var teams = teamMemberRepository.GetAll();
+                var teams = await teamMemberRepository.GetAllAsync();
 
                 //Assert
                 Assert.IsEmpty(teams);
@@ -80,7 +99,7 @@ namespace Teams.Data.Tests
                 //Arrange
                 if (context.TeamMembers.Count() < 1)
                     context.TeamMembers.AddRange(GenerateData(100));
-                teamMemberRepository = new TeamMemberRepository(context);
+                teamMemberRepository = new TeamMemberRepository(context, _mapper);
 
                 //Act
                 var team = teamMemberRepository.GetByIdAsync(1).Result;
@@ -94,7 +113,7 @@ namespace Teams.Data.Tests
             public void GetByIdAsync_TeamRepositoryReturnsNull_ReturnsNull()
             {
                 //Arrange
-                teamMemberRepository = new TeamMemberRepository(context);
+                teamMemberRepository = new TeamMemberRepository(context, _mapper);
 
                 //Act
                 var team = teamMemberRepository.GetByIdAsync(101).Result;
@@ -110,8 +129,8 @@ namespace Teams.Data.Tests
             public void InsertAsync_TeamRepositoryReturnsTrue_ReturnsTrue()
             {
                 //Arrange
-                teamMemberRepository = new TeamMemberRepository(context);
-                TeamMember teamMember = new TeamMember() { MemberId = "100" };
+                teamMemberRepository = new TeamMemberRepository(context, _mapper);
+                TeamMemberBusiness teamMember = new TeamMemberBusiness() { MemberId = "100" };
 
                 //Act
                 var result = teamMemberRepository.InsertAsync(teamMember).Result;
@@ -129,7 +148,7 @@ namespace Teams.Data.Tests
                 //Arrange
                 context.TeamMembers.AddRange(GenerateData(2));
                 context.SaveChanges();
-                teamMemberRepository = new TeamMemberRepository(context);
+                teamMemberRepository = new TeamMemberRepository(context, _mapper);
                 //Act
                 var result = teamMemberRepository.DeleteAsync(teamMemberRepository.GetByIdAsync(1).Result).Result;
 
@@ -141,7 +160,7 @@ namespace Teams.Data.Tests
             public void DeleteAsync_TeamRepositoryReturnsNull_ReturnsNull()
             {
                 //Arrange
-                teamMemberRepository = new TeamMemberRepository(context);
+                teamMemberRepository = new TeamMemberRepository(context, _mapper);
 
                 //Act&Assert
                 try
@@ -166,10 +185,10 @@ namespace Teams.Data.Tests
                     context.TeamMembers.AddRange(GenerateData(3));
                     context.SaveChanges();
                 }
-                teamMemberRepository = new TeamMemberRepository(context);
+                teamMemberRepository = new TeamMemberRepository(context, _mapper);
 
                 //Act
-                var result = teamMemberRepository.UpdateAsync(new TeamMember() { Id = 1, MemberId = "01" }).Result;
+                var result = teamMemberRepository.UpdateAsync(new TeamMemberBusiness() { Id = 1, MemberId = "01" }).Result;
 
                 //Assert
                 Assert.IsTrue(result);
@@ -180,10 +199,10 @@ namespace Teams.Data.Tests
             public void UpdateAsync_TeamRepositoryReturnsFalse_ReturnsFalse()
             {
                 //Arrange
-                teamMemberRepository = new TeamMemberRepository(context);
+                teamMemberRepository = new TeamMemberRepository(context, _mapper);
 
                 //Act
-                var result = teamMemberRepository.UpdateAsync(new TeamMember() { Id = 101, MemberId = "101" }).Result;
+                var result = teamMemberRepository.UpdateAsync(new TeamMemberBusiness() { Id = 101, MemberId = "101" }).Result;
 
                 //Assert
                 Assert.IsFalse(result);

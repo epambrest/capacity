@@ -1,6 +1,8 @@
 ﻿@model Teams.Web.ViewModels.Sprint.SprintAndTeamViewModel
 @using Microsoft.AspNetCore.Mvc.Localization
+@using Teams.Business.Models;
 @inject IViewLocalizer Localizer
+
 @{
     ViewBag.Title = "Sprints";
 }
@@ -29,7 +31,7 @@
                 <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["DaysInSprint"]</td>
                 <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["StoryPointInHours"]</td>
                 <td align="left" style="border-top: hidden; font-weight: bold"></td>
-                @{  
+                @{
                     bool IsActiveSprintWas = false;
                     bool IsCreatedSprintWas = false;
                 }
@@ -80,8 +82,8 @@
                         <td class="colorBlock" align="left" width="1%" bgcolor="blue"></td>
                     }
                     <td align="left" data-type="@item.Id" width="140" style="word-break: break-all">@Html.ActionLink(item.Name, "GetSprintById", new { sprintId = item.Id })</td>
-                    <td align="left" data-type="@item.Id" >@item.DaysInSprint</td>
-                    <td align="left" data-type="@item.Id" >@item.StoryPointInHours</td>
+                    <td align="left" data-type="@item.Id">@item.DaysInSprint</td>
+                    <td align="left" data-type="@item.Id">@item.StoryPointInHours</td>
                     @if (Model.IsOwner)
                     {
                         <td align="right" data-type="@item.Id">

@@ -58,7 +58,7 @@
                 <option disabled selected>@Localizer["SelectUser"]</option>
                 @foreach (var item in Model.TeamMembers)
                 {
-                    <option value=@item.Id>@item.Member.Email</option>
+                    <option value=@item.Id>@item.Member.UserName</option>
                 }
             </select>
             @Html.ValidationMessageFor(model => model.TaskMemberId)

@@ -3,7 +3,9 @@
     public class TeamMemberBusiness 
     {
         public int Id { get; set; }
-        public virtual TeamBusiness Team { get; set; }
-        public virtual UserBusiness Member { get; set; }
+        public int? TeamId { get; set; }
+        public TeamBusiness Team { get; set; }
+        public string MemberId { get; set; }
+        public UserBusiness Member { get; set; }
     }
 }

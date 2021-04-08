@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Teams.Business.Models;
 using Teams.Business.Services;
-using Teams.Data.Models;
 using Teams.Web.ViewModels.Shared;
 using Teams.Web.ViewModels.Team;
 
@@ -35,12 +35,12 @@ namespace Teams.Web.Controllers
         {
             var teams = await _manageTeamsService.GetMyTeamsAsync();
             var teamModelView = new List<TeamViewModel>();
-            teams.ToList().ForEach(t=>teamModelView.Add(new TeamViewModel(){Owner = t.Owner,TeamName = t.TeamName,TeamOwner = t.TeamOwner,Id = t.Id}));
+            teams.ToList().ForEach(t => teamModelView.Add(new TeamViewModel() {Owner = t.Owner, TeamName = t.TeamName, TeamOwner = t.TeamOwner, Id = t.Id}));
             return View(teamModelView);
         }
 
         [Authorize, NonAction]
-        private async Task<Team> GetTeamAsync(int teamId)
+        private async Task<TeamBusiness> GetTeamAsync(int teamId)
         {
             if (await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
@@ -97,8 +97,7 @@ namespace Teams.Web.Controllers
         public async Task<IActionResult> Remove(int teamId)
         {
             var result = await _manageTeamsService.RemoveAsync(teamId);
-            if (result) 
-               return RedirectToAction("GetMyTeams");
+            if (result) return RedirectToAction("GetMyTeams");
             return RedirectToAction("ErrorRemove");
         }
 

@@ -24,7 +24,7 @@
                     foreach (var item in Model.TeamMembers)
                     {
                         if (!allMembers.ContainsKey(item.Id))
-                            allMembers.Add(item.Id, item.Member.Email);
+                            allMembers.Add(item.Id, item.Member.UserName);
                     }
                     foreach (var member in allMembers)
                     {

@@ -29,7 +29,7 @@
     </tr>
     <tr align="center">
         <td align="left" width="1%"><i title="Owner" class="fas fa-crown"></i></td>
-        <td align="left">@Model.Owner.Email</td>
+        <td align="left">@Model.Owner.UserName</td>
         <td align="right"></td>
         <td align="right"></td>
     </tr>
@@ -37,14 +37,14 @@
     {
         <tr align="center">
             <td align="left" width="1%"><i title="Member" class="fas fa-user"></i></td>
-            <td align="left">@item.Member.Email</td>
+            <td align="left">@item.Member.UserName</td>
             <td align="right"></td>
-            @if (@Model.Owner.Email == User.Identity.Name)
+            @if (@Model.Owner.UserName == User.Identity.Name)
             {
                 <td align="right">
                     <button type='button' id="1" class='btn btn-outline-danger border-0' data-toggle="modal"
                             data-target="#removeMember" data-teamname="@Model.TeamName" data-teamid="@Model.Id"
-                            data-membername="@item.Member.Email" data-memberid="@item.MemberId">
+                            data-membername="@item.Member.UserName" data-memberid="@item.MemberId">
                         <i class='far fa-trash-alt'></i>
                     </button>
                 </td>

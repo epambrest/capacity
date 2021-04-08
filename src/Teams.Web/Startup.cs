@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
@@ -6,8 +7,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Globalization;
+using Teams.Business.Models;
+using Teams.Business.Repository;
 using Teams.Business.Services;
 using Teams.Data;
+using Teams.Data.Mappings;
 using Teams.Data.Models;
 using Teams.Data.Repository;
 using Teams.Security;
@@ -40,16 +44,30 @@ namespace Teams.Web
             services.AddTransient<IManageSprintsService, ManageSprintsService>();
             services.AddTransient<IManageTasksService, ManageTasksService>();
             services.AddTransient<IManageMemberWorkingDaysService, ManageMemberWorkingDaysService>();
-            services.AddTransient<IRepository<Team, int>, TeamRepository>();
-            services.AddTransient<IRepository<TeamMember, int>, TeamMemberRepository>();
-            services.AddTransient<IRepository<Sprint, int>, SprintRepository>();
-            services.AddTransient<IRepository<Task, int>, TaskRepository>();
-            services.AddTransient<IRepository<MemberWorkingDays, int>, MemberWorkingDaysRepository>();
+            services.AddTransient<IRepository<TeamBusiness, int>, TeamRepository>();
+            services.AddTransient<IRepository<TeamMemberBusiness, int>, TeamMemberRepository>();
+            services.AddTransient<IRepository<SprintBusiness, int>, SprintRepository>();
+            services.AddTransient<IRepository<TaskBusiness, int>, TaskRepository>();
+            services.AddTransient<IRepository<MemberWorkingDaysBusiness, int>, MemberWorkingDaysRepository>();
             services.AddHttpContextAccessor();
             services.AddTransient<ICurrentUser, CurrentUser>();
             services.AddTransient<IManageTeamsMembersService, ManageTeamsMembersService>();
             services.AddTransient<IAccessCheckService, AccessCheckService>();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MemberWorkingDaysProfile());
+                mc.AddProfile(new SprintProfile());
+                mc.AddProfile(new TaskProfile());
+                mc.AddProfile(new TeamProfile());
+                mc.AddProfile(new UserProfile());
+                mc.AddProfile(new TeamMemberProfile());
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
             services.AddControllersWithViews()
                 .AddViewLocalization()
                 .AddDataAnnotationsLocalization(options =>

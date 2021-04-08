@@ -6,7 +6,8 @@ namespace Teams.Business.Models
     {
         public int Id { get; set; }
         public string TeamName { get; set; }
-        public virtual UserBusiness Owner { get; set; }
-        public virtual ICollection<TeamMemberBusiness> TeamMembers { get; set; }
+        public string TeamOwner { get; set; }
+        public UserBusiness Owner { get; set; }
+        public List<TeamMemberBusiness> TeamMembers { get; set; } = new List<TeamMemberBusiness>();
     }
 }

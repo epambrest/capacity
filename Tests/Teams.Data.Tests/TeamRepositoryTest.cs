@@ -1,8 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Teams.Business.Models;
+using Teams.Business.Repository;
+using Teams.Data.Mappings;
 using Teams.Data.Models;
 using Teams.Data.Repository;
 
@@ -12,7 +16,8 @@ namespace Teams.Data.Tests
     class TeamRepositoryTest
     {
         private ApplicationDbContext context;
-        private IRepository<Team, int> teamRepository;
+        private IRepository<TeamBusiness, int> teamRepository;
+        private IMapper _mapper;
 
         [SetUp]
         public void Setup()
@@ -20,6 +25,18 @@ namespace Teams.Data.Tests
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
             .UseInMemoryDatabase(databaseName: "TeamListDatabase")
             .Options;
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MemberWorkingDaysProfile());
+                mc.AddProfile(new SprintProfile());
+                mc.AddProfile(new TaskProfile());
+                mc.AddProfile(new TeamProfile());
+                mc.AddProfile(new UserProfile());
+                mc.AddProfile(new TeamMemberProfile());
+            });
+            IMapper mapper = mappingConfig.CreateMapper();
+            _mapper = mapper;
 
             context = new ApplicationDbContext(options);
 
@@ -34,7 +51,9 @@ namespace Teams.Data.Tests
                 {
                     Id = i,
                     TeamName = "Name" + i,
-                    TeamOwner = "Owner" + i
+                    TeamOwner = "Owner" + i,
+                    TeamMembers = new List<TeamMember>(),
+                    Owner = new User()
                 });
             }
             return lst.AsQueryable();
@@ -42,15 +61,15 @@ namespace Teams.Data.Tests
 
         #region GetAll
         [Test]
-        public void GetAll_TeamRepositoryReturnsListCount100_ListCount100()
+        public async System.Threading.Tasks.Task GetAll_TeamRepositoryReturnsListCount100_ListCount100()
         {
             //Arrange
             context.Team.AddRange(GenerateData(100));
             context.SaveChanges();
-            teamRepository = new TeamRepository(context);
+            teamRepository = new TeamRepository(context, _mapper);
 
             //Act
-            var teams = teamRepository.GetAll();
+            var teams = await teamRepository.GetAllAsync();
 
             //Assert
             Assert.AreEqual(context.Team.Count(), teams.Count());
@@ -58,13 +77,13 @@ namespace Teams.Data.Tests
         }
 
         [Test]
-        public void GetAll_TeamRepositoryReturnsEmptyList_ReturnsEmpty()
+        public async System.Threading.Tasks.Task GetAll_TeamRepositoryReturnsEmptyList_ReturnsEmpty()
         {
             //Arrange
-            teamRepository = new TeamRepository(context);
+            teamRepository = new TeamRepository(context, _mapper);
 
             //Act
-            var teams = teamRepository.GetAll();
+            var teams = await teamRepository.GetAllAsync();
 
             //Assert
             Assert.IsEmpty(teams);
@@ -79,7 +98,7 @@ namespace Teams.Data.Tests
             //Arrange
             if (context.Team.Count() < 1)
                 context.Team.AddRange(GenerateData(100));
-            teamRepository = new TeamRepository(context);
+            teamRepository = new TeamRepository(context, _mapper);
 
             //Act
             var team = teamRepository.GetByIdAsync(1).Result;
@@ -93,7 +112,7 @@ namespace Teams.Data.Tests
         public void GetByIdAsync_TeamRepositoryReturnsNull_ReturnsNull()
         {
             //Arrange
-            teamRepository = new TeamRepository(context);
+            teamRepository = new TeamRepository(context, _mapper);
 
             //Act
             var team = teamRepository.GetByIdAsync(101).Result;
@@ -109,8 +128,8 @@ namespace Teams.Data.Tests
         public void InsertAsync_TeamRepositoryReturnsTrue_ReturnsTrue()
         {
             //Arrange
-            teamRepository = new TeamRepository(context);
-            Team team = new Team() { TeamName = "Name101", TeamOwner = "Owner101" };
+            teamRepository = new TeamRepository (context, _mapper);
+            TeamBusiness team = new TeamBusiness() { TeamName = "Name101", TeamOwner = "Owner101" };
 
             //Act
             var result = teamRepository.InsertAsync(team).Result;
@@ -128,7 +147,7 @@ namespace Teams.Data.Tests
             //Arrange
             context.Team.AddRange(GenerateData(2));
             context.SaveChanges();
-            teamRepository = new TeamRepository(context);
+            teamRepository = new TeamRepository(context, _mapper);
 
             //Act
             var result = teamRepository.DeleteAsync(teamRepository.GetByIdAsync(1).Result).Result;
@@ -142,7 +161,7 @@ namespace Teams.Data.Tests
         public void DeleteAsync_TeamRepositoryReturnsNull_ReturnsNull()
         {
             //Arrange
-            teamRepository = new TeamRepository(context);
+            teamRepository = new TeamRepository(context, _mapper);
 
             //Act&Assert
             try
@@ -167,28 +186,26 @@ namespace Teams.Data.Tests
                 context.Team.AddRange(GenerateData(100));
                 context.SaveChanges();
             }
-            teamRepository = new TeamRepository(context);
+            teamRepository = new TeamRepository(context, _mapper);
 
             //Act
-            var result = teamRepository.UpdateAsync(new Team() { Id = 1, TeamName = "1Name", TeamOwner = "1Onwer" }).Result;
+            var result = teamRepository.UpdateAsync(new TeamBusiness() { Id = 1, TeamName = "1Name", TeamOwner = "1Onwer" }).Result;
 
             //Assert
             Assert.IsTrue(result);
-
         }
 
         [Test]
         public void UpdateAsync_TeamRepositoryReturnsFalse_ReturnsFalse()
         {
             //Arrange
-            teamRepository = new TeamRepository(context);
+            teamRepository = new TeamRepository(context, _mapper);
 
             //Act
-            var result = teamRepository.UpdateAsync(new Team() { Id = 101, TeamName = "1Name", TeamOwner = "1Onwer" }).Result;
+            var result = teamRepository.UpdateAsync(new TeamBusiness() { Id = 101, TeamName = "1Name", TeamOwner = "1Onwer" }).Result;
 
             //Assert
             Assert.IsFalse(result);
-
         }
         #endregion
     }

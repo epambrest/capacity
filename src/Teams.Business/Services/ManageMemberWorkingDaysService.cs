@@ -1,43 +1,34 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Teams.Data;
-using Teams.Data.Models;
-using Teams.Security;
+using Teams.Business.Models;
+using Teams.Business.Repository;
 
 namespace Teams.Business.Services
 {
     public class ManageMemberWorkingDaysService : IManageMemberWorkingDaysService
     {
-        private readonly IRepository<MemberWorkingDays, int> _memberWorkingDaysRepository;
-        private readonly ICurrentUser _currentUser;
+        private readonly IRepository<MemberWorkingDaysBusiness, int> _memberWorkingDaysRepository;
 
-        public ManageMemberWorkingDaysService(IRepository<MemberWorkingDays, int> memberWorkingDaysRepository, ICurrentUser currentUser)
+        public ManageMemberWorkingDaysService(IRepository<MemberWorkingDaysBusiness, int> memberWorkingDaysRepository)
         {
             _memberWorkingDaysRepository = memberWorkingDaysRepository;
-            _currentUser = currentUser;
         }
 
-        public async Task<MemberWorkingDays> GetWorkingDaysByIdAsync(int workingDaysId)
+        public async Task<MemberWorkingDaysBusiness> GetWorkingDaysByIdAsync(int workingDaysId)
         {
-            var workingDays = await _memberWorkingDaysRepository.GetAll()
-                .Include(x => x.Sprint)
-                .Include(x => x.TeamMember)
-                .FirstOrDefaultAsync(x => x.Id == workingDaysId);
+            var workingDaysEntity = await _memberWorkingDaysRepository.GetAllAsync();
+            var workingDays = workingDaysEntity.FirstOrDefault(x => x.Id == workingDaysId);
             return workingDays;
         }
 
-        public async Task<bool> AddMemberWorkingDaysAsync(MemberWorkingDays memberWorkingDays)
+        public async Task<bool> AddMemberWorkingDaysAsync(MemberWorkingDaysBusiness memberWorkingDays)
         {
-            if (memberWorkingDays.WorkingDays < 0)
-            {
-                return false;
-            }
+            if (memberWorkingDays.WorkingDays < 0) return false;
             return await _memberWorkingDaysRepository.InsertAsync(memberWorkingDays);
         }
 
-        public async Task<bool> EditMemberWorkingDaysAsync(MemberWorkingDays memberWorkingDays)
+        public async Task<bool> EditMemberWorkingDaysAsync(MemberWorkingDaysBusiness memberWorkingDays)
         {
             var oldMemberWorkingDays = await _memberWorkingDaysRepository.GetByIdAsync(memberWorkingDays.Id);
 
@@ -50,13 +41,11 @@ namespace Teams.Business.Services
             return await _memberWorkingDaysRepository.UpdateAsync(memberWorkingDays);
         }
 
-        public async Task<IEnumerable<MemberWorkingDays>> GetAllWorkingDaysForSprintAsync(int sprintId)
+        public async Task<IEnumerable<MemberWorkingDaysBusiness>> GetAllWorkingDaysForSprintAsync(int sprintId)
         {
-            var workingDays = await _memberWorkingDaysRepository.GetAll()
-                .Include(x => x.Sprint)
-                .Include(x => x.TeamMember)
-                .Where(x => x.SprintId == sprintId).ToListAsync();
-            return workingDays;
+            var workingDaysEntity = await _memberWorkingDaysRepository.GetAllAsync();
+            var allWorkingDaysForSprint = workingDaysEntity.Where(x => x.SprintId == sprintId);
+            return allWorkingDaysForSprint;
         }
     }
 }

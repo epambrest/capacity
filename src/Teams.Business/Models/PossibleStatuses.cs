@@ -1,4 +1,4 @@
-﻿namespace Teams.Data.Models
+﻿namespace Teams.Business.Models
 {
     public class PossibleStatuses
     {

@@ -4,9 +4,10 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Teams.Business.Models;
+using Teams.Business.Repository;
 using Teams.Business.Services;
-using Teams.Data;
-using Teams.Data.Models;
 using Teams.Security;
 
 namespace Teams.Business.Tests
@@ -15,17 +16,17 @@ namespace Teams.Business.Tests
     class ManageTeamsServiceTest
     {
         private ManageTeamsService _manageTeamsService;
-        private Mock <IRepository<Team, int>> _teamRepository;
+        private Mock <IRepository<TeamBusiness, int>> _teamRepository;
         private Mock<ICurrentUser> _currentUserMock;
 
         [SetUp]
         public void Setup()
         {
             _currentUserMock =  new Mock<ICurrentUser>();
-            _teamRepository = new Mock<IRepository<Team, int>>();
-            var dbMock = new List<Team>().AsQueryable().BuildMock();
-            _teamRepository.Setup(x => x.GetAll()).Returns(dbMock.Object);
-            _teamRepository.Setup(x => x.InsertAsync(It.IsAny<Team>())).ReturnsAsync(true);
+            _teamRepository = new Mock<IRepository<TeamBusiness, int>>();
+            var dbMock = new List<TeamBusiness>();
+            _teamRepository.Setup(x => x.GetAllAsync()).Returns(Task.FromResult(GetFakeDbTeams()));
+            _teamRepository.Setup(x => x.InsertAsync(It.IsAny<TeamBusiness>())).ReturnsAsync(true);
             string ownerId = Guid.NewGuid().ToString();
             var userDetails = new Mock<UserDetails>(null);
             userDetails.Setup(x => x.Id()).Returns(ownerId);
@@ -85,22 +86,91 @@ namespace Teams.Business.Tests
         {
             //Arrange
             const string id = "abc-def";
-            var teams = new List<Team>
+            var teams = new List<TeamBusiness>
             {
-                new Team { Id= 1, TeamOwner = "abc-def", TeamName = "Team1", TeamMembers=new List<TeamMember>{new TeamMember {MemberId="def-abc", TeamId =1}}},
-                new Team { Id= 2, TeamOwner = "def-abc", TeamName = "Team2", TeamMembers=new List<TeamMember>{new TeamMember {MemberId="abc-def", TeamId =2}}},
-                new Team { Id= 3, TeamOwner = "def-abc", TeamName = "Team3", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}},
-                new Team { Id= 4, TeamOwner = "abc-def", TeamName = "Team4", TeamMembers=new List<TeamMember>{new TeamMember {MemberId="abc-def", TeamId =4}}},
-                new Team { Id= 5, TeamOwner = "def-abc", TeamName = "Team5", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}},
-                new Team { Id= 6, TeamOwner = "def-abc", TeamName = "Team6", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}},
-                new Team { Id= 7, TeamOwner = "def-abc", TeamName = "Team7", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}},
-                new Team { Id= 8, TeamOwner = "def-abc", TeamName = "Team8", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}},
-                new Team { Id= 9, TeamOwner = "def-abc", TeamName = "Team9", TeamMembers=new List<TeamMember>{new TeamMember {MemberId="abc-def", TeamId =9}}},
-                new Team { Id= 10, TeamOwner = "def-abc", TeamName = "Team10", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}}
+                new TeamBusiness 
+                {
+                    Id= 1, 
+                    TeamOwner = "abc-def",
+                    TeamName = "Team1",
+                    TeamMembers = new List<TeamMemberBusiness> {new TeamMemberBusiness { MemberId="def-abc", TeamId =1}}
+                },
+
+                new TeamBusiness 
+                { 
+                    Id= 2, 
+                    TeamOwner = "def-abc",
+                    TeamName = "Team2",
+                    TeamMembers = new List<TeamMemberBusiness> {new TeamMemberBusiness { MemberId="abc-def", TeamId =2}}
+                },
+                
+                new TeamBusiness
+                { 
+                    Id= 3,
+                    TeamOwner = "def-abc", 
+                    TeamName = "Team3",
+                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId="asf-fgv"}}
+                },
+                
+                new TeamBusiness 
+                { 
+                    Id= 4,
+                    TeamOwner = "abc-def",
+                    TeamName = "Team4",
+                    TeamMembers = new List<TeamMemberBusiness> {new TeamMemberBusiness { MemberId="abc-def", TeamId =4}}
+                },
+                
+                new TeamBusiness 
+                { 
+                    Id= 5,
+                    TeamOwner = "def-abc", 
+                    TeamName = "Team5", 
+                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId="asf-fgv"}}
+                },
+                
+                new TeamBusiness 
+                {
+                    Id= 6,
+                    TeamOwner = "def-abc",
+                    TeamName = "Team6",
+                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId="asf-fgv"}}
+                },
+                
+                new TeamBusiness 
+                { 
+                    Id= 7,
+                    TeamOwner = "def-abc", 
+                    TeamName = "Team7",
+                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId="asf-fgv"}}
+                },
+                
+                new TeamBusiness 
+                { 
+                    Id= 8, 
+                    TeamOwner = "def-abc", 
+                    TeamName = "Team8",
+                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId="asf-fgv"}}
+                },
+                
+                new TeamBusiness 
+                { 
+                    Id= 9, 
+                    TeamOwner = "def-abc",
+                    TeamName = "Team9", 
+                    TeamMembers = new List<TeamMemberBusiness> {new TeamMemberBusiness { MemberId="abc-def", TeamId =9}}
+                },
+                
+                new TeamBusiness 
+                { 
+                    Id= 10,
+                    TeamOwner = "def-abc",
+                    TeamName = "Team10", 
+                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId="asf-fgv"}}
+                }
             };
 
             var mock = teams.AsQueryable().BuildMock();
-            _teamRepository.Setup(x => x.GetAll()).Returns(mock.Object);
+            _teamRepository.Setup(x => x.GetAllAsync()).Returns(Task.FromResult(teams.AsEnumerable()));
 
             var ud = new Mock<UserDetails>(null);
             ud.Setup(x => x.Id()).Returns(id);
@@ -108,7 +178,7 @@ namespace Teams.Business.Tests
             _currentUserMock.SetupGet(x => x.Current).Returns(ud.Object);
 
             //Act
-            var result = new List<Team>(await _manageTeamsService.GetMyTeamsAsync());
+            var result = new List<TeamBusiness>(await _manageTeamsService.GetMyTeamsAsync());
 
             //Assert
             Assert.AreEqual(4, result.Count());
@@ -124,7 +194,7 @@ namespace Teams.Business.Tests
             //Arrange
             const string id = "abc-def";
             const int teamId = 3;
-            Team team = new Team { Id= 3, TeamOwner = "def-abc", TeamName = "Team3", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}};
+            TeamBusiness team = new TeamBusiness { Id = 3, TeamOwner = "def-abc", TeamName = "Team3", TeamMembers=new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "asf-fgv"}}};
 
             _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(team);
 
@@ -150,9 +220,9 @@ namespace Teams.Business.Tests
             const string teamName2 = "New Name_Team-4";
 
             var mock = GetFakeDbTeams().AsQueryable().BuildMock();
-            _teamRepository.Setup(x => x.GetAll()).Returns(mock.Object);
-            _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new Team { Id = 4, TeamOwner = "abc-def", TeamName = "Team4", TeamMembers = new List<TeamMember> { new TeamMember { MemberId = "abc-def", TeamId = 4 }}});
-            _teamRepository.Setup(x => x.UpdateAsync(It.IsAny<Team>())).ReturnsAsync(true);
+            _teamRepository.Setup(x => x.GetAllAsync()).Returns(Task.FromResult(GetFakeDbTeams()));
+            _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new TeamBusiness { Id = 4, TeamOwner = "abc-def", TeamName = "Team4", TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "abc-def", TeamId = 4 }}});
+            _teamRepository.Setup(x => x.UpdateAsync(It.IsAny<TeamBusiness>())).ReturnsAsync(true);
 
             var ud = new Mock<UserDetails>(null);
             ud.Setup(x => x.Id()).Returns(id);
@@ -177,11 +247,10 @@ namespace Teams.Business.Tests
             const string existTeamName = "Team5";
             const string errorTeamName = "ERR##$$OR";
             const string errorTeamName2 = "Team  Error";
-
             var mock = GetFakeDbTeams().AsQueryable().BuildMock();
-            _teamRepository.Setup(x => x.GetAll()).Returns(mock.Object);
-            _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new Team { Id = 4, TeamOwner = "abc-def", TeamName = "Team4", TeamMembers = new List<TeamMember> { new TeamMember { MemberId = "abc-def", TeamId = 4 } } });
-            _teamRepository.Setup(x => x.UpdateAsync(It.IsAny<Team>())).ReturnsAsync(true);
+            _teamRepository.Setup(x => x.GetAllAsync()).Returns(Task.FromResult(GetFakeDbTeams()));
+            _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new TeamBusiness { Id = 4, TeamOwner = "abc-def", TeamName = "Team4", TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "abc-def", TeamId = 4 } } });
+            _teamRepository.Setup(x => x.UpdateAsync(It.IsAny<TeamBusiness>())).ReturnsAsync(true);
 
             var ud = new Mock<UserDetails>(null);
             ud.Setup(x => x.Id()).Returns(id);
@@ -208,9 +277,9 @@ namespace Teams.Business.Tests
             const string teamName = "NewName";
 
             var mock = GetFakeDbTeams().AsQueryable().BuildMock();
-            _teamRepository.Setup(x => x.GetAll()).Returns(mock.Object);
-            _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new Team { Id = 4, TeamOwner = "abc-def", TeamName = "Team4", TeamMembers = new List<TeamMember> { new TeamMember { MemberId = "abc-def", TeamId = 4 } } });
-            _teamRepository.Setup(x => x.UpdateAsync(It.IsAny<Team>())).ReturnsAsync(true);
+            _teamRepository.Setup(x => x.GetAllAsync()).Returns(Task.FromResult(GetFakeDbTeams()));
+            _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new TeamBusiness { Id = 4, TeamOwner = "abc-def", TeamName = "Team4", TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "abc-def", TeamId = 4 } } });
+            _teamRepository.Setup(x => x.UpdateAsync(It.IsAny<TeamBusiness>())).ReturnsAsync(true);
 
             var ud = new Mock<UserDetails>(null);
             ud.Setup(x => x.Id()).Returns(id);
@@ -225,20 +294,89 @@ namespace Teams.Business.Tests
         }
 
        
-        private List<Team> GetFakeDbTeams()
+        private IEnumerable<TeamBusiness> GetFakeDbTeams()
         {
-            var teams = new List<Team>
+            var teams = new List<TeamBusiness>
             {
-                new Team { Id= 1, TeamOwner = "abc-def", TeamName = "Team1", TeamMembers=new List<TeamMember>{new TeamMember {MemberId="def-abc", TeamId =1}}},
-                new Team { Id= 2, TeamOwner = "def-abc", TeamName = "Team2", TeamMembers=new List<TeamMember>{new TeamMember {MemberId="abc-def", TeamId =2}}},
-                new Team { Id= 3, TeamOwner = "def-abc", TeamName = "Team3", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}},
-                new Team { Id= 4, TeamOwner = "abc-def", TeamName = "Team4", TeamMembers=new List<TeamMember>{new TeamMember {MemberId="abc-def", TeamId =4}}},
-                new Team { Id= 5, TeamOwner = "def-abc", TeamName = "Team5", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}},
-                new Team { Id= 6, TeamOwner = "def-abc", TeamName = "Team6", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}},
-                new Team { Id= 7, TeamOwner = "def-abc", TeamName = "Team7", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}},
-                new Team { Id= 8, TeamOwner = "def-abc", TeamName = "Team8", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}},
-                new Team { Id= 9, TeamOwner = "def-abc", TeamName = "Team9", TeamMembers=new List<TeamMember>{new TeamMember {MemberId="abc-def", TeamId =9}}},
-                new Team { Id= 10, TeamOwner = "def-abc", TeamName = "Team10", TeamMembers=new List<TeamMember>{ new TeamMember{MemberId="asf-fgv"}}}
+                new TeamBusiness 
+                { 
+                    Id = 1,
+                    TeamOwner = "abc-def",
+                    TeamName = "Team1",
+                    TeamMembers = new List<TeamMemberBusiness> {new TeamMemberBusiness { MemberId = "def-abc", TeamId = 1}}
+                },
+                
+                new TeamBusiness 
+                {
+                    Id = 2, 
+                    TeamOwner = "def-abc",
+                    TeamName = "Team2",
+                    TeamMembers = new List<TeamMemberBusiness> {new TeamMemberBusiness { MemberId = "abc-def", TeamId = 2}}
+                },
+                
+                new TeamBusiness 
+                { 
+                    Id = 3,
+                    TeamOwner = "def-abc",
+                    TeamName = "Team3", 
+                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "asf-fgv"}}
+                },
+                
+                new TeamBusiness
+                { 
+                    Id = 4,
+                    TeamOwner = "abc-def", 
+                    TeamName = "Team4", 
+                    TeamMembers = new List<TeamMemberBusiness> {new TeamMemberBusiness { MemberId = "abc-def", TeamId = 4}}
+                },
+                
+                new TeamBusiness 
+                { 
+                    Id = 5,
+                    TeamOwner = "def-abc", 
+                    TeamName = "Team5",
+                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "asf-fgv"}}
+                },
+                
+                new TeamBusiness 
+                { 
+                    Id = 6, 
+                    TeamOwner = "def-abc",
+                    TeamName = "Team6",
+                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "asf-fgv"}}
+                },
+                
+                new TeamBusiness 
+                { 
+                    Id = 7, 
+                    TeamOwner = "def-abc", 
+                    TeamName = "Team7", 
+                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "asf-fgv"}}
+                },
+                
+                new TeamBusiness 
+                { 
+                    Id = 8, 
+                    TeamOwner = "def-abc",
+                    TeamName = "Team8",
+                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "asf-fgv"}}
+                },
+                
+                new TeamBusiness
+                {
+                    Id = 9, 
+                    TeamOwner = "def-abc",
+                    TeamName = "Team9", 
+                    TeamMembers = new List<TeamMemberBusiness> {new TeamMemberBusiness { MemberId = "abc-def", TeamId = 9}}
+                },
+                
+                new TeamBusiness
+                {
+                    Id = 10,
+                    TeamOwner = "def-abc",
+                    TeamName = "Team10", 
+                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "asf-fgv"}}
+                }
             };
 
             return teams;

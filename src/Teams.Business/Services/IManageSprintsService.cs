@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Teams.Data.Annotations;
-using Teams.Data.Models;
+using Teams.Business.Annotations;
+using Teams.Business.Models;
 
 namespace Teams.Business.Services
 {
     public interface IManageSprintsService
     {
-        Task<IEnumerable<Sprint>> GetAllSprintsAsync(int teamId, DisplayOptions options);
-        Task<Team> GetTeam(int teamId);
-        Task<bool> AddSprintAsync(Sprint sprint);
+        Task<IEnumerable<SprintBusiness>> GetAllSprintsAsync(int teamId, DisplayOptions options);
+        Task<TeamBusiness> GetTeam(int teamId);
+        Task<bool> AddSprintAsync(SprintBusiness sprint);
         Task<bool> RemoveAsync(int sprintId);
-        Task<bool> EditSprintAsync(Sprint sprint);
-        Task<Sprint> GetSprintAsync(int sprintId, bool includeTaskAndTeamMember);
-        Task<double> GetAverageStoryPointAsync(Sprint sprint);
+        Task<bool> EditSprintAsync(SprintBusiness sprint);
+        Task<SprintBusiness> GetSprintAsync(int sprintId, bool includeTaskAndTeamMember);
+        Task<double> GetAverageStoryPointAsync(SprintBusiness sprint);
     }
 }

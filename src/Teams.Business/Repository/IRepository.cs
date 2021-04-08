@@ -1,12 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Teams.Data
+namespace Teams.Business.Repository
 {
     public interface IRepository<T, K> where T : class
     {
         Task<T> GetByIdAsync (K id);
-        IQueryable<T> GetAll();
+        Task<IEnumerable<T>> GetAllAsync();
         Task<bool> InsertAsync(T entity);
         Task<bool> UpdateAsync(T entity);
         Task<bool> DeleteAsync(T entity);

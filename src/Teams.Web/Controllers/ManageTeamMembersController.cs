@@ -7,8 +7,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Teams.Business.Annotations;
+using Teams.Business.Models;
 using Teams.Business.Services;
-using Teams.Data.Annotations;
 using Teams.Data.Models;
 using Teams.Web.ViewModels.Shared;
 using Teams.Web.ViewModels.Team;
@@ -19,26 +20,19 @@ namespace Teams.Web.Controllers
     public class ManageTeamMembersController : Controller
     {
         private readonly IManageTeamsMembersService _manageTeamsMembersService;
-
         private readonly IManageTeamsService _manageTeamsService;
-
+        private readonly IAccessCheckService _accessCheckService;
+        private readonly IStringLocalizer<ManageTeamMembersController> _localizer;
         private readonly UserManager<User> _userManager;
 
-        private readonly IAccessCheckService _accessCheckService;
-
-        private readonly IStringLocalizer<ManageTeamMembersController> _localizer;
-
-        public ManageTeamMembersController(IManageTeamsMembersService manageTeamsMembersService, IManageTeamsService manageTeamsService, IAccessCheckService accessCheckService, UserManager<User> userManager, IStringLocalizer<ManageTeamMembersController> localizer)
+        public ManageTeamMembersController(IManageTeamsMembersService manageTeamsMembersService, IManageTeamsService manageTeamsService, 
+            IAccessCheckService accessCheckService, IStringLocalizer<ManageTeamMembersController> localizer, UserManager<User> userManager)
         {
             _manageTeamsMembersService = manageTeamsMembersService;
-
             _manageTeamsService = manageTeamsService;
-
             _accessCheckService = accessCheckService;
-
-            _userManager = userManager;
-
             _localizer = localizer;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -47,7 +41,7 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize, NonAction]
-        public async Task<TeamMember> GetMemberAsync(int teamId, string memberId)
+        public async Task<TeamMemberBusiness> GetMemberAsync(int teamId, string memberId)
         {
             if (await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
@@ -57,7 +51,7 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize, NonAction]
-        private async Task<List<TeamMember>> GetAllTeamMembersAsync(int teamId, DisplayOptions options)
+        private async Task<List<TeamMemberBusiness>> GetAllTeamMembersAsync(int teamId, DisplayOptions options)
         {
             if (await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
@@ -69,7 +63,7 @@ namespace Teams.Web.Controllers
         [Authorize]
         public async Task<IActionResult> TeamMembersAsync(int teamId)
         {
-            List<TeamMember> members = await GetAllTeamMembersAsync(teamId, new DisplayOptions { });
+            List<TeamMemberBusiness> members = await GetAllTeamMembersAsync(teamId, new DisplayOptions { });
 
             if (members == null)
             {
@@ -133,11 +127,16 @@ namespace Teams.Web.Controllers
         [Authorize]
         public async Task<IActionResult> AddMemberAsync(int teamId)
         {
-            Team team = await _manageTeamsService.GetTeamAsync(teamId);
+            TeamBusiness team = await _manageTeamsService.GetTeamAsync(teamId);
             var users = await _userManager.Users.ToListAsync();
 
             var teamViewModel = new TeamViewModel() { Id = team.Id, TeamName = team.TeamName, TeamMembers = new List<TeamMemberViewModel>() };
-            users.ForEach(t => teamViewModel.TeamMembers.Add(new TeamMemberViewModel() { MemberId = t.Id, Member = t}));
+            
+            foreach(var user in users)
+            {
+                UserBusiness member = new UserBusiness() { Id = user.Id, FirstName = user.FirstName, LastName = user.LastName, UserName = user.UserName };
+                teamViewModel.TeamMembers.Add(new TeamMemberViewModel() { MemberId = user.Id, Member = member });
+            }
 
             return View(teamViewModel);
         }

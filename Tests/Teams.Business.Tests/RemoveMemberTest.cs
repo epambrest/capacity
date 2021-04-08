@@ -3,9 +3,10 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Teams.Business.Models;
+using Teams.Business.Repository;
 using Teams.Business.Services;
-using Teams.Data;
-using Teams.Data.Models;
 using Teams.Security;
 
 
@@ -15,24 +16,24 @@ namespace Teams.Business.Tests
     class DeleteMemberFromTeamTest
     {
         private Mock<ICurrentUser> _currentUser;
-        private Mock<IRepository<TeamMember, int>> _teamMemberRepository;
-        private Mock<IRepository<Team, int>> _teamRepository;
+        private Mock<IRepository<TeamMemberBusiness, int>> _teamMemberRepository;
+        private Mock<IRepository<TeamBusiness, int>> _teamRepository;
         private ManageTeamsMembersService _teamsMembersService;
 
         [SetUp]
         public void Setup()
         {
             _currentUser = new Mock<ICurrentUser>();
-            _teamMemberRepository = new Mock<IRepository<TeamMember, int>>();
-            _teamRepository = new Mock<IRepository<Team, int>>();
+            _teamMemberRepository = new Mock<IRepository<TeamMemberBusiness, int>>();
+            _teamRepository = new Mock<IRepository<TeamBusiness, int>>();
             var mock = GetFakeDbTeam().AsQueryable().BuildMock();
-            _teamMemberRepository.Setup(t => t.GetAll()).Returns(mock.Object);
-            _teamMemberRepository.Setup(t => t.DeleteAsync(It.IsAny<TeamMember>())).ReturnsAsync(true);
+            _teamMemberRepository.Setup(t => t.GetAllAsync()).Returns(Task.FromResult(GetFakeDbTeam()));
+            _teamMemberRepository.Setup(t => t.DeleteAsync(It.IsAny<TeamMemberBusiness>())).ReturnsAsync(true);
             _teamsMembersService = new ManageTeamsMembersService(_teamRepository.Object, _teamMemberRepository.Object, _currentUser.Object);
         }
 
         [Test]
-        public async System.Threading.Tasks.Task RemoveMember_teamsMembersServiceRemoveMemberReturnTrue_ReturnTrue()
+        public async Task RemoveMember_teamsMembersServiceRemoveMemberReturnTrue_ReturnTrue()
         {
 
             //Arrange
@@ -52,7 +53,7 @@ namespace Teams.Business.Tests
         }
 
         [Test]
-        public async System.Threading.Tasks.Task RemoveMember_teamsMembersServiceRemoveMemberReturnFalse_ReturnFalse()
+        public async Task RemoveMember_teamsMembersServiceRemoveMemberReturnFalse_ReturnFalse()
         {
 
             //Arrange
@@ -70,12 +71,23 @@ namespace Teams.Business.Tests
             Assert.IsFalse(result);
         }
 
-        private List<TeamMember> GetFakeDbTeam()
+        private IEnumerable<TeamMemberBusiness> GetFakeDbTeam()
         {
-            var members = new List<TeamMember>
+            var members = new List<TeamMemberBusiness>
             {
-                new TeamMember{ MemberId = "1234", TeamId =1,Team = new Team { TeamOwner="1"} },
-                new TeamMember{ MemberId = "1", TeamId =2,Team = new Team { TeamOwner="1"} }
+                new TeamMemberBusiness 
+                { 
+                    MemberId = "1234", 
+                    TeamId = 1,
+                    Team = new TeamBusiness { TeamOwner = "1"} 
+                },
+
+                new TeamMemberBusiness
+                { 
+                    MemberId = "1",
+                    TeamId = 2,
+                    Team = new TeamBusiness { TeamOwner = "1"}
+                }
             };
             return members;
         }

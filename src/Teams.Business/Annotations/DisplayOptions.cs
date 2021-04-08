@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Teams.Data.Annotations
+namespace Teams.Business.Annotations
 {
     public class DisplayOptions
     {
