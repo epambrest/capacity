@@ -26,7 +26,7 @@ namespace Teams.Data.Repository
             return await _dbContext.SaveChangesAsync() > 0 ? true : false;
         }
 
-        public async Task<IEnumerable<MemberWorkingDaysBusiness>> GetAllAsync() /*=> await _mapper.ProjectTo<MemberWorkingDaysBusiness>(_dbContext.MemberWorkingDays).ToListAsync();*/
+        public async Task<IEnumerable<MemberWorkingDaysBusiness>> GetAllAsync()
         {
             var allWorkingDays = await _dbContext.MemberWorkingDays.Include(x => x.Sprint)
                 .Include(x => x.TeamMember).ToListAsync();

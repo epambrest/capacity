@@ -30,6 +30,7 @@ namespace Teams.Data.Repository
             var allTasks = await _dbContext.Task.Include(t => t.TeamMember.Member).Include(t => t.Team).Include(t => t.TeamMember).ToListAsync();
             return _mapper.Map<List<Models.Task>, IEnumerable<TaskBusiness>>(allTasks);
         }
+
         public async Task<TaskBusiness> GetByIdAsync(int id) 
         {
             var dataModel = await _dbContext.Task.FindAsync(id);

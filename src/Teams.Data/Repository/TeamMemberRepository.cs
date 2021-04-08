@@ -27,7 +27,7 @@ namespace Teams.Data.Repository
             return result;
         }
 
-        public async Task<IEnumerable<TeamMemberBusiness>> GetAllAsync() /*=> await _mapper.ProjectTo<TeamMemberBusiness>(_dbContext.TeamMembers).ToListAsync();*/
+        public async Task<IEnumerable<TeamMemberBusiness>> GetAllAsync()
         {
             var allTeamMembers = await _dbContext.TeamMembers.Include(x => x.Member).Include(x => x.Team)
                 .ThenInclude(x => x.Owner).ToListAsync();
