@@ -28,7 +28,7 @@ namespace Teams.Data.Models
             TeamOwner = model.TeamOwner;
         }
 
-        public static async System.Threading.Tasks.Task DeleteDependEntentities(ApplicationDbContext _dbContext, int id)
+        public static async System.Threading.Tasks.Task DeleteDependEntentitiesAsync(ApplicationDbContext _dbContext, int id)
         {
             var tasks = await _dbContext.Task.Where(t => t.TeamId == id).ToListAsync();
 

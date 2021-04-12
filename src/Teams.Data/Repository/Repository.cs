@@ -27,7 +27,7 @@ namespace Teams.Data.Repository
 
             if (deletedItem is Team)
             {
-                await Team.DeleteDependEntentities(_dbContext, id);
+                await Team.DeleteDependEntentitiesAsync(_dbContext, id);
             }
 
             _dbSet.Remove(deletedItem);
