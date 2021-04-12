@@ -6,7 +6,6 @@ using System.Linq;
 using Teams.Business.Annotations;
 using Teams.Business.Models;
 using Teams.Business.Services;
-using Teams.Data.Models;
 using Teams.Data.Repository;
 using Teams.Security;
 

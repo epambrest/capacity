@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Teams.Business.Models;
 using Teams.Data.Repository;
-using Teams.Data.Models;
 
 namespace Teams.Business.Services
 {

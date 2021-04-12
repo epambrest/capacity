@@ -3,7 +3,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Teams.Business.Annotations;
-using Teams.Business.Models;
 using Teams.Data.Repository;
 using Teams.Security;
 

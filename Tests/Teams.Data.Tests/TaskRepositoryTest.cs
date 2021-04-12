@@ -5,8 +5,6 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using Teams.Business.Mappings;
-using Teams.Business.Models;
-using Teams.Data.Models;
 using Teams.Data.Repository;
 
 namespace Teams.Data.Tests

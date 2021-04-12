@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Teams.Business.Models;
-using Teams.Data.Models;
 
 namespace Teams.Business.Mappings
 {

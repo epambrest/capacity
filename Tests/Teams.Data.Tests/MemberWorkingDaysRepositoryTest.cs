@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using Teams.Business.Models;
-using Teams.Data.Repository;
 using Teams.Business.Mappings;
-using Teams.Data.Models;
-using Microsoft.Extensions.DependencyInjection;
+using Teams.Data.Repository;
 
 namespace Teams.Data.Tests
 {
