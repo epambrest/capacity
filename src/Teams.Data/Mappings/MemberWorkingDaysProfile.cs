@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
+using Teams.Business.Models;
 
-namespace Teams.Business.Mappings
+namespace Teams.Data.Mappings
 {
     public class MemberWorkingDaysProfile : Profile
     {
         public MemberWorkingDaysProfile()
         {
-            CreateMap<Business.Models.MemberWorkingDays, Data.Models.MemberWorkingDays>().ReverseMap();
+            CreateMap<MemberWorkingDays, Models.MemberWorkingDays>().ReverseMap();
         }
     }
 }

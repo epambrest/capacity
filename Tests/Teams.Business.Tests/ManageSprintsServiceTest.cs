@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Teams.Business.Annotations;
 using Teams.Business.Models;
+using Teams.Business.Repository;
 using Teams.Business.Services;
-using Teams.Data.Repository;
 using Teams.Security;
 
 namespace Teams.Business.Tests
@@ -14,7 +14,7 @@ namespace Teams.Business.Tests
     [TestFixture]
     class ManageSprintsServiceTest
     {
-        private Mock<IRepository<Data.Models.Sprint, Models.Sprint, int>> _sprintRepository;
+        private Mock<IRepository<Sprint, int>> _sprintRepository;
         private ManageSprintsService _manageSprintsService;
         private Mock<IManageTeamsService> _manageTeamsService;
         private Mock<ICurrentUser> _currentUser;
@@ -23,7 +23,7 @@ namespace Teams.Business.Tests
         public void Setup()
         {
             _currentUser = new Mock<ICurrentUser>();
-            _sprintRepository = new Mock<IRepository<Data.Models.Sprint, Models.Sprint, int>>();
+            _sprintRepository = new Mock<IRepository<Sprint, int>>();
             _manageTeamsService = new Mock<IManageTeamsService>();
             _manageSprintsService = new ManageSprintsService(_sprintRepository.Object, _manageTeamsService.Object, _currentUser.Object);
         }
@@ -35,9 +35,9 @@ namespace Teams.Business.Tests
             //Arrange
             const int teamId = 1;
 
-            var sprints = new List<Models.Sprint>
+            var sprints = new List<Sprint>
             {
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 1, 
                     TeamId = 1, 
@@ -47,7 +47,7 @@ namespace Teams.Business.Tests
                     Status = PossibleStatuses.CompletedStatus 
                 },
 
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 2, 
                     TeamId = 1, 
@@ -57,7 +57,7 @@ namespace Teams.Business.Tests
                     Status = PossibleStatuses.CompletedStatus 
                 },
 
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 3, 
                     TeamId = 1, 
@@ -67,7 +67,7 @@ namespace Teams.Business.Tests
                     Status = PossibleStatuses.ActiveStatus 
                 },
 
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 4, 
                     TeamId = 1, 
@@ -77,7 +77,7 @@ namespace Teams.Business.Tests
                     Status = PossibleStatuses.CompletedStatus 
                 },
 
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 5, 
                     TeamId = 1, 
@@ -93,7 +93,7 @@ namespace Teams.Business.Tests
                 .Returns(System.Threading.Tasks.Task.FromResult(sprints.AsEnumerable()));
 
             //Act
-            var result = new List<Models.Sprint>(await _manageSprintsService.GetAllSprintsAsync(teamId, new DisplayOptions { }));
+            var result = new List<Sprint>(await _manageSprintsService.GetAllSprintsAsync(teamId, new DisplayOptions { }));
 
             //Assert
             Assert.AreEqual(5, result.Count());
@@ -109,9 +109,9 @@ namespace Teams.Business.Tests
         {
             //Arrange
             const int teamId = 10;
-            var sprints = new List<Models.Sprint>
+            var sprints = new List<Sprint>
             {
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 1, 
                     TeamId = 1, 
@@ -121,7 +121,7 @@ namespace Teams.Business.Tests
                     Status = PossibleStatuses.ActiveStatus 
                 },
 
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 2, 
                     TeamId = 1, 
@@ -131,7 +131,7 @@ namespace Teams.Business.Tests
                     Status = PossibleStatuses.CompletedStatus 
                 },
 
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 3, 
                     TeamId = 1, 
@@ -141,7 +141,7 @@ namespace Teams.Business.Tests
                     Status = PossibleStatuses.CompletedStatus 
                 },
 
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 4, 
                     TeamId = 1, 
@@ -151,7 +151,7 @@ namespace Teams.Business.Tests
                     Status = PossibleStatuses.CompletedStatus 
                 },
 
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 5, 
                     TeamId = 1, 
@@ -167,7 +167,7 @@ namespace Teams.Business.Tests
                 Returns(System.Threading.Tasks.Task.FromResult(sprints.AsEnumerable()));
 
             //Act
-            var result = new List<Models.Sprint>(await _manageSprintsService.GetAllSprintsAsync(teamId, new DisplayOptions { }));
+            var result = new List<Sprint>(await _manageSprintsService.GetAllSprintsAsync(teamId, new DisplayOptions { }));
 
             //Assert
             Assert.IsEmpty(result);
@@ -179,7 +179,7 @@ namespace Teams.Business.Tests
 
             //Arrange
             const int sprintId = 1;
-            var sprint = new Models.Sprint 
+            var sprint = new Sprint 
             { 
                 Id = 1, 
                 TeamId = 1, 
@@ -202,7 +202,7 @@ namespace Teams.Business.Tests
         public async System.Threading.Tasks.Task AddSprintsAsync_ManageSpiritsServiceReturns_True()
         {
             //Arrange
-            var sprint = new Models.Sprint 
+            var sprint = new Sprint 
             { 
                 Id = 1, 
                 TeamId = 1, 
@@ -212,7 +212,7 @@ namespace Teams.Business.Tests
                 Status = PossibleStatuses.ActiveStatus 
             };
 
-            _sprintRepository.Setup(x => x.InsertAsync(It.IsAny<Business.Models.Sprint>())).ReturnsAsync(true);
+            _sprintRepository.Setup(x => x.InsertAsync(It.IsAny<Sprint>())).ReturnsAsync(true);
 
             //Act
             var result = await _manageSprintsService.AddSprintAsync(sprint);
@@ -225,7 +225,7 @@ namespace Teams.Business.Tests
         public async System.Threading.Tasks.Task AddSprintsAsync_ManageSpiritsServiceReturns_False()
         {
             //Arrange
-            var sprint1 = new Models.Sprint 
+            var sprint1 = new Sprint 
             { 
                 Id = 1, 
                 TeamId = 1, 
@@ -235,7 +235,7 @@ namespace Teams.Business.Tests
                 Status = PossibleStatuses.CompletedStatus 
             };
 
-            var sprint2 = new Models.Sprint 
+            var sprint2 = new Sprint 
             { 
                 Id = 1, 
                 TeamId = 1, 
@@ -245,7 +245,7 @@ namespace Teams.Business.Tests
                 Status = PossibleStatuses.CompletedStatus 
             };
 
-            var sprint3 = new Models.Sprint 
+            var sprint3 = new Sprint 
             { 
                 Id = 1, 
                 TeamId = 1, 
@@ -255,7 +255,7 @@ namespace Teams.Business.Tests
                 Status = PossibleStatuses.ActiveStatus 
             };
 
-            _sprintRepository.Setup(x => x.InsertAsync(It.IsAny<Business.Models.Sprint>())).ReturnsAsync(true);
+            _sprintRepository.Setup(x => x.InsertAsync(It.IsAny<Sprint>())).ReturnsAsync(true);
 
             //Act
             var result1 = await _manageSprintsService.AddSprintAsync(sprint1); //Incorrect name
@@ -272,7 +272,7 @@ namespace Teams.Business.Tests
         public async System.Threading.Tasks.Task AddSprintsAsync_ManageSpiritsServiceNameCheckReturns_False()
         {
             //Arrange
-            var sprint1 = new Models.Sprint 
+            var sprint1 = new Sprint 
             { 
                 Id = 1, 
                 TeamId = 1, 
@@ -282,7 +282,7 @@ namespace Teams.Business.Tests
                 Status = PossibleStatuses.CompletedStatus
             };
 
-            var sprint2 = new Models.Sprint 
+            var sprint2 = new Sprint 
             { 
                 Id = 1, 
                 TeamId = 1, 
@@ -292,7 +292,7 @@ namespace Teams.Business.Tests
                 Status = PossibleStatuses.CompletedStatus 
             };
 
-            var sprint3 = new Models.Sprint 
+            var sprint3 = new Sprint 
             { 
                 Id = 1, 
                 TeamId = 1, 
@@ -302,7 +302,7 @@ namespace Teams.Business.Tests
                 Status = PossibleStatuses.ActiveStatus 
             };
 
-            _sprintRepository.Setup(x => x.InsertAsync(It.IsAny<Business.Models.Sprint>())).ReturnsAsync(true);
+            _sprintRepository.Setup(x => x.InsertAsync(It.IsAny<Sprint>())).ReturnsAsync(true);
 
             //Act
             var result1 = await _manageSprintsService.AddSprintAsync(sprint1); 
@@ -319,7 +319,7 @@ namespace Teams.Business.Tests
         public async System.Threading.Tasks.Task AddSprintsAsync_ManageSpiritsServiceNameCheckReturns_True()
         {
             //Arrange
-            var sprint1 = new Models.Sprint 
+            var sprint1 = new Sprint 
             { 
                 Id = 1, 
                 TeamId = 1, 
@@ -329,7 +329,7 @@ namespace Teams.Business.Tests
                 Status = PossibleStatuses.CompletedStatus 
             };
 
-            var sprint2 = new Models.Sprint 
+            var sprint2 = new Sprint 
             { 
                 Id = 1, 
                 TeamId = 1, 
@@ -339,7 +339,7 @@ namespace Teams.Business.Tests
                 Status = PossibleStatuses.CompletedStatus 
             };
 
-            var sprint3 = new Models.Sprint 
+            var sprint3 = new Sprint 
             { 
                 Id = 1, 
                 TeamId = 1,
@@ -349,7 +349,7 @@ namespace Teams.Business.Tests
                 Status = PossibleStatuses.ActiveStatus 
             };
 
-            var sprint4 = new Models.Sprint 
+            var sprint4 = new Sprint 
             {
                 Id = 1, 
                 TeamId = 1, 
@@ -359,7 +359,7 @@ namespace Teams.Business.Tests
                 Status = PossibleStatuses.ActiveStatus 
             };
 
-            _sprintRepository.Setup(x => x.InsertAsync(It.IsAny<Business.Models.Sprint>())).ReturnsAsync(true);
+            _sprintRepository.Setup(x => x.InsertAsync(It.IsAny<Sprint>())).ReturnsAsync(true);
 
             //Act
             var result1 = await _manageSprintsService.AddSprintAsync(sprint1);
@@ -380,9 +380,9 @@ namespace Teams.Business.Tests
             // Arrange
             const string teamOwner = "1234";
             const int sprintId = 1;
-            var sprints = new List<Models.Sprint>
+            var sprints = new List<Sprint>
             {
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 1, 
                     TeamId = 1, 
@@ -390,10 +390,10 @@ namespace Teams.Business.Tests
                     DaysInSprint = 14, 
                     StoryPointInHours = 4, 
                     Status = PossibleStatuses.ActiveStatus, 
-                    Team = new Models.Team { TeamOwner = teamOwner}
+                    Team = new Team { TeamOwner = teamOwner}
                 },
 
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 2, 
                     TeamId = 1,
@@ -401,10 +401,10 @@ namespace Teams.Business.Tests
                     DaysInSprint = 16,
                     StoryPointInHours = 4,
                     Status = PossibleStatuses.CompletedStatus,
-                    Team = new Models.Team { TeamOwner = teamOwner}
+                    Team = new Team { TeamOwner = teamOwner}
                 },
 
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 3, 
                     TeamId = 1, 
@@ -412,10 +412,10 @@ namespace Teams.Business.Tests
                     DaysInSprint = 21,
                     StoryPointInHours = 2, 
                     Status = PossibleStatuses.CompletedStatus, 
-                    Team = new Models.Team { TeamOwner = teamOwner}
+                    Team = new Team { TeamOwner = teamOwner}
                 },
 
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 4, 
                     TeamId = 1, 
@@ -423,10 +423,10 @@ namespace Teams.Business.Tests
                     DaysInSprint = 10, 
                     StoryPointInHours = 3, 
                     Status = PossibleStatuses.CompletedStatus,
-                    Team = new Models.Team { TeamOwner = teamOwner}
+                    Team = new Team { TeamOwner = teamOwner}
                 },
 
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 5,
                     TeamId = 1, 
@@ -434,7 +434,7 @@ namespace Teams.Business.Tests
                     DaysInSprint = 27,
                     StoryPointInHours = 5,
                     Status = PossibleStatuses.CompletedStatus, 
-                    Team = new Models.Team { TeamOwner = teamOwner}
+                    Team = new Team { TeamOwner = teamOwner}
                 }
             };
             var user = new Mock<UserDetails>(null);
@@ -457,7 +457,7 @@ namespace Teams.Business.Tests
         public async System.Threading.Tasks.Task EditSprintsAsync_ManageSpiritsServiceReturns_True()
         {
             //Arrange
-            var sprint = new Models.Sprint 
+            var sprint = new Sprint 
             { 
                 Id = 1,
                 TeamId = 1, 
@@ -467,7 +467,7 @@ namespace Teams.Business.Tests
                 Status = PossibleStatuses.ActiveStatus 
             };
 
-            _sprintRepository.Setup(x => x.UpdateAsync(It.IsAny<Business.Models.Sprint>())).ReturnsAsync(true);
+            _sprintRepository.Setup(x => x.UpdateAsync(It.IsAny<Sprint>())).ReturnsAsync(true);
             _sprintRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(sprint);
 
             //Act
@@ -483,9 +483,9 @@ namespace Teams.Business.Tests
             // Arrange
             const string teamOwner = "1234";
             const int sprintId = 10;
-            var sprints = new List<Models.Sprint>
+            var sprints = new List<Sprint>
             {
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 1, 
                     TeamId = 1, 
@@ -493,10 +493,10 @@ namespace Teams.Business.Tests
                     DaysInSprint = 14, 
                     StoryPointInHours = 4, 
                     Status = PossibleStatuses.CompletedStatus, 
-                    Team = new Models.Team { TeamOwner = teamOwner}
+                    Team = new Team { TeamOwner = teamOwner}
                 },
 
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 2, 
                     TeamId = 1, 
@@ -504,10 +504,10 @@ namespace Teams.Business.Tests
                     DaysInSprint = 16, 
                     StoryPointInHours = 4, 
                     Status = PossibleStatuses.ActiveStatus, 
-                    Team = new Models.Team { TeamOwner = teamOwner}
+                    Team = new Team { TeamOwner = teamOwner}
                 },
 
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 3, 
                     TeamId = 1, 
@@ -515,10 +515,10 @@ namespace Teams.Business.Tests
                     DaysInSprint = 21, 
                     StoryPointInHours = 2, 
                     Status = PossibleStatuses.CompletedStatus, 
-                    Team = new Models.Team { TeamOwner = teamOwner}
+                    Team = new Team { TeamOwner = teamOwner}
                 },
 
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 4, 
                     TeamId = 1, 
@@ -529,7 +529,7 @@ namespace Teams.Business.Tests
                     Team = new Models.Team { TeamOwner = teamOwner}
                 },
 
-                new Models.Sprint 
+                new Sprint 
                 { 
                     Id = 5, 
                     TeamId = 1, 
@@ -537,7 +537,7 @@ namespace Teams.Business.Tests
                     DaysInSprint = 27, 
                     StoryPointInHours = 5, 
                     Status = PossibleStatuses.CompletedStatus, 
-                    Team = new Models.Team { TeamOwner = "123"}
+                    Team = new Team { TeamOwner = "123"}
                 }
             };
             var user = new Mock<UserDetails>(null);
@@ -562,7 +562,7 @@ namespace Teams.Business.Tests
         public async System.Threading.Tasks.Task EditSprintsAsync_ManageSpiritsServiceReturns_False()
         {
             //Arrange
-            var sprint1 = new Models.Sprint 
+            var sprint1 = new Sprint 
             { 
                 Id = 1, 
                 TeamId = 1,
@@ -572,7 +572,7 @@ namespace Teams.Business.Tests
                 Status = PossibleStatuses.ActiveStatus
             };
 
-            var sprint2 = new Models.Sprint
+            var sprint2 = new Sprint
             { 
                 Id = 1, 
                 TeamId = 1, 
@@ -582,7 +582,7 @@ namespace Teams.Business.Tests
                 Status = PossibleStatuses.ActiveStatus 
             };
 
-            var sprint3 = new Models.Sprint 
+            var sprint3 = new Sprint 
             { 
                 Id = 1, 
                 TeamId = 1,
@@ -592,7 +592,7 @@ namespace Teams.Business.Tests
                 Status = PossibleStatuses.ActiveStatus 
             };
 
-            _sprintRepository.Setup(x => x.UpdateAsync(It.IsAny<Business.Models.Sprint>())).ReturnsAsync(true);
+            _sprintRepository.Setup(x => x.UpdateAsync(It.IsAny<Sprint>())).ReturnsAsync(true);
             _sprintRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(sprint2);
 
             //Act
@@ -613,7 +613,7 @@ namespace Teams.Business.Tests
         public async System.Threading.Tasks.Task EditSprintsAsync_ManageSpiritsServiceNameCheckReturns_False(string SprintName)
         {
             //Arrange
-            var sprint = new Models.Sprint 
+            var sprint = new Sprint 
             { 
                 Id = 1,
                 TeamId = 1,
@@ -623,7 +623,7 @@ namespace Teams.Business.Tests
                 Status = PossibleStatuses.ActiveStatus 
             };
 
-            _sprintRepository.Setup(x => x.UpdateAsync(It.IsAny<Business.Models.Sprint>())).ReturnsAsync(true);
+            _sprintRepository.Setup(x => x.UpdateAsync(It.IsAny<Sprint>())).ReturnsAsync(true);
             _sprintRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(sprint);
 
             //Act
@@ -639,7 +639,7 @@ namespace Teams.Business.Tests
         public async System.Threading.Tasks.Task EditSprintsAsync_ManageSpiritsServiceNameCheckReturns_True(string SprintName)
         {
             //Arrange
-            var sprint = new Models.Sprint
+            var sprint = new Sprint
             { 
                 Id = 1, 
                 TeamId = 1,
@@ -649,7 +649,7 @@ namespace Teams.Business.Tests
                 Status = PossibleStatuses.ActiveStatus
             };
             
-            _sprintRepository.Setup(x => x.UpdateAsync(It.IsAny<Business.Models.Sprint>())).ReturnsAsync(true);
+            _sprintRepository.Setup(x => x.UpdateAsync(It.IsAny<Sprint>())).ReturnsAsync(true);
             _sprintRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(sprint);
 
             //Act

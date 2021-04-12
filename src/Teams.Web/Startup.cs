@@ -7,9 +7,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Globalization;
-using Teams.Business.Mappings;
+using Teams.Business.Repository;
 using Teams.Business.Services;
 using Teams.Data;
+using Teams.Data.Mappings;
 using Teams.Data.Repository;
 using Teams.Security;
 using Teams.Web.Models;
@@ -41,10 +42,17 @@ namespace Teams.Web
             services.AddTransient<IManageSprintsService, ManageSprintsService>();
             services.AddTransient<IManageTasksService, ManageTasksService>();
             services.AddTransient<IManageMemberWorkingDaysService, ManageMemberWorkingDaysService>();
-            services.AddTransient(typeof(IRepository<,,>), typeof(Repository<,,>));
+            services.AddTransient<IRepository<Business.Models.Team, int>, TeamRepository>();
+            services.AddTransient<IRepository<Business.Models.TeamMember, int>,
+                Repository<Data.Models.TeamMember, Business.Models.TeamMember, int>>();
+            services.AddTransient<IRepository<Business.Models.Sprint, int>,
+                Repository<Data.Models.Sprint, Business.Models.Sprint, int>>();
+            services.AddTransient<IRepository<Business.Models.Task, int>,
+                Repository<Data.Models.Task, Business.Models.Task, int>>();
+            services.AddTransient<IRepository<Business.Models.MemberWorkingDays, int>,
+                Repository<Data.Models.MemberWorkingDays, Business.Models.MemberWorkingDays, int>>();
             services.AddHttpContextAccessor();
             services.AddTransient<ICurrentUser, CurrentUser>();
-            services.AddTransient<IManageTeamsMembersService, ManageTeamsMembersService>();
             services.AddTransient<IAccessCheckService, AccessCheckService>();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 

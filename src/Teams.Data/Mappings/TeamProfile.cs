@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
+using Teams.Business.Models;
 
-namespace Teams.Business.Mappings
+namespace Teams.Data.Mappings
 {
     public class TeamProfile : Profile 
     {
         public TeamProfile()
         {
-            CreateMap<Business.Models.Team, Data.Models.Team>().ReverseMap();
+            CreateMap<Team, Models.Team>().ReverseMap();
         }
     }
 }

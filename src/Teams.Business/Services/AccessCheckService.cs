@@ -1,16 +1,17 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Teams.Data.Repository;
+using Teams.Business.Models;
+using Teams.Business.Repository;
 using Teams.Security;
 
 namespace Teams.Business.Services
 {
-    public class AccessCheckService : IAccessCheckService
+    public class AccessCheckService: IAccessCheckService
     {
         private readonly ICurrentUser _currentUser;
-        private readonly IRepository<Data.Models.Team, Business.Models.Team, int> _teamRepository;
+        private readonly IRepository<Team, int> _teamRepository;
 
-        public AccessCheckService(ICurrentUser currentUser, IRepository<Data.Models.Team, Models.Team, int> teamRepository)
+        public AccessCheckService(ICurrentUser currentUser, IRepository<Team, int> teamRepository)
         {
             _currentUser = currentUser;
             _teamRepository = teamRepository;

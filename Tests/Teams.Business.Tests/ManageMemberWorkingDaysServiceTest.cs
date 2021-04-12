@@ -3,21 +3,22 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using Teams.Business.Models;
+using Teams.Business.Repository;
 using Teams.Business.Services;
-using Teams.Data.Repository;
 
 namespace Teams.Business.Tests
 {
     [TestFixture]
     class ManageMemberWorkingDaysServiceTest
     {
-        private Mock<IRepository<Data.Models.MemberWorkingDays, Models.MemberWorkingDays, int>> _memberWorkingDaysRepository;
+        private Mock<IRepository<MemberWorkingDays, int>> _memberWorkingDaysRepository;
         private ManageMemberWorkingDaysService _manageMemberWorkingDaysService;
 
         [SetUp]
         public void Setup()
         {
-            _memberWorkingDaysRepository = new Mock<IRepository<Data.Models.MemberWorkingDays, Models.MemberWorkingDays, int>>();
+            _memberWorkingDaysRepository = new Mock<IRepository<MemberWorkingDays, int>>();
             _manageMemberWorkingDaysService = new ManageMemberWorkingDaysService(_memberWorkingDaysRepository.Object);
         }
 
@@ -27,7 +28,7 @@ namespace Teams.Business.Tests
 
             //Arrange
             const int memberWorkingDaysId = 1;
-            var memberWorkingDays = new List<Models.MemberWorkingDays>()
+            var memberWorkingDays = new List<MemberWorkingDays>()
             {  
                 new Models.MemberWorkingDays { Id = 1, MemberId = 1, SprintId = 1, WorkingDays = 21 } 
             };
@@ -47,9 +48,9 @@ namespace Teams.Business.Tests
         public async System.Threading.Tasks.Task AddMemberWorkingDaysAsync_ManageMemberWorkingDaysServiceReturnsTrue_ReturnsTrue()
         {
             //Arrange
-            var memberWorkingDays = new Business.Models.MemberWorkingDays { Id = 1, MemberId = 1, SprintId = 1, WorkingDays = 21 };
+            var memberWorkingDays = new MemberWorkingDays { Id = 1, MemberId = 1, SprintId = 1, WorkingDays = 21 };
 
-            _memberWorkingDaysRepository.Setup(x => x.InsertAsync(It.IsAny<Business.Models.MemberWorkingDays>())).ReturnsAsync(true);
+            _memberWorkingDaysRepository.Setup(x => x.InsertAsync(It.IsAny<MemberWorkingDays>())).ReturnsAsync(true);
 
             //Act
             var result = await _manageMemberWorkingDaysService.AddMemberWorkingDaysAsync(memberWorkingDays);
@@ -62,8 +63,8 @@ namespace Teams.Business.Tests
         public async System.Threading.Tasks.Task AddMemberWorkingDaysAsync_ManageMemberWorkingDaysServiceReturnsFalse_ReturnsFalse()
         {
             //Arrange
-            var memberWorkingDays = new Business.Models.MemberWorkingDays { Id = 1, MemberId = 1, SprintId = 1, WorkingDays = -4 };
-            _memberWorkingDaysRepository.Setup(x => x.InsertAsync(It.IsAny<Business.Models.MemberWorkingDays>())).ReturnsAsync(true);
+            var memberWorkingDays = new MemberWorkingDays { Id = 1, MemberId = 1, SprintId = 1, WorkingDays = -4 };
+            _memberWorkingDaysRepository.Setup(x => x.InsertAsync(It.IsAny<MemberWorkingDays>())).ReturnsAsync(true);
 
             //Act
             var result = await _manageMemberWorkingDaysService.AddMemberWorkingDaysAsync(memberWorkingDays); 
@@ -76,8 +77,8 @@ namespace Teams.Business.Tests
         public async System.Threading.Tasks.Task EditMemberWorkingDaysAsync_ManageMemberWorkingDaysServiceReturnsTrue_ReturnsTrue()
         {
             //Arrange
-            var memberWorkingDays = new Business.Models.MemberWorkingDays { Id = 1, MemberId = 1, SprintId = 1, WorkingDays = 10 };
-            _memberWorkingDaysRepository.Setup(x => x.UpdateAsync(It.IsAny<Business.Models.MemberWorkingDays>())).ReturnsAsync(true);
+            var memberWorkingDays = new MemberWorkingDays { Id = 1, MemberId = 1, SprintId = 1, WorkingDays = 10 };
+            _memberWorkingDaysRepository.Setup(x => x.UpdateAsync(It.IsAny<MemberWorkingDays>())).ReturnsAsync(true);
             _memberWorkingDaysRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(memberWorkingDays);
 
             //Act

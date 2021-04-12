@@ -2,16 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Teams.Business.Repository;
 using Teams.Data.Models;
 
 namespace Teams.Data.Repository
 {
-    public class Repository<TDb, TDomain, K> : IRepository<TDb, TDomain, int> 
+    public class Repository<TDb, TDomain, K> : IRepository<TDomain, int>
         where TDb : class
         where TDomain : class
     {
-        private readonly ApplicationDbContext _dbContext;
-        private readonly IMapper _mapper;
+        protected internal readonly ApplicationDbContext _dbContext;
+        protected internal readonly IMapper _mapper;
         DbSet<TDb> _dbSet;
         
         public Repository(ApplicationDbContext dbcontext, IMapper mapper)
@@ -21,15 +22,9 @@ namespace Teams.Data.Repository
             _dbSet = dbcontext.Set<TDb>();
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public virtual async Task<bool> DeleteAsync(int id)
         {
             TDb deletedItem = await _dbSet.FindAsync(id);
-
-            if (deletedItem is Team)
-            {
-                await Team.DeleteDependEntentitiesAsync(_dbContext, id);
-            }
-
             _dbSet.Remove(deletedItem);
             return await _dbContext.SaveChangesAsync() > 0 ? true : false;
         }

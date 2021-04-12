@@ -5,8 +5,9 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Teams.Business.Mappings;
-using Teams.Data.Repository;
+using Teams.Business.Models;
+using Teams.Business.Repository;
+using Teams.Data.Mappings;
 
 namespace Teams.Data.Tests
 {
@@ -16,7 +17,7 @@ namespace Teams.Data.Tests
         class TeamRepositoryTest
         {
             private ApplicationDbContext context;
-            private IRepository<Models.TeamMember, Business.Models.TeamMember, int> teamMemberRepository;
+            private IRepository<TeamMember, int> teamMemberRepository;
             private IMapper _mapper;
 
             [SetUp]
@@ -67,7 +68,7 @@ namespace Teams.Data.Tests
                 //Arrange
                 context.TeamMembers.AddRange(GenerateData(100));
                 context.SaveChanges();
-                teamMemberRepository = new Repository.Repository<Models.TeamMember, Business.Models.TeamMember, int>(context, _mapper);
+                teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
 
                 //Act
                 var teamMembers = await teamMemberRepository.GetAllAsync();
@@ -81,7 +82,7 @@ namespace Teams.Data.Tests
             public async System.Threading.Tasks.Task GetAll_TeamRepositoryReturnsEmptyList_ReturnsEmpty()
             {
                 //Arrange
-                teamMemberRepository = new Repository.Repository<Models.TeamMember, Business.Models.TeamMember, int>(context, _mapper);
+                teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
 
                 //Act
                 var teams = await teamMemberRepository.GetAllAsync();
@@ -99,7 +100,7 @@ namespace Teams.Data.Tests
                 //Arrange
                 if (context.TeamMembers.Count() < 1)
                     context.TeamMembers.AddRange(GenerateData(100));
-                teamMemberRepository = new Repository.Repository<Models.TeamMember, Business.Models.TeamMember, int>(context, _mapper);
+                teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
 
                 //Act
                 var team = teamMemberRepository.GetByIdAsync(1).Result;
@@ -113,7 +114,7 @@ namespace Teams.Data.Tests
             public void GetByIdAsync_TeamRepositoryReturnsNull_ReturnsNull()
             {
                 //Arrange
-                teamMemberRepository = new Repository.Repository<Models.TeamMember, Business.Models.TeamMember, int>(context, _mapper);
+                teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
 
                 //Act
                 var team = teamMemberRepository.GetByIdAsync(101).Result;
@@ -129,8 +130,8 @@ namespace Teams.Data.Tests
             public void InsertAsync_TeamRepositoryReturnsTrue_ReturnsTrue()
             {
                 //Arrange
-                teamMemberRepository = new Repository.Repository<Models.TeamMember, Business.Models.TeamMember, int>(context, _mapper);
-                Business.Models.TeamMember teamMember = new Business.Models.TeamMember() { MemberId = "100" };
+                teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
+                TeamMember teamMember = new TeamMember() { MemberId = "100" };
 
                 //Act
                 var result = teamMemberRepository.InsertAsync(teamMember).Result;
@@ -148,7 +149,7 @@ namespace Teams.Data.Tests
                 //Arrange
                 context.TeamMembers.AddRange(GenerateData(2));
                 context.SaveChanges();
-                teamMemberRepository = new Repository.Repository<Models.TeamMember, Business.Models.TeamMember, int>(context, _mapper);
+                teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
                 //Act
                 var result = teamMemberRepository.DeleteAsync(teamMemberRepository.GetByIdAsync(1).Result.Id).Result;
 
@@ -160,7 +161,7 @@ namespace Teams.Data.Tests
             public void DeleteAsync_TeamRepositoryReturnsNull_ReturnsNull()
             {
                 //Arrange
-                teamMemberRepository = new Repository.Repository<Models.TeamMember, Business.Models.TeamMember, int>(context, _mapper);
+                teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
 
                 //Act&Assert
                 try
@@ -185,10 +186,10 @@ namespace Teams.Data.Tests
                     context.TeamMembers.AddRange(GenerateData(3));
                     context.SaveChanges();
                 }
-                teamMemberRepository = new Repository.Repository<Models.TeamMember, Business.Models.TeamMember, int>(context, _mapper);
+                teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
 
                 //Act
-                var result = teamMemberRepository.UpdateAsync(new Business.Models.TeamMember() { Id = 1, MemberId = "01" }).Result;
+                var result = teamMemberRepository.UpdateAsync(new TeamMember() { Id = 1, MemberId = "01" }).Result;
 
                 //Assert
                 Assert.IsTrue(result);
@@ -199,10 +200,10 @@ namespace Teams.Data.Tests
             public void UpdateAsync_TeamRepositoryReturnsFalse_ReturnsFalse()
             {
                 //Arrange
-                teamMemberRepository = new Repository.Repository<Models.TeamMember, Business.Models.TeamMember, int>(context, _mapper);
+                teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
 
                 //Act
-                var result = teamMemberRepository.UpdateAsync(new Business.Models.TeamMember() { Id = 101, MemberId = "101" }).Result;
+                var result = teamMemberRepository.UpdateAsync(new TeamMember() { Id = 101, MemberId = "101" }).Result;
 
                 //Assert
                 Assert.IsFalse(result);

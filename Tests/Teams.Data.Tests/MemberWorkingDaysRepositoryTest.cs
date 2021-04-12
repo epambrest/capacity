@@ -4,7 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using Teams.Business.Mappings;
+using Teams.Business.Models;
+using Teams.Business.Repository;
+using Teams.Data.Mappings;
 using Teams.Data.Repository;
 
 namespace Teams.Data.Tests
@@ -13,7 +15,7 @@ namespace Teams.Data.Tests
     class MemberWorkingDaysRepositoryTest
     {
         private ApplicationDbContext _context;
-        private IRepository<Teams.Data.Models.MemberWorkingDays, Business.Models.MemberWorkingDays, int> _memberWorkingDaysRepository;
+        private IRepository<MemberWorkingDays, int> _memberWorkingDaysRepository;
         private IMapper _mapper;
 
         [SetUp]
@@ -38,42 +40,41 @@ namespace Teams.Data.Tests
             IMapper mapper = mappingConfig.CreateMapper();
             _mapper = mapper;
 
-            _memberWorkingDaysRepository = new Repository
-                .Repository<Teams.Data.Models.MemberWorkingDays, Business.Models.MemberWorkingDays, int>(_context, _mapper);
+            _memberWorkingDaysRepository = new Repository<Models.MemberWorkingDays, MemberWorkingDays, int>(_context, _mapper);
         }
 
-        private IQueryable<Data.Models.MemberWorkingDays> GetFakeMemberWorkingDaysDb()
+        private IQueryable<Models.MemberWorkingDays> GetFakeMemberWorkingDaysDb()
         {
-            var data = new List<Data.Models.MemberWorkingDays>
+            var data = new List<Models.MemberWorkingDays>
             {
-                new Data.Models.MemberWorkingDays 
+                new Models.MemberWorkingDays 
                 { 
                     Id = 1, 
                     SprintId = 1, 
                     MemberId = 1, 
                     WorkingDays = 27,
-                    Sprint = new Data.Models.Sprint(),
-                    TeamMember = new Data.Models.TeamMember()
+                    Sprint = new Models.Sprint(),
+                    TeamMember = new Models.TeamMember()
                 },
 
-                new Data.Models.MemberWorkingDays 
+                new Models.MemberWorkingDays 
                 { 
                     Id = 2, 
                     SprintId = 2, 
                     MemberId = 1, 
                     WorkingDays = 18,
-                    Sprint = new Data.Models.Sprint(),
-                    TeamMember = new Data.Models.TeamMember()
+                    Sprint = new Models.Sprint(),
+                    TeamMember = new Models.TeamMember()
                 },
 
-                new Data.Models.MemberWorkingDays 
+                new Models.MemberWorkingDays 
                 { 
                     Id = 3, 
                     SprintId = 1, 
                     MemberId = 3, 
                     WorkingDays = 2,
-                    Sprint = new Data.Models.Sprint(),
-                    TeamMember = new Data.Models.TeamMember()
+                    Sprint = new Models.Sprint(),
+                    TeamMember = new Models.TeamMember()
                 },
 
             }.AsQueryable();

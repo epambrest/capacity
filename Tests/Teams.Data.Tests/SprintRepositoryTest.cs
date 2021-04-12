@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using Teams.Business.Mappings;
 using Teams.Business.Models;
-using Teams.Data.Repository;
+using Teams.Business.Repository;
+using Teams.Data.Mappings;
 
 namespace Teams.Data.Tests
 {
@@ -14,7 +14,7 @@ namespace Teams.Data.Tests
     class SprintRepositoryTest
     {
         private ApplicationDbContext _context;
-        private IRepository<Models.Sprint, Business.Models.Sprint, int> _sprintRepository;
+        private IRepository<Sprint, int> _sprintRepository;
         private IMapper _mapper;
 
         [SetUp]
@@ -43,9 +43,9 @@ namespace Teams.Data.Tests
             _sprintRepository = new Repository.Repository<Data.Models.Sprint, Business.Models.Sprint, int>(_context, _mapper);
         }
 
-        private IEnumerable<Data.Models.Sprint> GetFakeSprintDb()
+        private IEnumerable<Models.Sprint> GetFakeSprintDb()
         {
-            var data = new List<Data.Models.Sprint>
+            var data = new List<Models.Sprint>
             {
                 new Models.Sprint
                 {
@@ -55,9 +55,9 @@ namespace Teams.Data.Tests
                     TeamId = 1,
                     StoryPointInHours = 4,
                     Status = PossibleStatuses.ActiveStatus,
-                    Team = new Data.Models.Team() {},
-                    Tasks = new List<Data.Models.Task>(),
-                    MemberWorkingDays = new List<Data.Models.MemberWorkingDays>() {new Data.Models.MemberWorkingDays() }  
+                    Team = new Models.Team() {},
+                    Tasks = new List<Models.Task>(),
+                    MemberWorkingDays = new List<Models.MemberWorkingDays>() {new Models.MemberWorkingDays() }  
                 },
 
                 new Models.Sprint
@@ -68,9 +68,9 @@ namespace Teams.Data.Tests
                     TeamId = 2, 
                     StoryPointInHours = 4, 
                     Status = PossibleStatuses.CompletedStatus,
-                    Team = new Data.Models.Team() {},
-                    Tasks = new List<Data.Models.Task>(),
-                    MemberWorkingDays = new List<Data.Models.MemberWorkingDays>() {new Data.Models.MemberWorkingDays() }
+                    Team = new Models.Team() {},
+                    Tasks = new List<Models.Task>(),
+                    MemberWorkingDays = new List<Models.MemberWorkingDays>() {new Models.MemberWorkingDays() }
                 },
 
                 new Models.Sprint 
@@ -81,9 +81,9 @@ namespace Teams.Data.Tests
                     TeamId = 3, 
                     StoryPointInHours = 4, 
                     Status = PossibleStatuses.CompletedStatus, 
-                    Team = new Data.Models.Team() {}, 
-                    Tasks = new List<Data.Models.Task>(),
-                    MemberWorkingDays = new List<Data.Models.MemberWorkingDays>() {new Data.Models.MemberWorkingDays() }
+                    Team = new Models.Team() {}, 
+                    Tasks = new List<Models.Task>(),
+                    MemberWorkingDays = new List<Models.MemberWorkingDays>() {new Models.MemberWorkingDays() }
                 },
 
                 new Models.Sprint 
@@ -94,9 +94,9 @@ namespace Teams.Data.Tests
                     TeamId = 4, 
                     StoryPointInHours = 4, 
                     Status = PossibleStatuses.CompletedStatus, 
-                    Team = new Data.Models.Team() {}, 
-                    Tasks = new List<Data.Models.Task>(),
-                    MemberWorkingDays = new List<Data.Models.MemberWorkingDays>() {new Data.Models.MemberWorkingDays() }
+                    Team = new Models.Team() {}, 
+                    Tasks = new List<Models.Task>(),
+                    MemberWorkingDays = new List<Models.MemberWorkingDays>() {new Models.MemberWorkingDays() }
                 },
 
                 new Models.Sprint 
@@ -107,9 +107,9 @@ namespace Teams.Data.Tests
                     TeamId = 5, 
                     StoryPointInHours = 4,
                     Status = PossibleStatuses.CompletedStatus,
-                    Team = new Data.Models.Team() {},
-                    Tasks = new List<Data.Models.Task>(),
-                    MemberWorkingDays = new List<Data.Models.MemberWorkingDays>() {new Data.Models.MemberWorkingDays()}
+                    Team = new Models.Team() {},
+                    Tasks = new List<Models.Task>(),
+                    MemberWorkingDays = new List<Models.MemberWorkingDays>() {new Models.MemberWorkingDays()}
                 }
             };
             return data;
@@ -162,7 +162,7 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task InsertAsync_SprintRepositoryReturns_True()
         {
             //Arrange
-            Business.Models.Sprint sprint = new Business.Models.Sprint 
+            Sprint sprint = new Sprint 
             { 
                 Id = 6,
                 DaysInSprint = 3, 
@@ -206,7 +206,7 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task UpdateAsync_SprintRepositoryReturns_True()
         {
             //Arrange
-            Business.Models.Sprint sprint = new Business.Models.Sprint 
+            Sprint sprint = new Sprint 
             { 
                 Id = 2, 
                 DaysInSprint = 3, 
@@ -229,7 +229,7 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task UpdateAsync_SprintRepositoryReturns_False()
         {
             //Arrange
-            Business.Models.Sprint sprint = new Business.Models.Sprint 
+            Sprint sprint = new Sprint 
             {
                 Id = 10,
                 DaysInSprint = 3, 

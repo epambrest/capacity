@@ -4,8 +4,9 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using Teams.Business.Annotations;
+using Teams.Business.Models;
+using Teams.Business.Repository;
 using Teams.Business.Services;
-using Teams.Data.Repository;
 using Teams.Security;
 
 namespace Teams.Business.Tests
@@ -14,9 +15,9 @@ namespace Teams.Business.Tests
     {
         private IManageTeamsMembersService _manageTeamsMembersService;
 
-        private Mock<IRepository<Data.Models.TeamMember, Models.TeamMember, int>> _teamMemberRepository;
+        private Mock<IRepository<TeamMember, int>> _teamMemberRepository;
 
-        private Mock<IRepository<Data.Models.Team, Models.Team, int>> _teamRepository;
+        private Mock<IRepository<Team, int>> _teamRepository;
 
         private Mock<ICurrentUser> _currentUserMock;
 
@@ -24,8 +25,8 @@ namespace Teams.Business.Tests
         public void Setup()
         {
             _currentUserMock = new Mock<ICurrentUser>();
-            _teamMemberRepository = new Mock<IRepository<Data.Models.TeamMember, Models.TeamMember, int>>();
-            _teamRepository = new Mock<IRepository<Data.Models.Team, Models.Team, int>>();
+            _teamMemberRepository = new Mock<IRepository<TeamMember, int>>();
+            _teamRepository = new Mock<IRepository<Team, int>>();
             _manageTeamsMembersService = new ManageTeamsMembersService(_teamRepository.Object, _teamMemberRepository.Object, _currentUserMock.Object);
         }
 
@@ -105,83 +106,83 @@ namespace Teams.Business.Tests
             Assert.AreEqual(result.Count, 0);
         }
 
-        private IEnumerable<Models.TeamMember> GetFakeDbTeamMembers()
+        private IEnumerable<TeamMember> GetFakeDbTeamMembers()
         {
-            var teamMembers = new List<Models.TeamMember>
+            var teamMembers = new List<TeamMember>
             {
-                new Models.TeamMember 
+                new TeamMember 
                 {
                     Id = 1, 
                     MemberId = "def-abc",
                     TeamId = 1
                 },
 
-                new Models.TeamMember
+                new TeamMember
                 {
                     Id = 2, 
                     MemberId = "abc-def",
                     TeamId = 2
                 },
 
-                new Models.TeamMember 
+                new TeamMember 
                 {
                     Id = 3,
                     MemberId = "asf-fgv",
                     TeamId = 3
                 },
 
-                new Models.TeamMember 
+                new TeamMember 
                 {
                     Id = 4,
                     MemberId = "def-abc",
-                    Member = new Models.User { UserName = "b" },
+                    Member = new User { UserName = "b" },
                     TeamId = 4
                 },
 
-                new Models.TeamMember 
+                new TeamMember 
                 {
                     Id = 5,
                     MemberId = "abc-def",
-                    Member = new Models.User { UserName = "a" }, 
+                    Member = new User { UserName = "a" }, 
                     TeamId = 4
                 },
 
-                new Models.TeamMember
+                new TeamMember
                 {
                     Id = 6,
                     MemberId = "asf-fgv",
                     TeamId = 5
                 },
 
-                new Models.TeamMember
+                new TeamMember
                 {
                     Id = 7,
                     MemberId = "asf-fgv",
                     TeamId = 6
                 },
 
-                new Models.TeamMember 
+                new TeamMember 
                 {
                     Id = 8,
                     MemberId = "asf-fgv", 
                     TeamId = 7
                 },
 
-                new Models.TeamMember
+                new TeamMember
                 {
                     Id = 9,
                     MemberId = "asf-fgv",
                     TeamId = 8
                 },
 
-                new Models.TeamMember 
+                new TeamMember 
                 {
                     Id = 10,
                     MemberId = "abc-def",
                     TeamId = 9
                 },
 
-                new Models.TeamMember 
+                new TeamMember 
                 {
                     Id = 11,
                     MemberId = "asf-fgv", 

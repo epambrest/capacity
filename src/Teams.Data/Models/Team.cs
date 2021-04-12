@@ -27,22 +27,5 @@ namespace Teams.Data.Models
             TeamName = model.TeamName;
             TeamOwner = model.TeamOwner;
         }
-
-        public static async System.Threading.Tasks.Task DeleteDependEntentitiesAsync(ApplicationDbContext _dbContext, int id)
-        {
-            var tasks = await _dbContext.Task.Where(t => t.TeamId == id).ToListAsync();
-
-            foreach (var task in tasks)
-            {
-                _dbContext.Task.Remove(task);
-            }
-
-            var teamMembers = await _dbContext.TeamMembers.Where(t => t.TeamId == id).ToListAsync();
-
-            foreach (var teamMember in teamMembers)
-            {
-                _dbContext.TeamMembers.Remove(teamMember);
-            }
-        }
     }
 }

@@ -3,6 +3,8 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using Teams.Business.Models;
+using Teams.Business.Repository;
 using Teams.Business.Services;
 using Teams.Data.Repository;
 using Teams.Security;
@@ -14,16 +16,16 @@ namespace Teams.Business.Tests
     class DeleteMemberFromTeamTest
     {
         private Mock<ICurrentUser> _currentUser;
-        private Mock<IRepository<Data.Models.TeamMember, Models.TeamMember, int>> _teamMemberRepository;
-        private Mock<IRepository<Data.Models.Team, Models.Team, int>> _teamRepository;
+        private Mock<IRepository<TeamMember, int>> _teamMemberRepository;
+        private Mock<IRepository<Team, int>> _teamRepository;
         private ManageTeamsMembersService _teamsMembersService;
 
         [SetUp]
         public void Setup()
         {
             _currentUser = new Mock<ICurrentUser>();
-            _teamMemberRepository = new Mock<IRepository<Data.Models.TeamMember, Models.TeamMember, int>>();
-            _teamRepository = new Mock<IRepository<Data.Models.Team, Models.Team, int>>();
+            _teamMemberRepository = new Mock<IRepository<TeamMember, int>>();
+            _teamRepository = new Mock<IRepository<Team, int>>();
             var mock = GetFakeDbTeam().AsQueryable().BuildMock();
             _teamMemberRepository.Setup(t => t.GetAllAsync())
                 .Returns(System.Threading.Tasks.Task.FromResult(GetFakeDbTeam()));
@@ -70,22 +72,22 @@ namespace Teams.Business.Tests
             Assert.IsFalse(result);
         }
 
-        private IEnumerable<Models.TeamMember> GetFakeDbTeam()
+        private IEnumerable<TeamMember> GetFakeDbTeam()
         {
-            var members = new List<Models.TeamMember>
+            var members = new List<TeamMember>
             {
-                new Models.TeamMember
+                new TeamMember
                 { 
                     MemberId = "1234", 
                     TeamId = 1,
-                    Team = new Models.Team { TeamOwner = "1"} 
+                    Team = new Team { TeamOwner = "1"} 
                 },
 
-                new Models.TeamMember
+                new TeamMember
                 { 
                     MemberId = "1",
                     TeamId = 2,
-                    Team = new Models.Team { TeamOwner = "1"}
+                    Team = new Team { TeamOwner = "1"}
                 }
             };
             return members;
