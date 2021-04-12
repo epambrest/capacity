@@ -34,7 +34,7 @@ namespace Teams.Web.Controllers
             var sprint = await _manageSprintsService.GetSprintAsync(sprintId, true);
             var workingDays = await _manageMemberWorkingDaysService.GetAllWorkingDaysForSprintAsync(sprintId);
             var team = await _manageSprintsService.GetTeam(sprint.TeamId);
-            List<TeamMemberBusiness> teamMembers = await _manageTeamsMembersService.GetAllTeamMembersAsync(sprint.TeamId, new DisplayOptions { });
+            List<TeamMember> teamMembers = await _manageTeamsMembersService.GetAllTeamMembersAsync(sprint.TeamId, new DisplayOptions { });
             var model = new SprintAndTeamViewModel
             {
                 Sprints = new List<SprintViewModel>(),
@@ -54,7 +54,7 @@ namespace Teams.Web.Controllers
             var memberWorkingDays = await _manageMemberWorkingDaysService.GetWorkingDaysByIdAsync(workingDaysId);
             if (memberWorkingDays == null) return false;
             
-            var newMemberWorkingDays = new MemberWorkingDaysBusiness { Id = memberWorkingDays.Id, MemberId = memberWorkingDays.MemberId, SprintId = memberWorkingDays.SprintId, Sprint = memberWorkingDays.Sprint, WorkingDays = workingDays };
+            var newMemberWorkingDays = new MemberWorkingDays { Id = memberWorkingDays.Id, MemberId = memberWorkingDays.MemberId, SprintId = memberWorkingDays.SprintId, Sprint = memberWorkingDays.Sprint, WorkingDays = workingDays };
             if (newMemberWorkingDays.WorkingDays >= 0 && newMemberWorkingDays.WorkingDays <= newMemberWorkingDays.Sprint.DaysInSprint)
             {
                 return await _manageMemberWorkingDaysService.EditMemberWorkingDaysAsync(newMemberWorkingDays);
@@ -67,9 +67,9 @@ namespace Teams.Web.Controllers
         public async Task<int> AddWorkingDays(int sprintId, int memberId, int workingDays)
         {
             var sprint = await _manageSprintsService.GetSprintAsync(sprintId, false);
-            if (TryValidateModel(new MemberWorkingDaysBusiness { SprintId = sprintId, MemberId = memberId, WorkingDays = workingDays, Sprint = sprint }))
+            if (TryValidateModel(new MemberWorkingDays { SprintId = sprintId, MemberId = memberId, WorkingDays = workingDays, Sprint = sprint }))
             {
-                var result = await _manageMemberWorkingDaysService.AddMemberWorkingDaysAsync(new MemberWorkingDaysBusiness { SprintId = sprintId, MemberId = memberId, WorkingDays = workingDays });
+                var result = await _manageMemberWorkingDaysService.AddMemberWorkingDaysAsync(new MemberWorkingDays { SprintId = sprintId, MemberId = memberId, WorkingDays = workingDays });
                 if (result)
                 {
                     var memberWorkingDays = await _manageMemberWorkingDaysService.GetAllWorkingDaysForSprintAsync(sprintId);

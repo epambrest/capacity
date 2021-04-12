@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using Teams.Business.Mappings;
 using Teams.Business.Models;
-using Teams.Business.Repository;
-using Teams.Data.Mappings;
 using Teams.Data.Models;
 using Teams.Data.Repository;
 
@@ -15,14 +15,17 @@ namespace Teams.Data.Tests
     class SprintRepositoryTest
     {
         private ApplicationDbContext _context;
-        private IRepository<SprintBusiness, int> _sprintRepository;
+        private IRepository<Models.Sprint, Business.Models.Sprint, int> _sprintRepository;
         private IMapper _mapper;
 
         [SetUp]
         public void Setup()
         {
+            var serviceProvider = new ServiceCollection().AddEntityFrameworkInMemoryDatabase()
+                .AddEntityFrameworkProxies().BuildServiceProvider();
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: "SprintDatabase").Options;
+                .UseInMemoryDatabase(databaseName: "MemberWorkingDaysDatabase").UseInternalServiceProvider(serviceProvider)
+                .UseLazyLoadingProxies().Options;
 
             var mappingConfig = new MapperConfiguration(mc =>
             {
@@ -38,14 +41,14 @@ namespace Teams.Data.Tests
 
             _context = new ApplicationDbContext(options);
 
-            _sprintRepository = new SprintRepository(_context, _mapper);
+            _sprintRepository = new Repository.Repository<Data.Models.Sprint, Business.Models.Sprint, int>(_context, _mapper);
         }
 
-        private IEnumerable<Sprint> GetFakeSprintDb()
+        private IEnumerable<Data.Models.Sprint> GetFakeSprintDb()
         {
-            var data = new List<Sprint>
+            var data = new List<Data.Models.Sprint>
             {
-                new Sprint
+                new Models.Sprint
                 {
                     Id = 1,
                     DaysInSprint = 3,
@@ -53,12 +56,12 @@ namespace Teams.Data.Tests
                     TeamId = 1,
                     StoryPointInHours = 4,
                     Status = PossibleStatuses.ActiveStatus,
-                    Team = new Team() {},
-                    Tasks = new List<Models.Task>(),
-                    MemberWorkingDays = new List<MemberWorkingDays>() {new MemberWorkingDays() }  
+                    Team = new Data.Models.Team() {},
+                    Tasks = new List<Data.Models.Task>(),
+                    MemberWorkingDays = new List<Data.Models.MemberWorkingDays>() {new Data.Models.MemberWorkingDays() }  
                 },
 
-                new Sprint
+                new Models.Sprint
                 {
                     Id = 2, 
                     DaysInSprint = 3, 
@@ -66,12 +69,12 @@ namespace Teams.Data.Tests
                     TeamId = 2, 
                     StoryPointInHours = 4, 
                     Status = PossibleStatuses.CompletedStatus,
-                    Team = new Team() {},
-                    Tasks = new List<Models.Task>(),
-                    MemberWorkingDays = new List<MemberWorkingDays>() {new MemberWorkingDays() }
+                    Team = new Data.Models.Team() {},
+                    Tasks = new List<Data.Models.Task>(),
+                    MemberWorkingDays = new List<Data.Models.MemberWorkingDays>() {new Data.Models.MemberWorkingDays() }
                 },
 
-                new Sprint 
+                new Models.Sprint 
                 { 
                     Id = 3, 
                     DaysInSprint = 3, 
@@ -79,12 +82,12 @@ namespace Teams.Data.Tests
                     TeamId = 3, 
                     StoryPointInHours = 4, 
                     Status = PossibleStatuses.CompletedStatus, 
-                    Team = new Team() {}, 
-                    Tasks = new List<Models.Task>(),
-                    MemberWorkingDays = new List<MemberWorkingDays>() {new MemberWorkingDays() }
+                    Team = new Data.Models.Team() {}, 
+                    Tasks = new List<Data.Models.Task>(),
+                    MemberWorkingDays = new List<Data.Models.MemberWorkingDays>() {new Data.Models.MemberWorkingDays() }
                 },
 
-                new Sprint 
+                new Models.Sprint 
                 { 
                     Id = 4, 
                     DaysInSprint = 3, 
@@ -92,12 +95,12 @@ namespace Teams.Data.Tests
                     TeamId = 4, 
                     StoryPointInHours = 4, 
                     Status = PossibleStatuses.CompletedStatus, 
-                    Team = new Team() {}, 
-                    Tasks = new List<Models.Task>(),
-                    MemberWorkingDays = new List<MemberWorkingDays>() {new MemberWorkingDays() }
+                    Team = new Data.Models.Team() {}, 
+                    Tasks = new List<Data.Models.Task>(),
+                    MemberWorkingDays = new List<Data.Models.MemberWorkingDays>() {new Data.Models.MemberWorkingDays() }
                 },
 
-                new Sprint 
+                new Models.Sprint 
                 { 
                     Id = 5, 
                     DaysInSprint = 3, 
@@ -105,9 +108,9 @@ namespace Teams.Data.Tests
                     TeamId = 5, 
                     StoryPointInHours = 4,
                     Status = PossibleStatuses.CompletedStatus,
-                    Team = new Team() {},
-                    Tasks = new List<Models.Task>(),
-                    MemberWorkingDays = new List<MemberWorkingDays>() {new MemberWorkingDays()}
+                    Team = new Data.Models.Team() {},
+                    Tasks = new List<Data.Models.Task>(),
+                    MemberWorkingDays = new List<Data.Models.MemberWorkingDays>() {new Data.Models.MemberWorkingDays()}
                 }
             };
             return data;
@@ -133,6 +136,8 @@ namespace Teams.Data.Tests
         {
             //Arrange
             const int sprintId = 3;
+            _context.Sprint.AddRange(GetFakeSprintDb());
+            _context.SaveChanges();
 
             //Act
             var result = await _sprintRepository.GetByIdAsync(sprintId);
@@ -158,7 +163,7 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task InsertAsync_SprintRepositoryReturns_True()
         {
             //Arrange
-            SprintBusiness sprint = new SprintBusiness 
+            Business.Models.Sprint sprint = new Business.Models.Sprint 
             { 
                 Id = 6,
                 DaysInSprint = 3, 
@@ -179,7 +184,7 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task DeleteAsync_SprintRepositoryReturns_True()
         {
             //Arrange
-            Sprint sprint = new Sprint 
+            Models.Sprint sprint = new Models.Sprint 
             {
                 Id = 3,
                 DaysInSprint = 3, 
@@ -192,7 +197,7 @@ namespace Teams.Data.Tests
             _context.SaveChanges();
 
             //Act
-            var result = await _sprintRepository.DeleteAsync(_mapper.Map<SprintBusiness>(sprint));
+            var result = await _sprintRepository.DeleteAsync(sprint.Id);
 
             //Assert
             Assert.IsTrue(result);
@@ -202,7 +207,7 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task UpdateAsync_SprintRepositoryReturns_True()
         {
             //Arrange
-            SprintBusiness sprint = new SprintBusiness 
+            Business.Models.Sprint sprint = new Business.Models.Sprint 
             { 
                 Id = 2, 
                 DaysInSprint = 3, 
@@ -211,6 +216,8 @@ namespace Teams.Data.Tests
                 StoryPointInHours = 4, 
                 Status = PossibleStatuses.CompletedStatus 
             };
+            _context.Sprint.AddRange(GetFakeSprintDb());
+            _context.SaveChanges();
 
             //Act
             var result = await _sprintRepository.UpdateAsync(sprint);
@@ -223,7 +230,7 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task UpdateAsync_SprintRepositoryReturns_False()
         {
             //Arrange
-            SprintBusiness sprint = new SprintBusiness 
+            Business.Models.Sprint sprint = new Business.Models.Sprint 
             {
                 Id = 10,
                 DaysInSprint = 3, 

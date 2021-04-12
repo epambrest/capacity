@@ -6,9 +6,9 @@ namespace Teams.Business.Services
 {
     public interface IManageMemberWorkingDaysService
     {
-        Task<MemberWorkingDaysBusiness> GetWorkingDaysByIdAsync(int workingDaysId);
-        Task<IEnumerable<MemberWorkingDaysBusiness>> GetAllWorkingDaysForSprintAsync(int sprintId);
-        Task<bool> EditMemberWorkingDaysAsync(MemberWorkingDaysBusiness memberWorkingDays);
-        Task<bool> AddMemberWorkingDaysAsync(MemberWorkingDaysBusiness memberWorkingDays);
+        Task<MemberWorkingDays> GetWorkingDaysByIdAsync(int workingDaysId);
+        Task<IEnumerable<MemberWorkingDays>> GetAllWorkingDaysForSprintAsync(int sprintId);
+        Task<bool> EditMemberWorkingDaysAsync(MemberWorkingDays memberWorkingDays);
+        Task<bool> AddMemberWorkingDaysAsync(MemberWorkingDays memberWorkingDays);
     }
 }

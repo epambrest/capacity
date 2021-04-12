@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Teams.Data.Models
 {
-    public class TeamMember 
+    public class TeamMember : IModel<TeamMember>
     {
         [Column("Id", TypeName = "int"), Key, Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -15,5 +15,11 @@ namespace Teams.Data.Models
         [ForeignKey(nameof(Member)), Required]
         public string MemberId { get; set; }
         public virtual User Member { get; set; }
+
+        public void Update(TeamMember model)
+        {
+            MemberId = model.MemberId;
+            TeamId = model.TeamId;
+        }
     }
 }

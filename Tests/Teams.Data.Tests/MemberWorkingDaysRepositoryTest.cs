@@ -4,10 +4,10 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using Teams.Business.Models;
-using Teams.Business.Repository;
-using Teams.Data.Mappings;
-using Teams.Data.Models;
 using Teams.Data.Repository;
+using Teams.Business.Mappings;
+using Teams.Data.Models;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Teams.Data.Tests
 {
@@ -15,17 +15,19 @@ namespace Teams.Data.Tests
     class MemberWorkingDaysRepositoryTest
     {
         private ApplicationDbContext _context;
-        private IRepository<MemberWorkingDaysBusiness, int> _memberWorkingDaysRepository;
+        private IRepository<Teams.Data.Models.MemberWorkingDays, Business.Models.MemberWorkingDays, int> _memberWorkingDaysRepository;
         private IMapper _mapper;
 
         [SetUp]
         public void Setup()
         {
+            var serviceProvider = new ServiceCollection().AddEntityFrameworkInMemoryDatabase()
+                .AddEntityFrameworkProxies().BuildServiceProvider();
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: "MemberWorkingDaysDatabase").Options;
+                .UseInMemoryDatabase(databaseName: "MemberWorkingDaysDatabase").UseInternalServiceProvider(serviceProvider)
+                .UseLazyLoadingProxies().Options;
 
             _context = new ApplicationDbContext(options);
-
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MemberWorkingDaysProfile());
@@ -37,42 +39,43 @@ namespace Teams.Data.Tests
             });
             IMapper mapper = mappingConfig.CreateMapper();
             _mapper = mapper;
-          
-            _memberWorkingDaysRepository = new MemberWorkingDaysRepository(_context, _mapper);
+
+            _memberWorkingDaysRepository = new Repository
+                .Repository<Teams.Data.Models.MemberWorkingDays, Business.Models.MemberWorkingDays, int>(_context, _mapper);
         }
 
-        private IQueryable<MemberWorkingDays> GetFakeMemberWorkingDaysDb()
+        private IQueryable<Data.Models.MemberWorkingDays> GetFakeMemberWorkingDaysDb()
         {
-            var data = new List<MemberWorkingDays>
+            var data = new List<Data.Models.MemberWorkingDays>
             {
-                new MemberWorkingDays 
+                new Data.Models.MemberWorkingDays 
                 { 
                     Id = 1, 
                     SprintId = 1, 
                     MemberId = 1, 
                     WorkingDays = 27,
-                    Sprint = new Sprint(),
-                    TeamMember = new TeamMember()
+                    Sprint = new Data.Models.Sprint(),
+                    TeamMember = new Data.Models.TeamMember()
                 },
 
-                new MemberWorkingDays 
+                new Data.Models.MemberWorkingDays 
                 { 
                     Id = 2, 
                     SprintId = 2, 
                     MemberId = 1, 
                     WorkingDays = 18,
-                    Sprint = new Sprint(),
-                    TeamMember = new TeamMember()
+                    Sprint = new Data.Models.Sprint(),
+                    TeamMember = new Data.Models.TeamMember()
                 },
 
-                new MemberWorkingDays 
+                new Data.Models.MemberWorkingDays 
                 { 
                     Id = 3, 
                     SprintId = 1, 
                     MemberId = 3, 
                     WorkingDays = 2,
-                    Sprint = new Sprint(),
-                    TeamMember = new TeamMember()
+                    Sprint = new Data.Models.Sprint(),
+                    TeamMember = new Data.Models.TeamMember()
                 },
 
             }.AsQueryable();
@@ -113,7 +116,8 @@ namespace Teams.Data.Tests
         {
             //Arrange
             const int memberWorkingDaysId = 1;
-
+            _context.MemberWorkingDays.AddRange(GetFakeMemberWorkingDaysDb());
+            _context.SaveChanges();
             //Act
             var result = await _memberWorkingDaysRepository.GetByIdAsync(memberWorkingDaysId);
 
@@ -140,7 +144,7 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task InsertAsync_MemberWorkingDaysRepositoryReturnsTrue_ReturnsTrue()
         {
             //Arrange
-            MemberWorkingDaysBusiness memberWorkingDays = new MemberWorkingDaysBusiness 
+            Business.Models.MemberWorkingDays memberWorkingDays = new Business.Models.MemberWorkingDays 
             { 
                 Id = 4, 
                 SprintId = 2,
@@ -161,7 +165,7 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task DeleteAsync_MemberWorkingDaysRepositoryReturnsTrue_ReturnsTrue()
         {
             //Arrange
-            MemberWorkingDays memberWorkingDays = new MemberWorkingDays 
+            Models.MemberWorkingDays memberWorkingDays = new Models.MemberWorkingDays 
             { 
                 Id = 4, 
                 SprintId = 2,
@@ -172,7 +176,7 @@ namespace Teams.Data.Tests
             _context.SaveChanges();
 
             //Act
-            var result = await _memberWorkingDaysRepository.DeleteAsync(_mapper.Map<MemberWorkingDaysBusiness>(memberWorkingDays));
+            var result = await _memberWorkingDaysRepository.DeleteAsync(memberWorkingDays.Id);
 
             //Assert
             Assert.IsTrue(result);
@@ -184,13 +188,15 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task UpdateAsync_MemberWorkingDaysRepositoryReturnsTrue_ReturnsTrue()
         {
             //Arrange
-            MemberWorkingDaysBusiness memberWorkingDays = new MemberWorkingDaysBusiness 
+            Business.Models.MemberWorkingDays memberWorkingDays = new Business.Models.MemberWorkingDays 
             { 
                 Id = 1,
                 SprintId = 1,
                 MemberId = 1, 
                 WorkingDays = 2 
             };
+            _context.MemberWorkingDays.AddRange(GetFakeMemberWorkingDaysDb());
+            _context.SaveChanges();
 
             //Act
             var result = await _memberWorkingDaysRepository.UpdateAsync(memberWorkingDays);
@@ -203,7 +209,7 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task UpdateAsync_MemberWorkingDaysRepositoryReturnsFalse_ReturnsFalse()
         {
             //Arrange
-            MemberWorkingDaysBusiness memberWorkingDays = new MemberWorkingDaysBusiness
+            Business.Models.MemberWorkingDays memberWorkingDays = new Business.Models.MemberWorkingDays
             {
                 Id = 7, 
                 SprintId = 1,

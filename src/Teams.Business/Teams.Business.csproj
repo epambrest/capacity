@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Teams.Data\Teams.Data.csproj" />
     <ProjectReference Include="..\Teams.Security\Teams.Security.csproj" />
   </ItemGroup>
 

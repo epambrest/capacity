@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Teams.Business.Models;
-using Teams.Business.Repository;
 using Teams.Business.Services;
+using Teams.Data.Models;
+using Teams.Data.Repository;
 using Teams.Security;
 
 namespace Teams.Business.Tests
@@ -16,17 +17,18 @@ namespace Teams.Business.Tests
     class ManageTeamsServiceTest
     {
         private ManageTeamsService _manageTeamsService;
-        private Mock <IRepository<TeamBusiness, int>> _teamRepository;
+        private Mock <IRepository<Data.Models.Team, Models.Team, int>> _teamRepository;
         private Mock<ICurrentUser> _currentUserMock;
 
         [SetUp]
         public void Setup()
         {
             _currentUserMock =  new Mock<ICurrentUser>();
-            _teamRepository = new Mock<IRepository<TeamBusiness, int>>();
-            var dbMock = new List<TeamBusiness>();
-            _teamRepository.Setup(x => x.GetAllAsync()).Returns(Task.FromResult(GetFakeDbTeams()));
-            _teamRepository.Setup(x => x.InsertAsync(It.IsAny<TeamBusiness>())).ReturnsAsync(true);
+            _teamRepository = new Mock<IRepository<Data.Models.Team, Models.Team, int>>();
+            var dbMock = new List<Models.Team>();
+            _teamRepository.Setup(x => x.GetAllAsync())
+                .Returns(System.Threading.Tasks.Task.FromResult(GetFakeDbTeams()));
+            _teamRepository.Setup(x => x.InsertAsync(It.IsAny<Business.Models.Team>())).ReturnsAsync(true);
             string ownerId = Guid.NewGuid().ToString();
             var userDetails = new Mock<UserDetails>(null);
             userDetails.Setup(x => x.Id()).Returns(ownerId);
@@ -86,91 +88,91 @@ namespace Teams.Business.Tests
         {
             //Arrange
             const string id = "abc-def";
-            var teams = new List<TeamBusiness>
+            var teams = new List<Models.Team>
             {
-                new TeamBusiness 
+                new Models.Team 
                 {
                     Id= 1, 
                     TeamOwner = "abc-def",
                     TeamName = "Team1",
-                    TeamMembers = new List<TeamMemberBusiness> {new TeamMemberBusiness { MemberId="def-abc", TeamId =1}}
+                    TeamMembers = new List<Models.TeamMember> {new Models.TeamMember { MemberId="def-abc", TeamId =1}}
                 },
 
-                new TeamBusiness 
+                new Models.Team 
                 { 
                     Id= 2, 
                     TeamOwner = "def-abc",
                     TeamName = "Team2",
-                    TeamMembers = new List<TeamMemberBusiness> {new TeamMemberBusiness { MemberId="abc-def", TeamId =2}}
+                    TeamMembers = new List<Models.TeamMember> {new Models.TeamMember { MemberId="abc-def", TeamId =2}}
                 },
                 
-                new TeamBusiness
+                new Models.Team
                 { 
                     Id= 3,
                     TeamOwner = "def-abc", 
                     TeamName = "Team3",
-                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId="asf-fgv"}}
+                    TeamMembers = new List<Models.TeamMember> { new Models.TeamMember { MemberId="asf-fgv"}}
                 },
                 
-                new TeamBusiness 
+                new Models.Team 
                 { 
                     Id= 4,
                     TeamOwner = "abc-def",
                     TeamName = "Team4",
-                    TeamMembers = new List<TeamMemberBusiness> {new TeamMemberBusiness { MemberId="abc-def", TeamId =4}}
+                    TeamMembers = new List<Models.TeamMember> {new Models.TeamMember { MemberId="abc-def", TeamId =4}}
                 },
                 
-                new TeamBusiness 
+                new Models.Team 
                 { 
                     Id= 5,
                     TeamOwner = "def-abc", 
                     TeamName = "Team5", 
-                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId="asf-fgv"}}
+                    TeamMembers = new List<Models.TeamMember> { new Models.TeamMember { MemberId="asf-fgv"}}
                 },
                 
-                new TeamBusiness 
+                new Models.Team 
                 {
                     Id= 6,
                     TeamOwner = "def-abc",
                     TeamName = "Team6",
-                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId="asf-fgv"}}
+                    TeamMembers = new List<Models.TeamMember> { new Models.TeamMember { MemberId="asf-fgv"}}
                 },
                 
-                new TeamBusiness 
+                new Models.Team 
                 { 
                     Id= 7,
                     TeamOwner = "def-abc", 
                     TeamName = "Team7",
-                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId="asf-fgv"}}
+                    TeamMembers = new List<Models.TeamMember> { new Models.TeamMember { MemberId="asf-fgv"}}
                 },
                 
-                new TeamBusiness 
+                new Models.Team 
                 { 
                     Id= 8, 
                     TeamOwner = "def-abc", 
                     TeamName = "Team8",
-                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId="asf-fgv"}}
+                    TeamMembers = new List<Models.TeamMember> { new Models.TeamMember { MemberId="asf-fgv"}}
                 },
                 
-                new TeamBusiness 
+                new Models.Team 
                 { 
                     Id= 9, 
                     TeamOwner = "def-abc",
                     TeamName = "Team9", 
-                    TeamMembers = new List<TeamMemberBusiness> {new TeamMemberBusiness { MemberId="abc-def", TeamId =9}}
+                    TeamMembers = new List<Models.TeamMember> {new Models.TeamMember { MemberId="abc-def", TeamId =9}}
                 },
                 
-                new TeamBusiness 
+                new Models.Team 
                 { 
                     Id= 10,
                     TeamOwner = "def-abc",
                     TeamName = "Team10", 
-                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId="asf-fgv"}}
+                    TeamMembers = new List<Models.TeamMember> { new Models.TeamMember { MemberId="asf-fgv"}}
                 }
             };
 
             var mock = teams.AsQueryable().BuildMock();
-            _teamRepository.Setup(x => x.GetAllAsync()).Returns(Task.FromResult(teams.AsEnumerable()));
+            _teamRepository.Setup(x => x.GetAllAsync()).Returns(System.Threading.Tasks.Task.FromResult(teams.AsEnumerable()));
 
             var ud = new Mock<UserDetails>(null);
             ud.Setup(x => x.Id()).Returns(id);
@@ -178,7 +180,7 @@ namespace Teams.Business.Tests
             _currentUserMock.SetupGet(x => x.Current).Returns(ud.Object);
 
             //Act
-            var result = new List<TeamBusiness>(await _manageTeamsService.GetMyTeamsAsync());
+            var result = new List<Models.Team>(await _manageTeamsService.GetMyTeamsAsync());
 
             //Assert
             Assert.AreEqual(4, result.Count());
@@ -194,7 +196,7 @@ namespace Teams.Business.Tests
             //Arrange
             const string id = "abc-def";
             const int teamId = 3;
-            TeamBusiness team = new TeamBusiness { Id = 3, TeamOwner = "def-abc", TeamName = "Team3", TeamMembers=new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "asf-fgv"}}};
+            Models.Team team = new Models.Team { Id = 3, TeamOwner = "def-abc", TeamName = "Team3", TeamMembers=new List<Models.TeamMember> { new Models.TeamMember { MemberId = "asf-fgv"}}};
 
             _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(team);
 
@@ -220,9 +222,10 @@ namespace Teams.Business.Tests
             const string teamName2 = "New Name_Team-4";
 
             var mock = GetFakeDbTeams().AsQueryable().BuildMock();
-            _teamRepository.Setup(x => x.GetAllAsync()).Returns(Task.FromResult(GetFakeDbTeams()));
-            _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new TeamBusiness { Id = 4, TeamOwner = "abc-def", TeamName = "Team4", TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "abc-def", TeamId = 4 }}});
-            _teamRepository.Setup(x => x.UpdateAsync(It.IsAny<TeamBusiness>())).ReturnsAsync(true);
+            _teamRepository.Setup(x => x.GetAllAsync()).Returns(System.Threading.Tasks.Task.FromResult(GetFakeDbTeams()));
+            _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(new Business.Models.Team { Id = 4, TeamOwner = "abc-def", TeamName = "Team4", TeamMembers = new List<Models.TeamMember> { new Models.TeamMember { MemberId = "abc-def", TeamId = 4 }}});
+            _teamRepository.Setup(x => x.UpdateAsync(It.IsAny<Business.Models.Team>())).ReturnsAsync(true);
 
             var ud = new Mock<UserDetails>(null);
             ud.Setup(x => x.Id()).Returns(id);
@@ -248,9 +251,11 @@ namespace Teams.Business.Tests
             const string errorTeamName = "ERR##$$OR";
             const string errorTeamName2 = "Team  Error";
             var mock = GetFakeDbTeams().AsQueryable().BuildMock();
-            _teamRepository.Setup(x => x.GetAllAsync()).Returns(Task.FromResult(GetFakeDbTeams()));
-            _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new TeamBusiness { Id = 4, TeamOwner = "abc-def", TeamName = "Team4", TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "abc-def", TeamId = 4 } } });
-            _teamRepository.Setup(x => x.UpdateAsync(It.IsAny<TeamBusiness>())).ReturnsAsync(true);
+            _teamRepository.Setup(x => x.GetAllAsync())
+                .Returns(System.Threading.Tasks.Task.FromResult(GetFakeDbTeams()));
+            _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(new Business.Models.Team { Id = 4, TeamOwner = "abc-def", TeamName = "Team4", TeamMembers = new List<Models.TeamMember> { new Models.TeamMember { MemberId = "abc-def", TeamId = 4 } } });
+            _teamRepository.Setup(x => x.UpdateAsync(It.IsAny<Business.Models.Team>())).ReturnsAsync(true);
 
             var ud = new Mock<UserDetails>(null);
             ud.Setup(x => x.Id()).Returns(id);
@@ -277,9 +282,11 @@ namespace Teams.Business.Tests
             const string teamName = "NewName";
 
             var mock = GetFakeDbTeams().AsQueryable().BuildMock();
-            _teamRepository.Setup(x => x.GetAllAsync()).Returns(Task.FromResult(GetFakeDbTeams()));
-            _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new TeamBusiness { Id = 4, TeamOwner = "abc-def", TeamName = "Team4", TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "abc-def", TeamId = 4 } } });
-            _teamRepository.Setup(x => x.UpdateAsync(It.IsAny<TeamBusiness>())).ReturnsAsync(true);
+            _teamRepository.Setup(x => x.GetAllAsync())
+                .Returns(System.Threading.Tasks.Task.FromResult(GetFakeDbTeams()));
+            _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(new Business.Models.Team { Id = 4, TeamOwner = "abc-def", TeamName = "Team4", TeamMembers = new List<Models.TeamMember> { new Models.TeamMember { MemberId = "abc-def", TeamId = 4 } } });
+            _teamRepository.Setup(x => x.UpdateAsync(It.IsAny<Business.Models.Team>())).ReturnsAsync(true);
 
             var ud = new Mock<UserDetails>(null);
             ud.Setup(x => x.Id()).Returns(id);
@@ -294,88 +301,88 @@ namespace Teams.Business.Tests
         }
 
        
-        private IEnumerable<TeamBusiness> GetFakeDbTeams()
+        private IEnumerable<Models.Team> GetFakeDbTeams()
         {
-            var teams = new List<TeamBusiness>
+            var teams = new List<Models.Team>
             {
-                new TeamBusiness 
+                new Models.Team 
                 { 
                     Id = 1,
                     TeamOwner = "abc-def",
                     TeamName = "Team1",
-                    TeamMembers = new List<TeamMemberBusiness> {new TeamMemberBusiness { MemberId = "def-abc", TeamId = 1}}
+                    TeamMembers = new List<Models.TeamMember> {new Models.TeamMember { MemberId = "def-abc", TeamId = 1}}
                 },
                 
-                new TeamBusiness 
+                new Models.Team 
                 {
                     Id = 2, 
                     TeamOwner = "def-abc",
                     TeamName = "Team2",
-                    TeamMembers = new List<TeamMemberBusiness> {new TeamMemberBusiness { MemberId = "abc-def", TeamId = 2}}
+                    TeamMembers = new List<Models.TeamMember> {new Models.TeamMember { MemberId = "abc-def", TeamId = 2}}
                 },
                 
-                new TeamBusiness 
+                new Models.Team 
                 { 
                     Id = 3,
                     TeamOwner = "def-abc",
                     TeamName = "Team3", 
-                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "asf-fgv"}}
+                    TeamMembers = new List<Models.TeamMember> { new Models.TeamMember { MemberId = "asf-fgv"}}
                 },
                 
-                new TeamBusiness
+                new Models.Team
                 { 
                     Id = 4,
                     TeamOwner = "abc-def", 
                     TeamName = "Team4", 
-                    TeamMembers = new List<TeamMemberBusiness> {new TeamMemberBusiness { MemberId = "abc-def", TeamId = 4}}
+                    TeamMembers = new List<Models.TeamMember> {new Models.TeamMember { MemberId = "abc-def", TeamId = 4}}
                 },
                 
-                new TeamBusiness 
+                new Models.Team 
                 { 
                     Id = 5,
                     TeamOwner = "def-abc", 
                     TeamName = "Team5",
-                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "asf-fgv"}}
+                    TeamMembers = new List<Models.TeamMember> { new Models.TeamMember { MemberId = "asf-fgv"}}
                 },
                 
-                new TeamBusiness 
+                new Models.Team 
                 { 
                     Id = 6, 
                     TeamOwner = "def-abc",
                     TeamName = "Team6",
-                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "asf-fgv"}}
+                    TeamMembers = new List<Models.TeamMember> { new Models.TeamMember { MemberId = "asf-fgv"}}
                 },
                 
-                new TeamBusiness 
+                new Models.Team 
                 { 
                     Id = 7, 
                     TeamOwner = "def-abc", 
                     TeamName = "Team7", 
-                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "asf-fgv"}}
+                    TeamMembers = new List<Models.TeamMember> { new Models.TeamMember { MemberId = "asf-fgv"}}
                 },
                 
-                new TeamBusiness 
+                new Models.Team 
                 { 
                     Id = 8, 
                     TeamOwner = "def-abc",
                     TeamName = "Team8",
-                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "asf-fgv"}}
+                    TeamMembers = new List<Models.TeamMember> { new Models.TeamMember { MemberId = "asf-fgv"}}
                 },
                 
-                new TeamBusiness
+                new Models.Team
                 {
                     Id = 9, 
                     TeamOwner = "def-abc",
                     TeamName = "Team9", 
-                    TeamMembers = new List<TeamMemberBusiness> {new TeamMemberBusiness { MemberId = "abc-def", TeamId = 9}}
+                    TeamMembers = new List<Models.TeamMember> {new Models.TeamMember { MemberId = "abc-def", TeamId = 9}}
                 },
                 
-                new TeamBusiness
+                new Models.Team
                 {
                     Id = 10,
                     TeamOwner = "def-abc",
                     TeamName = "Team10", 
-                    TeamMembers = new List<TeamMemberBusiness> { new TeamMemberBusiness { MemberId = "asf-fgv"}}
+                    TeamMembers = new List<Models.TeamMember> { new Models.TeamMember { MemberId = "asf-fgv"}}
                 }
             };
 

@@ -7,6 +7,6 @@ namespace Teams.Web.ViewModels.TeamMember
         public int Id { get; set; }
         public int TeamId { get; set; }
         public string MemberId { get; set; }
-        public virtual UserBusiness Member { get; set; }
+        public virtual User Member { get; set; }
     }
 }

@@ -40,7 +40,7 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize, NonAction]
-        private async Task<TeamBusiness> GetTeamAsync(int teamId)
+        private async Task<Team> GetTeamAsync(int teamId)
         {
             if (await _accessCheckService.OwnerOrMemberAsync(teamId))
             {

@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Teams.Business.Models;
-using Teams.Business.Repository;
 using Teams.Business.Services;
+using Teams.Data.Models;
+using Teams.Data.Repository;
 using Teams.Security;
 
 namespace Teams.Business.Tests
@@ -15,24 +16,25 @@ namespace Teams.Business.Tests
     class AddTeamMemberToTeamTests
     {
         private Mock<ICurrentUser> _currentUser;
-        private Mock<IRepository<TeamMemberBusiness, int>> _teamMemberRepository;
-        private Mock<IRepository<TeamBusiness, int>> _teamRepository;
+        private Mock<IRepository<Data.Models.TeamMember, Models.TeamMember, int>> _teamMemberRepository;
+        private Mock<IRepository<Data.Models.Team, Models.Team, int>> _teamRepository;
         private ManageTeamsMembersService _teamsMembersService;
 
         [SetUp]
         public void Setup()
         {
            _currentUser = new Mock<ICurrentUser>();
-            _teamMemberRepository = new Mock<IRepository<TeamMemberBusiness, int>>();
-            _teamRepository = new Mock<IRepository<TeamBusiness, int>>();
+            _teamMemberRepository = new Mock<IRepository<Data.Models.TeamMember, Models.TeamMember, int>>();
+            _teamRepository = new Mock<IRepository<Data.Models.Team, Models.Team, int>>();
             var mock = GetFakeDbTeam().AsQueryable().BuildMock();
-            _teamRepository.Setup(t => t.GetAllAsync()).Returns(Task.FromResult(GetFakeDbTeam()));
-            _teamMemberRepository.Setup(t => t.InsertAsync(It.IsAny<TeamMemberBusiness>())).ReturnsAsync(true);
+            _teamRepository.Setup(t => t.GetAllAsync())
+                .Returns(System.Threading.Tasks.Task.FromResult(GetFakeDbTeam()));
+            _teamMemberRepository.Setup(t => t.InsertAsync(It.IsAny<Business.Models.TeamMember>())).ReturnsAsync(true);
             _teamsMembersService = new ManageTeamsMembersService(_teamRepository.Object, _teamMemberRepository.Object, _currentUser.Object);
         }
 
         [Test]
-        public async Task AddMember_teamsMembersServiceAddMemberReturnTrue_ReturnTrue()
+        public async System.Threading.Tasks.Task AddMember_teamsMembersServiceAddMemberReturnTrue_ReturnTrue()
         {
 
             //Arrange
@@ -52,7 +54,7 @@ namespace Teams.Business.Tests
         }
 
         [Test]
-        public async Task AddMember_teamsMembersServiceAddMemberReturnFalse_ReturnFalse()
+        public async System.Threading.Tasks.Task AddMember_teamsMembersServiceAddMemberReturnFalse_ReturnFalse()
         {
 
             //Arrange
@@ -73,22 +75,22 @@ namespace Teams.Business.Tests
         }
 
 
-        private IEnumerable<TeamBusiness> GetFakeDbTeam()
+        private IEnumerable<Models.Team> GetFakeDbTeam()
         {
-            var teams = new List<TeamBusiness>
+            var teams = new List<Models.Team>
             {
-                new TeamBusiness 
+                new Models.Team 
                 {
                     Id = 1, 
                     TeamOwner = "1", 
-                    TeamMembers = new List<TeamMemberBusiness>() { new TeamMemberBusiness { Id = 1,MemberId = "1"} } 
+                    TeamMembers = new List<Models.TeamMember>() { new Models.TeamMember { Id = 1, MemberId = "1"} } 
                 },
 
-                new TeamBusiness 
+                new Models.Team 
                 {
                     Id = 2, 
                     TeamOwner = "1", 
-                    TeamMembers = new List<TeamMemberBusiness>() { new TeamMemberBusiness { Id = 2,MemberId = "2"} } 
+                    TeamMembers = new List<Models.TeamMember>() { new Models.TeamMember { Id = 2, MemberId = "2"} } 
                 },
             };
             return teams;

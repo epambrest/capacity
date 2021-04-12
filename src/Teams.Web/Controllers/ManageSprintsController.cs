@@ -39,7 +39,7 @@ namespace Teams.Web.Controllers
         [Authorize]
         public async Task<IActionResult> AllSprints(int teamId, DisplayOptions options)
         {
-            List<SprintBusiness> sprints;
+            List<Sprint> sprints;
 
             if (await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
@@ -51,7 +51,7 @@ namespace Teams.Web.Controllers
                 return View("ErrorGetAllSprints");
             }
 
-            List<TeamMemberBusiness> teamMembers = await GetAllTeamMembersAsync(teamId, new DisplayOptions { });
+            List<TeamMember> teamMembers = await GetAllTeamMembersAsync(teamId, new DisplayOptions { });
 
             var sprintViewModel = new SprintAndTeamViewModel
             {
@@ -104,7 +104,7 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize, NonAction]
-        private async Task<List<TeamMemberBusiness>> GetAllTeamMembersAsync(int teamId, DisplayOptions options)
+        private async Task<List<TeamMember>> GetAllTeamMembersAsync(int teamId, DisplayOptions options)
         {
             if (!await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
@@ -247,7 +247,7 @@ namespace Teams.Web.Controllers
                     });
                 }
 
-                var newSprint = new SprintBusiness
+                var newSprint = new Sprint
                 {
                     Id = editSprintViewModel.SprintId,
                     TeamId = editSprintViewModel.TeamId,
@@ -330,7 +330,7 @@ namespace Teams.Web.Controllers
                 if (sameSprint != null)
                     return RedirectToAction("AddSprint", new { teamId = sprintViewModel.TeamId, errorMessage = _localizer["SprintWithSameName"] });
 
-                var newSprint = new SprintBusiness
+                var newSprint = new Sprint
                 {
                     TeamId = sprintViewModel.TeamId,
                     Name = sprintViewModel.Name,
@@ -384,7 +384,7 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize, NonAction]
-        private async Task<bool> AddSprintAsync(SprintBusiness sprint)
+        private async Task<bool> AddSprintAsync(Sprint sprint)
         {
             if (await _accessCheckService.IsOwnerAsync(sprint.TeamId))
             {
@@ -394,7 +394,7 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize, NonAction]
-        private async Task<bool> EditSprintAsync(SprintBusiness sprint)
+        private async Task<bool> EditSprintAsync(Sprint sprint)
         {
             if (await _accessCheckService.IsOwnerAsync(sprint.TeamId))
             {
@@ -413,7 +413,7 @@ namespace Teams.Web.Controllers
                 foreach (var selectedTaskId in selectedTasksId)
                 {
                     var currentTask = await _manageTasksService.GetTaskByIdAsync(selectedTaskId);
-                    var task = new TaskBusiness
+                    var task = new Business.Models.Task
                     {
                         Id = currentTask.Id,
                         TeamId = currentTask.TeamId,
@@ -516,7 +516,7 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize, NonAction]
-        private List<TaskViewModel> CreateTaskViewModels(ICollection<TaskBusiness> tasks)
+        private List<TaskViewModel> CreateTaskViewModels(ICollection<Business.Models.Task> tasks)
         {
             var tasksList = new List<TaskViewModel>();
             tasks.ToList().ForEach(t => tasksList.Add(new TaskViewModel()

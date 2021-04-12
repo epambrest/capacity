@@ -8,9 +8,9 @@ namespace Teams.Business.Services
     public interface IManageTeamsMembersService
     {
         Task<bool> RemoveAsync(int teamId, string memberId);
-        Task<TeamMemberBusiness> GetMemberAsync(int teamId, string memberId);
+        Task<TeamMember> GetMemberAsync(int teamId, string memberId);
         Task<bool> AddAsync(int teamId, string memberId);
-        Task<List<TeamMemberBusiness>> GetAllTeamMembersAsync(int teamId, DisplayOptions options);
+        Task<List<TeamMember>> GetAllTeamMembersAsync(int teamId, DisplayOptions options);
     }
 }
 

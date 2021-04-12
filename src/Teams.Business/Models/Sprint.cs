@@ -2,16 +2,16 @@
 
 namespace Teams.Business.Models
 {
-    public class SprintBusiness
+    public class Sprint
     {
         public int Id { get; set; }
         public int TeamId { get; set; }
-        public TeamBusiness Team { get; set; }
+        public Team Team { get; set; }
         public string Name { get; set; }
         public int DaysInSprint { get; set; }
         public int StoryPointInHours { get; set; }
         public int Status { get; set; }
-        public List<TaskBusiness> Tasks { get; set; } = new List<TaskBusiness>();
-        public List<MemberWorkingDaysBusiness> MemberWorkingDays { get; set; } = new List<MemberWorkingDaysBusiness>();
+        public List<Task> Tasks { get; set; } = new List<Task>();
+        public List<MemberWorkingDays> MemberWorkingDays { get; set; } = new List<MemberWorkingDays>();
     }
 }

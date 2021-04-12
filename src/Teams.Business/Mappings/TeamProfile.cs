@@ -2,13 +2,13 @@
 using Teams.Business.Models;
 using Teams.Data.Models;
 
-namespace Teams.Data.Mappings
+namespace Teams.Business.Mappings
 {
     public class TeamProfile : Profile 
     {
         public TeamProfile()
         {
-            CreateMap<TeamBusiness, Team>().ReverseMap();
+            CreateMap<Business.Models.Team, Data.Models.Team>().ReverseMap();
         }
     }
 }

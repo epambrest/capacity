@@ -2,12 +2,12 @@
 
 namespace Teams.Business.Models
 {
-    public class TeamBusiness
+    public class Team
     {
         public int Id { get; set; }
         public string TeamName { get; set; }
         public string TeamOwner { get; set; }
-        public UserBusiness Owner { get; set; }
-        public List<TeamMemberBusiness> TeamMembers { get; set; } = new List<TeamMemberBusiness>();
+        public User Owner { get; set; }
+        public List<TeamMember> TeamMembers { get; set; } = new List<TeamMember>();
     }
 }

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Teams.Data.Models
 {
-    public class Task
+    public class Task : IModel<Task>
     {
         [Key]
         [Column("Id"), Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -34,5 +34,14 @@ namespace Teams.Data.Models
         
         [Column("Completed"), Required, DefaultValue(false)]
         public bool Completed { get; set; }
+
+        public void Update(Task model)
+        {
+            Name = model.Name;
+            Link = model.Link;
+            StoryPoints = model.StoryPoints;
+            MemberId = model.MemberId;
+            SprintId = model.SprintId;
+        }
     }
 }

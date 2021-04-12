@@ -13,7 +13,7 @@ namespace Teams.Web.ViewModels.Team
         public string TeamName { get; set; }
         public string TeamOwner { get; set; }
         public bool IsOwner { get; set; }
-        public virtual UserBusiness Owner { get; set; }
+        public virtual User Owner { get; set; }
         public List<TeamMemberViewModel> TeamMembers { get; set; }
     }
 }

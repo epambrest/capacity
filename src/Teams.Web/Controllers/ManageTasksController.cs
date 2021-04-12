@@ -224,7 +224,7 @@ namespace Teams.Web.Controllers
                     return RedirectToAction("EditTask", new { teamId = taskViewModel.TeamId, taskId = taskViewModel.TaskId, errorMessage = _localizer["LinkFieldError"] });
                 }
 
-                var task = new TaskBusiness
+                var task = new Business.Models.Task
                 {
                     Id = taskViewModel.TaskId,
                     TeamId = taskViewModel.TeamId,
@@ -265,7 +265,7 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize, NonAction]
-        private async Task<bool> EditTaskAsync(TaskBusiness task)
+        private async Task<bool> EditTaskAsync(Business.Models.Task task)
         {
             if (await _accessCheckService.IsOwnerAsync(task.TeamId))
             {
@@ -275,7 +275,7 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize, NonAction]
-        private async Task<List<TeamMemberBusiness>> GetAllTeamMembersAsync(int teamId)
+        private async Task<List<TeamMember>> GetAllTeamMembersAsync(int teamId)
         {
             if (!await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
@@ -285,7 +285,7 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize]
-        private Dictionary<string, int> GetTasksStoryPoints(List<TaskBusiness> tasks)
+        private Dictionary<string, int> GetTasksStoryPoints(List<Business.Models.Task> tasks)
         {
             Dictionary<string, int> tasksSp = new Dictionary<string, int>();
             int spCompletedTasks = 0;
@@ -451,7 +451,7 @@ namespace Teams.Web.Controllers
                     return RedirectToAction("AddTask", new { teamId = taskFormViewModel.TeamId, sprintId = taskFormViewModel.TaskSprintId, errorMessage = _localizer["LinkFieldError"] });
                 }
 
-                var task = new TaskBusiness
+                var task = new Business.Models.Task
                 {
                     Id = taskFormViewModel.TaskId,
                     TeamId = taskFormViewModel.TeamId,
@@ -494,7 +494,7 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize, NonAction]
-        private async Task<bool> AddTaskAsync(TaskBusiness task)
+        private async Task<bool> AddTaskAsync(Business.Models.Task task)
         {
             if (await _accessCheckService.IsOwnerAsync(task.TeamId))
                 return await _manageTasksService.AddTaskAsync(task);
@@ -506,7 +506,7 @@ namespace Teams.Web.Controllers
         {
             var team = await _manageSprintsService.GetTeam(teamId);
             var teamMembers = await GetAllTeamMembersAsync(teamId);
-            var sprints = new List<SprintBusiness>(await _manageSprintsService.GetAllSprintsAsync(teamId, new DisplayOptions()));
+            var sprints = new List<Sprint>(await _manageSprintsService.GetAllSprintsAsync(teamId, new DisplayOptions()));
 
             TaskFormViewModel model = new TaskFormViewModel
             {
@@ -547,7 +547,7 @@ namespace Teams.Web.Controllers
                 {
                     return RedirectToAction("AddTaskIntoTeam", new { teamId = taskFormViewModel.TeamId, errorMessage = _localizer["LinkFieldError"] });
                 }
-                var task = new TaskBusiness
+                var task = new Business.Models.Task
                 {
                     Id = taskFormViewModel.TaskId,
                     TeamId = taskFormViewModel.TeamId,

@@ -5,25 +5,27 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Teams.Business.Annotations;
 using Teams.Business.Models;
-using Teams.Business.Repository;
+using Teams.Data.Models;
+using Teams.Data.Repository;
 using Teams.Security;
 
 namespace Teams.Business.Services
 {
     public class ManageSprintsService : IManageSprintsService
     {
-        private readonly IRepository<SprintBusiness, int> _sprintRepository;
+        private readonly IRepository<Data.Models.Sprint, Business.Models.Sprint, int> _sprintRepository;
         private readonly IManageTeamsService _manageTeamsService;
         private readonly ICurrentUser _currentUser;
 
-        public ManageSprintsService(IRepository<SprintBusiness, int> sprintRepository, IManageTeamsService manageTeamsService, ICurrentUser currentUser)
+        public ManageSprintsService(IRepository<Data.Models.Sprint, Business.Models.Sprint, int> sprintRepository, 
+            IManageTeamsService manageTeamsService, ICurrentUser currentUser)
         {
             _sprintRepository = sprintRepository;
             _manageTeamsService = manageTeamsService;
             _currentUser = currentUser;
         }
 
-        public async Task<IEnumerable<SprintBusiness>> GetAllSprintsAsync(int teamId, DisplayOptions options)
+        public async Task<IEnumerable<Business.Models.Sprint>> GetAllSprintsAsync(int teamId, DisplayOptions options)
         {
             var allSprints = await _sprintRepository.GetAllAsync(); 
             var allTeamSprints = allSprints.Where(x => x.TeamId == teamId);
@@ -34,14 +36,14 @@ namespace Teams.Business.Services
                 return allTeamSprints.OrderByDescending(x => x.Name);
         }
 
-        public async Task<TeamBusiness> GetTeam(int teamId)
+        public async Task<Business.Models.Team> GetTeam(int teamId)
         {
             var teams = await _manageTeamsService.GetMyTeamsAsync();
             var team = teams.FirstOrDefault(i => i.Id == teamId);
             return team;
         }
 
-        public async Task<SprintBusiness> GetSprintAsync(int sprintId, bool includeTaskAndTeamMember)
+        public async Task<Business.Models.Sprint> GetSprintAsync(int sprintId, bool includeTaskAndTeamMember)
         {
             if (includeTaskAndTeamMember)
             {
@@ -52,7 +54,7 @@ namespace Teams.Business.Services
             return await _sprintRepository.GetByIdAsync(sprintId);
         }
 
-        public async Task<bool> AddSprintAsync(SprintBusiness sprint)
+        public async Task<bool> AddSprintAsync(Business.Models.Sprint sprint)
         {
             var allSprints = await _sprintRepository.GetAllAsync();
             bool isThisSprintName = allSprints.Where(x => x.TeamId == sprint.TeamId).Any(x => x.Name == sprint.Name);
@@ -73,11 +75,11 @@ namespace Teams.Business.Services
             
             if (sprint == null) return false;
 
-            var result = await _sprintRepository.DeleteAsync(sprint);
+            var result = await _sprintRepository.DeleteAsync(sprintId);
             return result;
          }
 
-        public async Task<bool> EditSprintAsync(SprintBusiness sprint)
+        public async Task<bool> EditSprintAsync(Business.Models.Sprint sprint)
         {
             var oldSprint = await _sprintRepository.GetByIdAsync(sprint.Id);
 
@@ -91,7 +93,7 @@ namespace Teams.Business.Services
             return await _sprintRepository.UpdateAsync(sprint);
         }
         
-        public async Task<double> GetAverageStoryPointAsync(SprintBusiness sprint)
+        public async Task<double> GetAverageStoryPointAsync(Business.Models.Sprint sprint)
         {
             var sprints = await GetAllSprintsAsync(sprint.TeamId, new DisplayOptions());
             sprints = sprints.Where(t => t.Status == PossibleStatuses.CompletedStatus);

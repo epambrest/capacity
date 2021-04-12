@@ -2,13 +2,13 @@
 using Teams.Business.Models;
 using Teams.Data.Models;
 
-namespace Teams.Data.Mappings
+namespace Teams.Business.Mappings
 {
     public class SprintProfile : Profile
     {
         public SprintProfile()
         {
-            CreateMap<SprintBusiness, Sprint>().ReverseMap();
+            CreateMap<Business.Models.Sprint, Data.Models.Sprint>().ReverseMap();
         }
     }
 }
