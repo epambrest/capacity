@@ -1,4 +1,4 @@
-﻿using Teams.Data.Models;
+﻿using Teams.Business.Models;
 
 namespace Teams.Web.ViewModels.TeamMember
 {

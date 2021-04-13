@@ -3,9 +3,9 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using Teams.Business.Models;
+using Teams.Business.Repository;
 using Teams.Business.Services;
-using Teams.Data;
-using Teams.Data.Models;
 using Teams.Security;
 
 namespace Teams.Business.Tests
@@ -22,11 +22,12 @@ namespace Teams.Business.Tests
         public void Setup()
         {
            _currentUser = new Mock<ICurrentUser>();
-            _teamMemberRepository =new Mock<IRepository<TeamMember, int>>();
+            _teamMemberRepository = new Mock<IRepository<TeamMember, int>>();
             _teamRepository = new Mock<IRepository<Team, int>>();
             var mock = GetFakeDbTeam().AsQueryable().BuildMock();
-            _teamRepository.Setup(t => t.GetAll()).Returns(mock.Object);
-            _teamMemberRepository.Setup(t => t.InsertAsync(It.IsAny<TeamMember>())).ReturnsAsync(true);
+            _teamRepository.Setup(t => t.GetAllAsync())
+                .Returns(System.Threading.Tasks.Task.FromResult(GetFakeDbTeam()));
+            _teamMemberRepository.Setup(t => t.InsertAsync(It.IsAny<Business.Models.TeamMember>())).ReturnsAsync(true);
             _teamsMembersService = new ManageTeamsMembersService(_teamRepository.Object, _teamMemberRepository.Object, _currentUser.Object);
         }
 
@@ -72,12 +73,23 @@ namespace Teams.Business.Tests
         }
 
 
-        private List<Team> GetFakeDbTeam()
+        private IEnumerable<Team> GetFakeDbTeam()
         {
             var teams = new List<Team>
             {
-                new Team {Id =1, TeamOwner = "1",TeamMembers = new List<TeamMember>(){ new TeamMember { Id=1,MemberId="1"} } },
-                new Team {Id =2, TeamOwner = "1",TeamMembers = new List<TeamMember>(){ new TeamMember { Id=2,MemberId="2"} } },
+                new Team 
+                {
+                    Id = 1, 
+                    TeamOwner = "1", 
+                    TeamMembers = new List<TeamMember>() { new TeamMember { Id = 1, MemberId = "1"} } 
+                },
+
+                new Team 
+                {
+                    Id = 2, 
+                    TeamOwner = "1", 
+                    TeamMembers = new List<TeamMember>() { new TeamMember { Id = 2, MemberId = "2"} } 
+                },
             };
             return teams;
         }

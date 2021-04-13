@@ -109,7 +109,7 @@
 
         <tr align="center">
             <td align="left" width="1%"><i title="@Localizer["Owner"]" class="fas fa-crown"></i></td>
-            <td align="left">@Model.Team.Owner.Email</td>
+            <td align="left">@Model.Team.Owner.UserName</td>
             <td align="left"></td>
             <td align="right"></td>
         </tr>
@@ -120,7 +120,7 @@
             {
                 <tr align="center">
                     <td align="left" width="1%"><i title="@Localizer["Member"]" class="fas fa-user"></i></td>
-                    <td align="left">@item.Member.Email</td>
+                    <td align="left">@item.Member.UserName</td>
                     <td align="left"></td>
                     <td align="right"></td>
                 </tr>
@@ -132,14 +132,14 @@
             {
                 <tr align="center">
                     <td align="left" width="1%"><i title="@Localizer["Member"]" class="fas fa-user"></i></td>
-                    <td align="left">@item.Member.Email</td>
+                    <td align="left">@item.Member.UserName</td>
 
                     @if (Model.memberWorkingDays.FirstOrDefault(i => i.MemberId == item.Id) == null)
                     {
                         <td align="center" id="@item.Id"></td>
                         <td align="right">
                             <button type='button' class='btn btn-outline-primary border-0' id="Add" data-toggle="modal" data-target="#workingDaysModalAdd" 
-                                    data-description="@item.Member.Email" data-whatever="@Model.sprintId" data-container="@Model.DaysInSprint" data-content="@item.Id">
+                                    data-description="@item.Member.UserName" data-whatever="@Model.sprintId" data-container="@Model.DaysInSprint" data-content="@item.Id">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </td>
@@ -150,7 +150,7 @@
                                                      @Model.memberWorkingDays.FirstOrDefault(i => i.MemberId == item.Id).WorkingDays</td>
                         <td align="right">
                             <button type='button' class='btn btn-outline-primary border-0' data-toggle="modal" data-target="#workingDaysModal"
-                                    data-content="@item.Member.Email" data-whatever="@Model.memberWorkingDays.FirstOrDefault(i => i.MemberId == item.Id).Id">
+                                    data-content="@item.Member.UserName" data-whatever="@Model.memberWorkingDays.FirstOrDefault(i => i.MemberId == item.Id).Id">
                                 <i class="fas fa-pen"></i>
                             </button>
                         </td>

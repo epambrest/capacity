@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Teams.Business.Annotations;
+using Teams.Business.Models;
 using Teams.Business.Services;
-using Teams.Data.Annotations;
-using Teams.Data.Models;
 using Teams.Web.ViewModels.MemberWorkingDays;
 using Teams.Web.ViewModels.Sprint;
 using Teams.Web.ViewModels.Team;
@@ -25,11 +25,6 @@ namespace Teams.Web.Controllers
             _manageMemberWorkingDaysService = manageMemberWorkingDaysService;
             _manageTeamsMembersService = manageTeamsMembersService;
             _manageSprintsService = manageSprintsService;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
         }
 
         [Authorize]
@@ -57,16 +52,14 @@ namespace Teams.Web.Controllers
         public async Task<bool> EditWorkingDays(int workingDaysId, int workingDays)
         {
             var memberWorkingDays = await _manageMemberWorkingDaysService.GetWorkingDaysByIdAsync(workingDaysId);
-            if (memberWorkingDays == null)
-                return false;
+            if (memberWorkingDays == null) return false;
             
             var newMemberWorkingDays = new MemberWorkingDays { Id = memberWorkingDays.Id, MemberId = memberWorkingDays.MemberId, SprintId = memberWorkingDays.SprintId, Sprint = memberWorkingDays.Sprint, WorkingDays = workingDays };
             if (newMemberWorkingDays.WorkingDays >= 0 && newMemberWorkingDays.WorkingDays <= newMemberWorkingDays.Sprint.DaysInSprint)
             {
                 return await _manageMemberWorkingDaysService.EditMemberWorkingDaysAsync(newMemberWorkingDays);
             }
-            else
-                return false;
+            else return false;
         }
 
         [Authorize]
@@ -82,11 +75,9 @@ namespace Teams.Web.Controllers
                     var memberWorkingDays = await _manageMemberWorkingDaysService.GetAllWorkingDaysForSprintAsync(sprintId);
                     return memberWorkingDays.FirstOrDefault(i => i.MemberId == memberId).Id;
                 }
-                else
-                    return -1;
+                else return -1;
             }
-            else
-                return -1;
+            else return -1;
         }
 
     }

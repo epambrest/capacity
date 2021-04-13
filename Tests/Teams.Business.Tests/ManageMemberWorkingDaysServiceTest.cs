@@ -3,10 +3,9 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using Teams.Business.Models;
+using Teams.Business.Repository;
 using Teams.Business.Services;
-using Teams.Data;
-using Teams.Data.Models;
-using Teams.Security;
 
 namespace Teams.Business.Tests
 {
@@ -15,15 +14,14 @@ namespace Teams.Business.Tests
     {
         private Mock<IRepository<MemberWorkingDays, int>> _memberWorkingDaysRepository;
         private ManageMemberWorkingDaysService _manageMemberWorkingDaysService;
-        private Mock<ICurrentUser> _currentUser;
 
         [SetUp]
         public void Setup()
         {
-            _currentUser = new Mock<ICurrentUser>();
             _memberWorkingDaysRepository = new Mock<IRepository<MemberWorkingDays, int>>();
-            _manageMemberWorkingDaysService = new ManageMemberWorkingDaysService(_memberWorkingDaysRepository.Object, _currentUser.Object);
+            _manageMemberWorkingDaysService = new ManageMemberWorkingDaysService(_memberWorkingDaysRepository.Object);
         }
+
         [Test]
         public async System.Threading.Tasks.Task GetTaskByIdAsync_ManageMemberWorkingDaysServiceReturnsId1_ReturnsId1()
         {
@@ -31,10 +29,13 @@ namespace Teams.Business.Tests
             //Arrange
             const int memberWorkingDaysId = 1;
             var memberWorkingDays = new List<MemberWorkingDays>()
-            {  new MemberWorkingDays { Id = 1, MemberId = 1, SprintId = 1, WorkingDays = 21 } };
+            {  
+                new Models.MemberWorkingDays { Id = 1, MemberId = 1, SprintId = 1, WorkingDays = 21 } 
+            };
             var mock = memberWorkingDays.AsQueryable().BuildMock();
 
-            _memberWorkingDaysRepository.Setup(x => x.GetAll()).Returns(mock.Object);
+            _memberWorkingDaysRepository.Setup(x => x.GetAllAsync())
+                .Returns(System.Threading.Tasks.Task.FromResult(memberWorkingDays.AsEnumerable()));
 
             //Act
             var result = await _manageMemberWorkingDaysService.GetWorkingDaysByIdAsync(memberWorkingDaysId);

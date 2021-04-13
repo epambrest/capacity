@@ -1,6 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Teams.Business.Models
 @inject IViewLocalizer Localizer
 @model Teams.Web.ViewModels.Sprint.SprintViewModel
+
 @{
     ViewBag.Title = Model.Name;
 }
@@ -24,13 +26,17 @@
         <h3 class="font-weight-normal">Completed</h3>
         @if (Model.Tasks.Count != 0)
         {
-            <form>
-                <input type="hidden" name="sprintId" value="@Model.Id" />
-                <input type="hidden" name="teamMemberId" value="@Model.Tasks[0].TeamMember.MemberId" />
-                <button type='submit' class='btn btn-outline-primary border-0 btn-lg' asp-controller="ManageTasks" asp-action="GetResultTeamMember">
-                    <i class="fas fa-clipboard-list"></i>
-                </button>
-            </form>
+            var anyTeamMember = Model.Tasks.FirstOrDefault(t => t.TeamMember != null).TeamMember;
+            if(anyTeamMember != null)
+            { 
+                <form>
+                    <input type="hidden" name="sprintId" value="@Model.Id" />
+                    <input type="hidden" name="teamMemberId" value="@anyTeamMember.MemberId" />
+                    <button type='submit' class='btn btn-outline-primary border-0 btn-lg' asp-controller="ManageTasks" asp-action="GetResultTeamMember">
+                        <i class="fas fa-clipboard-list"></i>
+                    </button>
+                </form>
+            }
         }
     }
     else if (Model.Status == PossibleStatuses.CreatedStatus)
@@ -40,8 +46,6 @@
 
     <h4 class="font-weight-normal">@Localizer["DaysinSprint"]: @Model.DaysInSprint | @Localizer["StoryPointinHours"]: @Model.StoryPointInHours</h4>
 </div>
-
-
 
 <table class="table">
 
@@ -90,7 +94,7 @@
 
             @if (item.TeamMember != null)
             {
-                <td align="left">@item.TeamMember.Member.Email</td>
+                <td align="left">@item.TeamMember.Member.UserName</td>
             }
             else
             {

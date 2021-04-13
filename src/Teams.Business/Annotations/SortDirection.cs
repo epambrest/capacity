@@ -1,4 +1,4 @@
-﻿namespace Teams.Data.Annotations
+﻿namespace Teams.Business.Annotations
 {
     public enum SortDirection
     {

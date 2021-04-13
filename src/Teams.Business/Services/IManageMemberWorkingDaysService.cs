@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Teams.Data.Models;
+using Teams.Business.Models;
 
 namespace Teams.Business.Services
 {

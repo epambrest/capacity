@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Teams.Data.Models;
-using Teams.Data.Repository;
+using Teams.Business.Models;
+using Teams.Business.Repository;
+using Teams.Data.Mappings;
 
 namespace Teams.Data.Tests
 {
@@ -15,27 +18,44 @@ namespace Teams.Data.Tests
         {
             private ApplicationDbContext context;
             private IRepository<TeamMember, int> teamMemberRepository;
+            private IMapper _mapper;
 
             [SetUp]
             public void Setup()
             {
+                var serviceProvider = new ServiceCollection().AddEntityFrameworkInMemoryDatabase()
+                    .AddEntityFrameworkProxies().BuildServiceProvider();
                 var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "TeamMemberListDatabase")
-                .Options;
+                    .UseInMemoryDatabase(databaseName: "MemberWorkingDaysDatabase").UseInternalServiceProvider(serviceProvider)
+                    .UseLazyLoadingProxies().Options;
+
+                var mappingConfig = new MapperConfiguration(mc =>
+                {
+                    mc.AddProfile(new MemberWorkingDaysProfile());
+                    mc.AddProfile(new SprintProfile());
+                    mc.AddProfile(new TaskProfile());
+                    mc.AddProfile(new TeamProfile());
+                    mc.AddProfile(new UserProfile());
+                    mc.AddProfile(new TeamMemberProfile());
+                });
+                IMapper mapper = mappingConfig.CreateMapper();
+                _mapper = mapper;
 
                 context = new ApplicationDbContext(options);
 
             }
 
-            private IQueryable<TeamMember> GenerateData(int num)
+            private IQueryable<Models.TeamMember> GenerateData(int num)
             {
-                var lst = new List<TeamMember>();
+                var lst = new List<Models.TeamMember>();
                 for (int i = 1; i < num; i++)
                 {
-                    lst.Add(new TeamMember
+                    lst.Add(new Models.TeamMember
                     {
                         Id = i,
                         MemberId = i.ToString(),
+                        Member = new Models.User(),
+                        TeamId = i
                     });
                 }
                 return lst.AsQueryable();
@@ -43,15 +63,15 @@ namespace Teams.Data.Tests
 
             #region GetAll
             [Test]
-            public void GetAll_TeamRepositoryReturnsListCount100_ListCount100()
+            public async System.Threading.Tasks.Task GetAll_TeamRepositoryReturnsListCount100_ListCount100()
             {
                 //Arrange
                 context.TeamMembers.AddRange(GenerateData(100));
                 context.SaveChanges();
-                teamMemberRepository = new TeamMemberRepository(context);
+                teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
 
                 //Act
-                var teamMembers = teamMemberRepository.GetAll();
+                var teamMembers = await teamMemberRepository.GetAllAsync();
 
                 //Assert
                 Assert.AreEqual(context.TeamMembers.Count(), teamMembers.Count());
@@ -59,13 +79,13 @@ namespace Teams.Data.Tests
             }
 
             [Test]
-            public void GetAll_TeamRepositoryReturnsEmptyList_ReturnsEmpty()
+            public async System.Threading.Tasks.Task GetAll_TeamRepositoryReturnsEmptyList_ReturnsEmpty()
             {
                 //Arrange
-                teamMemberRepository = new TeamMemberRepository(context);
+                teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
 
                 //Act
-                var teams = teamMemberRepository.GetAll();
+                var teams = await teamMemberRepository.GetAllAsync();
 
                 //Assert
                 Assert.IsEmpty(teams);
@@ -80,7 +100,7 @@ namespace Teams.Data.Tests
                 //Arrange
                 if (context.TeamMembers.Count() < 1)
                     context.TeamMembers.AddRange(GenerateData(100));
-                teamMemberRepository = new TeamMemberRepository(context);
+                teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
 
                 //Act
                 var team = teamMemberRepository.GetByIdAsync(1).Result;
@@ -94,7 +114,7 @@ namespace Teams.Data.Tests
             public void GetByIdAsync_TeamRepositoryReturnsNull_ReturnsNull()
             {
                 //Arrange
-                teamMemberRepository = new TeamMemberRepository(context);
+                teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
 
                 //Act
                 var team = teamMemberRepository.GetByIdAsync(101).Result;
@@ -110,7 +130,7 @@ namespace Teams.Data.Tests
             public void InsertAsync_TeamRepositoryReturnsTrue_ReturnsTrue()
             {
                 //Arrange
-                teamMemberRepository = new TeamMemberRepository(context);
+                teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
                 TeamMember teamMember = new TeamMember() { MemberId = "100" };
 
                 //Act
@@ -129,9 +149,9 @@ namespace Teams.Data.Tests
                 //Arrange
                 context.TeamMembers.AddRange(GenerateData(2));
                 context.SaveChanges();
-                teamMemberRepository = new TeamMemberRepository(context);
+                teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
                 //Act
-                var result = teamMemberRepository.DeleteAsync(teamMemberRepository.GetByIdAsync(1).Result).Result;
+                var result = teamMemberRepository.DeleteAsync(teamMemberRepository.GetByIdAsync(1).Result.Id).Result;
 
                 //Assert
                 Assert.IsTrue(result);
@@ -141,12 +161,12 @@ namespace Teams.Data.Tests
             public void DeleteAsync_TeamRepositoryReturnsNull_ReturnsNull()
             {
                 //Arrange
-                teamMemberRepository = new TeamMemberRepository(context);
+                teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
 
                 //Act&Assert
                 try
                 {
-                    var result = teamMemberRepository.DeleteAsync(null);
+                    var result = teamMemberRepository.DeleteAsync(0);
                 }
                 catch (Exception e)
                 {
@@ -166,7 +186,7 @@ namespace Teams.Data.Tests
                     context.TeamMembers.AddRange(GenerateData(3));
                     context.SaveChanges();
                 }
-                teamMemberRepository = new TeamMemberRepository(context);
+                teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
 
                 //Act
                 var result = teamMemberRepository.UpdateAsync(new TeamMember() { Id = 1, MemberId = "01" }).Result;
@@ -180,7 +200,7 @@ namespace Teams.Data.Tests
             public void UpdateAsync_TeamRepositoryReturnsFalse_ReturnsFalse()
             {
                 //Arrange
-                teamMemberRepository = new TeamMemberRepository(context);
+                teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
 
                 //Act
                 var result = teamMemberRepository.UpdateAsync(new TeamMember() { Id = 101, MemberId = "101" }).Result;

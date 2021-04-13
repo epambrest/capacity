@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Teams.Data.Models
 {
-    public class Sprint
+    public class Sprint : IModel<Sprint>
     {
         [Key]
         [Required]
@@ -37,7 +37,15 @@ namespace Teams.Data.Models
         public int Status { get; set; }
 
         [ForeignKey("SprintId")]
-        public virtual ICollection<Task> Tasks { get; set; }
-        public virtual ICollection<MemberWorkingDays> MemberWorkingDays { get; set; }
+        public virtual List<Task> Tasks { get; set; } = new List<Task>();
+        public virtual List<MemberWorkingDays> MemberWorkingDays { get; set; } = new List<MemberWorkingDays>();
+
+        public void Update(Sprint model)
+        {
+            Name = model.Name;
+            StoryPointInHours = model.StoryPointInHours;
+            DaysInSprint = model.DaysInSprint;
+            Status = model.Status;
+        }
     }
 }

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Teams.Data.Models
 {
-    public class Team
+    public class Team : IModel<Team>
     {
         [Key]
         [Column ("Id"), Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -18,7 +18,12 @@ namespace Teams.Data.Models
         [ForeignKey(nameof(Owner)), Required]
         public string TeamOwner { get; set; }
         public virtual User Owner { get; set; }
-        
-        public virtual ICollection<TeamMember> TeamMembers { get; set; }
+        public virtual List<TeamMember> TeamMembers { get; set; } = new List<TeamMember>();
+
+        public void Update(Team model)
+        {
+            TeamName = model.TeamName;
+            TeamOwner = model.TeamOwner;
+        }
     }
 }

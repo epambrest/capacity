@@ -17,6 +17,13 @@ namespace Teams.Data
         public DbSet<Task> Task { get; set; }
         public DbSet<MemberWorkingDays> MemberWorkingDays { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder
+                .UseLazyLoadingProxies()
+                .UseSqlServer(@"Server=(local);Database=TeamCapacity;MultipleActiveResultSets=true;Trusted_Connection=True;");
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

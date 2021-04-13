@@ -3,10 +3,10 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using Teams.Business.Annotations;
+using Teams.Business.Models;
+using Teams.Business.Repository;
 using Teams.Business.Services;
-using Teams.Data;
-using Teams.Data.Annotations;
-using Teams.Data.Models;
 using Teams.Security;
 
 namespace Teams.Business.Tests
@@ -38,10 +38,11 @@ namespace Teams.Business.Tests
             const string memberId = "def-abc";
 
             var mock = GetFakeDbTeamMembers().AsQueryable().BuildMock();
-            _teamMemberRepository.Setup(x => x.GetAll()).Returns(mock.Object);
+            _teamMemberRepository.Setup(x => x.GetAllAsync())
+                .Returns(System.Threading.Tasks.Task.FromResult(GetFakeDbTeamMembers()));
 
             //Act
-            var result =await  _manageTeamsMembersService.GetMemberAsync(teamId, memberId);
+            var result = await  _manageTeamsMembersService.GetMemberAsync(teamId, memberId);
 
             //Assert
             Assert.AreEqual(result.TeamId, teamId);
@@ -58,11 +59,12 @@ namespace Teams.Business.Tests
             const string memberIdError = "eror-id";
 
             var mock = GetFakeDbTeamMembers().AsQueryable().BuildMock();
-            _teamMemberRepository.Setup(x => x.GetAll()).Returns(mock.Object);
+            _teamMemberRepository.Setup(x => x.GetAllAsync())
+                .Returns(System.Threading.Tasks.Task.FromResult(GetFakeDbTeamMembers()));
 
             //Act
-            var result1 =await _manageTeamsMembersService.GetMemberAsync(teamId, memberIdError);
-            var result2 =await _manageTeamsMembersService.GetMemberAsync(teamIdError, memberId);
+            var result1 = await _manageTeamsMembersService.GetMemberAsync(teamId, memberIdError);
+            var result2 = await _manageTeamsMembersService.GetMemberAsync(teamIdError, memberId);
 
             //Assert
             Assert.AreEqual(result1, null);
@@ -76,7 +78,8 @@ namespace Teams.Business.Tests
             const int teamId = 4;
 
             var mock = GetFakeDbTeamMembers().AsQueryable().BuildMock();
-            _teamMemberRepository.Setup(x => x.GetAll()).Returns(mock.Object);
+            _teamMemberRepository.Setup(x => x.GetAllAsync())
+                .Returns(System.Threading.Tasks.Task.FromResult(GetFakeDbTeamMembers()));
 
             //Act
             var result = await _manageTeamsMembersService.GetAllTeamMembersAsync(teamId, new DisplayOptions { });
@@ -93,7 +96,8 @@ namespace Teams.Business.Tests
             const int teamId = 40;
 
             var mock = GetFakeDbTeamMembers().AsQueryable().BuildMock();
-            _teamMemberRepository.Setup(x => x.GetAll()).Returns(mock.Object);
+            _teamMemberRepository.Setup(x => x.GetAllAsync())
+                .Returns(System.Threading.Tasks.Task.FromResult(GetFakeDbTeamMembers()));
 
             //Act
             var result = await _manageTeamsMembersService.GetAllTeamMembersAsync(teamId, new DisplayOptions { });
@@ -102,21 +106,88 @@ namespace Teams.Business.Tests
             Assert.AreEqual(result.Count, 0);
         }
 
-        private List<TeamMember> GetFakeDbTeamMembers()
+        private IEnumerable<TeamMember> GetFakeDbTeamMembers()
         {
             var teamMembers = new List<TeamMember>
             {
-                new TeamMember {Id =1, MemberId="def-abc", TeamId =1},
-                new TeamMember {Id =2, MemberId="abc-def", TeamId =2},
-                new TeamMember {Id =3, MemberId="asf-fgv", TeamId =3},
-                new TeamMember {Id =4, MemberId="def-abc", Member= new User{ UserName = "b" }, TeamId =4},
-                new TeamMember {Id =5, MemberId="abc-def", Member= new User{ UserName = "a" }, TeamId =4},
-                new TeamMember {Id =6, MemberId="asf-fgv", TeamId =5},
-                new TeamMember {Id =7, MemberId="asf-fgv", TeamId =6},
-                new TeamMember {Id =8, MemberId="asf-fgv", TeamId =7},
-                new TeamMember {Id =9, MemberId="asf-fgv", TeamId =8},
-                new TeamMember {Id =10, MemberId="abc-def", TeamId =9},
-                new TeamMember {Id =11, MemberId="asf-fgv", TeamId =10}
+                new TeamMember 
+                {
+                    Id = 1, 
+                    MemberId = "def-abc",
+                    TeamId = 1
+                },
+
+                new TeamMember
+                {
+                    Id = 2, 
+                    MemberId = "abc-def",
+                    TeamId = 2
+                },
+
+                new TeamMember 
+                {
+                    Id = 3,
+                    MemberId = "asf-fgv",
+                    TeamId = 3
+                },
+
+                new TeamMember 
+                {
+                    Id = 4,
+                    MemberId = "def-abc",
+                    Member = new User { UserName = "b" },
+                    TeamId = 4
+                },
+
+                new TeamMember 
+                {
+                    Id = 5,
+                    MemberId = "abc-def",
+                    Member = new User { UserName = "a" }, 
+                    TeamId = 4
+                },
+
+                new TeamMember
+                {
+                    Id = 6,
+                    MemberId = "asf-fgv",
+                    TeamId = 5
+                },
+
+                new TeamMember
+                {
+                    Id = 7,
+                    MemberId = "asf-fgv",
+                    TeamId = 6
+                },
+
+                new TeamMember 
+                {
+                    Id = 8,
+                    MemberId = "asf-fgv", 
+                    TeamId = 7
+                },
+
+                new TeamMember
+                {
+                    Id = 9,
+                    MemberId = "asf-fgv",
+                    TeamId = 8
+                },
+
+                new TeamMember 
+                {
+                    Id = 10,
+                    MemberId = "abc-def",
+                    TeamId = 9
+                },
+
+                new TeamMember 
+                {
+                    Id = 11,
+                    MemberId = "asf-fgv", 
+                    TeamId = 10
+                }
             };
 
             return teamMembers;

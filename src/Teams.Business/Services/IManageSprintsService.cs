@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Teams.Data.Annotations;
-using Teams.Data.Models;
+using Teams.Business.Annotations;
+using Teams.Business.Models;
 
 namespace Teams.Business.Services
 {

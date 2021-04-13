@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Teams.Data.Models;
+using Teams.Business.Models;
 using Teams.Web.ViewModels.TeamMember;
 
 namespace Teams.Web.ViewModels.Team

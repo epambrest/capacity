@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Teams.Data.Models
 {
-    public class MemberWorkingDays
+    public class MemberWorkingDays : IModel<MemberWorkingDays>
     {
         [Key]
         [Column("Id"), Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -20,5 +20,10 @@ namespace Teams.Data.Models
         
         [Column("WorkingDays"), Required]
         public int WorkingDays { get; set; }
+
+        public void Update(MemberWorkingDays model)
+        {
+            WorkingDays = model.WorkingDays;
+        }
     }
 }

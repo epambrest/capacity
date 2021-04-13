@@ -34,7 +34,7 @@
             <option disabled selected>@Localizer["Choose"]</option>
             @foreach (var item in @Model.TeamMembers)
             {
-                <option value=@item.MemberId>@item.Member.Email</option>
+                <option value=@item.MemberId>@item.Member.UserName</option>
             }
         </select><br/><br/>
         

@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
 @using Teams.Web.ViewModels.Task
+@using Teams.Business.Models; 
 @inject IViewLocalizer Localizer
 @model Teams.Web.ViewModels.Task.AllTasksForTeamViewModel
 
@@ -21,14 +22,14 @@
             string firstName = member.Member.FirstName;
             string lastName = member.Member.LastName;
             string shortName = firstName.Substring(0, 1).ToUpper() + lastName.Substring(0, 1).ToUpper();
-            <button class="сircle-button" style="margin-left:15px;" id=@member.Member.Email FirstName=@firstName LastName=@lastName>
+            <button class="сircle-button" style="margin-left:15px;" id=@member.Member.UserName FirstName=@firstName LastName=@lastName>
                 @shortName
             </button>
         }
         else
         {
-            string shortEmail = member.Member.Email.Substring(0, 2).ToUpper();
-            <button class="сircle-button" style="margin-left:15px;" id=@member.Member.Email>
+            string shortEmail = member.Member.UserName.Substring(0, 2).ToUpper();
+            <button class="сircle-button" style="margin-left:15px;" id=@member.Member.UserName>
                 @shortEmail
             </button>
         }
@@ -101,16 +102,19 @@ else
                                     <td align="left" style="border-top: hidden; font-weight: bold">@Localizer["Action"]</td>
                                 }
                                 <td align="left" style="border-top: hidden; font-weight: bold"></td>
-                                <td style="border-top: hidden;" align="right">
-                                    <form>
-                                        <input type="hidden" name="teamId" value="@Model.TeamId" />
-                                        <input type="hidden" name="sprintId" value="@sprintId" />
-                                        <button type='submit' class='btn btn-outline-primary border-0' asp-controller="ManageTasks" asp-action="AddTask">
-                                            <i class="fas fa-plus"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            }
+                                @if (type != "Backlog")
+                                {
+                                    <td style="border-top: hidden;" align="right">
+                                        <form>
+                                            <input type="hidden" name="teamId" value="@Model.TeamId" />
+                                            <input type="hidden" name="sprintId" value="@sprintId" />
+                                            <button type='submit' class='btn btn-outline-primary border-0' asp-controller="ManageTasks" asp-action="AddTask">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                }
+                             }
                         </tr>
                         @foreach (var item in tasks)
                         {
@@ -136,14 +140,14 @@ else
                                                 string firstName = item.TeamMember.Member.FirstName;
                                                 string lastName = item.TeamMember.Member.LastName;
                                                 string shortName = firstName.Substring(0, 1).ToUpper() + lastName.Substring(0, 1).ToUpper();
-                                                <button class="сircle-button" style="margin-left:15px;" id=@item.TeamMember.Member.Email FirstName=@firstName LastName=@lastName>
+                                                <button class="сircle-button" style="margin-left:15px;" id=@item.TeamMember.Member.UserName FirstName=@firstName LastName=@lastName>
                                                     @shortName
                                                 </button>
                                             }
                                             else
                                             {
-                                                string shortEmail = item.TeamMember.Member.Email.Substring(0, 2).ToUpper();
-                                                <button class="сircle-button" style="margin-left:15px;" id=@item.TeamMember.Member.Email>
+                                                string shortEmail = item.TeamMember.Member.UserName.Substring(0, 2).ToUpper();
+                                                <button class="сircle-button" style="margin-left:15px;" id=@item.TeamMember.Member.UserName>
                                                     @shortEmail
                                                 </button>
                                             }
@@ -174,10 +178,19 @@ else
                                     }
                                     <td align="right">
                                         <form>
-                                            <input type="hidden" name="taskId" value="@item.Id" />
-                                            <button type='submit' class='btn btn-outline-primary border-0' asp-action="EditTask">
-                                                <i class="fas fa-pen"></i>
-                                            </button>
+                                            @if (item.SprintId != 0 && item.SprintId != null)
+                                            {
+                                                <input type="hidden" name="taskId" value="@item.Id" />
+                                                <button type='submit' class='btn btn-outline-primary border-0' asp-action="EditTask">
+                                                    <i class="fas fa-pen"></i>
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button class='btn btn-outline-secondary border-0' disabled>
+                                                    <i class="fas fa-pen"></i>
+                                                </button>
+                                            }
                                         </form>
                                     </td>
                                     <td align="right">

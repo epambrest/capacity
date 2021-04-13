@@ -1,8 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using Teams.Data.Repository;
+using Teams.Business.Models;
+using Teams.Business.Repository;
+using Teams.Data.Mappings;
 
 namespace Teams.Data.Tests
 {
@@ -10,28 +14,108 @@ namespace Teams.Data.Tests
     class TaskRepositoryTest
     {
         private ApplicationDbContext _context;
-        private IRepository<Data.Models.Task, int> _taskRepository;
+        private IRepository<Task, int> _taskRepository;
+        private IMapper _mapper;
 
         [SetUp]
         public void Setup()
         {
+            var serviceProvider = new ServiceCollection().AddEntityFrameworkInMemoryDatabase()
+                .AddEntityFrameworkProxies().BuildServiceProvider();
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: "TaskDatabase").Options;
+                .UseInMemoryDatabase(databaseName: "MemberWorkingDaysDatabase").UseInternalServiceProvider(serviceProvider)
+                .UseLazyLoadingProxies().Options;
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MemberWorkingDaysProfile());
+                mc.AddProfile(new SprintProfile());
+                mc.AddProfile(new TaskProfile());
+                mc.AddProfile(new TeamProfile());
+                mc.AddProfile(new UserProfile());
+                mc.AddProfile(new TeamMemberProfile());
+            });
+            IMapper mapper = mappingConfig.CreateMapper();
+            _mapper = mapper;
 
             _context = new ApplicationDbContext(options);
 
-            _taskRepository = new TaskRepository(_context);
+            _taskRepository = new Repository.Repository<Data.Models.Task, Business.Models.Task, int>(_context, _mapper);
         }
 
-        private IQueryable<Data.Models.Task> GetFakeTaskDb()
+        private IQueryable<Models.Task> GetFakeTaskDb()
         {
-            var data = new List<Data.Models.Task>
+            var data = new List<Models.Task>
             {
-                new Data.Models.Task{ Id=1, Name = "Task1", TeamId= 1, SprintId=1, MemberId=1, Link ="Link1", StoryPoints=1 },
-                new Data.Models.Task{ Id=2, Name = "Task2", TeamId= 2, SprintId=2, MemberId=2, Link ="Link2", StoryPoints=2 },
-                new Data.Models.Task{ Id=3, Name = "Task3", TeamId= 3, SprintId=3, MemberId=3, Link ="Link3", StoryPoints=3 },
-                new Data.Models.Task{ Id=4, Name = "Task4", TeamId= 4, SprintId=4, MemberId=4, Link ="Link4", StoryPoints=4 },
-                new Data.Models.Task{ Id=5, Name = "Task5", TeamId= 5, SprintId=5, MemberId=5, Link ="Link5", StoryPoints=5 }
+                new Models.Task 
+                { 
+                    Id = 1, 
+                    Name = "Task1", 
+                    TeamId = 1, 
+                    SprintId = 1, 
+                    MemberId = 1, 
+                    Link = "Link1", 
+                    StoryPoints = 1, 
+                    Sprint = new Models.Sprint(), 
+                    Team = new Models.Team(), 
+                    TeamMember = new Models.TeamMember() { Member = new Models.User() } 
+                },
+
+                new Models.Task 
+                { 
+                    Id = 2, 
+                    Name = "Task2", 
+                    TeamId = 2, 
+                    SprintId = 2, 
+                    MemberId = 2, 
+                    Link = "Link2", 
+                    StoryPoints = 2,
+                    Sprint = new Models.Sprint(),
+                    Team = new Models.Team(),
+                    TeamMember = new Models.TeamMember() { Member = new Models.User() }
+                },
+
+                new Models.Task 
+                { 
+                    Id = 3, 
+                    Name = "Task3", 
+                    TeamId = 3, 
+                    SprintId = 3, 
+                    MemberId = 3, 
+                    Link = "Link3", 
+                    StoryPoints = 3,
+                    Sprint = new Models.Sprint(),
+                    Team = new Models.Team(),
+                    TeamMember = new Models.TeamMember() { Member = new Models.User() }
+                },
+
+                new Models.Task 
+                { 
+                    Id = 4, 
+                    Name = "Task4", 
+                    TeamId = 4, 
+                    SprintId = 4, 
+                    MemberId = 4, 
+                    Link = "Link4", 
+                    StoryPoints = 4,
+                    Sprint = new Models.Sprint(),
+                    Team = new Models.Team(),
+                    TeamMember = new Models.TeamMember() { Member = new Models.User() }
+                },
+
+                new Models.Task 
+                { 
+                    Id = 5, 
+                    Name = "Task5", 
+                    TeamId = 5, 
+                    SprintId = 5, 
+                    MemberId = 5, 
+                    Link = "Link5", 
+                    StoryPoints = 5,
+                    Sprint = new Models.Sprint(),
+                    Team = new Models.Team(),
+                    TeamMember = new Models.TeamMember() { Member = new Models.User() }
+                }
             }.AsQueryable();
             return data;
         }
@@ -45,10 +129,10 @@ namespace Teams.Data.Tests
             _context.SaveChanges();
 
             //Act
-            var result = await _taskRepository.GetAll().ToListAsync();
+            var result = await _taskRepository.GetAllAsync();
 
             //Assert
-            Assert.AreEqual(result.Count(), taskCount);
+            Assert.AreEqual(result.ToList().Count(), taskCount);
         }
 
         [Test]
@@ -56,6 +140,8 @@ namespace Teams.Data.Tests
         {
             //Arrange
             const int taskId = 5;
+            _context.Task.AddRange(GetFakeTaskDb());
+            _context.SaveChanges();
 
             //Act
             var result = await _taskRepository.GetByIdAsync(taskId);
@@ -81,7 +167,16 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task InsertAsync_TaskRepositoryReturns_True()
         {
             //Arrange
-            Data.Models.Task task = new Data.Models.Task { Id = 6, Name = "Task6", TeamId = 6, SprintId = 6, MemberId = 6, Link = "Link6", StoryPoints = 6 };
+            Task task = new Task 
+            {
+                Id = 6, 
+                Name = "Task6",
+                TeamId = 6,
+                SprintId = 6,
+                MemberId = 6, 
+                Link = "Link6", 
+                StoryPoints = 6
+            };
 
             //Act
             var result = await _taskRepository.InsertAsync(task);
@@ -94,12 +189,21 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task DeleteAsync_TaskRepositoryReturns_True()
         {
             //Arrange
-            Data.Models.Task task = new Data.Models.Task { Id = 2, Name = "Task2", TeamId = 2, SprintId = 2, MemberId = 2, Link = "Link2", StoryPoints = 2 };
+            Models.Task task = new Models.Task 
+            {
+                Id = 2, 
+                Name = "Task2",
+                TeamId = 2,
+                SprintId = 2, 
+                MemberId = 2,
+                Link = "Link2", 
+                StoryPoints = 2 
+            };
             _context.Task.Add(task);
             _context.SaveChanges();
 
             //Act
-            var result = await _taskRepository.DeleteAsync(task);
+            var result = await _taskRepository.DeleteAsync(task.Id);
 
             //Assert
             Assert.IsTrue(result);
@@ -109,7 +213,18 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task UpdateAsync_TaskRepositoryReturns_True()
         {
             //Arrange
-            Data.Models.Task task = new Data.Models.Task { Id = 2, Name = "Task2", TeamId = 8, SprintId = 8, MemberId = 7, Link = "Link2", StoryPoints = 9 };
+            Task task = new Task
+            { 
+                Id = 2, 
+                Name = "Task2",
+                TeamId = 8, 
+                SprintId = 8, 
+                MemberId = 7,
+                Link = "Link2",
+                StoryPoints = 9 
+            };
+            _context.Task.AddRange(GetFakeTaskDb());
+            _context.SaveChanges();
 
             //Act
             var result = await _taskRepository.UpdateAsync(task);
@@ -122,7 +237,16 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task UpdateAsync_TaskRepositoryReturns_False()
         {
             //Arrange
-            Data.Models.Task task = new Data.Models.Task { Id = 8, Name = "Task2", TeamId = 2, SprintId = 2, MemberId = 6, Link = "Link2", StoryPoints = 2 };
+            Task task = new Task 
+            { 
+                Id = 8,
+                Name = "Task2", 
+                TeamId = 2,
+                SprintId = 2,
+                MemberId = 6, 
+                Link = "Link2",
+                StoryPoints = 2 
+            };
 
             //Act
             var result = await _taskRepository.UpdateAsync(task);

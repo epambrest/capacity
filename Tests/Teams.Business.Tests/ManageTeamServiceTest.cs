@@ -3,9 +3,9 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using Teams.Business.Models;
+using Teams.Business.Repository;
 using Teams.Business.Services;
-using Teams.Data;
-using Teams.Data.Models;
 using Teams.Security;
 
 namespace Teams.Business.Tests
@@ -21,7 +21,7 @@ namespace Teams.Business.Tests
             public void Setup()
             {
                 _currentUser = new Mock<ICurrentUser>();
-                _teamRepository = new Mock<IRepository<Team, int>>();
+            _teamRepository = new Mock<IRepository<Team, int>>();
                 _manageTeamsService = new ManageTeamsService(_currentUser.Object, _teamRepository.Object);
             }
 
@@ -33,16 +33,17 @@ namespace Teams.Business.Tests
                 const int teamId = 1;
                 var teams = new List<Team>
                 {
-                 new Team { Id= 1, TeamOwner = "1234", TeamName = "First_Team"},
-                 new Team { Id= 2, TeamOwner = "1234", TeamName = "Second_Team"}
+                    new Team { Id= 1, TeamOwner = "1234", TeamName = "First_Team"},
+                    new Team { Id= 2, TeamOwner = "1234", TeamName = "Second_Team"}
                 };
                 var user = new Mock<UserDetails>(null);
                 user.Setup(x => x.Id()).Returns(teamOwner);
                 _currentUser.SetupGet(x => x.Current).Returns(user.Object);
                 var mock = teams.AsQueryable().BuildMock();
-                _teamRepository.Setup(x => x.GetAll()).Returns(mock.Object);
-                _teamRepository.Setup(x => x.DeleteAsync(It.IsAny<Team>()))
-                .ReturnsAsync(true);
+                _teamRepository.Setup(x => x.GetAllAsync())
+                    .Returns(System.Threading.Tasks.Task.FromResult(teams.AsEnumerable()));
+                _teamRepository.Setup(x => x.DeleteAsync(It.IsAny<int>()))
+                    .ReturnsAsync(true);
 
                 //Act
                 var result = await _manageTeamsService.RemoveAsync(teamId);
@@ -60,16 +61,34 @@ namespace Teams.Business.Tests
                 const int teamId2 = 3;
                 var teams = new List<Team>
                 {
-                 new Team { Id= 1, TeamOwner = "1234", TeamName = "First_Team"},
-                 new Team { Id= 2, TeamOwner = "1234", TeamName = "Second_Team"},
-                 new Team { Id= 3, TeamOwner = "4152", TeamName = "Third_Team"},
+                    new Team 
+                    {
+                        Id= 1, 
+                        TeamOwner = "1234",
+                        TeamName = "First_Team"
+                    },
+
+                    new Team 
+                    { 
+                        Id= 2, 
+                        TeamOwner = "1234", 
+                        TeamName = "Second_Team"
+                    },
+
+                    new Team 
+                    { 
+                        Id= 3,
+                        TeamOwner = "4152", 
+                        TeamName = "Third_Team"
+                    },
                 };
                 var user = new Mock<UserDetails>(null);
                 user.Setup(x => x.Id()).Returns(teamOwner);
                 _currentUser.SetupGet(x => x.Current).Returns(user.Object);
                 var mock = teams.AsQueryable().BuildMock();
-                _teamRepository.Setup(x => x.GetAll()).Returns(mock.Object);
-                _teamRepository.Setup(x => x.DeleteAsync(It.IsAny<Team>()))
+                _teamRepository.Setup(x => x.GetAllAsync())
+                    .Returns(System.Threading.Tasks.Task.FromResult(teams.AsEnumerable()));
+                _teamRepository.Setup(x => x.DeleteAsync(It.IsAny<int>()))
                 .ReturnsAsync(true);
 
                 //Act
