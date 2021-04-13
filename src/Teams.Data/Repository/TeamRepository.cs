@@ -7,12 +7,9 @@ namespace Teams.Data.Repository
 {
     public class TeamRepository : Repository<Models.Team, Business.Models.Team, int>
     {
-        DbSet<Models.Team> _dbSet;
-
         public TeamRepository(ApplicationDbContext dbcontext, IMapper mapper) 
             : base(dbcontext, mapper)
         {
-            _dbSet = dbcontext.Set<Models.Team>();
         }
 
         public override async Task<bool> DeleteAsync(int id)

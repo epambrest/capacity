@@ -13,7 +13,7 @@ namespace Teams.Data.Repository
     {
         protected internal readonly ApplicationDbContext _dbContext;
         protected internal readonly IMapper _mapper;
-        DbSet<TDb> _dbSet;
+        protected internal DbSet<TDb> _dbSet;
         
         public Repository(ApplicationDbContext dbcontext, IMapper mapper)
         {
