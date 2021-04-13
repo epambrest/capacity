@@ -7,7 +7,6 @@ using Teams.Business.Annotations;
 using Teams.Business.Models;
 using Teams.Business.Repository;
 using Teams.Business.Services;
-using Teams.Data.Repository;
 using Teams.Security;
 
 namespace Teams.Business.Tests
