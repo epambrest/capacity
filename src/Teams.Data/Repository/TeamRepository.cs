@@ -7,15 +7,17 @@ namespace Teams.Data.Repository
 {
     public class TeamRepository : Repository<Models.Team, Business.Models.Team, int>
     {
-        DbSet<Teams.Business.Models.Team> _dbSet;
+        DbSet<Models.Team> _dbSet;
+
         public TeamRepository(ApplicationDbContext dbcontext, IMapper mapper) 
             : base(dbcontext, mapper)
         {
+            _dbSet = dbcontext.Set<Models.Team>();
         }
 
         public override async Task<bool> DeleteAsync(int id)
         {
-            Teams.Business.Models.Team deletedItem = await _dbSet.FindAsync(id);
+            Models.Team deletedItem = await _dbSet.FindAsync(id);
             var tasks = await _dbContext.Task.Where(t => t.TeamId == id).ToListAsync();
 
             foreach (var task in tasks)
