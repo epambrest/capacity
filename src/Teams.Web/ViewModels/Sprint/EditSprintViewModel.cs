@@ -16,5 +16,33 @@ namespace Teams.Web.ViewModels.Sprint
         public string TeamName { get; set; }
         public string ErrorMessage { get; set; }
         public int Status { get; set; }
+
+        private EditSprintViewModel(Business.Models.Sprint sprint, string errorMessage, Business.Models.Team team)
+        {
+            if (team != null)
+            {
+                TeamId = team.Id;
+                TeamName = team.TeamName;
+            }
+
+            if (sprint != null)
+            {
+                SprintId = sprint.Id;
+                SprintName = sprint.Name;
+                SprintDaysInSprint = sprint.DaysInSprint;
+                SprintStorePointInHours = sprint.StoryPointInHours;
+                Status = sprint.Status;
+            }
+
+            ErrorMessage = errorMessage;
+        }
+
+        public EditSprintViewModel() { }
+
+        public static EditSprintViewModel Create(Business.Models.Sprint sprint, string errorMessage, Business.Models.Team team)
+        {
+
+            return new EditSprintViewModel(sprint, errorMessage, team);
+        }
     }
 }

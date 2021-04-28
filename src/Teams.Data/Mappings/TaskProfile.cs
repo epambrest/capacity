@@ -7,7 +7,7 @@ namespace Teams.Data.Mappings
     {
         public TaskProfile()
         {
-            CreateMap<Task, Models.Task>().ReverseMap();
+            CreateMap<Models.Task, Task>().ReverseMap();
         }
     }
 }

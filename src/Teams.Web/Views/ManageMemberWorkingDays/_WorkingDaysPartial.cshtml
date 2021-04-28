@@ -19,9 +19,8 @@
         $("#submitEdit").click(function () {
             var DaysInSprint = document.getElementById("DaysInSprint").value;
             var workingDaysId = document.getElementById('workingDaysId').value;
-            var workingDays = document.getElementById('workingDays').value;
-
-            if (!(isNaN(workingDays) || workingDays < 0 || workingDays > DaysInSprint)) {
+            var workingDays = parseInt(document.getElementById('workingDays').value);
+            if (workingDays <= 0 || workingDays > DaysInSprint) {
                 $('#element').toast('show');
             }
             else {
@@ -65,9 +64,9 @@
             var DaysInSprint = document.getElementById("DaysInSprint").value;
             var sprintId = document.getElementById('sprintId').value;
             var memberId = document.getElementById('memberId').value;
-            var workingDays = document.getElementById('AddWorkingDays').value;
+            var workingDays = parseInt(document.getElementById('AddWorkingDays').value);
             var Member = document.getElementById('MemberAdd').value;
-            if (!(isNaN(workingDays) || workingDays < 0 || workingDays > DaysInSprint)) {
+            if (workingDays <= 0 || workingDays > DaysInSprint) {
                 $('#element').toast('show');
             }
             else {

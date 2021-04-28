@@ -58,6 +58,7 @@ namespace Teams.Web
 
             var mapperConfig = new MapperConfiguration(mc =>
             {
+                mc.ShouldUseConstructor = mc => !mc.IsPrivate;
                 mc.AddProfile(new MemberWorkingDaysProfile());
                 mc.AddProfile(new SprintProfile());
                 mc.AddProfile(new TaskProfile());

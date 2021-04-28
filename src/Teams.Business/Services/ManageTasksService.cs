@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -12,11 +13,15 @@ namespace Teams.Business.Services
     public class ManageTasksService : IManageTasksService
     {
         private readonly IRepository<Models.Task, int> _taskRepository;
+        private readonly IRepository<Models.Sprint, int> _sprintRepository;
         private readonly ICurrentUser _currentUser;
 
-        public ManageTasksService(IRepository<Models.Task, int> taskRepository, ICurrentUser currentUser)
+        public ManageTasksService(IRepository<Models.Task, int> taskRepository, 
+            IRepository<Models.Sprint, int> sprintRepository,
+            ICurrentUser currentUser)
         {
             _taskRepository = taskRepository;
+            _sprintRepository = sprintRepository;
             _currentUser = currentUser;
         }
 
@@ -83,6 +88,47 @@ namespace Teams.Business.Services
                 return false;
             }
             return await _taskRepository.InsertAsync(task);
+        }
+
+        public async Task<Dictionary<OtherNamesTaskParams, double>> GetTasksAllParamsForMember(int teamMemberId, int sprintId)
+        {
+            var allSprints = await _sprintRepository.GetAllAsync();
+            var currentSprint = allSprints.FirstOrDefault(s => s.Id == sprintId);
+            if (currentSprint == null) return null;
+            else if (currentSprint.Tasks == null) return null;
+
+            var allMemberTasks = currentSprint.Tasks.Where(t => t.MemberId == teamMemberId).ToList();
+            var sprint = allSprints.Where(t => t.Id == sprintId).FirstOrDefault(t => t.Id == sprintId);
+            int spCompletedTasks = 0;
+            int spUnCompletedTasks = 0;
+            int totalStoryPoints = 0;
+
+            foreach (var memberTask in allMemberTasks)
+            {
+                if (memberTask.Completed == true)
+                {
+                    spCompletedTasks += memberTask.StoryPoints;
+                }
+                else
+                {
+                    spUnCompletedTasks += memberTask.StoryPoints;
+                }
+
+                totalStoryPoints += memberTask.StoryPoints;
+            }
+
+            int quantityСompletedTasks = allMemberTasks.Count(t => t.Completed == true);
+            int quantityUnСompletedTasks = allMemberTasks.Count(t => t.Completed == false);
+            int teamMemberTotalSp = spCompletedTasks + spUnCompletedTasks;
+            Dictionary<OtherNamesTaskParams, double> tasksAllParams = new Dictionary<OtherNamesTaskParams, double>();
+            tasksAllParams.Add(OtherNamesTaskParams.SpCompletedTasks, spCompletedTasks);
+            tasksAllParams.Add(OtherNamesTaskParams.SpUnCompletedTasks, spUnCompletedTasks);
+            tasksAllParams.Add(OtherNamesTaskParams.TotalStoryPoints, totalStoryPoints);
+            tasksAllParams.Add(OtherNamesTaskParams.QuantityСompletedTasks, quantityСompletedTasks);
+            tasksAllParams.Add(OtherNamesTaskParams.QuantityUnСompletedTasks, quantityUnСompletedTasks);
+            tasksAllParams.Add(OtherNamesTaskParams.TeamMemberTotalSp, teamMemberTotalSp);
+
+            return tasksAllParams;
         }
     }
 }

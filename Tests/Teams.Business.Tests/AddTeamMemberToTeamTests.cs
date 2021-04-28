@@ -77,19 +77,10 @@ namespace Teams.Business.Tests
         {
             var teams = new List<Team>
             {
-                new Team 
-                {
-                    Id = 1, 
-                    TeamOwner = "1", 
-                    TeamMembers = new List<TeamMember>() { new TeamMember { Id = 1, MemberId = "1"} } 
-                },
-
-                new Team 
-                {
-                    Id = 2, 
-                    TeamOwner = "1", 
-                    TeamMembers = new List<TeamMember>() { new TeamMember { Id = 2, MemberId = "2"} } 
-                },
+                Team.Create(8, "2", "1234", new List<TeamMember>() { 
+                    TeamMember.Create(1, 8, "1", User.Create("1", "vasya@mail.ru", "vasya", "ivanov")) }),
+                Team.Create(2, "1", "1234", new List<TeamMember>() { 
+                    TeamMember.Create(2, 2, "2", User.Create("2", "vasya@mail.ru", "vasya", "ivanov")) }),
             };
             return teams;
         }

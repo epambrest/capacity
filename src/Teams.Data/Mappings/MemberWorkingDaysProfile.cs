@@ -7,7 +7,7 @@ namespace Teams.Data.Mappings
     {
         public MemberWorkingDaysProfile()
         {
-            CreateMap<MemberWorkingDays, Models.MemberWorkingDays>().ReverseMap();
+            CreateMap<Models.MemberWorkingDays, MemberWorkingDays>().ReverseMap();
         }
     }
 }

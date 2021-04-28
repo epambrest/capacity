@@ -15,5 +15,43 @@ namespace Teams.Web.ViewModels.Team
         public bool IsOwner { get; set; }
         public virtual User Owner { get; set; }
         public List<TeamMemberViewModel> TeamMembers { get; set; }
+
+        private TeamViewModel(Business.Models.Team team, bool isOwner, List<TeamMemberViewModel> teamMemberViewModels)
+        {
+            if (team != null)
+            {
+                Id = team.Id;
+                Owner = team.Owner;
+                TeamName = team.TeamName;
+            }
+
+            IsOwner = isOwner;
+            TeamMembers = teamMemberViewModels;
+        }
+
+        public TeamViewModel() { }
+        public static TeamViewModel Create(Business.Models.Team team, bool isOwner, List<Business.Models.TeamMember> allTeamMembers)
+        {
+            List<TeamMemberViewModel> teamMemberViewModels = new List<TeamMemberViewModel>();
+
+            if (allTeamMembers.Count > 0)
+            {
+                foreach (var teamMember in allTeamMembers)
+                {
+                    var newTeamMemberViewModel = TeamMemberViewModel.Create(teamMember);
+                    teamMemberViewModels.Add(newTeamMemberViewModel);
+                }
+            }
+            else
+            {
+                foreach (var teamMember in team.TeamMembers)
+                {
+                    var newTeamMemberViewModel = TeamMemberViewModel.Create(teamMember);
+                    teamMemberViewModels.Add(newTeamMemberViewModel);
+                }
+            }
+
+            return new TeamViewModel(team, isOwner, teamMemberViewModels);
+        }
     }
 }

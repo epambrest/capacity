@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Teams.Business.Models;
@@ -46,6 +47,17 @@ namespace Teams.Business.Services
             var workingDaysEntity = await _memberWorkingDaysRepository.GetAllAsync();
             var allWorkingDaysForSprint = workingDaysEntity.Where(x => x.SprintId == sprintId);
             return allWorkingDaysForSprint;
+        }
+
+        public async Task<double> GetStoryPointsInDayForMember(int sprintId, int teamMemberId, int teamMemberTotalSp)
+        {
+            var allWorkingDaysForSprint = await _memberWorkingDaysRepository.GetAllAsync();
+            var memberWorkingDays = allWorkingDaysForSprint.Where(i => i.SprintId == sprintId)
+                .FirstOrDefault(i => i.MemberId == teamMemberId);
+            double storyPointsInDay = 0;
+            if (memberWorkingDays != null)
+                storyPointsInDay = Convert.ToDouble(teamMemberTotalSp) / Convert.ToDouble(memberWorkingDays.WorkingDays);
+            return storyPointsInDay;
         }
     }
 }

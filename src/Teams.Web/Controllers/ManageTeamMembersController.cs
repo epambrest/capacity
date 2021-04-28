@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Teams.Business.Annotations;
+using Teams.Business.Models;
 using Teams.Business.Services;
 using Teams.Web.ViewModels.Shared;
 using Teams.Web.ViewModels.Team;
@@ -39,7 +40,7 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize, NonAction]
-        public async Task<Business.Models.TeamMember> GetMemberAsync(int teamId, string memberId)
+        public async Task<TeamMember> GetMemberAsync(int teamId, string memberId)
         {
             if (await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
@@ -49,7 +50,7 @@ namespace Teams.Web.Controllers
         }
 
         [Authorize, NonAction]
-        private async Task<List<Business.Models.TeamMember>> GetAllTeamMembersAsync(int teamId, DisplayOptions options)
+        private async Task<List<TeamMember>> GetAllTeamMembersAsync(int teamId, DisplayOptions options)
         {
             if (await _accessCheckService.OwnerOrMemberAsync(teamId))
             {
@@ -61,7 +62,7 @@ namespace Teams.Web.Controllers
         [Authorize]
         public async Task<IActionResult> TeamMembersAsync(int teamId)
         {
-            List<Business.Models.TeamMember> members = await GetAllTeamMembersAsync(teamId, new DisplayOptions { });
+            List<TeamMember> members = await GetAllTeamMembersAsync(teamId, new DisplayOptions { });
 
             if (members == null)
             {
@@ -76,28 +77,13 @@ namespace Teams.Web.Controllers
                 return View("ErrorNotMember");
             }
 
-            var teamViewModel = new TeamViewModel() 
-            { 
-                Id = team.Id, 
-                TeamName = team.TeamName, 
-                Owner = team.Owner,
-                TeamMembers = new List<TeamMemberViewModel>()
-            };
-
-            members.ForEach(t => teamViewModel.TeamMembers.Add(new TeamMemberViewModel()
-            {
-                MemberId = t.MemberId,
-                Member = t.Member
-            }));
-
+            bool isOwner = false;
             if (await _accessCheckService.IsOwnerAsync(teamId))
             {
-                teamViewModel.IsOwner = true;
+                isOwner = true;
             }
-            else
-            {
-                teamViewModel.IsOwner = false;
-            }
+
+            var teamViewModel = TeamViewModel.Create(team, isOwner, new List<TeamMember>()); 
 
             return View(teamViewModel);
         }
@@ -119,22 +105,30 @@ namespace Teams.Web.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            ErrorViewModel errorViewModel = ErrorViewModel.Create(Activity.Current?.Id ?? HttpContext.TraceIdentifier);
+            return View(errorViewModel);
         }
 
         [Authorize]
         public async Task<IActionResult> AddMemberAsync(int teamId)
         {
-            Business.Models.Team team = await _manageTeamsService.GetTeamAsync(teamId);
-            var users = await _userManager.Users.ToListAsync();
+            Team team = await _manageTeamsService.GetTeamAsync(teamId);
 
-            var teamViewModel = new TeamViewModel() { Id = team.Id, TeamName = team.TeamName, TeamMembers = new List<TeamMemberViewModel>() };
-            
-            foreach(var user in users)
+            bool isOwner = false;
+            if (await _accessCheckService.IsOwnerAsync(teamId))
             {
-                Business.Models.User member = new Business.Models.User() { Id = user.Id, FirstName = user.FirstName, LastName = user.LastName, UserName = user.UserName };
-                teamViewModel.TeamMembers.Add(new TeamMemberViewModel() { MemberId = user.Id, Member = member });
+                isOwner = true;
             }
+
+            var users = await _userManager.Users.ToListAsync();
+            List<TeamMember> allMembers = new List<TeamMember>();
+            foreach (var user in users)
+            {
+                User member = Business.Models.User.Create(user.Id, user.UserName, user.FirstName, user.LastName);
+                allMembers.Add(TeamMember.Create(user.Id, member));
+            }
+
+            TeamViewModel teamViewModel = TeamViewModel.Create(team, isOwner, allMembers);
 
             return View(teamViewModel);
         }

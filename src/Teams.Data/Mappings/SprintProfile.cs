@@ -7,7 +7,7 @@ namespace Teams.Data.Mappings
     {
         public SprintProfile()
         {
-            CreateMap<Sprint, Models.Sprint>().ReverseMap();
+            CreateMap<Models.Sprint, Sprint>().ReverseMap();
         }
     }
 }

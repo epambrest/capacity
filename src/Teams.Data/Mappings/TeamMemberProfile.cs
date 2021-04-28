@@ -4,10 +4,10 @@ using Teams.Business.Models;
 namespace Teams.Data.Mappings
 {
     public class TeamMemberProfile : Profile
+    {
+        public TeamMemberProfile()
         {
-            public TeamMemberProfile()
-            {
-                CreateMap<TeamMember, Models.TeamMember>().ReverseMap();
-            }
+            CreateMap<Models.TeamMember, TeamMember>().ReverseMap();
         }
+    }
 }

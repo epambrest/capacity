@@ -42,6 +42,7 @@ namespace Teams.Data.Models
             StoryPoints = model.StoryPoints;
             MemberId = model.MemberId;
             SprintId = model.SprintId;
+            Completed = model.Completed;
         }
     }
 }

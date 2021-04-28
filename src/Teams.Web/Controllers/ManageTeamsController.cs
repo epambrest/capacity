@@ -34,18 +34,22 @@ namespace Teams.Web.Controllers
         public async Task<IActionResult> GetMyTeamsAsync()
         {
             var teams = await _manageTeamsService.GetMyTeamsAsync();
-            var teamModelView = new List<TeamViewModel>();
-            teams.ToList().ForEach(t => teamModelView.Add(new TeamViewModel() {Owner = t.Owner, TeamName = t.TeamName, TeamOwner = t.TeamOwner, Id = t.Id}));
-            return View(teamModelView);
+            var teamViewsModels = new List<TeamViewModel>();
+
+            foreach (var team in  teams)
+            {
+                TeamViewModel teamViewModel = TeamViewModel.Create(team, false, new List<TeamMember>());
+                teamViewsModels.Add(teamViewModel);
+            }
+
+            return View(teamViewsModels);
         }
 
         [Authorize, NonAction]
         private async Task<Team> GetTeamAsync(int teamId)
         {
             if (await _accessCheckService.OwnerOrMemberAsync(teamId))
-            {
                 return await _manageTeamsService.GetTeamAsync(teamId);
-            }
             else return null;
         }
 
@@ -70,7 +74,8 @@ namespace Teams.Web.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            ErrorViewModel errorViewModel = ErrorViewModel.Create(Activity.Current?.Id ?? HttpContext.TraceIdentifier);
+            return View(errorViewModel);
         }
 
         [HttpPost]

@@ -6,10 +6,11 @@ namespace Teams.Business.Services
 {
     public interface IManageTasksService
     {
-        Task<Business.Models.Task> GetTaskByIdAsync(int id);
-        Task<IEnumerable<Business.Models.Task>> GetAllTasksForTeamAsync(int teamId, DisplayOptions options);
+        Task<Models.Task> GetTaskByIdAsync(int id);
+        Task<IEnumerable<Models.Task>> GetAllTasksForTeamAsync(int teamId, DisplayOptions options);
         Task<bool> RemoveAsync(int taskId);
-        Task<bool> EditTaskAsync(Business.Models.Task task);
-        Task<bool> AddTaskAsync(Business.Models.Task task);
+        Task<bool> EditTaskAsync(Models.Task task);
+        Task<bool> AddTaskAsync(Models.Task task);
+        Task<Dictionary<OtherNamesTaskParams, double>> GetTasksAllParamsForMember(int teamMemberId, int sprintId);
     }
 }

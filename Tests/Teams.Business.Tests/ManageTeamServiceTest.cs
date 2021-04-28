@@ -33,8 +33,8 @@ namespace Teams.Business.Tests
                 const int teamId = 1;
                 var teams = new List<Team>
                 {
-                    new Team { Id= 1, TeamOwner = "1234", TeamName = "First_Team"},
-                    new Team { Id= 2, TeamOwner = "1234", TeamName = "Second_Team"}
+                    Team.Create(1, "1234", "First_Team", new List<TeamMember>()),
+                    Team.Create(2, "1234", "Second_Team", new List<TeamMember>()),
                 };
                 var user = new Mock<UserDetails>(null);
                 user.Setup(x => x.Id()).Returns(teamOwner);
@@ -61,26 +61,9 @@ namespace Teams.Business.Tests
                 const int teamId2 = 3;
                 var teams = new List<Team>
                 {
-                    new Team 
-                    {
-                        Id= 1, 
-                        TeamOwner = "1234",
-                        TeamName = "First_Team"
-                    },
-
-                    new Team 
-                    { 
-                        Id= 2, 
-                        TeamOwner = "1234", 
-                        TeamName = "Second_Team"
-                    },
-
-                    new Team 
-                    { 
-                        Id= 3,
-                        TeamOwner = "4152", 
-                        TeamName = "Third_Team"
-                    },
+                    Team.Create(1, "1234", "First_Team", new List<TeamMember>()),
+                    Team.Create(2, "1234", "Second_Team", new List<TeamMember>()),
+                    Team.Create(3, "4152", "Third_Team", new List<TeamMember>()),
                 };
                 var user = new Mock<UserDetails>(null);
                 user.Setup(x => x.Id()).Returns(teamOwner);

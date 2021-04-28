@@ -23,7 +23,9 @@ namespace Teams.Web.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            string requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+            ErrorViewModel errorViewModel = ErrorViewModel.Create(requestId);
+            return View(errorViewModel);
         }
     }
 }

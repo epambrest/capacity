@@ -86,88 +86,7 @@ namespace Teams.Business.Tests
         {
             //Arrange
             const string id = "abc-def";
-            var teams = new List<Team>
-            {
-                new Team 
-                {
-                    Id= 1, 
-                    TeamOwner = "abc-def",
-                    TeamName = "Team1",
-                    TeamMembers = new List<TeamMember> {new TeamMember { MemberId="def-abc", TeamId =1}}
-                },
-
-                new Team 
-                { 
-                    Id= 2, 
-                    TeamOwner = "def-abc",
-                    TeamName = "Team2",
-                    TeamMembers = new List<TeamMember> {new TeamMember { MemberId="abc-def", TeamId =2}}
-                },
-                
-                new Team
-                { 
-                    Id= 3,
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team3",
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="asf-fgv"}}
-                },
-                
-                new Team 
-                { 
-                    Id= 4,
-                    TeamOwner = "abc-def",
-                    TeamName = "Team4",
-                    TeamMembers = new List<TeamMember> {new TeamMember { MemberId="abc-def", TeamId =4}}
-                },
-                
-                new Team 
-                { 
-                    Id= 5,
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team5", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="asf-fgv"}}
-                },
-                
-                new Team 
-                {
-                    Id= 6,
-                    TeamOwner = "def-abc",
-                    TeamName = "Team6",
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="asf-fgv"}}
-                },
-                
-                new Team 
-                { 
-                    Id= 7,
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team7",
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="asf-fgv"}}
-                },
-                
-                new Team 
-                { 
-                    Id= 8, 
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team8",
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="asf-fgv"}}
-                },
-                
-                new Team 
-                { 
-                    Id= 9, 
-                    TeamOwner = "def-abc",
-                    TeamName = "Team9", 
-                    TeamMembers = new List<TeamMember> {new TeamMember { MemberId="abc-def", TeamId =9}}
-                },
-                
-                new Team 
-                { 
-                    Id= 10,
-                    TeamOwner = "def-abc",
-                    TeamName = "Team10", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="asf-fgv"}}
-                }
-            };
+            var teams = GetFakeDbTeams();
 
             var mock = teams.AsQueryable().BuildMock();
             _teamRepository.Setup(x => x.GetAllAsync()).Returns(System.Threading.Tasks.Task.FromResult(teams.AsEnumerable()));
@@ -194,7 +113,9 @@ namespace Teams.Business.Tests
             //Arrange
             const string id = "abc-def";
             const int teamId = 3;
-            Team team = new Team { Id = 3, TeamOwner = "def-abc", TeamName = "Team3", TeamMembers = new List<TeamMember> { new TeamMember { MemberId = "asf-fgv"}}};
+
+            Team team = Team.Create(3, "def-abc", "Team3", new List<TeamMember>() {
+                    TeamMember.Create(3, 3, "asf-fgv", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))});
 
             _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(team);
 
@@ -218,11 +139,13 @@ namespace Teams.Business.Tests
             const int teamId = 4;
             const string teamName = "NewName";
             const string teamName2 = "New Name_Team-4";
+            Team team = Team.Create(4, "abc-def", "Team4", new List<TeamMember>() {
+                    TeamMember.Create(4, 4, "abc-def", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))});
 
             var mock = GetFakeDbTeams().AsQueryable().BuildMock();
             _teamRepository.Setup(x => x.GetAllAsync()).Returns(System.Threading.Tasks.Task.FromResult(GetFakeDbTeams()));
             _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
-                .ReturnsAsync(new Team { Id = 4, TeamOwner = "abc-def", TeamName = "Team4", TeamMembers = new List<TeamMember> { new TeamMember { MemberId = "abc-def", TeamId = 4 }}});
+                .ReturnsAsync(team);
             _teamRepository.Setup(x => x.UpdateAsync(It.IsAny<Team>())).ReturnsAsync(true);
 
             var ud = new Mock<UserDetails>(null);
@@ -248,11 +171,14 @@ namespace Teams.Business.Tests
             const string existTeamName = "Team5";
             const string errorTeamName = "ERR##$$OR";
             const string errorTeamName2 = "Team  Error";
+            Team team = Team.Create(4, "abc-def", "Team4", new List<TeamMember>() {
+                    TeamMember.Create(4, 4, "abc-def", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))});
+
             var mock = GetFakeDbTeams().AsQueryable().BuildMock();
             _teamRepository.Setup(x => x.GetAllAsync())
                 .Returns(System.Threading.Tasks.Task.FromResult(GetFakeDbTeams()));
             _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
-                .ReturnsAsync(new Team { Id = 4, TeamOwner = "abc-def", TeamName = "Team4", TeamMembers = new List<TeamMember> { new TeamMember { MemberId = "abc-def", TeamId = 4 } } });
+                .ReturnsAsync(team);
             _teamRepository.Setup(x => x.UpdateAsync(It.IsAny<Team>())).ReturnsAsync(true);
 
             var ud = new Mock<UserDetails>(null);
@@ -278,12 +204,14 @@ namespace Teams.Business.Tests
             const string id = "not-owner";
             const int teamId = 4;
             const string teamName = "NewName";
+            Team team = Team.Create(4, "abc-def", "Team4", new List<TeamMember>() {
+                    TeamMember.Create(4, 4, "abc-def", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))});
 
             var mock = GetFakeDbTeams().AsQueryable().BuildMock();
             _teamRepository.Setup(x => x.GetAllAsync())
                 .Returns(System.Threading.Tasks.Task.FromResult(GetFakeDbTeams()));
             _teamRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
-                .ReturnsAsync(new Team { Id = 4, TeamOwner = "abc-def", TeamName = "Team4", TeamMembers = new List<TeamMember> { new TeamMember { MemberId = "abc-def", TeamId = 4 } } });
+                .ReturnsAsync(team);
             _teamRepository.Setup(x => x.UpdateAsync(It.IsAny<Team>())).ReturnsAsync(true);
 
             var ud = new Mock<UserDetails>(null);
@@ -303,85 +231,35 @@ namespace Teams.Business.Tests
         {
             var teams = new List<Team>
             {
-                new Team 
-                { 
-                    Id = 1,
-                    TeamOwner = "abc-def",
-                    TeamName = "Team1",
-                    TeamMembers = new List<TeamMember> {new TeamMember { MemberId = "def-abc", TeamId = 1}}
-                },
-                
-                new Team 
-                {
-                    Id = 2, 
-                    TeamOwner = "def-abc",
-                    TeamName = "Team2",
-                    TeamMembers = new List<TeamMember> {new TeamMember { MemberId = "abc-def", TeamId = 2}}
-                },
-                
-                new Team 
-                { 
-                    Id = 3,
-                    TeamOwner = "def-abc",
-                    TeamName = "Team3", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId = "asf-fgv"}}
-                },
-                
-                new Team
-                { 
-                    Id = 4,
-                    TeamOwner = "abc-def", 
-                    TeamName = "Team4", 
-                    TeamMembers = new List<TeamMember> {new TeamMember { MemberId = "abc-def", TeamId = 4}}
-                },
-                
-                new Team 
-                { 
-                    Id = 5,
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team5",
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId = "asf-fgv"}}
-                },
-                
-                new Team 
-                { 
-                    Id = 6, 
-                    TeamOwner = "def-abc",
-                    TeamName = "Team6",
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId = "asf-fgv"}}
-                },
-                
-                new Team 
-                { 
-                    Id = 7, 
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team7", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId = "asf-fgv"}}
-                },
-                
-                new Team 
-                { 
-                    Id = 8, 
-                    TeamOwner = "def-abc",
-                    TeamName = "Team8",
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId = "asf-fgv"}}
-                },
-                
-                new Team
-                {
-                    Id = 9, 
-                    TeamOwner = "def-abc",
-                    TeamName = "Team9", 
-                    TeamMembers = new List<TeamMember> {new TeamMember { MemberId = "abc-def", TeamId = 9}}
-                },
-                
-                new Team
-                {
-                    Id = 10,
-                    TeamOwner = "def-abc",
-                    TeamName = "Team10", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId = "asf-fgv"}}
-                }
+                Team.Create(1, "abc-def", "Team1", new List<TeamMember>() {
+                    TeamMember.Create(1, 1, "def-abc", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
+
+                Team.Create(2, "def-abc", "Team2", new List<TeamMember>() {
+                    TeamMember.Create(2, 2, "abc-def", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
+
+                Team.Create(3, "def-abc", "Team3", new List<TeamMember>() {
+                    TeamMember.Create(3, 3, "asf-fgv", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
+
+                Team.Create(4, "abc-def", "Team4", new List<TeamMember>() {
+                    TeamMember.Create(4, 4, "abc-def", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
+
+                Team.Create(5, "def-abc", "Team5", new List<TeamMember>() {
+                    TeamMember.Create(5, 5, "asf-fgv", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
+
+                Team.Create(6, "def-abc", "Team6", new List<TeamMember>() {
+                    TeamMember.Create(6, 6, "asf-fgv", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
+
+                Team.Create(7, "def-abc", "Team7", new List<TeamMember>() {
+                    TeamMember.Create(7, 7, "asf-fgv", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
+
+                Team.Create(8, "def-abc", "Team8", new List<TeamMember>() {
+                    TeamMember.Create(8, 8, "asf-fgv", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
+
+                Team.Create(9, "def-abc", "Team9", new List<TeamMember>() {
+                    TeamMember.Create(9, 9, "abc-def", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
+
+                Team.Create(10, "def-abc", "Team10", new List<TeamMember>() {
+                    TeamMember.Create(10, 10, "asf-fgv", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
             };
 
             return teams;

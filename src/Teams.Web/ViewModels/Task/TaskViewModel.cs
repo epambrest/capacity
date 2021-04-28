@@ -14,5 +14,25 @@ namespace Teams.Web.ViewModels.Task
         public int StoryPoints { get; set; }
         public bool Completed { get; set; }
         public TeamMemberViewModel TeamMember { get; set; }
+
+        private TaskViewModel(Business.Models.Task task)
+        {
+            TeamMember = task.MemberId != null ? TeamMemberViewModel.Create(task.TeamMember) : null;
+            TeamId = task.TeamId;
+            Name = task.Name;
+            SprintId = task.SprintId;
+            MemberId = task.MemberId;
+            StoryPoints = task.StoryPoints;
+            Id = task.Id;
+            Link = task.Link;
+            Completed = task.Completed;
+        }
+
+        public static TaskViewModel Create(Business.Models.Task task)
+        {
+            if (task == null) return null;
+            return new TaskViewModel(task);
+        }
+
     }
 }
