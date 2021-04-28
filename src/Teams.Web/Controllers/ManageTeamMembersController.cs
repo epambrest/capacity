@@ -12,7 +12,6 @@ using Teams.Business.Models;
 using Teams.Business.Services;
 using Teams.Web.ViewModels.Shared;
 using Teams.Web.ViewModels.Team;
-using Teams.Web.ViewModels.TeamMember;
 
 namespace Teams.Web.Controllers
 {

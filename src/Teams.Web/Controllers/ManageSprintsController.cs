@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +8,6 @@ using Teams.Business.Annotations;
 using Teams.Business.Models;
 using Teams.Business.Services;
 using Teams.Web.ViewModels.Sprint;
-using Teams.Web.ViewModels.Task;
-using Teams.Web.ViewModels.Team;
-using Teams.Web.ViewModels.TeamMember;
 
 namespace Teams.Web.Controllers
 {

@@ -3,13 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Teams.Business.Annotations;
 using Teams.Business.Models;
 using Teams.Business.Services;
-using Teams.Web.ViewModels.MemberWorkingDays;
 using Teams.Web.ViewModels.Sprint;
-using Teams.Web.ViewModels.Team;
-using Teams.Web.ViewModels.TeamMember;
 
 namespace Teams.Web.Controllers
 {
