@@ -22,7 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Teams.Business\Teams.Business.csproj" />
     <ProjectReference Include="..\..\src\Teams.Data\Teams.Data.csproj" />
-    <ProjectReference Include="..\..\src\Teams.Security\Teams.Security.csproj" />
   </ItemGroup>
 
 </Project>
