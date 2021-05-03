@@ -12,7 +12,7 @@ using Teams.Business.Services;
 using Teams.Data;
 using Teams.Data.Mappings;
 using Teams.Data.Repository;
-using Teams.Security;
+using Teams.Business.Security;
 using Teams.Web.Models;
 using Teams.Web.Resources.ViewModels;
 
