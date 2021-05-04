@@ -37,7 +37,7 @@ namespace Teams.Business.Services
             var alreadyInTeam = allTeams.Any(t => t.TeamOwner == _currentUser.Current.Id() && t.Id == teamId 
                 && t.TeamMembers.Any(t => t.MemberId == memberId));
             if (!alreadyInTeam && memberId != _currentUser.Current.Id())
-                return await _teamMemberRepository.InsertAsync(new TeamMember { TeamId = teamId, MemberId = memberId });
+                return await _teamMemberRepository.InsertAsync(TeamMember.Create(teamId, memberId));
             return false;
         }
 

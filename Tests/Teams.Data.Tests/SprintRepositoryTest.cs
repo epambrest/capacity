@@ -28,6 +28,7 @@ namespace Teams.Data.Tests
 
             var mappingConfig = new MapperConfiguration(mc =>
             {
+                mc.ShouldUseConstructor = mc => !mc.IsPrivate;
                 mc.AddProfile(new MemberWorkingDaysProfile());
                 mc.AddProfile(new SprintProfile());
                 mc.AddProfile(new TaskProfile());
@@ -162,15 +163,8 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task InsertAsync_SprintRepositoryReturns_True()
         {
             //Arrange
-            Sprint sprint = new Sprint 
-            { 
-                Id = 6,
-                DaysInSprint = 3, 
-                Name = "Sprint6", 
-                TeamId = 6,
-                StoryPointInHours = 4,
-                Status = PossibleStatuses.CompletedStatus 
-            };
+            Team team = Team.Create(1, "1234", "1234", new List<TeamMember>());
+            Sprint sprint = Sprint.Create(6, 6, team, "Sprint", 3, 4, PossibleStatuses.CompletedStatus); 
 
             //Act
             var result = await _sprintRepository.InsertAsync(sprint);
@@ -206,15 +200,9 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task UpdateAsync_SprintRepositoryReturns_True()
         {
             //Arrange
-            Sprint sprint = new Sprint 
-            { 
-                Id = 2, 
-                DaysInSprint = 3, 
-                Name = "Update", 
-                TeamId = 5, 
-                StoryPointInHours = 4, 
-                Status = PossibleStatuses.CompletedStatus 
-            };
+            Team team = Team.Create(1, "1234", "1234", new List<TeamMember>());
+            Sprint sprint = Sprint.Create(2, 5, team, "Update", 3, 4, PossibleStatuses.CompletedStatus);
+
             _context.Sprint.AddRange(GetFakeSprintDb());
             _context.SaveChanges();
 
@@ -229,15 +217,8 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task UpdateAsync_SprintRepositoryReturns_False()
         {
             //Arrange
-            Sprint sprint = new Sprint 
-            {
-                Id = 10,
-                DaysInSprint = 3, 
-                Name = "Sprint5",
-                TeamId = 6,
-                StoryPointInHours = 4,
-                Status = PossibleStatuses.CompletedStatus 
-            };
+            Team team = Team.Create(1, "1234", "1234", new List<TeamMember>());
+            Sprint sprint = Sprint.Create(10, 6, team, "Sprint5", 3, 4, PossibleStatuses.CompletedStatus);
 
             //Act
             var result = await _sprintRepository.UpdateAsync(sprint);

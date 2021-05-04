@@ -7,5 +7,15 @@ namespace Teams.Web.ViewModels.Home
         public string Version { get; set; }
         public bool IsDbConnected { get; set; }
         public DateTime ServerDateTime { get; set; }
+
+        private HealthViewModel(string version, bool isDbConnected)
+        {
+            Version = version;
+            IsDbConnected = isDbConnected;
+            ServerDateTime = DateTime.Now;
+        }
+
+        public static HealthViewModel Create(string version, bool isDbConnected) => 
+            new HealthViewModel(version, isDbConnected);
     }
 }

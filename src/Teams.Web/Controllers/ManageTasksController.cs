@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -42,17 +41,12 @@ namespace Teams.Web.Controllers
         [Authorize]
         public async Task<IActionResult> AllTasksForTeam(int teamId, DisplayOptions options)
         {
-            if (!await _accessCheckService.OwnerOrMemberAsync(teamId))
-            {
-                return View("ErrorGetAllTasks");
-            }
+            if (!await _accessCheckService.OwnerOrMemberAsync(teamId)) return View("ErrorGetAllTasks");
 
             var tasksForTeamViewModel = await GetAllTasksForTeamViewModel(teamId, options);
 
             if (tasksForTeamViewModel.Tasks == null || tasksForTeamViewModel.Sprints == null || tasksForTeamViewModel.Members == null)
-            {
                 return View("ErrorGetAllTasks");
-            }
 
             return View(tasksForTeamViewModel);
         }
@@ -60,63 +54,15 @@ namespace Teams.Web.Controllers
         [Authorize, NonAction]
         private async Task<AllTasksForTeamViewModel> GetAllTasksForTeamViewModel(int teamId, DisplayOptions options)
         {
+            options.SortDirection = SortDirection.ByStatus;
             var tasks = await _manageTasksService.GetAllTasksForTeamAsync(teamId, options);
             var team = await _manageTeamsService.GetTeamAsync(teamId);
             var sprints = await _manageSprintsService.GetAllSprintsAsync(teamId, options);
-            var members = await _manageTeamsMembersService.GetAllTeamMembersAsync(teamId, new DisplayOptions { });
 
-            var tasksForTeamViewModel = new AllTasksForTeamViewModel()
-            {
-                TeamId = team.Id,
-                TeamName = team.TeamName,
-                Tasks = new List<TaskViewModel>(),
-                Sprints = new List<SprintViewModel>(),
-                Members = new List<TeamMemberViewModel>()
-            };
+            var isOwner = false;
+            if (await _accessCheckService.IsOwnerAsync(teamId)) isOwner = true;
 
-            sprints.ToList().ForEach(t => tasksForTeamViewModel.Sprints.Add(new SprintViewModel()
-            {
-                Id = t.Id,
-                DaysInSprint = t.DaysInSprint,
-                Status = t.Status,
-                Name = t.Name,
-                StoryPointInHours = t.StoryPointInHours,
-                TeamId = t.TeamId
-            }));
-
-            if (tasksForTeamViewModel.Sprints.Count > 1 && tasksForTeamViewModel.Sprints[1].Status == PossibleStatuses.ActiveStatus)
-            {
-                var swapElem = tasksForTeamViewModel.Sprints[0];
-                tasksForTeamViewModel.Sprints[0] = tasksForTeamViewModel.Sprints[1];
-                tasksForTeamViewModel.Sprints[1] = swapElem;
-            }
-
-            tasks.ToList().ForEach(t => tasksForTeamViewModel.Tasks.Add(new TaskViewModel()
-            {
-                Id = t.Id,
-                Link = t.Link,
-                Name = t.Name,
-                StoryPoints = t.StoryPoints,
-                SprintId = t.SprintId,
-                TeamMember = t.MemberId != null ? new TeamMemberViewModel() { Member = t.TeamMember.Member } : null,
-                MemberId = t.MemberId,
-                Completed = t.Completed
-            }));
-
-            members.ForEach(t => tasksForTeamViewModel.Members.Add(new TeamMemberViewModel()
-            {
-                MemberId = t.MemberId,
-                Member = t.Member
-            }));
-
-            if (await _accessCheckService.IsOwnerAsync(teamId))
-            {
-                tasksForTeamViewModel.IsOwner = true;
-            }
-            else
-            {
-                tasksForTeamViewModel.IsOwner = false;
-            }
+            var tasksForTeamViewModel = AllTasksForTeamViewModel.Create(team, isOwner, sprints.ToList(), tasks.ToList());
 
             return tasksForTeamViewModel;
         }
@@ -125,24 +71,13 @@ namespace Teams.Web.Controllers
         [Authorize]
         public async Task<IActionResult> GetTaskByIdAsync(int teamId, int taskId)
         {
-            if (!await _accessCheckService.OwnerOrMemberAsync(teamId))
-            {
-                return View("ErrorGetTaskById");
-            }
+            if (!await _accessCheckService.OwnerOrMemberAsync(teamId)) return View("ErrorGetTaskById");
 
             if (await _accessCheckService.IsOwnerAsync(teamId)) ViewBag.AddVision = "visible";
             else ViewBag.AddVision = "collapse";
 
             var task = await _manageTasksService.GetTaskByIdAsync(taskId);
-            var taskViewModel = new TaskViewModel()
-            {
-                Id=task.Id,
-                Link = task.Link,
-                Name = task.Name,
-                TeamId = task.TeamId,
-                StoryPoints = task.StoryPoints,
-                TeamMember = task.MemberId != null ? new TeamMemberViewModel() { Member = task.TeamMember.Member } : null
-            };
+            var taskViewModel = TaskViewModel.Create(task);
 
             return View(taskViewModel);
         }
@@ -154,8 +89,8 @@ namespace Teams.Web.Controllers
             var task = await _manageTasksService.GetTaskByIdAsync(taskId);
             var sprintId = task.SprintId;
             var result = await _manageTasksService.RemoveAsync(taskId);
-            if (result)
-                return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId });
+
+            if (result) return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId });
             return RedirectToAction("ErrorRemoveTask");
         }
 
@@ -165,8 +100,8 @@ namespace Teams.Web.Controllers
             var task = await _manageTasksService.GetTaskByIdAsync(taskId);
             var teamId = task.TeamId;
             var result = await _manageTasksService.RemoveAsync(taskId);
-            if (result)
-                return RedirectToAction("AllTasksForTeam", new { teamId });
+
+            if (result) return RedirectToAction("AllTasksForTeam", new { teamId });
             return RedirectToAction("ErrorRemoveTask");
         }
 
@@ -178,142 +113,87 @@ namespace Teams.Web.Controllers
             var team = await _manageSprintsService.GetTeam(task.TeamId);
             var teamMembers = await GetAllTeamMembersAsync(task.TeamId);
             var teamMember = teamMembers.FirstOrDefault(t => t.Id == task.MemberId);
-            string taskMemberName;
-            
-            if (teamMember != null)
-                taskMemberName = teamMember.Member.UserName;
-            else
-                taskMemberName = "";
+            var taskFormViewModel = TaskFormViewModel.Create(task, errorMessage, teamMembers, new List<Sprint>());
 
-            TaskFormViewModel model = new TaskFormViewModel
-            {
-                TeamId = task.TeamId,
-                TaskId = task.Id,
-                TaskSprintId = task.SprintId.GetValueOrDefault(),
-                TeamName = team.TeamName,
-                TaskName = task.Name,
-                TaskLink = task.Link,
-                TaskStoryPoints = task.StoryPoints,
-                TaskMemberId = task.MemberId,
-                ErrorMessage = errorMessage,
-                TaskMemberName = taskMemberName,
-                TeamMembers = new List<TeamMemberViewModel>()
-            };
-
-            teamMembers.ForEach(t=>model.TeamMembers.Add(new TeamMemberViewModel()
-            {
-                Member = t.Member,
-                Id = t.Id
-            }));
-
-            return View(model);
+            return View(taskFormViewModel);
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> EditTaskAsync(TaskFormViewModel taskViewModel)
+        public async Task<IActionResult> EditTaskAsync(TaskFormViewModel taskFormViewModel)
         {
             if (ModelState.IsValid)
             {
-                if (taskViewModel.LinkValidation == null && !Regex.IsMatch(taskViewModel.TaskLink, @"^(?:http(s):\/\/)(github\.com\/)|(bitbucket\.org\/)[\w\d\S]+(\/[\w\d\S]+)*$"))
+                if (taskFormViewModel.LinkValidation == null && !Regex.IsMatch(taskFormViewModel.TaskLink, 
+                    @"^(?:http(s):\/\/)(github\.com\/)|(bitbucket\.org\/)[\w\d\S]+(\/[\w\d\S]+)*$"))
                 {
-                    return RedirectToAction("EditTask", new { teamId = taskViewModel.TeamId, taskId = taskViewModel.TaskId, errorMessage = _localizer["LinkFieldError"] });
+                    return RedirectToAction("EditTask", new { teamId = taskFormViewModel.TeamId, 
+                        taskId = taskFormViewModel.TaskId, errorMessage = _localizer["LinkFieldError"] });
                 }
-                else if (taskViewModel.LinkValidation != null && !Regex.IsMatch(taskViewModel.TaskLink, @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"))
+                else if (taskFormViewModel.LinkValidation != null && !Regex.IsMatch(taskFormViewModel.TaskLink,
+                    @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"))
                 {
-                    return RedirectToAction("EditTask", new { teamId = taskViewModel.TeamId, taskId = taskViewModel.TaskId, errorMessage = _localizer["LinkFieldError"] });
+                    return RedirectToAction("EditTask", new { teamId = taskFormViewModel.TeamId, 
+                        taskId = taskFormViewModel.TaskId, errorMessage = _localizer["LinkFieldError"] });
                 }
 
-                var task = new Business.Models.Task
-                {
-                    Id = taskViewModel.TaskId,
-                    TeamId = taskViewModel.TeamId,
-                    Name = taskViewModel.TaskName,
-                    StoryPoints = taskViewModel.TaskStoryPoints,
-                    Link = taskViewModel.TaskLink,
-                    SprintId = taskViewModel.TaskSprintId,
-                    MemberId = taskViewModel.TaskMemberId
-                };
+                var task = Business.Models.Task.Create(taskFormViewModel.TaskId,
+                    taskFormViewModel.TeamId,
+                    null,
+                    taskFormViewModel.TaskName,
+                    taskFormViewModel.TaskStoryPoints,
+                    taskFormViewModel.TaskLink,
+                    taskFormViewModel.TaskSprintId,
+                    taskFormViewModel.TaskMemberId);
 
-                var currentTask = await _manageTasksService.GetTaskByIdAsync(taskViewModel.TaskId);
+                var currentTask = await _manageTasksService.GetTaskByIdAsync(taskFormViewModel.TaskId);
 
-                if (currentTask.Name== taskViewModel.TaskName && 
-                    currentTask.Link == taskViewModel.TaskLink &&
-                    currentTask.StoryPoints == taskViewModel.TaskStoryPoints&&
-                    currentTask.MemberId== taskViewModel.TaskMemberId
+                if (currentTask.Name == taskFormViewModel.TaskName && 
+                    currentTask.Link == taskFormViewModel.TaskLink &&
+                    currentTask.StoryPoints == taskFormViewModel.TaskStoryPoints&&
+                    currentTask.MemberId == taskFormViewModel.TaskMemberId
                     )
                 {
-                    return RedirectToAction("EditTask", new { teamId = taskViewModel.TeamId, taskId = taskViewModel.TaskId, errorMessage = _localizer["HasntAnyChange"] });
+                    return RedirectToAction("EditTask", new { teamId = taskFormViewModel.TeamId, 
+                        taskId = taskFormViewModel.TaskId, errorMessage = _localizer["HasntAnyChange"] });
                 }
 
                 var result = await EditTaskAsync(task);
 
-                if (result) return RedirectToAction("AllTasksForTeam", new { teamId = taskViewModel.TeamId });
-                else return RedirectToAction("NotOwnerError", new { teamId = taskViewModel.TaskId });
+                if (result) return RedirectToAction("AllTasksForTeam", new { teamId = taskFormViewModel.TeamId });
+                else return RedirectToAction("NotOwnerError", new { teamId = taskFormViewModel.TaskId });
             }
 
-            var teamMembers = await GetAllTeamMembersAsync(taskViewModel.TeamId);
-
-            taskViewModel.TeamMembers = new List<TeamMemberViewModel>();
-            teamMembers.ForEach(t => taskViewModel.TeamMembers.Add(new TeamMemberViewModel
+            var teamMembers = await GetAllTeamMembersAsync(taskFormViewModel.TeamId);
+            taskFormViewModel.TeamMembers = new List<TeamMemberViewModel>();
+            
+            foreach(var teamMember in teamMembers)
             {
-                Member = t.Member,
-                Id = t.Id
-            }));
+                var teamMemberViewModel = TeamMemberViewModel.Create(teamMember);
+                taskFormViewModel.TeamMembers.Add(teamMemberViewModel);
+            }
 
-            return View(taskViewModel);
+            return View(taskFormViewModel);
         }
 
         [Authorize, NonAction]
         private async Task<bool> EditTaskAsync(Business.Models.Task task)
         {
-            if (await _accessCheckService.IsOwnerAsync(task.TeamId))
-            {
-                return await _manageTasksService.EditTaskAsync(task);
-            }
+            if (await _accessCheckService.IsOwnerAsync(task.TeamId)) return await _manageTasksService.EditTaskAsync(task);
             else return false;
         }
 
         [Authorize, NonAction]
         private async Task<List<TeamMember>> GetAllTeamMembersAsync(int teamId)
         {
-            if (!await _accessCheckService.OwnerOrMemberAsync(teamId))
-            {
-                RedirectToAction("Error");
-            }
+            if (!await _accessCheckService.OwnerOrMemberAsync(teamId)) RedirectToAction("Error");
             return await _manageTeamsMembersService.GetAllTeamMembersAsync(teamId, new DisplayOptions { });
-        }
-
-        [Authorize]
-        private Dictionary<string, int> GetTasksStoryPoints(List<Business.Models.Task> tasks)
-        {
-            Dictionary<string, int> tasksSp = new Dictionary<string, int>();
-            int spCompletedTasks = 0;
-            int spUnCompletedTasks = 0;
-            foreach (var task in tasks)
-            {
-                if(task.Completed == true)
-                {
-                    spCompletedTasks += task.StoryPoints;
-                }
-                else
-                {
-                    spUnCompletedTasks += task.StoryPoints;
-                }
-            }
-            tasksSp.Add("spCompletedTasks", spCompletedTasks);
-            tasksSp.Add("spUnCompletedTasks", spUnCompletedTasks);
-            return tasksSp;
         }
 
         [Authorize]
         public IActionResult GetResultError(string errorMessage)
         {
-                        
-            GetResultErrorViewModel getResultErrorViewModel = new GetResultErrorViewModel
-            {
-                ErrorMessage = errorMessage,
-            };
+            var getResultErrorViewModel = GetResultErrorViewModel.Create(errorMessage);
             return View(getResultErrorViewModel);
         }
 
@@ -329,69 +209,11 @@ namespace Teams.Web.Controllers
             if (completedSprint.Status != 2)
                 return RedirectToAction("GetResultError", new { errorMessage = _localizer["StatusIsNotComplete"] });
 
-            var allMemberTasks = completedSprint.Tasks.Where(t => t.MemberId == teamMemberId).ToList();
-            var allSprintTasks = completedSprint.Tasks.ToList();
-
-            if(allMemberTasks == null)
-                return RedirectToAction("GetResultError", new { errorMessage = _localizer["TasksNotExists"] });
-
-            Dictionary<string, int> tasksSp = GetTasksStoryPoints(allMemberTasks);
-            int spCompletedTasks = tasksSp.GetValueOrDefault("spCompletedTasks");
-            int spUnCompletedTasks = tasksSp.GetValueOrDefault("spUnCompletedTasks");
-            int totalStoryPoints = 0;
-            int quantityСompletedTasks = allMemberTasks.Count(t => t.Completed == true);
-            int quantityUnСompletedTasks = allMemberTasks.Count(t => t.Completed == false);
-
-            allMemberTasks.ForEach(t => totalStoryPoints += t.StoryPoints);
-
-            var allWorkingDaysForSprint = await _manageMemberWorkingDaysService.GetAllWorkingDaysForSprintAsync(sprintId);
-
-            var memberWorkingDays = allWorkingDaysForSprint.Where(i => i.MemberId == teamMemberId).FirstOrDefault();
-
-            if (memberWorkingDays == null)
-            {
-                RedirectToAction("GetResultError", new { errorMessage = "Can't get count of working days in the current team member" });
-            }
-
-            var teamMemberTotalSp = spCompletedTasks + spUnCompletedTasks;
-            var storyPointsInDay = Convert.ToDouble(teamMemberTotalSp) / Convert.ToDouble(memberWorkingDays.WorkingDays);
-
-            var resultsTasksForMemberViewModel = new ResultsTasksForMemberViewModel()
-            {
-                TeamMemberId = currentMember.Id,
-                TeamId = completedSprint.TeamId,
-                CompletedSprintId = completedSprint.Id,
-                TeamMemberEmail = currentMember.Member.UserName,
-                SprintName = completedSprint.Name,
-                Tasks = new List<TaskViewModel>(),
-                TeamMembers = new List<TeamMemberViewModel>(),
-                TotalStoryPoints = totalStoryPoints,
-                QuantityСompletedTasks = quantityСompletedTasks,
-                QuantityUnСompletedTasks = quantityUnСompletedTasks,
-                SpСompletedTasks = spCompletedTasks,
-                SpUnСompletedTasks = spUnCompletedTasks,
-                StoryPointsInDay = storyPointsInDay
-            };
-
-            allMemberTasks.ForEach(t => resultsTasksForMemberViewModel.Tasks.Add(new TaskViewModel()
-            {
-                TeamMember = new TeamMemberViewModel() { Member = t.TeamMember.Member },
-                Name = t.Name,
-                StoryPoints = t.StoryPoints,
-                Id = t.Id,
-                Link = t.Link,
-                Completed = t.Completed
-            }
-            ));
-
-            allSprintTasks.ForEach(t => resultsTasksForMemberViewModel.TeamMembers.Add(new TeamMemberViewModel()
-            {
-                Id = t.TeamMember.Id,
-                TeamId = t.TeamMember.TeamId.GetValueOrDefault(),
-                MemberId = t.TeamMember.Id.ToString(),
-                Member = t.TeamMember.Member
-            }
-            ));
+            var tasksAllParams = await _manageTasksService.GetTasksAllParamsForMember(teamMemberId, sprintId);
+            var teamMemberTotalSp = tasksAllParams.TeamMemberTotalSp;
+            var storyPointsInDay = await _manageMemberWorkingDaysService.GetStoryPointsInDayForMember(sprintId, teamMemberId, teamMemberTotalSp);
+            tasksAllParams.AddStoryPointsInDay(storyPointsInDay);
+            var resultsTasksForMemberViewModel = ResultsTasksForMemberViewModel.Create(completedSprint, currentMember, tasksAllParams);
 
             return View(resultsTasksForMemberViewModel);
         }
@@ -404,35 +226,18 @@ namespace Teams.Web.Controllers
             return View();
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
 
-        public IActionResult AddTaskError(int teamId)
-        {
-            return View(teamId);
-        }
+        public IActionResult AddTaskError(int teamId) => View(teamId);
         
         [Authorize]
         public async Task<IActionResult> AddTaskAsync(int teamId, int sprintId, string errorMessage)
         {
             var team = await _manageSprintsService.GetTeam(teamId);
             var teamMembers = await GetAllTeamMembersAsync(teamId);
+            var task = Business.Models.Task.Create(teamId, sprintId, team);
+            var model = TaskFormViewModel.Create(task, errorMessage, teamMembers, new List<Sprint>());
 
-            TaskFormViewModel model = new TaskFormViewModel
-            {
-                TeamId = teamId,
-                TaskSprintId = sprintId,
-                TeamName = team.TeamName,
-                ErrorMessage = errorMessage,
-                TeamMembers = new List<TeamMemberViewModel>()
-            };
-            teamMembers.ForEach(t => model.TeamMembers.Add(new TeamMemberViewModel()
-            {
-                Member = t.Member,
-                Id = t.Id
-            }));
             return View(model);
         }
 
@@ -442,53 +247,47 @@ namespace Teams.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (taskFormViewModel.LinkValidation == null && !Regex.IsMatch(taskFormViewModel.TaskLink, @"^(?:http(s):\/\/)(github\.com\/)|(bitbucket\.org\/)[\w\d\S]+(\/[\w\d\S]+)*$"))
+                if (taskFormViewModel.LinkValidation == null && !Regex.IsMatch(taskFormViewModel.TaskLink, 
+                    @"^(?:http(s):\/\/)(github\.com\/)|(bitbucket\.org\/)[\w\d\S]+(\/[\w\d\S]+)*$"))
                 {
-                    return RedirectToAction("AddTask", new { teamId = taskFormViewModel.TeamId, sprintId = taskFormViewModel.TaskSprintId , errorMessage = _localizer["LinkFieldError"] });
+                    return RedirectToAction("AddTask", new { teamId = taskFormViewModel.TeamId, 
+                        sprintId = taskFormViewModel.TaskSprintId , errorMessage = _localizer["LinkFieldError"] });
                 }
-                else if (taskFormViewModel.LinkValidation != null && !Regex.IsMatch(taskFormViewModel.TaskLink, @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"))
+                else if (taskFormViewModel.LinkValidation != null && !Regex.IsMatch(taskFormViewModel.TaskLink, 
+                    @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"))
                 {
-                    return RedirectToAction("AddTask", new { teamId = taskFormViewModel.TeamId, sprintId = taskFormViewModel.TaskSprintId, errorMessage = _localizer["LinkFieldError"] });
+                    return RedirectToAction("AddTask", new { teamId = taskFormViewModel.TeamId, 
+                        sprintId = taskFormViewModel.TaskSprintId, errorMessage = _localizer["LinkFieldError"] });
                 }
 
-                var task = new Business.Models.Task
-                {
-                    Id = taskFormViewModel.TaskId,
-                    TeamId = taskFormViewModel.TeamId,
-                    Name = taskFormViewModel.TaskName,
-                    StoryPoints = taskFormViewModel.TaskStoryPoints,
-                    Link = taskFormViewModel.TaskLink,
-                    SprintId = taskFormViewModel.TaskSprintId,
-                    MemberId = taskFormViewModel.TaskMemberId
-                };
+                var task = Business.Models.Task.Create(taskFormViewModel.TaskId,
+                    taskFormViewModel.TeamId,
+                    null,
+                    taskFormViewModel.TaskName,
+                    taskFormViewModel.TaskStoryPoints,
+                    taskFormViewModel.TaskLink,
+                    taskFormViewModel.TaskSprintId,
+                    taskFormViewModel.TaskMemberId);
 
                 var isOwner = await _accessCheckService.IsOwnerAsync(task.TeamId);
 
-                if (!isOwner)
-                {
-                    return RedirectToAction("NotOwnerError", new { teamId = taskFormViewModel.TeamId });
-                }
+                if (!isOwner) return RedirectToAction("NotOwnerError", new { teamId = taskFormViewModel.TeamId });
 
                 var result = await _manageTasksService.AddTaskAsync(task);
 
-                if (result)
-                {
-                    return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId = taskFormViewModel.TaskSprintId });
-                }
-                else
-                {
-                    return RedirectToAction("AddTaskError", new { teamId = taskFormViewModel.TeamId });
-                }
+                if (result) return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId = taskFormViewModel.TaskSprintId });
+                else return RedirectToAction("AddTaskError", new { teamId = taskFormViewModel.TeamId });
+                
             }
 
             var teamMembers = await GetAllTeamMembersAsync(taskFormViewModel.TeamId);
-
             taskFormViewModel.TeamMembers = new List<TeamMemberViewModel>();
-            teamMembers.ForEach(t => taskFormViewModel.TeamMembers.Add(new TeamMemberViewModel()
+
+            foreach (var teamMember in teamMembers)
             {
-                Member = t.Member,
-                Id = t.Id
-            }));
+                var teamMemberViewModel = TeamMemberViewModel.Create(teamMember);
+                taskFormViewModel.TeamMembers.Add(teamMemberViewModel);
+            }
 
             return View(taskFormViewModel);
         }
@@ -507,27 +306,8 @@ namespace Teams.Web.Controllers
             var team = await _manageSprintsService.GetTeam(teamId);
             var teamMembers = await GetAllTeamMembersAsync(teamId);
             var sprints = new List<Sprint>(await _manageSprintsService.GetAllSprintsAsync(teamId, new DisplayOptions()));
-
-            TaskFormViewModel model = new TaskFormViewModel
-            {
-                TeamId = teamId,
-                Sprints = new List<SprintViewModel>(),
-                TeamName = team.TeamName,
-                ErrorMessage = errorMessage,
-                TeamMembers = new List<TeamMemberViewModel>()
-            };
-
-            sprints.ForEach(t => model.Sprints.Add(new SprintViewModel()
-            {
-                Id = t.Id,
-                Name = t.Name
-            }));
-
-            teamMembers.ForEach(t => model.TeamMembers.Add(new TeamMemberViewModel()
-            {
-                Id = t.Id,
-                Member = t.Member
-            }));
+            var task = Business.Models.Task.Create(teamId, 0, team);
+            var model = TaskFormViewModel.Create(task, errorMessage, teamMembers, sprints);
 
             return View(model);
         }
@@ -538,62 +318,56 @@ namespace Teams.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (taskFormViewModel.LinkValidation == null && !Regex.IsMatch(taskFormViewModel.TaskLink, 
+                    @"^(?:http(s):\/\/)(github\.com\/)|(bitbucket\.org\/)[\w\d\S]+(\/[\w\d\S]+)*$"))
+                {
+                    return RedirectToAction("AddTaskIntoTeam", new { teamId = taskFormViewModel.TeamId, 
+                        errorMessage = _localizer["LinkFieldError"] });
+                }
+                else if(taskFormViewModel.LinkValidation != null && !Regex.IsMatch(taskFormViewModel.TaskLink, 
+                    @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"))
+                {
+                    return RedirectToAction("AddTaskIntoTeam", new { teamId = taskFormViewModel.TeamId, 
+                        errorMessage = _localizer["LinkFieldError"] });
+                }
 
-                if (taskFormViewModel.LinkValidation == null && !Regex.IsMatch(taskFormViewModel.TaskLink, @"^(?:http(s):\/\/)(github\.com\/)|(bitbucket\.org\/)[\w\d\S]+(\/[\w\d\S]+)*$"))
-                {
-                    return RedirectToAction("AddTaskIntoTeam", new { teamId = taskFormViewModel.TeamId, errorMessage = _localizer["LinkFieldError"] });
-                }
-                else if(taskFormViewModel.LinkValidation != null && !Regex.IsMatch(taskFormViewModel.TaskLink, @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"))
-                {
-                    return RedirectToAction("AddTaskIntoTeam", new { teamId = taskFormViewModel.TeamId, errorMessage = _localizer["LinkFieldError"] });
-                }
-                var task = new Business.Models.Task
-                {
-                    Id = taskFormViewModel.TaskId,
-                    TeamId = taskFormViewModel.TeamId,
-                    Name = taskFormViewModel.TaskName,
-                    StoryPoints = taskFormViewModel.TaskStoryPoints,
-                    Link = taskFormViewModel.TaskLink,
-                    SprintId = taskFormViewModel.TaskSprintId,
-                    MemberId = taskFormViewModel.TaskMemberId
-                };
+                var task = Business.Models.Task.Create(taskFormViewModel.TaskId,
+                    taskFormViewModel.TeamId,
+                    null,
+                    taskFormViewModel.TaskName,
+                    taskFormViewModel.TaskStoryPoints,
+                    taskFormViewModel.TaskLink,
+                    taskFormViewModel.TaskSprintId,
+                    taskFormViewModel.TaskMemberId);
 
                 var isOwner = await _accessCheckService.IsOwnerAsync(task.TeamId);
 
-                if (!isOwner)
-                {
-                    return RedirectToAction("NotOwnerError", new { teamId = taskFormViewModel.TeamId });
-                }
+                if (!isOwner) return RedirectToAction("NotOwnerError", new { teamId = taskFormViewModel.TeamId });
 
                 var result = await _manageTasksService.AddTaskAsync(task);
 
-                if (result)
-                {
-                    return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId = taskFormViewModel.TaskSprintId });
-                }
-                else
-                {
-                    return RedirectToAction("AddTaskError", new { teamId = taskFormViewModel.TeamId });
-                }
+                if (result) return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId = taskFormViewModel.TaskSprintId });
+                
+                else return RedirectToAction("AddTaskError", new { teamId = taskFormViewModel.TeamId });
             }
             
             var teamMembers = await GetAllTeamMembersAsync(taskFormViewModel.TeamId);
             var teamSprints = await _manageSprintsService.GetAllSprintsAsync(taskFormViewModel.TeamId, new DisplayOptions());
 
             taskFormViewModel.TeamMembers = new List<TeamMemberViewModel>();
-            taskFormViewModel.Sprints = new List<SprintViewModel>().ToList();
-
-            teamMembers.ForEach(t => taskFormViewModel.TeamMembers.Add(new TeamMemberViewModel()
+            foreach (var teamMember in teamMembers)
             {
-                Member = t.Member,
-                Id = t.Id
-            }));
+                var teamMemberViewModel = TeamMemberViewModel.Create(teamMember);
+                taskFormViewModel.TeamMembers.Add(teamMemberViewModel);
+            }
 
-            teamSprints.ToList().ForEach(t => taskFormViewModel.Sprints.Add(new SprintViewModel()
+            taskFormViewModel.Sprints = new List<SprintViewModel>();
+
+            foreach (var teamSprint in teamSprints)
             {
-                Name = t.Name,
-                Id = t.Id
-            }));
+                var sprintViewModel = SprintViewModel.Create(teamSprint, false, 0);
+                taskFormViewModel.Sprints.Add(sprintViewModel);
+            }
 
             return View(taskFormViewModel);
         }

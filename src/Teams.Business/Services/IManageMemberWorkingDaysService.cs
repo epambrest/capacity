@@ -10,5 +10,6 @@ namespace Teams.Business.Services
         Task<IEnumerable<MemberWorkingDays>> GetAllWorkingDaysForSprintAsync(int sprintId);
         Task<bool> EditMemberWorkingDaysAsync(MemberWorkingDays memberWorkingDays);
         Task<bool> AddMemberWorkingDaysAsync(MemberWorkingDays memberWorkingDays);
+        Task<double> GetStoryPointsInDayForMember(int sprintId, int teamMemberId, int teamMemberTotalSp);
     }
 }

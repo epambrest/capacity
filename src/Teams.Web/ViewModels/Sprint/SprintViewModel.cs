@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Teams.Web.ViewModels.Task;
 
 namespace Teams.Web.ViewModels.Sprint
@@ -25,6 +26,48 @@ namespace Teams.Web.ViewModels.Sprint
 
         public int TotalStoryPoint { get; set; }
         public double AverageStoryPoint { get; set; }
+
+        private SprintViewModel(Business.Models.Sprint sprint, 
+            bool isOwner, 
+            double averageStoryPoint, 
+            List<TaskViewModel> taskViewModels, 
+            List<SelectListItem> selectTasks)
+        {
+            if (sprint != null)
+            {
+                DaysInSprint = sprint.DaysInSprint;
+                Id = sprint.Id;
+                Status = sprint.Status;
+                Name = sprint.Name;
+                StoryPointInHours = sprint.StoryPointInHours;
+                TotalStoryPoint = sprint.Tasks.Count > 0 ? sprint.Tasks.Sum(t => t.StoryPoints) : 0;
+                TeamId = sprint.TeamId;
+            }
+
+            Tasks = taskViewModels;
+            SelectTasks = selectTasks;
+            AverageStoryPoint = averageStoryPoint;
+            IsOwner = isOwner;
+        }
+
+        public SprintViewModel() 
+        { 
+        }
+
+        public static SprintViewModel Create(Business.Models.Sprint sprint, bool isOwner, double averageStoryPoint)
+        {
+            var taskViewModels = new List<TaskViewModel>();
+            var selectTasks = new List<SelectListItem>();
+
+            foreach (var task in sprint.Tasks)
+            {
+                var taskViewModel = TaskViewModel.Create(task);
+                taskViewModels.Add(taskViewModel);
+                selectTasks.Add(new SelectListItem(task.Name, task.Id.ToString()));
+            }
+
+            return new SprintViewModel(sprint, isOwner, averageStoryPoint, taskViewModels, selectTasks);
+        }
 
     }
 }

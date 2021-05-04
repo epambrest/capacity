@@ -41,85 +41,35 @@ namespace Teams.Business.Tests
 
             var teams = new List<Team>
             {
-                new Team 
-                { 
-                    Id = 1, 
-                    TeamOwner = "abc-def", 
-                    TeamName = "Team1", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="def-abc", TeamId =1 }}
-                },
-                
-                new Team 
-                { 
-                    Id = 2, 
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team2", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="abc-def", TeamId =2 }}
-                },
-                
-                new Team 
-                { 
-                    Id = 3, 
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team3", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="asf-fgv", TeamId = 3 }}
-                },
-                
-                new Team 
-                { 
-                    Id = 4, 
-                    TeamOwner = "abc-def", 
-                    TeamName = "Team4", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="abc-def", TeamId =4 }}
-                },
-                
-                new Team 
-                { 
-                    Id = 5, 
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team5", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="asf-fgv", TeamId = 5 }}
-                },
-                
-                new Team 
-                { 
-                    Id = 6, 
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team6", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="asf-fgv", TeamId = 6 }}
-                },
-                
-                new Team 
-                { 
-                    Id = 7, 
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team7", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="asf-fgv", TeamId = 7 }}
-                },
-                
-                new Team 
-                { 
-                    Id = 8, 
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team8", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="asf-fgv", TeamId = 8 }}
-                },
-                
-                new Team 
-                { 
-                    Id = 9, 
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team9", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="abc-def", TeamId =9 }}
-                },
-                
-                new Team 
-                { 
-                    Id = 10, 
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team10", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="asf-fgv", TeamId = 10 }}
-                }
+                Team.Create(1, "abc-def", "Team1", new List<TeamMember>() {
+                    TeamMember.Create(1, 1, "def-abc", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
+
+                Team.Create(2, "def-abc", "Team2", new List<TeamMember>() {
+                    TeamMember.Create(2, 2, "abc-def", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
+
+                Team.Create(3, "def-abc", "Team3", new List<TeamMember>() {
+                    TeamMember.Create(3, 3, "asf-fgv", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
+
+                Team.Create(4, "abc-def", "Team4", new List<TeamMember>() {
+                    TeamMember.Create(4, 4, "abc-def", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
+
+                Team.Create(5, "def-abc", "Team5", new List<TeamMember>() {
+                    TeamMember.Create(5, 5, "asf-fgv", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
+
+                Team.Create(6, "def-abc", "Team6", new List<TeamMember>() {
+                    TeamMember.Create(6, 6, "asf-fgv", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
+
+                Team.Create(7, "def-abc", "Team7", new List<TeamMember>() {
+                    TeamMember.Create(7, 7, "asf-fgv", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
+
+                Team.Create(8, "def-abc", "Team8", new List<TeamMember>() {
+                    TeamMember.Create(8, 8, "asf-fgv", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
+
+                Team.Create(9, "def-abc", "Team9", new List<TeamMember>() {
+                    TeamMember.Create(9, 9, "abc-def", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
+
+                Team.Create(10, "def-abc", "Team10", new List<TeamMember>() {
+                    TeamMember.Create(10, 10, "asf-fgv", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
             };
 
             var mock = teams.AsQueryable().BuildMock();
@@ -152,85 +102,35 @@ namespace Teams.Business.Tests
 
             var teams = new List<Team>
             {
-                new Team 
-                { 
-                    Id= 1, 
-                    TeamOwner = "abc-def", 
-                    TeamName = "Team1", 
-                    TeamMembers=new List<TeamMember> { new TeamMember { MemberId="def-abc", TeamId =1 }}
-                },
+                Team.Create(1, "abc-def", "Team1", new List<TeamMember>() {
+                    TeamMember.Create(1, 1, "def-abc", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
 
-                new Team 
-                { 
-                    Id= 2, 
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team2", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="abc-def", TeamId =2 }}
-                },
+                Team.Create(2, "def-abc", "Team2", new List<TeamMember>() {
+                    TeamMember.Create(2, 2, "abc-def", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
 
-                new Team 
-                { 
-                    Id= 3, 
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team3", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="asf-fgv", TeamId = 3 }}
-                },
+                Team.Create(3, "def-abc", "Team3", new List<TeamMember>() {
+                    TeamMember.Create(3, 3, "asf-fgv", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
 
-                new Team 
-                { 
-                    Id= 4, 
-                    TeamOwner = "abc-def", 
-                    TeamName = "Team4", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="abc-def", TeamId =4 }}
-                },
+                Team.Create(4, "abc-def", "Team4", new List<TeamMember>() {
+                    TeamMember.Create(4, 4, "abc-def", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
 
-                new Team 
-                { 
-                    Id= 5, 
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team5", 
-                    TeamMembers = new List<TeamMember>{ new TeamMember { MemberId="asf-fgv", TeamId = 5 }}
-                },
+                Team.Create(5, "def-abc", "Team5", new List<TeamMember>() {
+                    TeamMember.Create(5, 5, "asf-fgv", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
 
-                new Team 
-                { 
-                    Id= 6, 
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team6", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="asf-fgv", TeamId = 6 }}
-                },
+                Team.Create(6, "def-abc", "Team6", new List<TeamMember>() {
+                    TeamMember.Create(6, 6, "asf-fgv", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
 
-                new Team 
-                { 
-                    Id= 7, 
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team7", 
-                    TeamMembers = new List<TeamMember>{ new TeamMember { MemberId="asf-fgv", TeamId = 7 }}
-                },
+                Team.Create(7, "def-abc", "Team7", new List<TeamMember>() {
+                    TeamMember.Create(7, 7, "asf-fgv", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
 
-                new Team 
-                { 
-                    Id= 8, 
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team8", 
-                    TeamMembers = new List<TeamMember>{ new TeamMember { MemberId="asf-fgv", TeamId = 8 }}
-                },
+                Team.Create(8, "def-abc", "Team8", new List<TeamMember>() {
+                    TeamMember.Create(8, 8, "asf-fgv", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
 
-                new Team 
-                { 
-                    Id = 9, 
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team9", 
-                    TeamMembers = new List<TeamMember> { new TeamMember { MemberId="abc-def", TeamId =9 }}
-                },
+                Team.Create(9, "def-abc", "Team9", new List<TeamMember>() {
+                    TeamMember.Create(9, 9, "abc-def", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
 
-                new Team 
-                { 
-                    Id= 10, 
-                    TeamOwner = "def-abc", 
-                    TeamName = "Team10", 
-                    TeamMembers = new List<TeamMember>{ new TeamMember { MemberId="asf-fgv", TeamId = 10 }}
-                }
+                Team.Create(10, "def-abc", "Team10", new List<TeamMember>() {
+                    TeamMember.Create(10, 10, "asf-fgv", User.Create("1234", "vasya@mail.ru", "vasya", "ivanov"))}),
             };
 
             var mock = teams.AsQueryable().BuildMock();

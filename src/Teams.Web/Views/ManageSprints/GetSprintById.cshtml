@@ -26,12 +26,12 @@
         <h3 class="font-weight-normal">Completed</h3>
         @if (Model.Tasks.Count != 0)
         {
-            var anyTeamMember = Model.Tasks.FirstOrDefault(t => t.TeamMember != null).TeamMember;
+            var anyTeamMember = Model.Tasks.FirstOrDefault(t => t.TeamMember != null);
             if(anyTeamMember != null)
             { 
                 <form>
                     <input type="hidden" name="sprintId" value="@Model.Id" />
-                    <input type="hidden" name="teamMemberId" value="@anyTeamMember.MemberId" />
+                    <input type="hidden" name="teamMemberId" value="@anyTeamMember.TeamMember.Id" />
                     <button type='submit' class='btn btn-outline-primary border-0 btn-lg' asp-controller="ManageTasks" asp-action="GetResultTeamMember">
                         <i class="fas fa-clipboard-list"></i>
                     </button>

@@ -8,10 +8,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Teams.Business.Annotations;
+using Teams.Business.Models;
 using Teams.Business.Services;
 using Teams.Web.ViewModels.Shared;
 using Teams.Web.ViewModels.Team;
-using Teams.Web.ViewModels.TeamMember;
 
 namespace Teams.Web.Controllers
 {
@@ -33,108 +33,74 @@ namespace Teams.Web.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
 
         [Authorize, NonAction]
-        public async Task<Business.Models.TeamMember> GetMemberAsync(int teamId, string memberId)
+        public async Task<TeamMember> GetMemberAsync(int teamId, string memberId)
         {
             if (await _accessCheckService.OwnerOrMemberAsync(teamId))
-            {
                 return await _manageTeamsMembersService.GetMemberAsync(teamId, memberId);
-            }
             else return null;
         }
 
         [Authorize, NonAction]
-        private async Task<List<Business.Models.TeamMember>> GetAllTeamMembersAsync(int teamId, DisplayOptions options)
+        private async Task<List<TeamMember>> GetAllTeamMembersAsync(int teamId, DisplayOptions options)
         {
             if (await _accessCheckService.OwnerOrMemberAsync(teamId))
-            {
                 return await _manageTeamsMembersService.GetAllTeamMembersAsync(teamId, options);
-            }
             else return null;
         }
 
         [Authorize]
         public async Task<IActionResult> TeamMembersAsync(int teamId)
         {
-            List<Business.Models.TeamMember> members = await GetAllTeamMembersAsync(teamId, new DisplayOptions { });
+            var members = await GetAllTeamMembersAsync(teamId, new DisplayOptions { });
 
-            if (members == null)
-            {
-                return View("MembersError");
-            }
+            if (members == null) return View("MembersError");
 
             var teams = await _manageTeamsService.GetMyTeamsAsync();
             var team = teams.FirstOrDefault(x => x.Id == teamId);
 
-            if (team == null)
-            {
-                return View("ErrorNotMember");
-            }
+            if (team == null) return View("ErrorNotMember");
 
-            var teamViewModel = new TeamViewModel() 
-            { 
-                Id = team.Id, 
-                TeamName = team.TeamName, 
-                Owner = team.Owner,
-                TeamMembers = new List<TeamMemberViewModel>()
-            };
+            var isOwner = false;
+            if (await _accessCheckService.IsOwnerAsync(teamId)) isOwner = true;
 
-            members.ForEach(t => teamViewModel.TeamMembers.Add(new TeamMemberViewModel()
-            {
-                MemberId = t.MemberId,
-                Member = t.Member
-            }));
-
-            if (await _accessCheckService.IsOwnerAsync(teamId))
-            {
-                teamViewModel.IsOwner = true;
-            }
-            else
-            {
-                teamViewModel.IsOwner = false;
-            }
+            var teamViewModel = TeamViewModel.Create(team, isOwner, new List<TeamMember>()); 
 
             return View(teamViewModel);
         }
 
-        public IActionResult MembersError()
-        {
-            return View("Index");
-        }
+        public IActionResult MembersError() => View("Index");
 
-        public IActionResult ErrorNotMember()
-        {
-            return View("ErrorNotMember");
-        }
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        public IActionResult ErrorNotMember() => View("ErrorNotMember");
+     
+        public IActionResult Privacy() => View();
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var errorViewModel = ErrorViewModel.Create(Activity.Current?.Id ?? HttpContext.TraceIdentifier);
+            return View(errorViewModel);
         }
 
         [Authorize]
         public async Task<IActionResult> AddMemberAsync(int teamId)
         {
-            Business.Models.Team team = await _manageTeamsService.GetTeamAsync(teamId);
-            var users = await _userManager.Users.ToListAsync();
+            var team = await _manageTeamsService.GetTeamAsync(teamId);
 
-            var teamViewModel = new TeamViewModel() { Id = team.Id, TeamName = team.TeamName, TeamMembers = new List<TeamMemberViewModel>() };
-            
-            foreach(var user in users)
+            var isOwner = false;
+            if (await _accessCheckService.IsOwnerAsync(teamId)) isOwner = true;
+
+            var users = await _userManager.Users.ToListAsync();
+            var allMembers = new List<TeamMember>();
+            foreach (var user in users)
             {
-                Business.Models.User member = new Business.Models.User() { Id = user.Id, FirstName = user.FirstName, LastName = user.LastName, UserName = user.UserName };
-                teamViewModel.TeamMembers.Add(new TeamMemberViewModel() { MemberId = user.Id, Member = member });
+                var member = Business.Models.User.Create(user.Id, user.UserName, user.FirstName, user.LastName);
+                allMembers.Add(TeamMember.Create(user.Id, member));
             }
+
+            var teamViewModel = TeamViewModel.Create(team, isOwner, allMembers);
 
             return View(teamViewModel);
         }
@@ -145,7 +111,7 @@ namespace Teams.Web.Controllers
         {
             if (memberId == null) return RedirectToAction("AddError", new { errorMessage = _localizer["MemberFieldError"], teamId = teamId });
 
-            bool result = await _manageTeamsMembersService.AddAsync(teamId, memberId);
+            var result = await _manageTeamsMembersService.AddAsync(teamId, memberId);
 
             if (result) return RedirectToAction("TeamMembers", new { teamId });
             else return RedirectToAction("AddError", new { errorMessage= _localizer["CurrentUser"], teamId = teamId });
@@ -162,17 +128,11 @@ namespace Teams.Web.Controllers
         public async Task<IActionResult> RemoveAsync(int teamId, string memberId)
         {
             var result = await _manageTeamsMembersService.RemoveAsync(teamId, memberId);
-            if (result)
-            {
-                return RedirectToAction("TeamMembers", new { teamId});
-            }
+            if (result) return RedirectToAction("TeamMembers", new { teamId});
             return RedirectToAction("ErrorRemoveMember");
         }
 
         [Authorize]
-        public IActionResult ErrorRemoveMember()
-        {
-            return View();
-        }
+        public IActionResult ErrorRemoveMember() => View();
     }
 }

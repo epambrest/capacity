@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using Teams.Business.Models;
 using Teams.Business.Services;
@@ -25,27 +24,28 @@ namespace Teams.Web.Controllers
             _localizer = localizer;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
 
         [Authorize]
         public async Task<IActionResult> GetMyTeamsAsync()
         {
             var teams = await _manageTeamsService.GetMyTeamsAsync();
-            var teamModelView = new List<TeamViewModel>();
-            teams.ToList().ForEach(t => teamModelView.Add(new TeamViewModel() {Owner = t.Owner, TeamName = t.TeamName, TeamOwner = t.TeamOwner, Id = t.Id}));
-            return View(teamModelView);
+            var teamViewsModels = new List<TeamViewModel>();
+
+            foreach (var team in  teams)
+            {
+                var teamViewModel = TeamViewModel.Create(team, false, new List<TeamMember>());
+                teamViewsModels.Add(teamViewModel);
+            }
+
+            return View(teamViewsModels);
         }
 
         [Authorize, NonAction]
         private async Task<Team> GetTeamAsync(int teamId)
         {
             if (await _accessCheckService.OwnerOrMemberAsync(teamId))
-            {
                 return await _manageTeamsService.GetTeamAsync(teamId);
-            }
             else return null;
         }
 
@@ -62,15 +62,13 @@ namespace Teams.Web.Controllers
             return RedirectToAction("GetMyTeams");
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        public IActionResult Privacy() => View();
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var errorViewModel = ErrorViewModel.Create(Activity.Current?.Id ?? HttpContext.TraceIdentifier);
+            return View(errorViewModel);
         }
 
         [HttpPost]
@@ -101,9 +99,6 @@ namespace Teams.Web.Controllers
             return RedirectToAction("ErrorRemove");
         }
 
-        public IActionResult ErrorRemoveAsync()
-        {
-            return View();
-        }
+        public IActionResult ErrorRemoveAsync() => View();
     }
 }

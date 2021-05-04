@@ -28,6 +28,7 @@ namespace Teams.Data.Tests
 
             var mappingConfig = new MapperConfiguration(mc =>
             {
+                mc.ShouldUseConstructor = mc => !mc.IsPrivate;
                 mc.AddProfile(new MemberWorkingDaysProfile());
                 mc.AddProfile(new SprintProfile());
                 mc.AddProfile(new TaskProfile());
@@ -167,16 +168,8 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task InsertAsync_TaskRepositoryReturns_True()
         {
             //Arrange
-            Task task = new Task 
-            {
-                Id = 6, 
-                Name = "Task6",
-                TeamId = 6,
-                SprintId = 6,
-                MemberId = 6, 
-                Link = "Link6", 
-                StoryPoints = 6
-            };
+            Team team = Team.Create(6, "2", "1234", new List<TeamMember>());
+            Task task = Task.Create(1, 6, team, "Task5", 6, "Link1", 4, 4); 
 
             //Act
             var result = await _taskRepository.InsertAsync(task);
@@ -213,16 +206,8 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task UpdateAsync_TaskRepositoryReturns_True()
         {
             //Arrange
-            Task task = new Task
-            { 
-                Id = 2, 
-                Name = "Task2",
-                TeamId = 8, 
-                SprintId = 8, 
-                MemberId = 7,
-                Link = "Link2",
-                StoryPoints = 9 
-            };
+            Team team = Team.Create(8, "2", "1234", new List<TeamMember>());
+            Task task = Task.Create(2, 8, team, "Task2", 9, "Link2", 8, 7);
             _context.Task.AddRange(GetFakeTaskDb());
             _context.SaveChanges();
 
@@ -237,16 +222,8 @@ namespace Teams.Data.Tests
         public async System.Threading.Tasks.Task UpdateAsync_TaskRepositoryReturns_False()
         {
             //Arrange
-            Task task = new Task 
-            { 
-                Id = 8,
-                Name = "Task2", 
-                TeamId = 2,
-                SprintId = 2,
-                MemberId = 6, 
-                Link = "Link2",
-                StoryPoints = 2 
-            };
+            Team team = Team.Create(2, "2", "1234", new List<TeamMember>());
+            Task task = Task.Create(8, 2, team, "Task2", 2, "Link2", 2, 6);
 
             //Act
             var result = await _taskRepository.UpdateAsync(task);

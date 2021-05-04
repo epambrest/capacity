@@ -65,7 +65,7 @@ namespace Teams.Business.Tests
             _currentUser.SetupGet(x => x.Current).Returns(user.Object);
 
             //Act
-            bool result = await _teamsMembersService.RemoveAsync(teamId, ownerId);
+           bool result = await _teamsMembersService.RemoveAsync(teamId, ownerId);
 
             //Assert
             Assert.IsFalse(result);
@@ -73,21 +73,11 @@ namespace Teams.Business.Tests
 
         private IEnumerable<TeamMember> GetFakeDbTeam()
         {
+            Team team = Team.Create("1", "Team1");
             var members = new List<TeamMember>
             {
-                new TeamMember
-                { 
-                    MemberId = "1234", 
-                    TeamId = 1,
-                    Team = new Team { TeamOwner = "1"} 
-                },
-
-                new TeamMember
-                { 
-                    MemberId = "1",
-                    TeamId = 2,
-                    Team = new Team { TeamOwner = "1"}
-                }
+                TeamMember.Create(10, 1, team, "1234", User.Create("1", "vasya@mail.ru", "vasya", "ivanov")),
+                TeamMember.Create(10, 1, team, "1", User.Create("1", "vasya@mail.ru", "vasya", "ivanov")),
             };
             return members;
         }

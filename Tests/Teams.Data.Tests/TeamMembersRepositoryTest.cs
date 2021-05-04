@@ -31,6 +31,7 @@ namespace Teams.Data.Tests
 
                 var mappingConfig = new MapperConfiguration(mc =>
                 {
+                    mc.ShouldUseConstructor = mc => !mc.IsPrivate;
                     mc.AddProfile(new MemberWorkingDaysProfile());
                     mc.AddProfile(new SprintProfile());
                     mc.AddProfile(new TaskProfile());
@@ -131,7 +132,7 @@ namespace Teams.Data.Tests
             {
                 //Arrange
                 teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
-                TeamMember teamMember = new TeamMember() { MemberId = "100" };
+                TeamMember teamMember = TeamMember.Create(2, "100");
 
                 //Act
                 var result = teamMemberRepository.InsertAsync(teamMember).Result;
@@ -189,7 +190,8 @@ namespace Teams.Data.Tests
                 teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
 
                 //Act
-                var result = teamMemberRepository.UpdateAsync(new TeamMember() { Id = 1, MemberId = "01" }).Result;
+                var result = teamMemberRepository.UpdateAsync(TeamMember.Create(1, 1, "01", 
+                    User.Create("2", "vasya@mail.ru", "vasya", "ivanov"))).Result;
 
                 //Assert
                 Assert.IsTrue(result);
@@ -203,7 +205,7 @@ namespace Teams.Data.Tests
                 teamMemberRepository = new Repository.Repository<Models.TeamMember, TeamMember, int>(context, _mapper);
 
                 //Act
-                var result = teamMemberRepository.UpdateAsync(new TeamMember() { Id = 101, MemberId = "101" }).Result;
+                var result = teamMemberRepository.UpdateAsync(TeamMember.Create(101, "101")).Result;
 
                 //Assert
                 Assert.IsFalse(result);

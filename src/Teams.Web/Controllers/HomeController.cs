@@ -8,22 +8,18 @@ namespace Teams.Web.Controllers
     {
         public IActionResult Index()    
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("GetMyTeams", "ManageTeams");
-            }
+            if (User.Identity.IsAuthenticated) return RedirectToAction("GetMyTeams", "ManageTeams");
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        public IActionResult Privacy() => View(); 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            string requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+            var errorViewModel = ErrorViewModel.Create(requestId);
+            return View(errorViewModel);
         }
     }
 }

@@ -110,84 +110,17 @@ namespace Teams.Business.Tests
         {
             var teamMembers = new List<TeamMember>
             {
-                new TeamMember 
-                {
-                    Id = 1, 
-                    MemberId = "def-abc",
-                    TeamId = 1
-                },
-
-                new TeamMember
-                {
-                    Id = 2, 
-                    MemberId = "abc-def",
-                    TeamId = 2
-                },
-
-                new TeamMember 
-                {
-                    Id = 3,
-                    MemberId = "asf-fgv",
-                    TeamId = 3
-                },
-
-                new TeamMember 
-                {
-                    Id = 4,
-                    MemberId = "def-abc",
-                    Member = new User { UserName = "b" },
-                    TeamId = 4
-                },
-
-                new TeamMember 
-                {
-                    Id = 5,
-                    MemberId = "abc-def",
-                    Member = new User { UserName = "a" }, 
-                    TeamId = 4
-                },
-
-                new TeamMember
-                {
-                    Id = 6,
-                    MemberId = "asf-fgv",
-                    TeamId = 5
-                },
-
-                new TeamMember
-                {
-                    Id = 7,
-                    MemberId = "asf-fgv",
-                    TeamId = 6
-                },
-
-                new TeamMember 
-                {
-                    Id = 8,
-                    MemberId = "asf-fgv", 
-                    TeamId = 7
-                },
-
-                new TeamMember
-                {
-                    Id = 9,
-                    MemberId = "asf-fgv",
-                    TeamId = 8
-                },
-
-                new TeamMember 
-                {
-                    Id = 10,
-                    MemberId = "abc-def",
-                    TeamId = 9
-                },
-
-                new TeamMember 
-                {
-                    Id = 11,
-                    MemberId = "asf-fgv", 
-                    TeamId = 10
-                }
+                TeamMember.Create(1, 1, "def-abc", User.Create("def-abc", "vasya@mail.ru", "vasya", "ivanov")),
+                TeamMember.Create(2, 2, "abc-def", User.Create("abc-def", "vasya@mail.ru", "vasya", "ivanov")),
+                TeamMember.Create(3, 3, "asf-fgv", User.Create("asf-fgv", "vasya@mail.ru", "vasya", "ivanov")),
+                TeamMember.Create(4, 4, "def-abc", User.Create("def-abc", "b", "vasya", "ivanov")),
+                TeamMember.Create(5, 4, "abc-def", User.Create("abc-def", "a", "vasya", "ivanov")),
+                TeamMember.Create(6, 5, "asf-fgv", User.Create("asf-fgv", "vasya@mail.ru", "vasya", "ivanov")),
+                TeamMember.Create(7, 6, "asf-fgv", User.Create("asf-fgv", "vasya@mail.ru", "vasya", "ivanov")),
+                TeamMember.Create(8, 7, "asf-fgv", User.Create("asf-fgv", "vasya@mail.ru", "vasya", "ivanov")),
+                TeamMember.Create(9, 8, "asf-fgv", User.Create("asf-fgv", "vasya@mail.ru", "vasya", "ivanov")),
+                TeamMember.Create(10, 9, "abc-def", User.Create("abc-def", "vasya@mail.ru", "vasya", "ivanov")),
+                TeamMember.Create(11, 10, "asf-fgv", User.Create("asf-fgv", "vasya@mail.ru", "vasya", "ivanov")),
             };
 
             return teamMembers;

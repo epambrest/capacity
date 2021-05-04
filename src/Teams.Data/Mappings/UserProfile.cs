@@ -5,9 +5,6 @@ namespace Teams.Data.Mappings
 {
     public class UserProfile : Profile
     {
-        public UserProfile()
-        {
-            CreateMap<User, Models.User>().ReverseMap();
-        }
+        public UserProfile() => CreateMap<Models.User, User>().ReverseMap();
     }
 }

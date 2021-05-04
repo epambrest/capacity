@@ -30,9 +30,29 @@ namespace Teams.Business.Services
             var allTeamSprints = allSprints.Where(x => x.TeamId == teamId);
 
             if (options.SortDirection == SortDirection.Ascending)
+            {
                 return allTeamSprints.OrderBy(x => x.Name);
-            else
+            }
+            else if (options.SortDirection == SortDirection.Descending)
+            {
                 return allTeamSprints.OrderByDescending(x => x.Name);
+            }
+            else if (options.SortDirection == SortDirection.ByStatus)
+            {
+                var allTeamSprintsByStatus = allTeamSprints.OrderBy(x => x.Status).ToList();
+
+                if (allTeamSprintsByStatus.Count > 1 && allTeamSprintsByStatus[1].Status == PossibleStatuses.ActiveStatus)
+                {
+                    var swapElem = allTeamSprintsByStatus[0];
+                    allTeamSprintsByStatus[0] = allTeamSprintsByStatus[1];
+                    allTeamSprintsByStatus[1] = swapElem;
+                    return allTeamSprintsByStatus;
+                }
+
+                return allTeamSprintsByStatus;
+            }
+
+            return allTeamSprints;
         }
 
         public async Task<Team> GetTeam(int teamId)
@@ -99,7 +119,8 @@ namespace Teams.Business.Services
 
             if (sprints.Count() > 0)
             {
-                var averageSp = Math.Round((double)sprints.SelectMany(t => t.Tasks).Where(t => t.Completed == true).Sum(t => t.StoryPoints) / sprints.Count(), 1);
+                var averageSp = Math.Round((double)sprints.SelectMany(t => t.Tasks)
+                    .Where(t => t.Completed == true).Sum(t => t.StoryPoints) / sprints.Count(), 1);
                 return averageSp;
             }
             return 0;
