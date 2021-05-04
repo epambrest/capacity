@@ -3,7 +3,7 @@ using Moq;
 using NUnit.Framework;
 using System.Security.Authentication;
 using System.Security.Claims;
-using Teams.Security;
+using Teams.Business.Security;
 
 namespace Teams.Business.Tests
 {

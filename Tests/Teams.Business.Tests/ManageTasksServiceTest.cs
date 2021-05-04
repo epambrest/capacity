@@ -9,6 +9,7 @@ using Teams.Business.Repository;
 using Teams.Business.Services;
 using Teams.Business.Structures;
 using Teams.Security;
+using Teams.Business.Security;
 
 namespace Teams.Business.Tests
 {

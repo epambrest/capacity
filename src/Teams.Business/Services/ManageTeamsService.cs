@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Teams.Business.Models;
 using Teams.Business.Repository;
-using Teams.Security;
+using Teams.Business.Security;
 
 namespace Teams.Business.Services
 {
