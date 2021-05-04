@@ -6,7 +6,6 @@ using Teams.Business.Annotations;
 using Teams.Business.Repository;
 using Teams.Business.Security;
 using Teams.Business.Structures;
-using Teams.Security;
 
 
 namespace Teams.Business.Services
