@@ -35,12 +35,12 @@ namespace Teams.Business.Models
             MemberWorkingDays = memberWorkingDays;
         }
 
-        public Sprint() { }
-
-        public static Sprint Create(int teamId, string name, int daysInSprint, int storyPointInHours, int status)
-        {
-            return new Sprint(teamId, name, daysInSprint, storyPointInHours, status);
+        public Sprint() 
+        { 
         }
+
+        public static Sprint Create(int teamId, string name, int daysInSprint, int storyPointInHours, int status) => 
+            new Sprint(teamId, name, daysInSprint, storyPointInHours, status);
 
         public static Sprint Create(int id, 
             int teamId, 
@@ -49,20 +49,13 @@ namespace Teams.Business.Models
             int daysInSprint, 
             int storyPointInHours, 
             int status, 
-            List<Task> tasks = null)
-        {
-            return new Sprint(teamId, name, daysInSprint, storyPointInHours, status, id, team, tasks);
-        }
+            List<Task> tasks = null) => 
+            new Sprint(teamId, name, daysInSprint, storyPointInHours, status, id, team, tasks);
 
-        public static Sprint Create(int teamId, List<Task> tasks)
-        {
-            return new Sprint(teamId, "", 0, 0, 0, 0, null, tasks);
-        }
+        public static Sprint Create(int teamId, List<Task> tasks) => 
+            new Sprint(teamId, "", 0, 0, 0, 0, null, tasks);
 
-        public void SetStatus(int status)
-        {
-            Status = status;
-        }
+        public void SetStatus(int status) => Status = status;
 
     }
 }

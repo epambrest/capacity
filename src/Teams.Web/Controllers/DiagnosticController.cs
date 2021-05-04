@@ -26,9 +26,9 @@ namespace Teams.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Health()
         {
-            string version = _config.GetValue<string>("version");
-            bool IsDbConnected = await CheckDbConnection();
-            HealthViewModel healthViewModel = HealthViewModel.Create(version, IsDbConnected);
+            var version = _config.GetValue<string>("version");
+            var IsDbConnected = await CheckDbConnection();
+            var healthViewModel = HealthViewModel.Create(version, IsDbConnected);
             return View(healthViewModel);
         }
 

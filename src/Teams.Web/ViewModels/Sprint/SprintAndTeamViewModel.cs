@@ -36,9 +36,9 @@ namespace Teams.Web.ViewModels.Sprint
             bool isOwner, 
             List<Business.Models.MemberWorkingDays> memberWorkingDays)
         {
-            List<SprintViewModel> sprintViewModels = new List<SprintViewModel>();
-            TeamViewModel teamViewModel = TeamViewModel.Create(team, isOwner, new List<Business.Models.TeamMember>());
-            List<MemberWorkingDaysViewModel> memberWorkingDaysViewModels = new List<MemberWorkingDaysViewModel>();
+            var sprintViewModels = new List<SprintViewModel>();
+            var teamViewModel = TeamViewModel.Create(team, isOwner, new List<Business.Models.TeamMember>());
+            var memberWorkingDaysViewModels = new List<MemberWorkingDaysViewModel>();
 
             foreach (var sprint in sprints)
             {

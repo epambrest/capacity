@@ -19,21 +19,16 @@ namespace Teams.Business.Models
             Owner = owner;
         }
 
-        public Team() { }
-
-        public static Team Create(int id, string teamOwner, string teamName, List<TeamMember> teamMembers)
-        {
-            return new Team(teamOwner, teamName, id, teamMembers);
+        public Team() 
+        { 
         }
 
-        public static Team Create(string teamOwner, string teamName)
-        {
-            return new Team(teamOwner, teamName);
-        }
+        public static Team Create(int id, string teamOwner, string teamName, List<TeamMember> teamMembers) => 
+            new Team(teamOwner, teamName, id, teamMembers);
 
-        public void SetTeamMembers(List<TeamMember> teamMembers)
-        {
-            TeamMembers = teamMembers;
-        }
+        public static Team Create(string teamOwner, string teamName) => new Team(teamOwner, teamName);
+
+        public void SetTeamMembers(List<TeamMember> teamMembers) => TeamMembers = teamMembers;
+
     }
 }

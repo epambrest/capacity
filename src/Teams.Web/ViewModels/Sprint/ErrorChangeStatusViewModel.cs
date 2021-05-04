@@ -11,11 +11,11 @@
             ErrorMessage = errorMessage;
         }
 
-        public ErrorChangeStatusViewModel(){}
-
-        public static ErrorChangeStatusViewModel Create(string sprintName, string errorMessage)
+        public ErrorChangeStatusViewModel()
         {
-            return new ErrorChangeStatusViewModel(sprintName, errorMessage);
         }
+
+        public static ErrorChangeStatusViewModel Create(string sprintName, string errorMessage) => 
+            new ErrorChangeStatusViewModel(sprintName, errorMessage);
     }
 }

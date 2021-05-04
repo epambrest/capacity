@@ -15,9 +15,7 @@
             WorkingDays = memberWorkingDays.WorkingDays;
         }
 
-        public static MemberWorkingDaysViewModel Create(Business.Models.MemberWorkingDays memberWorkingDays)
-        {
-            return new MemberWorkingDaysViewModel(memberWorkingDays);
-        }
+        public static MemberWorkingDaysViewModel Create(Business.Models.MemberWorkingDays memberWorkingDays) => 
+            new MemberWorkingDaysViewModel(memberWorkingDays);
     }
 }

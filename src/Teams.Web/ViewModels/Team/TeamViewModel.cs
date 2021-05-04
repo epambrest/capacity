@@ -8,6 +8,7 @@ namespace Teams.Web.ViewModels.Team
     public class TeamViewModel
     {
         public int Id { get; set; }
+
         [Required(ErrorMessage = "The {0} field is required.")]
         [Display(Name = "TeamName")]
         public string TeamName { get; set; }
@@ -29,10 +30,13 @@ namespace Teams.Web.ViewModels.Team
             TeamMembers = teamMemberViewModels;
         }
 
-        public TeamViewModel() { }
+        public TeamViewModel() 
+        { 
+        }
+
         public static TeamViewModel Create(Business.Models.Team team, bool isOwner, List<Business.Models.TeamMember> allTeamMembers)
         {
-            List<TeamMemberViewModel> teamMemberViewModels = new List<TeamMemberViewModel>();
+            var teamMemberViewModels = new List<TeamMemberViewModel>();
 
             if (allTeamMembers.Count > 0)
             {

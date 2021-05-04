@@ -37,12 +37,11 @@ namespace Teams.Web.ViewModels.Sprint
             ErrorMessage = errorMessage;
         }
 
-        public EditSprintViewModel() { }
-
-        public static EditSprintViewModel Create(Business.Models.Sprint sprint, string errorMessage, Business.Models.Team team)
-        {
-
-            return new EditSprintViewModel(sprint, errorMessage, team);
+        public EditSprintViewModel() 
+        { 
         }
+
+        public static EditSprintViewModel Create(Business.Models.Sprint sprint, string errorMessage, Business.Models.Team team) => 
+            new EditSprintViewModel(sprint, errorMessage, team);
     }
 }

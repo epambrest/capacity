@@ -41,17 +41,12 @@ namespace Teams.Web.Controllers
         [Authorize]
         public async Task<IActionResult> AllTasksForTeam(int teamId, DisplayOptions options)
         {
-            if (!await _accessCheckService.OwnerOrMemberAsync(teamId))
-            {
-                return View("ErrorGetAllTasks");
-            }
+            if (!await _accessCheckService.OwnerOrMemberAsync(teamId)) return View("ErrorGetAllTasks");
 
             var tasksForTeamViewModel = await GetAllTasksForTeamViewModel(teamId, options);
 
             if (tasksForTeamViewModel.Tasks == null || tasksForTeamViewModel.Sprints == null || tasksForTeamViewModel.Members == null)
-            {
                 return View("ErrorGetAllTasks");
-            }
 
             return View(tasksForTeamViewModel);
         }
@@ -64,13 +59,10 @@ namespace Teams.Web.Controllers
             var team = await _manageTeamsService.GetTeamAsync(teamId);
             var sprints = await _manageSprintsService.GetAllSprintsAsync(teamId, options);
 
-            bool isOwner = false;
-            if (await _accessCheckService.IsOwnerAsync(teamId))
-            {
-                isOwner = true;
-            }
+            var isOwner = false;
+            if (await _accessCheckService.IsOwnerAsync(teamId)) isOwner = true;
 
-            AllTasksForTeamViewModel tasksForTeamViewModel = AllTasksForTeamViewModel.Create(team, isOwner, sprints.ToList(), tasks.ToList());
+            var tasksForTeamViewModel = AllTasksForTeamViewModel.Create(team, isOwner, sprints.ToList(), tasks.ToList());
 
             return tasksForTeamViewModel;
         }
@@ -79,16 +71,13 @@ namespace Teams.Web.Controllers
         [Authorize]
         public async Task<IActionResult> GetTaskByIdAsync(int teamId, int taskId)
         {
-            if (!await _accessCheckService.OwnerOrMemberAsync(teamId))
-            {
-                return View("ErrorGetTaskById");
-            }
+            if (!await _accessCheckService.OwnerOrMemberAsync(teamId)) return View("ErrorGetTaskById");
 
             if (await _accessCheckService.IsOwnerAsync(teamId)) ViewBag.AddVision = "visible";
             else ViewBag.AddVision = "collapse";
 
             var task = await _manageTasksService.GetTaskByIdAsync(taskId);
-            TaskViewModel taskViewModel = TaskViewModel.Create(task);
+            var taskViewModel = TaskViewModel.Create(task);
 
             return View(taskViewModel);
         }
@@ -100,8 +89,8 @@ namespace Teams.Web.Controllers
             var task = await _manageTasksService.GetTaskByIdAsync(taskId);
             var sprintId = task.SprintId;
             var result = await _manageTasksService.RemoveAsync(taskId);
-            if (result)
-                return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId });
+
+            if (result) return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId });
             return RedirectToAction("ErrorRemoveTask");
         }
 
@@ -111,8 +100,8 @@ namespace Teams.Web.Controllers
             var task = await _manageTasksService.GetTaskByIdAsync(taskId);
             var teamId = task.TeamId;
             var result = await _manageTasksService.RemoveAsync(taskId);
-            if (result)
-                return RedirectToAction("AllTasksForTeam", new { teamId });
+
+            if (result) return RedirectToAction("AllTasksForTeam", new { teamId });
             return RedirectToAction("ErrorRemoveTask");
         }
 
@@ -124,8 +113,7 @@ namespace Teams.Web.Controllers
             var team = await _manageSprintsService.GetTeam(task.TeamId);
             var teamMembers = await GetAllTeamMembersAsync(task.TeamId);
             var teamMember = teamMembers.FirstOrDefault(t => t.Id == task.MemberId);
-
-            TaskFormViewModel taskFormViewModel = TaskFormViewModel.Create(task, errorMessage, teamMembers, new List<Sprint>());
+            var taskFormViewModel = TaskFormViewModel.Create(task, errorMessage, teamMembers, new List<Sprint>());
 
             return View(taskFormViewModel);
         }
@@ -181,7 +169,7 @@ namespace Teams.Web.Controllers
             
             foreach(var teamMember in teamMembers)
             {
-                TeamMemberViewModel teamMemberViewModel = TeamMemberViewModel.Create(teamMember);
+                var teamMemberViewModel = TeamMemberViewModel.Create(teamMember);
                 taskFormViewModel.TeamMembers.Add(teamMemberViewModel);
             }
 
@@ -191,27 +179,21 @@ namespace Teams.Web.Controllers
         [Authorize, NonAction]
         private async Task<bool> EditTaskAsync(Business.Models.Task task)
         {
-            if (await _accessCheckService.IsOwnerAsync(task.TeamId))
-            {
-                return await _manageTasksService.EditTaskAsync(task);
-            }
+            if (await _accessCheckService.IsOwnerAsync(task.TeamId)) return await _manageTasksService.EditTaskAsync(task);
             else return false;
         }
 
         [Authorize, NonAction]
         private async Task<List<TeamMember>> GetAllTeamMembersAsync(int teamId)
         {
-            if (!await _accessCheckService.OwnerOrMemberAsync(teamId))
-            {
-                RedirectToAction("Error");
-            }
+            if (!await _accessCheckService.OwnerOrMemberAsync(teamId)) RedirectToAction("Error");
             return await _manageTeamsMembersService.GetAllTeamMembersAsync(teamId, new DisplayOptions { });
         }
 
         [Authorize]
         public IActionResult GetResultError(string errorMessage)
         {
-            GetResultErrorViewModel getResultErrorViewModel = GetResultErrorViewModel.Create(errorMessage);
+            var getResultErrorViewModel = GetResultErrorViewModel.Create(errorMessage);
             return View(getResultErrorViewModel);
         }
 
@@ -227,10 +209,10 @@ namespace Teams.Web.Controllers
             if (completedSprint.Status != 2)
                 return RedirectToAction("GetResultError", new { errorMessage = _localizer["StatusIsNotComplete"] });
 
-            Dictionary<OtherNamesTaskParams, double> tasksAllParams = await _manageTasksService.GetTasksAllParamsForMember(teamMemberId, sprintId);
-            int teamMemberTotalSp = (int)tasksAllParams.GetValueOrDefault(OtherNamesTaskParams.TeamMemberTotalSp);
+            var tasksAllParams = await _manageTasksService.GetTasksAllParamsForMember(teamMemberId, sprintId);
+            var teamMemberTotalSp = tasksAllParams.TeamMemberTotalSp;
             var storyPointsInDay = await _manageMemberWorkingDaysService.GetStoryPointsInDayForMember(sprintId, teamMemberId, teamMemberTotalSp);
-            tasksAllParams.Add(OtherNamesTaskParams.StoryPointsInDay, storyPointsInDay);
+            tasksAllParams.AddStoryPointsInDay(storyPointsInDay);
             var resultsTasksForMemberViewModel = ResultsTasksForMemberViewModel.Create(completedSprint, currentMember, tasksAllParams);
 
             return View(resultsTasksForMemberViewModel);
@@ -244,24 +226,17 @@ namespace Teams.Web.Controllers
             return View();
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
 
-        public IActionResult AddTaskError(int teamId)
-        {
-            return View(teamId);
-        }
+        public IActionResult AddTaskError(int teamId) => View(teamId);
         
         [Authorize]
         public async Task<IActionResult> AddTaskAsync(int teamId, int sprintId, string errorMessage)
         {
             var team = await _manageSprintsService.GetTeam(teamId);
             var teamMembers = await GetAllTeamMembersAsync(teamId);
-            Business.Models.Task task = Business.Models.Task.Create(teamId, sprintId, team);
-
-            TaskFormViewModel model = TaskFormViewModel.Create(task, errorMessage, teamMembers, new List<Sprint>());
+            var task = Business.Models.Task.Create(teamId, sprintId, team);
+            var model = TaskFormViewModel.Create(task, errorMessage, teamMembers, new List<Sprint>());
 
             return View(model);
         }
@@ -296,21 +271,13 @@ namespace Teams.Web.Controllers
 
                 var isOwner = await _accessCheckService.IsOwnerAsync(task.TeamId);
 
-                if (!isOwner)
-                {
-                    return RedirectToAction("NotOwnerError", new { teamId = taskFormViewModel.TeamId });
-                }
+                if (!isOwner) return RedirectToAction("NotOwnerError", new { teamId = taskFormViewModel.TeamId });
 
                 var result = await _manageTasksService.AddTaskAsync(task);
 
-                if (result)
-                {
-                    return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId = taskFormViewModel.TaskSprintId });
-                }
-                else
-                {
-                    return RedirectToAction("AddTaskError", new { teamId = taskFormViewModel.TeamId });
-                }
+                if (result) return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId = taskFormViewModel.TaskSprintId });
+                else return RedirectToAction("AddTaskError", new { teamId = taskFormViewModel.TeamId });
+                
             }
 
             var teamMembers = await GetAllTeamMembersAsync(taskFormViewModel.TeamId);
@@ -318,7 +285,7 @@ namespace Teams.Web.Controllers
 
             foreach (var teamMember in teamMembers)
             {
-                TeamMemberViewModel teamMemberViewModel = TeamMemberViewModel.Create(teamMember);
+                var teamMemberViewModel = TeamMemberViewModel.Create(teamMember);
                 taskFormViewModel.TeamMembers.Add(teamMemberViewModel);
             }
 
@@ -339,10 +306,8 @@ namespace Teams.Web.Controllers
             var team = await _manageSprintsService.GetTeam(teamId);
             var teamMembers = await GetAllTeamMembersAsync(teamId);
             var sprints = new List<Sprint>(await _manageSprintsService.GetAllSprintsAsync(teamId, new DisplayOptions()));
-
-            Business.Models.Task task = Business.Models.Task.Create(teamId, 0, team);
-
-            TaskFormViewModel model = TaskFormViewModel.Create(task, errorMessage, teamMembers, sprints);
+            var task = Business.Models.Task.Create(teamId, 0, team);
+            var model = TaskFormViewModel.Create(task, errorMessage, teamMembers, sprints);
 
             return View(model);
         }
@@ -353,7 +318,6 @@ namespace Teams.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 if (taskFormViewModel.LinkValidation == null && !Regex.IsMatch(taskFormViewModel.TaskLink, 
                     @"^(?:http(s):\/\/)(github\.com\/)|(bitbucket\.org\/)[\w\d\S]+(\/[\w\d\S]+)*$"))
                 {
@@ -366,6 +330,7 @@ namespace Teams.Web.Controllers
                     return RedirectToAction("AddTaskIntoTeam", new { teamId = taskFormViewModel.TeamId, 
                         errorMessage = _localizer["LinkFieldError"] });
                 }
+
                 var task = Business.Models.Task.Create(taskFormViewModel.TaskId,
                     taskFormViewModel.TeamId,
                     null,
@@ -377,21 +342,13 @@ namespace Teams.Web.Controllers
 
                 var isOwner = await _accessCheckService.IsOwnerAsync(task.TeamId);
 
-                if (!isOwner)
-                {
-                    return RedirectToAction("NotOwnerError", new { teamId = taskFormViewModel.TeamId });
-                }
+                if (!isOwner) return RedirectToAction("NotOwnerError", new { teamId = taskFormViewModel.TeamId });
 
                 var result = await _manageTasksService.AddTaskAsync(task);
 
-                if (result)
-                {
-                    return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId = taskFormViewModel.TaskSprintId });
-                }
-                else
-                {
-                    return RedirectToAction("AddTaskError", new { teamId = taskFormViewModel.TeamId });
-                }
+                if (result) return RedirectToAction("GetSprintById", "ManageSprints", new { sprintId = taskFormViewModel.TaskSprintId });
+                
+                else return RedirectToAction("AddTaskError", new { teamId = taskFormViewModel.TeamId });
             }
             
             var teamMembers = await GetAllTeamMembersAsync(taskFormViewModel.TeamId);
@@ -400,7 +357,7 @@ namespace Teams.Web.Controllers
             taskFormViewModel.TeamMembers = new List<TeamMemberViewModel>();
             foreach (var teamMember in teamMembers)
             {
-                TeamMemberViewModel teamMemberViewModel = TeamMemberViewModel.Create(teamMember);
+                var teamMemberViewModel = TeamMemberViewModel.Create(teamMember);
                 taskFormViewModel.TeamMembers.Add(teamMemberViewModel);
             }
 
@@ -408,7 +365,7 @@ namespace Teams.Web.Controllers
 
             foreach (var teamSprint in teamSprints)
             {
-                SprintViewModel sprintViewModel = SprintViewModel.Create(teamSprint, false, 0);
+                var sprintViewModel = SprintViewModel.Create(teamSprint, false, 0);
                 taskFormViewModel.Sprints.Add(sprintViewModel);
             }
 

@@ -50,15 +50,18 @@ namespace Teams.Web.ViewModels.Sprint
             IsOwner = isOwner;
         }
 
-        public SprintViewModel() { }
+        public SprintViewModel() 
+        { 
+        }
+
         public static SprintViewModel Create(Business.Models.Sprint sprint, bool isOwner, double averageStoryPoint)
         {
-            List<TaskViewModel> taskViewModels = new List<TaskViewModel>();
-            List<SelectListItem> selectTasks = new List<SelectListItem>();
+            var taskViewModels = new List<TaskViewModel>();
+            var selectTasks = new List<SelectListItem>();
 
             foreach (var task in sprint.Tasks)
             {
-                TaskViewModel taskViewModel = TaskViewModel.Create(task);
+                var taskViewModel = TaskViewModel.Create(task);
                 taskViewModels.Add(taskViewModel);
                 selectTasks.Add(new SelectListItem(task.Name, task.Id.ToString()));
             }

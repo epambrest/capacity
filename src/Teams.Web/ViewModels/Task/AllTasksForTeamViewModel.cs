@@ -36,25 +36,25 @@ namespace Teams.Web.ViewModels.Task
             List<Business.Models.Sprint> sprints, 
             List<Business.Models.Task> tasks)
         {
-            List<TeamMemberViewModel> teamMemberViewModels = new List<TeamMemberViewModel>();
-            List<SprintViewModel> sprintViewModels = new List<SprintViewModel>();
-            List<TaskViewModel> taskViewModels = new List<TaskViewModel>();
+            var teamMemberViewModels = new List<TeamMemberViewModel>();
+            var sprintViewModels = new List<SprintViewModel>();
+            var taskViewModels = new List<TaskViewModel>();
 
             foreach(var teamMember in team.TeamMembers)
             {
-                TeamMemberViewModel teamMemberViewModel = TeamMemberViewModel.Create(teamMember);
+                var teamMemberViewModel = TeamMemberViewModel.Create(teamMember);
                 teamMemberViewModels.Add(teamMemberViewModel);
             }
 
             foreach(var sprint in sprints)
             {
-                SprintViewModel sprintViewModel = SprintViewModel.Create(sprint, isOwner, 0);
+                var sprintViewModel = SprintViewModel.Create(sprint, isOwner, 0);
                 sprintViewModels.Add(sprintViewModel);
             }
 
             foreach(var task in tasks)
             {
-                TaskViewModel taskViewModel = TaskViewModel.Create(task);
+                var taskViewModel = TaskViewModel.Create(task);
                 taskViewModels.Add(taskViewModel);
             }
 

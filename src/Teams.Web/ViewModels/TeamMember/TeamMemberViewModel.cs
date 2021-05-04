@@ -15,11 +15,7 @@ namespace Teams.Web.ViewModels.TeamMember
             Member = teamMember.Member;
             MemberId = teamMember.MemberId;
 
-            if (teamMember.Member != null)
-            {
-                Member = teamMember.Member;
-            }
-
+            if (teamMember.Member != null) Member = teamMember.Member;
         }
 
         public static TeamMemberViewModel Create(Business.Models.TeamMember teamMember)

@@ -7,6 +7,7 @@ using Teams.Business.Annotations;
 using Teams.Business.Models;
 using Teams.Business.Repository;
 using Teams.Business.Services;
+using Teams.Business.Structures;
 using Teams.Security;
 
 namespace Teams.Business.Tests
@@ -154,42 +155,22 @@ namespace Teams.Business.Tests
         {
             get
             {
-                yield return new TestCaseData(new Dictionary<OtherNamesTaskParams, double>()
-                {
-                    [OtherNamesTaskParams.SpCompletedTasks] = 7,
-                    [OtherNamesTaskParams.SpUnCompletedTasks] = 1,
-                    [OtherNamesTaskParams.TotalStoryPoints] = 8,
-                    [OtherNamesTaskParams.QuantityСompletedTasks] = 2,
-                    [OtherNamesTaskParams.QuantityUnСompletedTasks] = 1,
-                    [OtherNamesTaskParams.TeamMemberTotalSp] = 8,
-                },
-                1, 1);
-
-                yield return new TestCaseData(new Dictionary<OtherNamesTaskParams, double>()
-                {
-                    [OtherNamesTaskParams.SpCompletedTasks] = 0,
-                    [OtherNamesTaskParams.SpUnCompletedTasks] = 0,
-                    [OtherNamesTaskParams.TotalStoryPoints] = 0,
-                    [OtherNamesTaskParams.QuantityСompletedTasks] = 0,
-                    [OtherNamesTaskParams.QuantityUnСompletedTasks] = 0,
-                    [OtherNamesTaskParams.TeamMemberTotalSp] = 0,
-                }, 
-                1, 2);
-
+                yield return new TestCaseData(TasksAllParams.Create(7, 1, 8, 2, 1, 8),1, 1);
+                yield return new TestCaseData(TasksAllParams.Create(0, 0, 0, 0, 0, 0), 1, 2);
                 yield return new TestCaseData(null, 0, 0);
             }
         }
 
         [Test, TestCaseSource(nameof(GetTasksAllParamsForMemberTestsData))]
-        public async System.Threading.Tasks.Task GetTasksAllParamsForMemberTests_FromManageTaskService(Dictionary<OtherNamesTaskParams, double> allParamsExcepted, 
-        int teamMemberId,
-        int sprintId)
+        public async System.Threading.Tasks.Task GetTasksAllParamsForMemberTests_FromManageTaskService(TasksAllParams allParamsExcepted, 
+            int teamMemberId,
+            int sprintId)
         {
             //Act
             var result = await _manageTasksService.GetTasksAllParamsForMember(teamMemberId, sprintId);
 
             //Assert
-            CollectionAssert.AreEqual(allParamsExcepted, result);
+            Assert.AreEqual(allParamsExcepted, result);
         }
 
         [Test]

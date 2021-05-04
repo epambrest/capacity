@@ -12,17 +12,14 @@ namespace Teams.Web.Controllers
     public class ManageMemberWorkingDaysController : Controller
     {
         private readonly IManageMemberWorkingDaysService _manageMemberWorkingDaysService;
-        private readonly IManageTeamsMembersService _manageTeamsMembersService;
         private readonly IManageSprintsService _manageSprintsService;
         private readonly IAccessCheckService _accessCheckService;
 
-        public ManageMemberWorkingDaysController(IManageMemberWorkingDaysService manageMemberWorkingDaysService, 
-            IManageTeamsMembersService manageTeamsMembersService, 
+        public ManageMemberWorkingDaysController(IManageMemberWorkingDaysService manageMemberWorkingDaysService,
             IManageSprintsService manageSprintsService, 
             IAccessCheckService accessCheckService)
         {
             _manageMemberWorkingDaysService = manageMemberWorkingDaysService;
-            _manageTeamsMembersService = manageTeamsMembersService;
             _manageSprintsService = manageSprintsService;
             _accessCheckService = accessCheckService;
         }
@@ -35,13 +32,11 @@ namespace Teams.Web.Controllers
             var workingDays = await _manageMemberWorkingDaysService.GetAllWorkingDaysForSprintAsync(sprintId);
             var team = await _manageSprintsService.GetTeam(sprint.TeamId);
 
-            bool isOwner = false;
+            var isOwner = false;
             if (await _accessCheckService.IsOwnerAsync(team.Id))
-            {
                 isOwner = true;
-            }
 
-            SprintAndTeamViewModel sprintAndTeamViewModel = SprintAndTeamViewModel.Create(sprint, new List<Sprint>(), team, isOwner, workingDays.ToList());
+            var sprintAndTeamViewModel = SprintAndTeamViewModel.Create(sprint, new List<Sprint>(), team, isOwner, workingDays.ToList());
 
             return PartialView("_WorkingDaysPartial", sprintAndTeamViewModel);
         }
@@ -60,9 +55,7 @@ namespace Teams.Web.Controllers
                 workingDays);
 
             if (newMemberWorkingDays.WorkingDays >= 0 && newMemberWorkingDays.WorkingDays <= newMemberWorkingDays.Sprint.DaysInSprint)
-            {
                 return await _manageMemberWorkingDaysService.EditMemberWorkingDaysAsync(newMemberWorkingDays);
-            }
             else return false;
         }
 
@@ -87,6 +80,5 @@ namespace Teams.Web.Controllers
             }
             else return -1;
         }
-
     }
 }

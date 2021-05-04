@@ -14,10 +14,8 @@ namespace Teams.Web.ViewModels.Home
             IsDbConnected = isDbConnected;
             ServerDateTime = DateTime.Now;
         }
-        public static HealthViewModel Create(string version, bool isDbConnected)
-        {
-            HealthViewModel healthViewModel = new HealthViewModel(version, isDbConnected);
-            return healthViewModel;
-        }
+
+        public static HealthViewModel Create(string version, bool isDbConnected) => 
+            new HealthViewModel(version, isDbConnected);
     }
 }

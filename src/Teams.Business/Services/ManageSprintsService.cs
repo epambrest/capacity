@@ -30,9 +30,13 @@ namespace Teams.Business.Services
             var allTeamSprints = allSprints.Where(x => x.TeamId == teamId);
 
             if (options.SortDirection == SortDirection.Ascending)
+            {
                 return allTeamSprints.OrderBy(x => x.Name);
+            }
             else if (options.SortDirection == SortDirection.Descending)
+            {
                 return allTeamSprints.OrderByDescending(x => x.Name);
+            }
             else if (options.SortDirection == SortDirection.ByStatus)
             {
                 var allTeamSprintsByStatus = allTeamSprints.OrderBy(x => x.Status).ToList();

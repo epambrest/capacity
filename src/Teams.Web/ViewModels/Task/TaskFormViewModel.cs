@@ -44,7 +44,9 @@ namespace Teams.Web.ViewModels.Task
             TeamMembers = teamMemberViewModels;
         }
 
-        public TaskFormViewModel() { }
+        public TaskFormViewModel() 
+        { 
+        }
 
         public static TaskFormViewModel Create(Business.Models.Task task, 
             string errorMessage, 
@@ -52,7 +54,7 @@ namespace Teams.Web.ViewModels.Task
             List<Business.Models.Sprint> sprints)
         {
             var teamMember = teamMembers.FirstOrDefault(t => t.Id == task.MemberId);
-            List<TeamMemberViewModel> teamMemberViewModels = new List<TeamMemberViewModel>();
+            var teamMemberViewModels = new List<TeamMemberViewModel>();
             string taskMemberName;
 
             if (teamMember != null) taskMemberName = teamMember.Member.UserName;
@@ -62,15 +64,15 @@ namespace Teams.Web.ViewModels.Task
             {
                 if (member != null)
                 {
-                    TeamMemberViewModel teamMemberViewModel = TeamMemberViewModel.Create(member);
+                    var teamMemberViewModel = TeamMemberViewModel.Create(member);
                     teamMemberViewModels.Add(teamMemberViewModel);
                 }
             }
 
-            List<SprintViewModel> sprintViewModels = new List<SprintViewModel>();
+            var sprintViewModels = new List<SprintViewModel>();
             foreach(var sprint in sprints)
             {
-                SprintViewModel sprintViewModel = SprintViewModel.Create(sprint, false, 0);
+                var sprintViewModel = SprintViewModel.Create(sprint, false, 0);
                 sprintViewModels.Add(sprintViewModel);
             }
 

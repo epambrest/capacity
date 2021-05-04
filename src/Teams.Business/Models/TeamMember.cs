@@ -17,25 +17,18 @@
             Id = id;
         }
 
-        public TeamMember() { }
-
-        public static TeamMember Create(string memberId, User member)
-        {
-            return new TeamMember(memberId, 0, member);
+        public TeamMember() 
+        { 
         }
 
-        public static TeamMember Create(int teamId, string memberId)
-        {
-            return new TeamMember(memberId, teamId);
-        }
-        public static TeamMember Create(int id, int teamId, string memberId, User member)
-        {
-            return new TeamMember(memberId, teamId, member, null, id);
-        }
+        public static TeamMember Create(string memberId, User member) => new TeamMember(memberId, 0, member);
 
-        public static TeamMember Create(int id, int teamId, Team team, string memberId, User member)
-        {
-            return new TeamMember(memberId, teamId, member, team, id);
-        }
+        public static TeamMember Create(int teamId, string memberId) => new TeamMember(memberId, teamId);
+   
+        public static TeamMember Create(int id, int teamId, string memberId, User member) => 
+            new TeamMember(memberId, teamId, member, null, id);
+
+        public static TeamMember Create(int id, int teamId, Team team, string memberId, User member) => 
+            new TeamMember(memberId, teamId, member, team, id);
     }
 }

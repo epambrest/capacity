@@ -21,9 +21,6 @@ namespace Teams.Data.Models
         [Column("WorkingDays"), Required]
         public int WorkingDays { get; set; }
 
-        public void Update(MemberWorkingDays model)
-        {
-            WorkingDays = model.WorkingDays;
-        }
+        public void Update(MemberWorkingDays model) => WorkingDays = model.WorkingDays;
     }
 }

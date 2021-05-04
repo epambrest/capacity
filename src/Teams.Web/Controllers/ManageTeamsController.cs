@@ -24,10 +24,7 @@ namespace Teams.Web.Controllers
             _localizer = localizer;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
 
         [Authorize]
         public async Task<IActionResult> GetMyTeamsAsync()
@@ -37,7 +34,7 @@ namespace Teams.Web.Controllers
 
             foreach (var team in  teams)
             {
-                TeamViewModel teamViewModel = TeamViewModel.Create(team, false, new List<TeamMember>());
+                var teamViewModel = TeamViewModel.Create(team, false, new List<TeamMember>());
                 teamViewsModels.Add(teamViewModel);
             }
 
@@ -65,15 +62,12 @@ namespace Teams.Web.Controllers
             return RedirectToAction("GetMyTeams");
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        public IActionResult Privacy() => View();
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            ErrorViewModel errorViewModel = ErrorViewModel.Create(Activity.Current?.Id ?? HttpContext.TraceIdentifier);
+            var errorViewModel = ErrorViewModel.Create(Activity.Current?.Id ?? HttpContext.TraceIdentifier);
             return View(errorViewModel);
         }
 
@@ -105,9 +99,6 @@ namespace Teams.Web.Controllers
             return RedirectToAction("ErrorRemove");
         }
 
-        public IActionResult ErrorRemoveAsync()
-        {
-            return View();
-        }
+        public IActionResult ErrorRemoveAsync() => View();
     }
 }

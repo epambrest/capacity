@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Teams.Business.Annotations;
+using Teams.Business.Structures;
 using Teams.Web.ViewModels.TeamMember;
 
 namespace Teams.Web.ViewModels.Task
@@ -24,7 +24,7 @@ namespace Teams.Web.ViewModels.Task
         private ResultsTasksForMemberViewModel(Business.Models.Sprint completedSprint,
             Business.Models.TeamMember member, 
             List<TaskViewModel> tasks,
-            Dictionary<OtherNamesTaskParams, double> tasksAllParams,
+            TasksAllParams tasksAllParams,
             List<TeamMemberViewModel> teamMemberViewModels)
         {
             TeamMemberId = member.Id;
@@ -34,34 +34,34 @@ namespace Teams.Web.ViewModels.Task
             SprintName = completedSprint.Name;
             Tasks = tasks;
             TeamMembers = teamMemberViewModels;
-            TotalStoryPoints = (int)tasksAllParams.GetValueOrDefault(OtherNamesTaskParams.TotalStoryPoints);
-            QuantityСompletedTasks = (int)tasksAllParams.GetValueOrDefault(OtherNamesTaskParams.QuantityСompletedTasks);
-            QuantityUnСompletedTasks = (int)tasksAllParams.GetValueOrDefault(OtherNamesTaskParams.QuantityUnСompletedTasks);
-            SpСompletedTasks = (int)tasksAllParams.GetValueOrDefault(OtherNamesTaskParams.SpCompletedTasks);
-            SpUnСompletedTasks = (int)tasksAllParams.GetValueOrDefault(OtherNamesTaskParams.SpUnCompletedTasks);
-            StoryPointsInDay = (int)tasksAllParams.GetValueOrDefault(OtherNamesTaskParams.StoryPointsInDay);
+            TotalStoryPoints = tasksAllParams.TotalStoryPoints;
+            QuantityСompletedTasks = tasksAllParams.QuantityСompletedTasks;
+            QuantityUnСompletedTasks = tasksAllParams.QuantityUnСompletedTasks;
+            SpСompletedTasks = tasksAllParams.SpCompletedTasks;
+            SpUnСompletedTasks = tasksAllParams.SpUnCompletedTasks;
+            StoryPointsInDay = tasksAllParams.StoryPointsInDay;
         }
 
         public static ResultsTasksForMemberViewModel Create(Business.Models.Sprint completedSprint,
             Business.Models.TeamMember currentMember,
-            Dictionary<OtherNamesTaskParams, double> tasksAllParams)
+            TasksAllParams tasksAllParams)
         {
             var allMemberTasks = completedSprint.Tasks.Where(t => t.MemberId == currentMember.Id).ToList();
             var allSprintTasks = completedSprint.Tasks.ToList();
 
-            List<TaskViewModel> taskViewModelsForMember = new List<TaskViewModel>();
+            var taskViewModelsForMember = new List<TaskViewModel>();
             foreach(var taskMember in allMemberTasks)
             {
-                TaskViewModel taskViewModelForMember = TaskViewModel.Create(taskMember);
+                var taskViewModelForMember = TaskViewModel.Create(taskMember);
                 taskViewModelsForMember.Add(taskViewModelForMember);
             }
 
-            List<TeamMemberViewModel> teamMemberViewModels = new List<TeamMemberViewModel>();
+            var teamMemberViewModels = new List<TeamMemberViewModel>();
             foreach(var task in allSprintTasks)
             {
                 if (task.TeamMember != null)
                 {
-                    TeamMemberViewModel teamMemberViewModel = TeamMemberViewModel.Create(task.TeamMember);
+                    var teamMemberViewModel = TeamMemberViewModel.Create(task.TeamMember);
                     teamMemberViewModels.Add(teamMemberViewModel);
                 }
             }

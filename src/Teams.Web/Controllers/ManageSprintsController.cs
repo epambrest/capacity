@@ -48,16 +48,13 @@ namespace Teams.Web.Controllers
                 return View("ErrorGetAllSprints");
             }
 
-            bool isOwner = false;
-            if (await _accessCheckService.IsOwnerAsync(teamId))
-            {
-                isOwner = true;
-            }
+            var isOwner = false;
+            if (await _accessCheckService.IsOwnerAsync(teamId)) isOwner = true;
 
             var team = await _manageSprintsService.GetTeam(teamId);
-            List<TeamMember> teamMembers = await GetAllTeamMembersAsync(teamId, new DisplayOptions { });
+            var teamMembers = await GetAllTeamMembersAsync(teamId, new DisplayOptions { });
             team.SetTeamMembers(teamMembers);
-            SprintAndTeamViewModel sprintViewModel = SprintAndTeamViewModel.Create(null, 
+            var sprintViewModel = SprintAndTeamViewModel.Create(null, 
                 sprints, team, isOwner, new List<MemberWorkingDays>());
 
             return View(sprintViewModel);
@@ -67,9 +64,7 @@ namespace Teams.Web.Controllers
         private async Task<List<TeamMember>> GetAllTeamMembersAsync(int teamId, DisplayOptions options)
         {
             if (!await _accessCheckService.OwnerOrMemberAsync(teamId))
-            {
                 RedirectToAction("Error");
-            }
             return await _manageTeamsMembersService.GetAllTeamMembersAsync(teamId, options);
         }
 
@@ -79,14 +74,11 @@ namespace Teams.Web.Controllers
             var task = await _manageTasksService.GetTaskByIdAsync(taskId);
             var sprint = await _manageSprintsService.GetSprintAsync(task.SprintId.GetValueOrDefault(), false);
 
-            if (sprint == null)
-            {
-                return View("ErrorSprint");
-            }
+            if (sprint == null) return View("ErrorSprint");
+            
             if (sprint.Status != PossibleStatuses.ActiveStatus)
-            {
                 return RedirectToAction("ErrorTask", new { Cause = "SprintNotActive", task.SprintId });
-            }
+            
             if (task.MemberId == null)
                 return RedirectToAction("ErrorTask", new { Cause = "NotAssigned", task.SprintId });
 
@@ -112,19 +104,14 @@ namespace Teams.Web.Controllers
         {
             var sprint = await _manageSprintsService.GetSprintAsync(sprintId, true);
 
-            if (sprint == null)
-            {
-                return View("ErrorGetAllSprints");
-            }
+            if (sprint == null) return View("ErrorGetAllSprints");
 
-            bool isOwner = false;
-            if (await _accessCheckService.IsOwnerAsync(sprint.TeamId))
-            {
-                isOwner = true;
-            }
+            var isOwner = false;
+            if (await _accessCheckService.IsOwnerAsync(sprint.TeamId)) isOwner = true;
+   
 
             var averageStoryPoint = await _manageSprintsService.GetAverageStoryPointAsync(sprint);
-            SprintViewModel sprintViewModel = SprintViewModel.Create(sprint, isOwner, averageStoryPoint);
+            var sprintViewModel = SprintViewModel.Create(sprint, isOwner, averageStoryPoint);
 
             return View(sprintViewModel);
         }
@@ -134,8 +121,7 @@ namespace Teams.Web.Controllers
         {
             var sprint = await _manageSprintsService.GetSprintAsync(sprintId, false);
             var team = await _manageSprintsService.GetTeam(sprint.TeamId);
-            EditSprintViewModel editSprintViewModel = EditSprintViewModel.Create(sprint, errorMessage, team);
-
+            var editSprintViewModel = EditSprintViewModel.Create(sprint, errorMessage, team);
             return View(editSprintViewModel);
         }
 
@@ -143,8 +129,7 @@ namespace Teams.Web.Controllers
         [Authorize]
         public async Task<IActionResult> EditSprintAsync(EditSprintViewModel editSprintViewModel)
         {
-            if (!ModelState.IsValid)
-                return View(editSprintViewModel);
+            if (!ModelState.IsValid) return View(editSprintViewModel);
 
             var sprints = await _manageSprintsService.GetAllSprintsAsync(editSprintViewModel.TeamId, new DisplayOptions());
             var currentSprint = sprints.FirstOrDefault(i => i.Id == editSprintViewModel.SprintId);
@@ -210,15 +195,12 @@ namespace Teams.Web.Controllers
             var tasks = (await _manageTasksService.GetAllTasksForTeamAsync(teamId, new DisplayOptions()))
                 .Where(task => task.SprintId == null && task.Completed == false);
 
-            Sprint sprint = Sprint.Create(teamId, tasks.ToList());
+            var sprint = Sprint.Create(teamId, tasks.ToList());
 
-            bool isOwner = false;
-            if (await _accessCheckService.IsOwnerAsync(teamId))
-            {
-                isOwner = true;
-            }
+            var isOwner = false;
+            if (await _accessCheckService.IsOwnerAsync(teamId)) isOwner = true;
 
-            SprintViewModel sprintViewModel = SprintViewModel.Create(sprint, isOwner, 0);
+            var sprintViewModel = SprintViewModel.Create(sprint, isOwner, 0);
 
             return View(sprintViewModel);
         }
@@ -234,9 +216,7 @@ namespace Teams.Web.Controllers
                 var activeSprint = sprints.FirstOrDefault(i => i.Status == PossibleStatuses.ActiveStatus);
 
                 if (activeSprint != null && sprintViewModel.Status == PossibleStatuses.ActiveStatus)
-                {
                     return RedirectToAction("AddSprint", new { teamId = sprintViewModel.TeamId, errorMessage = _localizer["ActiveFieldError"] });
-                }
 
                 var createdSprint = sprints.FirstOrDefault(i => i.Status == PossibleStatuses.CreatedStatus);
 
@@ -252,9 +232,7 @@ namespace Teams.Web.Controllers
                     sprintViewModel.DaysInSprint,
                     sprintViewModel.StoryPointInHours,
                     sprintViewModel.Status);
-
                 var result = await AddSprintAsync(newSprint);
-
 
                 if (result && sprintViewModel.SelectTasksIds != null &&
                     await UpdateTasks(sprintViewModel.SelectTasksIds, newSprint.Id))
@@ -301,9 +279,7 @@ namespace Teams.Web.Controllers
         private async Task<bool> AddSprintAsync(Sprint sprint)
         {
             if (await _accessCheckService.IsOwnerAsync(sprint.TeamId))
-            {
                 return await _manageSprintsService.AddSprintAsync(sprint);
-            }
             else return false;
         }
 
@@ -311,9 +287,7 @@ namespace Teams.Web.Controllers
         private async Task<bool> EditSprintAsync(Sprint sprint)
         {
             if (await _accessCheckService.IsOwnerAsync(sprint.TeamId))
-            {
                 return await _manageSprintsService.EditSprintAsync(sprint);
-            }
             else return false;
         }
 
@@ -346,10 +320,7 @@ namespace Teams.Web.Controllers
             return false;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
 
         [Authorize]
         public async Task<IActionResult> Remove(int sprintId)
@@ -363,7 +334,7 @@ namespace Teams.Web.Controllers
 
         private bool IsStatusCanBeChanged(int curStatus, int nextStatus)
         {
-            List<int> statuses = new List<int>() { PossibleStatuses.CreatedStatus, PossibleStatuses.ActiveStatus, PossibleStatuses.CompletedStatus };
+            var statuses = new List<int>() { PossibleStatuses.CreatedStatus, PossibleStatuses.ActiveStatus, PossibleStatuses.CompletedStatus };
 
             if (!statuses.Contains(curStatus) || !statuses.Contains(nextStatus))
                 return false;
@@ -388,7 +359,7 @@ namespace Teams.Web.Controllers
                     status == PossibleStatuses.ActiveStatus &&
                     activeSprint.Id != currentSprint.Id)
                 {
-                    ErrorChangeStatusViewModel errorChangeStatusViewModel = ErrorChangeStatusViewModel.Create(currentSprint.Name,
+                    var errorChangeStatusViewModel = ErrorChangeStatusViewModel.Create(currentSprint.Name,
                         _localizer["ActiveFieldError"]);
                     return RedirectToAction("ErrorChangeStatus", errorChangeStatusViewModel);
                 }
@@ -402,28 +373,21 @@ namespace Teams.Web.Controllers
                 }
                 else
                 {
-                    ErrorChangeStatusViewModel errorChangeStatusViewModel = ErrorChangeStatusViewModel.Create(currentSprint.Name,
+                    var errorChangeStatusViewModel = ErrorChangeStatusViewModel.Create(currentSprint.Name,
                     _localizer["ErrorWhileEdit"]);
                     return RedirectToAction("ErrorChangeStatus", errorChangeStatusViewModel);
                 }
             }
             else
             {
-                ErrorChangeStatusViewModel errorChangeStatusViewModel = ErrorChangeStatusViewModel.Create(currentSprint.Name,
+                var errorChangeStatusViewModel = ErrorChangeStatusViewModel.Create(currentSprint.Name,
                     _localizer["CantChangeStatus"]);
                 return RedirectToAction("ErrorChangeStatus", errorChangeStatusViewModel);
             }
         }
 
-        public IActionResult ErrorChangeStatus(ErrorChangeStatusViewModel errorChangeStatusViewModel)
-        {
+        public IActionResult ErrorChangeStatus(ErrorChangeStatusViewModel errorChangeStatusViewModel) => View(errorChangeStatusViewModel);
 
-            return View(errorChangeStatusViewModel);
-        }
-
-        public IActionResult ErrorRemove()
-        {
-            return View();
-        }
+        public IActionResult ErrorRemove() => View();
     }
 }

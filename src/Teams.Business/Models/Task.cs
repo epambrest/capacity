@@ -39,7 +39,9 @@
             Id = id;
         }
 
-        public Task() { }
+        public Task() 
+        { 
+        }
 
         public static Task Create(int id, 
             int teamId, 
@@ -49,19 +51,13 @@
             string link,
             int sprintId, 
             int? memberId,
-            bool isCompleted = false)
-        {
-            return new Task(teamId, sprintId, team, name, storyPoints, link, memberId, isCompleted, id);
-        }
+            bool isCompleted = false) => 
+            new Task(teamId, sprintId, team, name, storyPoints, link, memberId, isCompleted, id);
+        
 
-        public static Task Create(int teamId, int sprintId, Team team)
-        {
-            return new Task(teamId, sprintId, team);
-        }
+        public static Task Create(int teamId, int sprintId, Team team) => 
+            new Task(teamId, sprintId, team);
 
-        public void SetCompleted()
-        {
-            Completed = true;
-        }
+        public void SetCompleted() => Completed = true;
     }
 }

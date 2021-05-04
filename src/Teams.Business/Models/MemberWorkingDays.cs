@@ -24,16 +24,14 @@
             TeamMember = teamMember;
         }
 
-        public MemberWorkingDays() { }
-
-        public static MemberWorkingDays Create(int id, int memberId, int sprintId, Sprint sprint, int workingDays)
-        {
-            return new MemberWorkingDays(memberId, sprintId, sprint, workingDays, id);
+        public MemberWorkingDays() 
+        { 
         }
 
-        public static MemberWorkingDays Create(int memberId, int sprintId, Sprint sprint, int workingDays)
-        {
-            return new MemberWorkingDays(memberId, sprintId, sprint, workingDays);
-        }
+        public static MemberWorkingDays Create(int id, int memberId, int sprintId, Sprint sprint, int workingDays) => 
+            new MemberWorkingDays(memberId, sprintId, sprint, workingDays, id);
+
+        public static MemberWorkingDays Create(int memberId, int sprintId, Sprint sprint, int workingDays) => 
+            new MemberWorkingDays(memberId, sprintId, sprint, workingDays);
     }
 }

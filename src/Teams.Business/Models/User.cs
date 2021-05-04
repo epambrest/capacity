@@ -15,11 +15,11 @@
             LastName = lastName;
         }
 
-        public User() { }
-
-        public static User Create(string id, string userName, string firstName, string lastName)
-        {
-            return new User(id, userName, firstName, lastName);
+        public User() 
+        { 
         }
+        
+        public static User Create(string id, string userName, string firstName, string lastName) => 
+            new User(id, userName, firstName, lastName);
     }
 }
